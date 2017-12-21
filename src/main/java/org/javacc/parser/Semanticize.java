@@ -974,13 +974,8 @@ public class Semanticize extends JavaCCGlobals
     public boolean goDeeper (final Expansion e)
     {
       if (e instanceof RegularExpression)
-      {
         return false;
-      }
-      else
-      {
-        return true;
-      }
+      return true;
     }
 
     public void action (final Expansion e)
@@ -1051,17 +1046,11 @@ public class Semanticize extends JavaCCGlobals
 
   static class ProductionDefinedChecker extends JavaCCGlobals implements TreeWalkerOp
   {
-
     public boolean goDeeper (final Expansion e)
     {
       if (e instanceof RegularExpression)
-      {
         return false;
-      }
-      else
-      {
-        return true;
-      }
+      return true;
     }
 
     public void action (final Expansion e)
@@ -1082,19 +1071,13 @@ public class Semanticize extends JavaCCGlobals
 
   }
 
-  static class EmptyChecker extends JavaCCGlobals implements TreeWalkerOp
+  static final class EmptyChecker extends JavaCCGlobals implements TreeWalkerOp
   {
-
     public boolean goDeeper (final Expansion e)
     {
       if (e instanceof RegularExpression)
-      {
         return false;
-      }
-      else
-      {
-        return true;
-      }
+      return true;
     }
 
     public void action (final Expansion e)
@@ -1132,18 +1115,10 @@ public class Semanticize extends JavaCCGlobals
     public boolean goDeeper (final Expansion e)
     {
       if (e instanceof RegularExpression)
-      {
         return false;
-      }
-      else
-        if (e instanceof Lookahead)
-        {
-          return false;
-        }
-        else
-        {
-          return true;
-        }
+      if (e instanceof Lookahead)
+        return false;
+      return true;
     }
 
     public void action (final Expansion e)

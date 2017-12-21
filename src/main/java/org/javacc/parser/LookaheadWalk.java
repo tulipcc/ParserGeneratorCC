@@ -82,10 +82,7 @@ public final class LookaheadWalk
         {
           return new ArrayList <> ();
         }
-        else
-        {
-          return genFirstSet (partialMatches, prod.getExpansion ());
-        }
+        return genFirstSet (partialMatches, prod.getExpansion ());
       }
       else
         if (exp instanceof Choice)
@@ -171,7 +168,7 @@ public final class LookaheadWalk
                     }
   }
 
-  private static void listSplit (final List toSplit, final List mask, final List partInMask, final List rest)
+  private static void listSplit (final List <MatchInfo> toSplit, final List <MatchInfo> mask, final List <MatchInfo> partInMask, final List <MatchInfo> rest)
   {
     OuterLoop: for (int i = 0; i < toSplit.size (); i++)
     {

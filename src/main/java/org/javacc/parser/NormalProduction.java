@@ -28,6 +28,7 @@
 package org.javacc.parser;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +50,7 @@ public class NormalProduction
   /**
    * The NonTerminal nodes which refer to this production.
    */
-  private List parents = new ArrayList ();
+  private List <? super Expansion> parents = new ArrayList <> ();
 
   /**
    * The access modifier of this production.
@@ -115,9 +116,9 @@ public class NormalProduction
 
   protected String eol = System.getProperty ("line.separator", "\n");
 
-  protected StringBuffer dumpPrefix (final int indent)
+  protected StringBuilder dumpPrefix (final int indent)
   {
-    final StringBuffer sb = new StringBuffer (128);
+    final StringBuilder sb = new StringBuilder (128);
     for (int i = 0; i < indent; i++)
       sb.append ("  ");
     return sb;
@@ -130,19 +131,20 @@ public class NormalProduction
                                                         // name
   }
 
-  public StringBuffer dump (final int indent, final Set alreadyDumped)
+  public StringBuilder dump (final int indent, final Set <? super NormalProduction> alreadyDumped)
   {
-    final StringBuffer sb = dumpPrefix (indent).append (System.identityHashCode (this))
-                                               .append (' ')
-                                               .append (getSimpleName ())
-                                               .append (' ')
-                                               .append (getLhs ());
+    final StringBuilder sb = dumpPrefix (indent).append (System.identityHashCode (this))
+                                                .append (' ')
+                                                .append (getSimpleName ())
+                                                .append (' ')
+                                                .append (getLhs ());
     if (!alreadyDumped.contains (this))
     {
       alreadyDumped.add (this);
       if (getExpansion () != null)
       {
-        sb.append (eol).append (getExpansion ().dump (indent + 1, alreadyDumped));
+        // cannot re-use already dumped
+        sb.append (eol).append (getExpansion ().dump (indent + 1, new HashSet <> ()));
       }
     }
 
@@ -187,7 +189,7 @@ public class NormalProduction
    * @param parents
    *        the parents to set
    */
-  void setParents (final List parents)
+  void setParents (final List <? super Expansion> parents)
   {
     this.parents = parents;
   }
@@ -195,7 +197,7 @@ public class NormalProduction
   /**
    * @return the parents
    */
-  List getParents ()
+  List <? super Expansion> getParents ()
   {
     return parents;
   }

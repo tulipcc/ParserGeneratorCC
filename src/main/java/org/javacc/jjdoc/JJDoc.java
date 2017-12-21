@@ -401,7 +401,7 @@ public class JJDoc extends JJDocGlobals
         if (o instanceof SingleCharacter)
         {
           returnString += "\"";
-          final char s[] = { ((SingleCharacter) o).ch };
+          final char s[] = { ((SingleCharacter) o).m_ch };
           returnString += add_escapes (new String (s));
           returnString += "\"";
         }

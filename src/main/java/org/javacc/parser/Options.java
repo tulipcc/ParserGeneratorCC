@@ -1187,7 +1187,7 @@ public class Options
 
   /**
    * Gets all the user options (in order)
-   * 
+   *
    * @return
    */
   public static Set <OptionInfo> getUserOptions ()

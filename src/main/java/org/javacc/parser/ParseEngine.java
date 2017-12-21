@@ -1435,7 +1435,7 @@ public class ParseEngine
     final Expansion e = inf.exp;
     if (e instanceof RegularExpression)
     {
-      ; // nothing to here
+      // nothing to here
     }
     else
       if (e instanceof NonTerminal)
@@ -1448,7 +1448,7 @@ public class ParseEngine
         final NormalProduction ntprod = (NormalProduction) (production_table.get (e_nrw.getName ()));
         if (ntprod instanceof CodeProduction)
         {
-          ; // nothing to do here
+          // nothing to do here
         }
         else
         {

@@ -1569,7 +1569,7 @@ public class RCharacterList extends RegularExpression
     {
       if (descriptors.get (i) instanceof SingleCharacter)
       {
-        final char ch = ((SingleCharacter) descriptors.get (i)).ch;
+        final char ch = ((SingleCharacter) descriptors.get (i)).m_ch;
 
         if (ch != Character.toLowerCase (ch))
           descriptors.add (new SingleCharacter (Character.toLowerCase (ch)));
@@ -1759,7 +1759,7 @@ public class RCharacterList extends RegularExpression
     for (i = 0; i < descriptors.size (); i++)
     {
       if (descriptors.get (i) instanceof SingleCharacter)
-        startState.AddChar (((SingleCharacter) descriptors.get (i)).ch);
+        startState.AddChar (((SingleCharacter) descriptors.get (i)).m_ch);
       else // if (descriptors.get(i) instanceof CharacterRange)
       {
         final CharacterRange cr = (CharacterRange) descriptors.get (i);
@@ -1767,7 +1767,7 @@ public class RCharacterList extends RegularExpression
         if (cr.getLeft () == cr.getRight ())
           startState.AddChar (cr.getLeft ());
         else
-          startState.AddRange (cr.getLeft (), cr.getRight ());
+          startState.addRange (cr.getLeft (), cr.getRight ());
       }
     }
 
@@ -1811,20 +1811,20 @@ public class RCharacterList extends RegularExpression
         {
           if (newDesc.get (j) instanceof SingleCharacter)
           {
-            if (((SingleCharacter) newDesc.get (j)).ch > s.ch)
+            if (((SingleCharacter) newDesc.get (j)).m_ch > s.m_ch)
               break;
             else
-              if (((SingleCharacter) newDesc.get (j)).ch == s.ch)
+              if (((SingleCharacter) newDesc.get (j)).m_ch == s.m_ch)
                 continue Outer;
           }
           else
           {
             final char l = ((CharacterRange) newDesc.get (j)).getLeft ();
 
-            if (InRange (s.ch, (CharacterRange) newDesc.get (j)))
+            if (InRange (s.m_ch, (CharacterRange) newDesc.get (j)))
               continue Outer;
             else
-              if (l > s.ch)
+              if (l > s.m_ch)
                 break;
           }
         }
@@ -1840,13 +1840,13 @@ public class RCharacterList extends RegularExpression
         {
           if (newDesc.get (j) instanceof SingleCharacter)
           {
-            if (InRange (((SingleCharacter) newDesc.get (j)).ch, range))
+            if (InRange (((SingleCharacter) newDesc.get (j)).m_ch, range))
             {
               newDesc.remove (j--);
               cnt--;
             }
             else
-              if (((SingleCharacter) newDesc.get (j)).ch > range.getRight ())
+              if (((SingleCharacter) newDesc.get (j)).m_ch > range.getRight ())
                 break;
           }
           else
@@ -1911,7 +1911,7 @@ public class RCharacterList extends RegularExpression
     {
       if (descriptors.get (i) instanceof SingleCharacter)
       {
-        final char c = ((SingleCharacter) descriptors.get (i)).ch;
+        final char c = ((SingleCharacter) descriptors.get (i)).m_ch;
 
         if (c >= 0 && c <= lastRemoved + 1)
         {

@@ -27,32 +27,33 @@
  */
 package org.javacc.parser;
 
+import java.io.Serializable;
+
 /**
  * Describes single character descriptors in a character list.
  */
 
-public class SingleCharacter
+public class SingleCharacter implements Serializable
 {
-
   /**
    * The line and column number of the construct that corresponds most closely
    * to this node.
    */
-  private int column;
+  private int m_nColumn;
 
-  private int line;
+  private int m_nLine;
 
   /**
    * The character of this descriptor.
    */
-  public char ch;
+  public char m_ch;
 
   SingleCharacter ()
   {}
 
   SingleCharacter (final char c)
   {
-    ch = c;
+    m_ch = c;
   }
 
   /**
@@ -61,7 +62,7 @@ public class SingleCharacter
    */
   void setLine (final int line)
   {
-    this.line = line;
+    this.m_nLine = line;
   }
 
   /**
@@ -69,7 +70,7 @@ public class SingleCharacter
    */
   int getLine ()
   {
-    return line;
+    return m_nLine;
   }
 
   /**
@@ -78,7 +79,7 @@ public class SingleCharacter
    */
   void setColumn (final int column)
   {
-    this.column = column;
+    this.m_nColumn = column;
   }
 
   /**
@@ -86,7 +87,6 @@ public class SingleCharacter
    */
   int getColumn ()
   {
-    return column;
+    return m_nColumn;
   }
-
 }

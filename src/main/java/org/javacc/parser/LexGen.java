@@ -374,10 +374,9 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
     final String codeGeneratorClass = Options.getTokenManagerCodeGenerator ();
     keepLineCol = Options.getKeepLineColumn ();
     errorHandlingClass = Options.getTokenMgrErrorClass ();
-    final List choices = new ArrayList ();
+    final List <RChoice> choices = new ArrayList <> ();
     Enumeration e;
     TokenProduction tp;
-    int i, j;
 
     staticString = (Options.getStatic () ? "static " : "");
     tokMgrClassName = cu_name + "TokenManager";
@@ -401,7 +400,8 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
       lexStateIndex = GetIndex (key);
       lexStateSuffix = "_" + lexStateIndex;
       final List <TokenProduction> allTps = (List <TokenProduction>) allTpsForState.get (key);
-      initStates.put (key, initialState = new NfaState ());
+      initialState = new NfaState ();
+      initStates.put (key, initialState);
       ignoring = false;
 
       singlesToSkip[lexStateIndex] = new NfaState ();
@@ -410,7 +410,7 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
       if (key.equals ("DEFAULT"))
         defaultLexState = lexStateIndex;
 
-      for (i = 0; i < allTps.size (); i++)
+      for (int i = 0; i < allTps.size (); i++)
       {
         tp = allTps.get (i);
         final int kind = tp.kind;
@@ -420,7 +420,7 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
         if (i == 0)
           ignoring = ignore;
 
-        for (j = 0; j < rexps.size (); j++)
+        for (int j = 0; j < rexps.size (); j++)
         {
           final RegExprSpec respec = rexps.get (j);
           curRE = respec.rexp;
@@ -454,7 +454,7 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
               Nfa temp;
 
               if (curRE instanceof RChoice)
-                choices.add (curRE);
+                choices.add ((RChoice) curRE);
 
               temp = curRE.GenerateNfa (ignore);
               temp.end.isFinal = true;
@@ -512,12 +512,13 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
       }
 
       // Generate a static block for initializing the nfa transitions
-      NfaState.ComputeClosures ();
+      NfaState.computeClosures ();
 
-      for (i = 0; i < initialState.epsilonMoves.size (); i++)
-        initialState.epsilonMoves.elementAt (i).GenerateCode ();
+      for (final NfaState aItem : initialState.epsilonMoves)
+        aItem.GenerateCode ();
 
-      if (hasNfa[lexStateIndex] = (NfaState.generatedStates != 0))
+      hasNfa[lexStateIndex] = (NfaState.generatedStates != 0);
+      if (hasNfa[lexStateIndex])
       {
         initialState.GenerateCode ();
         startState = initialState.GenerateInitMoves (this);
@@ -567,8 +568,8 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
         stateSetSize = NfaState.generatedStates;
     }
 
-    for (i = 0; i < choices.size (); i++)
-      ((RChoice) choices.get (i)).CheckUnmatchability ();
+    for (final RChoice aItem : choices)
+      aItem.CheckUnmatchability ();
 
     CheckEmptyStringMatch ();
 
@@ -582,14 +583,14 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
       if (token_mgr_decls != null && token_mgr_decls.size () > 0)
       {
         final Token t = (Token) token_mgr_decls.get (0);
-        for (j = 0; j < token_mgr_decls.size (); j++)
+        for (int j = 0; j < token_mgr_decls.size (); j++)
         {
           tokenMgrDecls.append (((Token) token_mgr_decls.get (j)).image + " ");
         }
       }
       tokenizerData.setDecls (tokenMgrDecls.toString ());
       final Map <Integer, String> actionStrings = new HashMap <> ();
-      for (i = 0; i < maxOrdinal; i++)
+      for (int i = 0; i < maxOrdinal; i++)
       {
         if (newLexState[i] == null)
         {
@@ -1062,7 +1063,7 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
       if (maxLexStates > 1)
         genCodeLine (caseStr + i + ":");
 
-      if (singlesToSkip[i].HasTransitions ())
+      if (singlesToSkip[i].hasTransitions ())
       {
         // added the backup(0) to make JIT happy
         genCodeLine (prefix + "try { input_stream.backup(0);");

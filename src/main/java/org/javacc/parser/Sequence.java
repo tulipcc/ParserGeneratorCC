@@ -56,7 +56,7 @@ public class Sequence extends Expansion
   }
 
   @Override
-  public StringBuffer dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
     if (alreadyDumped.contains (this))
     {
@@ -64,7 +64,7 @@ public class Sequence extends Expansion
     }
 
     alreadyDumped.add (this);
-    final StringBuffer sb = super.dump (indent, alreadyDumped);
+    final StringBuilder sb = super.dump (indent, alreadyDumped);
     for (final Object aObject : units)
     {
       final Expansion next = (Expansion) aObject;

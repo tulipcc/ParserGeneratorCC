@@ -92,9 +92,9 @@ public abstract class RegularExpression extends Expansion
   int walkStatus = 0;
 
   @Override
-  public StringBuffer dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final StringBuffer sb = super.dump (indent, alreadyDumped);
+    final StringBuilder sb = super.dump (indent, alreadyDumped);
     alreadyDumped.add (this);
     sb.append (' ').append (label);
     return sb;

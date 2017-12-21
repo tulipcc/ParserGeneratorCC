@@ -42,7 +42,7 @@ public class NonTerminal extends Expansion
    * The LHS to which the return value of the non-terminal is assigned. In case
    * there is no LHS, then the vector remains empty.
    */
-  private List <Token> lhsTokens = new ArrayList <> ();
+  private List <Token> m_lhsTokens = new ArrayList <> ();
 
   /**
    * The name of the non-terminal.
@@ -61,9 +61,9 @@ public class NonTerminal extends Expansion
   private NormalProduction prod;
 
   @Override
-  public StringBuffer dump (final int indent, final Set alreadyDumped)
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final StringBuffer value = super.dump (indent, alreadyDumped).append (' ').append (name);
+    final StringBuilder value = super.dump (indent, alreadyDumped).append (' ').append (name);
     return value;
   }
 
@@ -73,7 +73,7 @@ public class NonTerminal extends Expansion
    */
   public void setLhsTokens (final List <Token> lhsTokens)
   {
-    this.lhsTokens = lhsTokens;
+    this.m_lhsTokens = lhsTokens;
   }
 
   /**
@@ -81,7 +81,7 @@ public class NonTerminal extends Expansion
    */
   public List <Token> getLhsTokens ()
   {
-    return lhsTokens;
+    return m_lhsTokens;
   }
 
   /**

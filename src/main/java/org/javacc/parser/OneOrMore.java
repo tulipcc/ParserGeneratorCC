@@ -54,9 +54,9 @@ public class OneOrMore extends Expansion
   }
 
   @Override
-  public StringBuffer dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final StringBuffer sb = super.dump (indent, alreadyDumped);
+    final StringBuilder sb = super.dump (indent, alreadyDumped);
     if (alreadyDumped.contains (this))
       return sb;
     alreadyDumped.add (this);

@@ -276,10 +276,9 @@ public class LexGenCPP extends LexGen // CodeGenerator implements
       return;
 
     keepLineCol = Options.getKeepLineColumn ();
-    final List choices = new ArrayList ();
+    final List <RChoice> choices = new ArrayList <> ();
     Enumeration e;
     TokenProduction tp;
-    int i, j;
 
     staticString = (Options.getStatic () ? "static " : "");
     tokMgrClassName = cu_name + "TokenManager";
@@ -310,7 +309,7 @@ public class LexGenCPP extends LexGen // CodeGenerator implements
       if (key.equals ("DEFAULT"))
         defaultLexState = lexStateIndex;
 
-      for (i = 0; i < allTps.size (); i++)
+      for (int i = 0; i < allTps.size (); i++)
       {
         tp = allTps.get (i);
         final int kind = tp.kind;
@@ -320,7 +319,7 @@ public class LexGenCPP extends LexGen // CodeGenerator implements
         if (i == 0)
           ignoring = ignore;
 
-        for (j = 0; j < rexps.size (); j++)
+        for (int j = 0; j < rexps.size (); j++)
         {
           final RegExprSpec respec = rexps.get (j);
           curRE = respec.rexp;
@@ -352,7 +351,7 @@ public class LexGenCPP extends LexGen // CodeGenerator implements
               Nfa temp;
 
               if (curRE instanceof RChoice)
-                choices.add (curRE);
+                choices.add ((RChoice) curRE);
 
               temp = curRE.GenerateNfa (ignore);
               temp.end.isFinal = true;
@@ -410,12 +409,13 @@ public class LexGenCPP extends LexGen // CodeGenerator implements
       }
 
       // Generate a static block for initializing the nfa transitions
-      NfaState.ComputeClosures ();
+      NfaState.computeClosures ();
 
-      for (i = 0; i < initialState.epsilonMoves.size (); i++)
-        initialState.epsilonMoves.elementAt (i).GenerateCode ();
+      for (final NfaState aItem : initialState.epsilonMoves)
+        aItem.GenerateCode ();
 
-      if (hasNfa[lexStateIndex] = (NfaState.generatedStates != 0))
+      hasNfa[lexStateIndex] = (NfaState.generatedStates != 0);
+      if (hasNfa[lexStateIndex])
       {
         initialState.GenerateCode ();
         initialState.GenerateInitMoves (this);
@@ -456,8 +456,8 @@ public class LexGenCPP extends LexGen // CodeGenerator implements
         stateSetSize = NfaState.generatedStates;
     }
 
-    for (i = 0; i < choices.size (); i++)
-      ((RChoice) choices.get (i)).CheckUnmatchability ();
+    for (final RChoice aItem : choices)
+      aItem.CheckUnmatchability ();
 
     NfaState.DumpStateSets (this);
     CheckEmptyStringMatch ();
@@ -824,7 +824,7 @@ public class LexGenCPP extends LexGen // CodeGenerator implements
       if (maxLexStates > 1)
         genCodeLine (caseStr + i + ":");
 
-      if (singlesToSkip[i].HasTransitions ())
+      if (singlesToSkip[i].hasTransitions ())
       {
         // added the backup(0) to make JIT happy
         genCodeLine (prefix + "{ input_stream->backup(0);");

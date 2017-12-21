@@ -32,10 +32,8 @@
 package org.javacc.parser;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,7 +66,7 @@ final class KindInfo
     finalKindCnt++;
     finalKindSet.add (kind);
   }
-};
+}
 
 /**
  * Describes string literals.
@@ -95,8 +93,10 @@ public class RStringLiteral extends RegularExpression
   private static int maxStrKind = 0;
   private static int maxLen = 0;
   private static int charCnt = 0;
-  private static List charPosKind = new ArrayList (); // Elements are hashtables
-                                                      // with single char keys;
+  private static List <Map <String, KindInfo>> charPosKind = new ArrayList <> (); // Elements
+                                                                                  // are
+                                                                                  // hashtables
+  // with single char keys;
   private static int [] maxLenForActive = new int [100]; // 6400 tokens
   public static String [] allImages;
   private static int [] [] intermediateKinds;
@@ -105,7 +105,8 @@ public class RStringLiteral extends RegularExpression
   private static int startStateCnt = 0;
   private static boolean subString[];
   private static boolean subStringAtPos[];
-  private static Hashtable [] statesForPos;
+
+  private static Map <String, long []> [] statesForPos;
 
   /**
    * Initialize all the static variables, so that there is no interference
@@ -116,7 +117,7 @@ public class RStringLiteral extends RegularExpression
   {
     maxStrKind = 0;
     maxLen = 0;
-    charPosKind = new ArrayList ();
+    charPosKind = new ArrayList <> ();
     maxLenForActive = new int [100]; // 6400 tokens
     intermediateKinds = null;
     intermediateMatchedPos = null;
@@ -306,11 +307,14 @@ public class RStringLiteral extends RegularExpression
 
   /**
    * Used for top level string literals.
+   *
+   * @param codeGenerator
+   * @param kind
    */
   public void GenerateDfa (final CodeGenerator codeGenerator, final int kind)
   {
     String s;
-    Hashtable temp;
+    Map <String, KindInfo> temp;
     KindInfo info;
     int len;
 
@@ -341,11 +345,11 @@ public class RStringLiteral extends RegularExpression
       }
 
       if (i >= charPosKind.size ()) // Kludge, but OK
-        charPosKind.add (temp = new Hashtable ());
+        charPosKind.add (temp = new HashMap <> ());
       else
-        temp = (Hashtable) charPosKind.get (i);
+        temp = charPosKind.get (i);
 
-      if ((info = (KindInfo) temp.get (s)) == null)
+      if ((info = temp.get (s)) == null)
         temp.put (s, info = new KindInfo (LexGen.maxOrdinal));
 
       if (i + 1 == len)
@@ -358,11 +362,11 @@ public class RStringLiteral extends RegularExpression
         s = ("" + image.charAt (i)).toLowerCase ();
 
         if (i >= charPosKind.size ()) // Kludge, but OK
-          charPosKind.add (temp = new Hashtable ());
+          charPosKind.add (temp = new HashMap <> ());
         else
-          temp = (Hashtable) charPosKind.get (i);
+          temp = charPosKind.get (i);
 
-        if ((info = (KindInfo) temp.get (s)) == null)
+        if ((info = temp.get (s)) == null)
           temp.put (s, info = new KindInfo (LexGen.maxOrdinal));
 
         if (i + 1 == len)
@@ -376,11 +380,11 @@ public class RStringLiteral extends RegularExpression
         s = ("" + image.charAt (i)).toUpperCase ();
 
         if (i >= charPosKind.size ()) // Kludge, but OK
-          charPosKind.add (temp = new Hashtable ());
+          charPosKind.add (temp = new HashMap <> ());
         else
-          temp = (Hashtable) charPosKind.get (i);
+          temp = charPosKind.get (i);
 
-        if ((info = (KindInfo) temp.get (s)) == null)
+        if ((info = temp.get (s)) == null)
           temp.put (s, info = new KindInfo (LexGen.maxOrdinal));
 
         if (i + 1 == len)
@@ -452,17 +456,15 @@ public class RStringLiteral extends RegularExpression
     if (LexGen.mixed[LexGen.lexStateIndex] || NfaState.generatedStates == 0)
       return -1;
 
-    final Hashtable allStateSets = statesForPos[pos];
+    final Map <String, long []> allStateSets = statesForPos[pos];
 
     if (allStateSets == null)
       return -1;
 
-    final Enumeration e = allStateSets.keys ();
-
-    while (e.hasMoreElements ())
+    for (final Map.Entry <String, long []> aEntry : allStateSets.entrySet ())
     {
-      String s = (String) e.nextElement ();
-      final long [] actives = (long []) allStateSets.get (s);
+      String s = aEntry.getKey ();
+      final long [] actives = aEntry.getValue ();
 
       s = s.substring (s.indexOf (", ") + 2);
       s = s.substring (s.indexOf (", ") + 2);
@@ -705,23 +707,21 @@ public class RStringLiteral extends RegularExpression
     codeGenerator.genCodeLine ("}");
   }
 
-  static String [] ReArrange (final Hashtable tab)
+  static String [] ReArrange (final Map <String, KindInfo> tab)
   {
     final String [] ret = new String [tab.size ()];
-    final Enumeration e = tab.keys ();
     int cnt = 0;
 
-    while (e.hasMoreElements ())
+    for (final String s : tab.keySet ())
     {
-      int i = 0, j;
-      String s;
-      final char c = (s = (String) e.nextElement ()).charAt (0);
+      final char c = s.charAt (0);
 
+      int i = 0;
       while (i < cnt && ret[i].charAt (0) < c)
         i++;
 
       if (i < cnt)
-        for (j = cnt - 1; j >= i; j--)
+        for (int j = cnt - 1; j >= i; j--)
           ret[j + 1] = ret[j];
 
       ret[i] = s;
@@ -733,11 +733,10 @@ public class RStringLiteral extends RegularExpression
 
   static void DumpDfaCode (final CodeGenerator codeGenerator)
   {
-    Hashtable tab;
+    Map <String, KindInfo> tab;
     String key;
     KindInfo info;
     final int maxLongsReqd = maxStrKind / 64 + 1;
-    int i, j, k;
     boolean ifGenerated;
     LexGen.maxLongsReqd[LexGen.lexStateIndex] = maxLongsReqd;
 
@@ -775,21 +774,21 @@ public class RStringLiteral extends RegularExpression
     }
 
     boolean createStartNfa = false;
-    ;
-    for (i = 0; i < maxLen; i++)
+    for (int i = 0; i < maxLen; i++)
     {
       boolean atLeastOne = false;
       boolean startNfaNeeded = false;
-      tab = (Hashtable) charPosKind.get (i);
+      tab = charPosKind.get (i);
       final String [] keys = ReArrange (tab);
 
-      final StringBuffer params = new StringBuffer ();
+      final StringBuilder params = new StringBuilder ();
       params.append ("(");
       if (i != 0)
       {
         if (i == 1)
         {
-          for (j = 0; j < maxLongsReqd - 1; j++)
+          int j = 0;
+          for (; j < maxLongsReqd - 1; j++)
             if (i <= maxLenForActive[j])
             {
               if (atLeastOne)
@@ -808,7 +807,8 @@ public class RStringLiteral extends RegularExpression
         }
         else
         {
-          for (j = 0; j < maxLongsReqd - 1; j++)
+          int j = 0;
+          for (; j < maxLongsReqd - 1; j++)
             if (i <= maxLenForActive[j] + 1)
             {
               if (atLeastOne)
@@ -860,7 +860,8 @@ public class RStringLiteral extends RegularExpression
           atLeastOne = false;
           codeGenerator.genCode ("   if ((");
 
-          for (j = 0; j < maxLongsReqd - 1; j++)
+          int j = 0;
+          for (; j < maxLongsReqd - 1; j++)
             if (i <= maxLenForActive[j] + 1)
             {
               if (atLeastOne)
@@ -924,8 +925,8 @@ public class RStringLiteral extends RegularExpression
             codeGenerator.genCodeLine ("   fprintf(debugStream, \"   Possible string literal matches : { \");");
           }
 
-          final StringBuffer fmt = new StringBuffer ();
-          final StringBuffer args = new StringBuffer ();
+          final StringBuilder fmt = new StringBuilder ();
+          final StringBuilder args = new StringBuilder ();
           for (int vecs = 0; vecs < maxStrKind / 64 + 1; vecs++)
           {
             if (i <= maxLenForActive[vecs])
@@ -990,7 +991,9 @@ public class RStringLiteral extends RegularExpression
         if (!LexGen.mixed[LexGen.lexStateIndex] && NfaState.generatedStates != 0)
         {
           codeGenerator.genCode ("      jjStopStringLiteralDfa" + LexGen.lexStateSuffix + "(" + (i - 1) + ", ");
-          for (k = 0; k < maxLongsReqd - 1; k++)
+
+          int k = 0;
+          for (; k < maxLongsReqd - 1; k++)
           {
             if (i <= maxLenForActive[k])
               codeGenerator.genCode ("active" + k + ", ");
@@ -1088,7 +1091,7 @@ public class RStringLiteral extends RegularExpression
       CaseLoop: for (int q = 0; q < keys.length; q++)
       {
         key = keys[q];
-        info = (KindInfo) tab.get (key);
+        info = tab.get (key);
         ifGenerated = false;
         final char c = key.charAt (0);
 
@@ -1098,11 +1101,12 @@ public class RStringLiteral extends RegularExpression
             (NfaState.generatedStates == 0 || !NfaState.CanStartNfaUsingAscii (c)))
         {
           int kind;
-          for (j = 0; j < maxLongsReqd; j++)
+          int j = 0;
+          for (; j < maxLongsReqd; j++)
             if (info.finalKinds[j] != 0L)
               break;
 
-          for (k = 0; k < 64; k++)
+          for (int k = 0; k < 64; k++)
             if ((info.finalKinds[j] & (1L << k)) != 0L && !subString[kind = (j * 64 + k)])
             {
               if ((intermediateKinds != null &&
@@ -1151,12 +1155,12 @@ public class RStringLiteral extends RegularExpression
 
         if (info.finalKindCnt != 0)
         {
-          for (j = 0; j < maxLongsReqd; j++)
+          for (int j = 0; j < maxLongsReqd; j++)
           {
             if ((matchedKind = info.finalKinds[j]) == 0L)
               continue;
 
-            for (k = 0; k < 64; k++)
+            for (int k = 0; k < 64; k++)
             {
               if ((matchedKind & (1L << k)) == 0L)
                 continue;
@@ -1263,7 +1267,8 @@ public class RStringLiteral extends RegularExpression
             codeGenerator.genCode ("         return ");
 
             codeGenerator.genCode ("jjMoveStringLiteralDfa" + (i + 1) + LexGen.lexStateSuffix + "(");
-            for (j = 0; j < maxLongsReqd - 1; j++)
+            int j = 0;
+            for (; j < maxLongsReqd - 1; j++)
               if ((i + 1) <= maxLenForActive[j])
               {
                 if (atLeastOne)
@@ -1293,7 +1298,8 @@ public class RStringLiteral extends RegularExpression
 
             codeGenerator.genCode ("jjMoveStringLiteralDfa" + (i + 1) + LexGen.lexStateSuffix + "(");
 
-            for (j = 0; j < maxLongsReqd - 1; j++)
+            int j = 0;
+            for (; j < maxLongsReqd - 1; j++)
               if ((i + 1) <= maxLenForActive[j] + 1)
               {
                 if (atLeastOne)
@@ -1410,7 +1416,9 @@ public class RStringLiteral extends RegularExpression
              */
 
             codeGenerator.genCode ("   return jjStartNfa" + LexGen.lexStateSuffix + "(" + (i - 1) + ", ");
-            for (k = 0; k < maxLongsReqd - 1; k++)
+
+            int k = 0;
+            for (; k < maxLongsReqd - 1; k++)
               if (i <= maxLenForActive[k])
                 codeGenerator.genCode ("active" + k + ", ");
               else
@@ -1459,15 +1467,16 @@ public class RStringLiteral extends RegularExpression
   static void GenerateNfaStartStates (final CodeGenerator codeGenerator, final NfaState initialState)
   {
     final boolean [] seen = new boolean [NfaState.generatedStates];
-    final Hashtable stateSets = new Hashtable ();
+    final Map <String, String> stateSets = new HashMap <> ();
     String stateSetString = "";
     int i, j, kind, jjmatchedPos = 0;
     final int maxKindsReqd = maxStrKind / 64 + 1;
     long [] actives;
-    List newStates = new ArrayList ();
-    List oldStates = null, jjtmpStates;
+    List <NfaState> newStates = new ArrayList <> ();
+    List <NfaState> oldStates = null;
+    List <NfaState> jjtmpStates;
 
-    statesForPos = new Hashtable [maxLen];
+    statesForPos = new Map [maxLen];
     intermediateKinds = new int [maxStrKind + 1] [];
     intermediateMatchedPos = new int [maxStrKind + 1] [];
 
@@ -1483,7 +1492,8 @@ public class RStringLiteral extends RegularExpression
 
       try
       {
-        if ((oldStates = (List) initialState.epsilonMoves.clone ()) == null || oldStates.size () == 0)
+        oldStates = new ArrayList <> (initialState.epsilonMoves);
+        if (oldStates.size () == 0)
         {
           DumpNfaStartStatesCode (statesForPos, codeGenerator);
           return;
@@ -1509,7 +1519,7 @@ public class RStringLiteral extends RegularExpression
         }
         else
         {
-          kind = NfaState.MoveFromSet (image.charAt (j), oldStates, newStates);
+          kind = NfaState.moveFromSet (image.charAt (j), oldStates, newStates);
           oldStates.clear ();
 
           if (j == 0 &&
@@ -1550,16 +1560,16 @@ public class RStringLiteral extends RegularExpression
           stateSets.put (stateSetString, stateSetString);
           for (p = 0; p < newStates.size (); p++)
           {
-            if (seen[((NfaState) newStates.get (p)).stateName])
-              ((NfaState) newStates.get (p)).inNextOf++;
+            if (seen[newStates.get (p).stateName])
+              newStates.get (p).inNextOf++;
             else
-              seen[((NfaState) newStates.get (p)).stateName] = true;
+              seen[newStates.get (p).stateName] = true;
           }
         }
         else
         {
           for (p = 0; p < newStates.size (); p++)
-            seen[((NfaState) newStates.get (p)).stateName] = true;
+            seen[newStates.get (p).stateName] = true;
         }
 
         jjtmpStates = oldStates;
@@ -1567,13 +1577,10 @@ public class RStringLiteral extends RegularExpression
         (newStates = jjtmpStates).clear ();
 
         if (statesForPos[j] == null)
-          statesForPos[j] = new Hashtable ();
+          statesForPos[j] = new HashMap <> ();
 
-        if ((actives = ((long []) statesForPos[j].get (kind + ", " + jjmatchedPos + ", " + stateSetString))) == null)
-        {
-          actives = new long [maxKindsReqd];
-          statesForPos[j].put (kind + ", " + jjmatchedPos + ", " + stateSetString, actives);
-        }
+        actives = statesForPos[j].computeIfAbsent (kind + ", " + jjmatchedPos + ", " + stateSetString,
+                                                   k -> new long [maxKindsReqd]);
 
         actives[i / 64] |= 1L << (i % 64);
         // String name = NfaState.StoreStateSet(stateSetString);
@@ -1587,7 +1594,7 @@ public class RStringLiteral extends RegularExpression
     }
   }
 
-  static void DumpNfaStartStatesCode (final Hashtable [] statesForPos, final CodeGenerator codeGenerator)
+  static void DumpNfaStartStatesCode (final Map <String, long []> [] statesForPos, final CodeGenerator codeGenerator)
   {
     if (maxStrKind == 0)
     { // No need to generate this function
@@ -1599,7 +1606,7 @@ public class RStringLiteral extends RegularExpression
     boolean condGenerated = false;
     int ind = 0;
 
-    final StringBuffer params = new StringBuffer ();
+    final StringBuilder params = new StringBuilder ();
     for (i = 0; i < maxKindsReqd - 1; i++)
       params.append ("" + Options.getLongType () + " active" + i + ", ");
     params.append ("" + Options.getLongType () + " active" + i + ")");
@@ -1661,11 +1668,10 @@ public class RStringLiteral extends RegularExpression
 
       codeGenerator.genCodeLine ("      case " + i + ":");
 
-      final Enumeration e = statesForPos[i].keys ();
-      while (e.hasMoreElements ())
+      for (final Map.Entry <String, long []> aEntry : statesForPos[i].entrySet ())
       {
-        String stateSetString = (String) e.nextElement ();
-        final long [] actives = (long []) statesForPos[i].get (stateSetString);
+        String stateSetString = aEntry.getKey ();
+        final long [] actives = aEntry.getValue ();
 
         for (int j = 0; j < maxKindsReqd; j++)
         {
@@ -1819,9 +1825,9 @@ public class RStringLiteral extends RegularExpression
   }
 
   @Override
-  public StringBuffer dump (final int indent, final Set alreadyDumped)
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final StringBuffer sb = super.dump (indent, alreadyDumped).append (' ').append (image);
+    final StringBuilder sb = super.dump (indent, alreadyDumped).append (' ').append (image);
     return sb;
   }
 
@@ -1832,9 +1838,9 @@ public class RStringLiteral extends RegularExpression
   }
 
   /*
-   * static void GenerateData(TokenizerData tokenizerData) { Hashtable tab;
-   * String key; KindInfo info; for (int i = 0; i < maxLen; i++) { tab =
-   * (Hashtable)charPosKind.get(i); String[] keys = ReArrange(tab); if
+   * static void GenerateData(TokenizerData tokenizerData) { Map tab; String
+   * key; KindInfo info; for (int i = 0; i < maxLen; i++) { tab =
+   * (Map)charPosKind.get(i); String[] keys = ReArrange(tab); if
    * (Options.getIgnoreCase()) { for (String s : keys) { char c = s.charAt(0);
    * tab.put(Character.toLowerCase(c), tab.get(c));
    * tab.put(Character.toUpperCase(c), tab.get(c)); } } for (int q = 0; q <

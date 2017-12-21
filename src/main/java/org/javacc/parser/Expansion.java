@@ -123,19 +123,26 @@ public class Expansion
 
   protected static final String eol = System.getProperty ("line.separator", "\n");
 
-  protected StringBuffer dumpPrefix (final int indent)
+  protected StringBuilder dumpPrefix (final int indent)
   {
-    final StringBuffer sb = new StringBuffer (128);
+    final StringBuilder sb = new StringBuilder (indent * 2);
     for (int i = 0; i < indent; i++)
       sb.append ("  ");
     return sb;
   }
 
-  public StringBuffer dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  /**
+   * @param indent
+   *        indentation level
+   * @param alreadyDumped
+   *        what was already dumped?
+   * @return String
+   */
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final StringBuffer value = dumpPrefix (indent).append (System.identityHashCode (this))
-                                                  .append (" ")
-                                                  .append (getSimpleName ());
+    final StringBuilder value = dumpPrefix (indent).append (System.identityHashCode (this))
+                                                   .append (" ")
+                                                   .append (getSimpleName ());
     return value;
   }
 
