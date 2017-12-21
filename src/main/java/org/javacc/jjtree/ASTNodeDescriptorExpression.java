@@ -27,21 +27,25 @@
  */
 package org.javacc.jjtree;
 
-
-public class ASTNodeDescriptorExpression extends JJTreeNode {
-  ASTNodeDescriptorExpression(int id) {
-    super(id);
+public class ASTNodeDescriptorExpression extends JJTreeNode
+{
+  ASTNodeDescriptorExpression (final int id)
+  {
+    super (id);
   }
 
-  String translateImage(Token t)
+  @Override
+  String translateImage (final Token t)
   {
-    return whiteOut(t);
+    return whiteOut (t);
   }
 
   /** Accept the visitor. **/
-  public Object jjtAccept(JJTreeParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+  @Override
+  public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
+  {
+    return visitor.visit (this, data);
   }
 }
 
-/*end*/
+/* end */

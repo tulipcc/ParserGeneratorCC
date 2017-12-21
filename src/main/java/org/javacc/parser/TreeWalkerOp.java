@@ -28,21 +28,21 @@
 package org.javacc.parser;
 
 /**
- * Objects of this type are passed to the tree walker
- * routines in ExpansionTreeWalker.
+ * Objects of this type are passed to the tree walker routines in
+ * ExpansionTreeWalker.
  */
-public interface TreeWalkerOp {
+public interface TreeWalkerOp
+{
 
   /**
-   * When called at a particular node, this specifies to the
-   * tree walker if it should visit more nodes under this node.
+   * When called at a particular node, this specifies to the tree walker if it
+   * should visit more nodes under this node.
    */
-  boolean goDeeper(Expansion e);
+  boolean goDeeper (Expansion e);
 
   /**
-   * When a node is visited, this method is invoked with the
-   * node as parameter.
+   * When a node is visited, this method is invoked with the node as parameter.
    */
-  void action(Expansion e);
+  void action (Expansion e);
 
 }

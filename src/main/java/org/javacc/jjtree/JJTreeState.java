@@ -41,212 +41,218 @@ import org.javacc.parser.OutputFile;
 final class JJTreeState
 {
 
-  private JJTreeState() {}
+  private JJTreeState ()
+  {}
 
-  static void insertParserMembers(IO io) {
+  static void insertParserMembers (final IO io)
+  {
     String s;
 
-    if (JJTreeOptions.getStatic()) {
+    if (Options.getStatic ())
+    {
       s = "static ";
-    } else {
+    }
+    else
+    {
       s = "";
     }
 
-    io.println();
-    io.println("  protected " + s + nameState() +
-         " jjtree = new " + nameState() + "();");
-    io.println();
+    io.println ();
+    io.println ("  protected " + s + nameState () + " jjtree = new " + nameState () + "();");
+    io.println ();
   }
 
-
-  private static String nameState() {
+  private static String nameState ()
+  {
     return "JJT" + JJTreeGlobals.parserName + "State";
   }
 
-
-  static void generateTreeState_java()
+  static void generateTreeState_java ()
   {
-    File file = new File(JJTreeOptions.getJJTreeOutputDirectory(), nameState() + ".java");
+    final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), nameState () + ".java");
 
-    try {
-      OutputFile outputFile = new OutputFile(file);
-      PrintWriter ostr = outputFile.getPrintWriter();
-      NodeFiles.generatePrologue(ostr);
-      insertState(ostr);
-      outputFile.close();
-    } catch (IOException e) {
-      throw new Error(e.toString());
+    try
+    {
+      final OutputFile outputFile = new OutputFile (file);
+      final PrintWriter ostr = outputFile.getPrintWriter ();
+      NodeFiles.generatePrologue (ostr);
+      insertState (ostr);
+      outputFile.close ();
+    }
+    catch (final IOException e)
+    {
+      throw new Error (e.toString ());
     }
   }
 
+  private static void insertState (final PrintWriter ostr)
+  {
+    ostr.println ("public class " + nameState () + " {");
 
-  private static void insertState(PrintWriter ostr) {
-    ostr.println("public class " + nameState() + " {");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("  private java.util.List nodes;");
+    else
+      ostr.println ("  private java.util.List<Node> nodes;");
 
-    if (!JJTreeOptions.getGenerateGenerics())
-       ostr.println("  private java.util.List nodes;");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("  private java.util.List marks;");
     else
-       ostr.println("  private java.util.List<Node> nodes;");
+      ostr.println ("  private java.util.List<Integer> marks;");
 
-    if (!JJTreeOptions.getGenerateGenerics())
-       ostr.println("  private java.util.List marks;");
-    else
-       ostr.println("  private java.util.List<Integer> marks;");
+    ostr.println ("");
+    ostr.println ("  private int sp;        // number of nodes on stack");
+    ostr.println ("  private int mk;        // current mark");
+    ostr.println ("  private boolean node_created;");
+    ostr.println ("");
+    ostr.println ("  public " + nameState () + "() {");
 
-    ostr.println("");
-    ostr.println("  private int sp;        // number of nodes on stack");
-    ostr.println("  private int mk;        // current mark");
-    ostr.println("  private boolean node_created;");
-    ostr.println("");
-    ostr.println("  public " + nameState() + "() {");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("    nodes = new java.util.ArrayList();");
+    else
+      ostr.println ("    nodes = new java.util.ArrayList<Node>();");
 
-    if (!JJTreeOptions.getGenerateGenerics())
-       ostr.println("    nodes = new java.util.ArrayList();");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("    marks = new java.util.ArrayList();");
     else
-       ostr.println("    nodes = new java.util.ArrayList<Node>();");
+      ostr.println ("    marks = new java.util.ArrayList<Integer>();");
 
-    if (!JJTreeOptions.getGenerateGenerics())
-       ostr.println("    marks = new java.util.ArrayList();");
+    ostr.println ("    sp = 0;");
+    ostr.println ("    mk = 0;");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("  /* Determines whether the current node was actually closed and");
+    ostr.println ("     pushed.  This should only be called in the final user action of a");
+    ostr.println ("     node scope.  */");
+    ostr.println ("  public boolean nodeCreated() {");
+    ostr.println ("    return node_created;");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("  /* Call this to reinitialize the node stack.  It is called");
+    ostr.println ("     automatically by the parser's ReInit() method. */");
+    ostr.println ("  public void reset() {");
+    ostr.println ("    nodes.clear();");
+    ostr.println ("    marks.clear();");
+    ostr.println ("    sp = 0;");
+    ostr.println ("    mk = 0;");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("  /* Returns the root node of the AST.  It only makes sense to call");
+    ostr.println ("     this after a successful parse. */");
+    ostr.println ("  public Node rootNode() {");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("    return (Node)nodes.get(0);");
     else
-       ostr.println("    marks = new java.util.ArrayList<Integer>();");
-
-    ostr.println("    sp = 0;");
-    ostr.println("    mk = 0;");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("  /* Determines whether the current node was actually closed and");
-    ostr.println("     pushed.  This should only be called in the final user action of a");
-    ostr.println("     node scope.  */");
-    ostr.println("  public boolean nodeCreated() {");
-    ostr.println("    return node_created;");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("  /* Call this to reinitialize the node stack.  It is called");
-    ostr.println("     automatically by the parser's ReInit() method. */");
-    ostr.println("  public void reset() {");
-    ostr.println("    nodes.clear();");
-    ostr.println("    marks.clear();");
-    ostr.println("    sp = 0;");
-    ostr.println("    mk = 0;");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("  /* Returns the root node of the AST.  It only makes sense to call");
-    ostr.println("     this after a successful parse. */");
-    ostr.println("  public Node rootNode() {");
-    if (!JJTreeOptions.getGenerateGenerics())
-      ostr.println("    return (Node)nodes.get(0);");
+      ostr.println ("    return nodes.get(0);");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("  /* Pushes a node on to the stack. */");
+    ostr.println ("  public void pushNode(Node n) {");
+    ostr.println ("    nodes.add(n);");
+    ostr.println ("    ++sp;");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("  /* Returns the node on the top of the stack, and remove it from the");
+    ostr.println ("     stack.  */");
+    ostr.println ("  public Node popNode() {");
+    ostr.println ("    if (--sp < mk) {");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("      mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
     else
-      ostr.println("    return nodes.get(0);");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("  /* Pushes a node on to the stack. */");
-    ostr.println("  public void pushNode(Node n) {");
-    ostr.println("    nodes.add(n);");
-    ostr.println("    ++sp;");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("  /* Returns the node on the top of the stack, and remove it from the");
-    ostr.println("     stack.  */");
-    ostr.println("  public Node popNode() {");
-    ostr.println("    if (--sp < mk) {");
-    if (!JJTreeOptions.getGenerateGenerics())
-      ostr.println("      mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
+      ostr.println ("      mk = marks.remove(marks.size()-1);");
+    ostr.println ("    }");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("    return (Node)nodes.remove(nodes.size()-1);");
     else
-      ostr.println("      mk = marks.remove(marks.size()-1);");
-    ostr.println("    }");
-    if (!JJTreeOptions.getGenerateGenerics())
-      ostr.println("    return (Node)nodes.remove(nodes.size()-1);");
+      ostr.println ("    return nodes.remove(nodes.size()-1);");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("  /* Returns the node currently on the top of the stack. */");
+    ostr.println ("  public Node peekNode() {");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("    return (Node)nodes.get(nodes.size()-1);");
     else
-      ostr.println("    return nodes.remove(nodes.size()-1);");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("  /* Returns the node currently on the top of the stack. */");
-    ostr.println("  public Node peekNode() {");
-    if (!JJTreeOptions.getGenerateGenerics())
-      ostr.println("    return (Node)nodes.get(nodes.size()-1);");
+      ostr.println ("    return nodes.get(nodes.size()-1);");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("  /* Returns the number of children on the stack in the current node");
+    ostr.println ("     scope. */");
+    ostr.println ("  public int nodeArity() {");
+    ostr.println ("    return sp - mk;");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("");
+    ostr.println ("  public void clearNodeScope(Node n) {");
+    ostr.println ("    while (sp > mk) {");
+    ostr.println ("      popNode();");
+    ostr.println ("    }");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("    mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
     else
-      ostr.println("    return nodes.get(nodes.size()-1);");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("  /* Returns the number of children on the stack in the current node");
-    ostr.println("     scope. */");
-    ostr.println("  public int nodeArity() {");
-    ostr.println("    return sp - mk;");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("");
-    ostr.println("  public void clearNodeScope(Node n) {");
-    ostr.println("    while (sp > mk) {");
-    ostr.println("      popNode();");
-    ostr.println("    }");
-    if (!JJTreeOptions.getGenerateGenerics())
-      ostr.println("    mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
+      ostr.println ("    mk = marks.remove(marks.size()-1);");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("");
+    ostr.println ("  public void openNodeScope(Node n) {");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("    marks.add(new Integer(mk));");
     else
-      ostr.println("    mk = marks.remove(marks.size()-1);");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("");
-    ostr.println("  public void openNodeScope(Node n) {");
-    if (!JJTreeOptions.getGenerateGenerics())
-      ostr.println("    marks.add(new Integer(mk));");
+      ostr.println ("    marks.add(mk);");
+    ostr.println ("    mk = sp;");
+    ostr.println ("    n.jjtOpen();");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("");
+    ostr.println ("  /* A definite node is constructed from a specified number of");
+    ostr.println ("     children.  That number of nodes are popped from the stack and");
+    ostr.println ("     made the children of the definite node.  Then the definite node");
+    ostr.println ("     is pushed on to the stack. */");
+    ostr.println ("  public void closeNodeScope(Node n, int num) {");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("    mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
     else
-      ostr.println("    marks.add(mk);");
-    ostr.println("    mk = sp;");
-    ostr.println("    n.jjtOpen();");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("");
-    ostr.println("  /* A definite node is constructed from a specified number of");
-    ostr.println("     children.  That number of nodes are popped from the stack and");
-    ostr.println("     made the children of the definite node.  Then the definite node");
-    ostr.println("     is pushed on to the stack. */");
-    ostr.println("  public void closeNodeScope(Node n, int num) {");
-    if (!JJTreeOptions.getGenerateGenerics())
-      ostr.println("    mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
+      ostr.println ("    mk = marks.remove(marks.size()-1);");
+    ostr.println ("    while (num-- > 0) {");
+    ostr.println ("      Node c = popNode();");
+    ostr.println ("      c.jjtSetParent(n);");
+    ostr.println ("      n.jjtAddChild(c, num);");
+    ostr.println ("    }");
+    ostr.println ("    n.jjtClose();");
+    ostr.println ("    pushNode(n);");
+    ostr.println ("    node_created = true;");
+    ostr.println ("  }");
+    ostr.println ("");
+    ostr.println ("");
+    ostr.println ("  /* A conditional node is constructed if its condition is true.  All");
+    ostr.println ("     the nodes that have been pushed since the node was opened are");
+    ostr.println ("     made children of the conditional node, which is then pushed");
+    ostr.println ("     on to the stack.  If the condition is false the node is not");
+    ostr.println ("     constructed and they are left on the stack. */");
+    ostr.println ("  public void closeNodeScope(Node n, boolean condition) {");
+    ostr.println ("    if (condition) {");
+    ostr.println ("      int a = nodeArity();");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("      mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
     else
-      ostr.println("    mk = marks.remove(marks.size()-1);");
-    ostr.println("    while (num-- > 0) {");
-    ostr.println("      Node c = popNode();");
-    ostr.println("      c.jjtSetParent(n);");
-    ostr.println("      n.jjtAddChild(c, num);");
-    ostr.println("    }");
-    ostr.println("    n.jjtClose();");
-    ostr.println("    pushNode(n);");
-    ostr.println("    node_created = true;");
-    ostr.println("  }");
-    ostr.println("");
-    ostr.println("");
-    ostr.println("  /* A conditional node is constructed if its condition is true.  All");
-    ostr.println("     the nodes that have been pushed since the node was opened are");
-    ostr.println("     made children of the conditional node, which is then pushed");
-    ostr.println("     on to the stack.  If the condition is false the node is not");
-    ostr.println("     constructed and they are left on the stack. */");
-    ostr.println("  public void closeNodeScope(Node n, boolean condition) {");
-    ostr.println("    if (condition) {");
-    ostr.println("      int a = nodeArity();");
-    if (!JJTreeOptions.getGenerateGenerics())
-      ostr.println("      mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
+      ostr.println ("      mk = marks.remove(marks.size()-1);");
+    ostr.println ("      while (a-- > 0) {");
+    ostr.println ("        Node c = popNode();");
+    ostr.println ("        c.jjtSetParent(n);");
+    ostr.println ("        n.jjtAddChild(c, a);");
+    ostr.println ("      }");
+    ostr.println ("      n.jjtClose();");
+    ostr.println ("      pushNode(n);");
+    ostr.println ("      node_created = true;");
+    ostr.println ("    } else {");
+    if (!Options.getGenerateGenerics ())
+      ostr.println ("      mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
     else
-      ostr.println("      mk = marks.remove(marks.size()-1);");
-    ostr.println("      while (a-- > 0) {");
-    ostr.println("        Node c = popNode();");
-    ostr.println("        c.jjtSetParent(n);");
-    ostr.println("        n.jjtAddChild(c, a);");
-    ostr.println("      }");
-    ostr.println("      n.jjtClose();");
-    ostr.println("      pushNode(n);");
-    ostr.println("      node_created = true;");
-    ostr.println("    } else {");
-    if (!JJTreeOptions.getGenerateGenerics())
-      ostr.println("      mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
-    else
-      ostr.println("      mk = marks.remove(marks.size()-1);");
-    ostr.println("      node_created = false;");
-    ostr.println("    }");
-    ostr.println("  }");
-    ostr.println("}");
+      ostr.println ("      mk = marks.remove(marks.size()-1);");
+    ostr.println ("      node_created = false;");
+    ostr.println ("    }");
+    ostr.println ("  }");
+    ostr.println ("}");
   }
 
 }
 
-/*end*/
+/* end */

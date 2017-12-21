@@ -27,21 +27,23 @@
  */
 package org.javacc.jjtree;
 
-
 public class ASTExpansionNodeScope extends JJTreeNode
 {
-  ASTExpansionNodeScope(int id) {
-    super(id);
+  ASTExpansionNodeScope (final int id)
+  {
+    super (id);
   }
 
   NodeScope node_scope;
   JJTreeNode expansion_unit;
 
   /** Accept the visitor. **/
-  public Object jjtAccept(JJTreeParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+  @Override
+  public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
+  {
+    return visitor.visit (this, data);
   }
 
 }
 
-/*end*/
+/* end */

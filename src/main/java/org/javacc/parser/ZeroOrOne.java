@@ -34,28 +34,33 @@ import java.util.Set;
  * Describes zero-or-one expansions (e.g., [foo], foo?).
  */
 
-public class ZeroOrOne extends Expansion {
+public class ZeroOrOne extends Expansion
+{
 
   /**
    * The expansion which is repeated zero or one times.
    */
   public Expansion expansion;
 
-  public ZeroOrOne() {}
+  public ZeroOrOne ()
+  {}
 
-    public ZeroOrOne(Token t, Expansion e) {
-        this.setLine(t.beginLine);
-        this.setColumn(t.beginColumn);
-        this.expansion = e;
-        e.parent = this;
-    }
+  public ZeroOrOne (final Token t, final Expansion e)
+  {
+    this.setLine (t.beginLine);
+    this.setColumn (t.beginColumn);
+    this.expansion = e;
+    e.parent = this;
+  }
 
-    public StringBuffer dump(int indent, Set<? super Expansion> alreadyDumped) {
-      StringBuffer sb = super.dump(indent, alreadyDumped);
-      if (alreadyDumped.contains(this))
-        return sb;
-      alreadyDumped.add(this);
-      sb.append(eol).append(expansion.dump(indent + 1, alreadyDumped));
+  @Override
+  public StringBuffer dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  {
+    final StringBuffer sb = super.dump (indent, alreadyDumped);
+    if (alreadyDumped.contains (this))
       return sb;
-    }
+    alreadyDumped.add (this);
+    sb.append (eol).append (expansion.dump (indent + 1, alreadyDumped));
+    return sb;
+  }
 }

@@ -28,27 +28,30 @@
 
 package org.javacc.jjtree;
 
-
 public class ASTBNF extends ASTProduction
 {
-  ASTBNF(int id) {
-    super(id);
-    throws_list.add("ParseException");
-    throws_list.add("RuntimeException");
+  ASTBNF (final int id)
+  {
+    super (id);
+    throws_list.add ("ParseException");
+    throws_list.add ("RuntimeException");
   }
 
   Token declBeginLoc;
 
-  public String toString()
+  @Override
+  public String toString ()
   {
-    return super.toString() + ": " + name;
+    return super.toString () + ": " + name;
   }
 
   /** Accept the visitor. **/
-  public Object jjtAccept(JJTreeParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+  @Override
+  public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
+  {
+    return visitor.visit (this, data);
   }
 
 }
 
-/*end*/
+/* end */

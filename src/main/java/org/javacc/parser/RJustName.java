@@ -29,29 +29,32 @@
 package org.javacc.parser;
 
 /**
- * Describes regular expressions which are referred to just by
- * their name.  This means that a regular expression with this
- * name has been declared earlier.
+ * Describes regular expressions which are referred to just by their name. This
+ * means that a regular expression with this name has been declared earlier.
  */
 
-public class RJustName extends RegularExpression {
+public class RJustName extends RegularExpression
+{
 
   /**
    * "regexpr" points to the regular expression denoted by the name.
    */
   public RegularExpression regexpr;
 
-  public Nfa GenerateNfa(boolean ignoreCase)
+  @Override
+  public Nfa GenerateNfa (final boolean ignoreCase)
   {
-     return regexpr.GenerateNfa(ignoreCase);
+    return regexpr.GenerateNfa (ignoreCase);
   }
 
-    public RJustName() {}
+  public RJustName ()
+  {}
 
-    public RJustName(Token token, String image) {
-        this.setLine(token.beginLine);
-        this.setColumn(token.beginColumn);
-        this.label = image;
-    }
+  public RJustName (final Token token, final String image)
+  {
+    this.setLine (token.beginLine);
+    this.setColumn (token.beginColumn);
+    this.label = image;
+  }
 
 }

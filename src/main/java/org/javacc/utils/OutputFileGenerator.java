@@ -25,160 +25,175 @@
 
 package org.javacc.utils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Generates boiler-plate files from templates. Only very basic
- * template processing is supplied - if we need something more
- * sophisticated I suggest we use a third-party library.
- * 
+ * Generates boiler-plate files from templates. Only very basic template
+ * processing is supplied - if we need something more sophisticated I suggest we
+ * use a third-party library.
+ *
  * @author paulcager
  * @since 4.2
  */
-public class OutputFileGenerator {
+public class OutputFileGenerator
+{
 
   /**
-   * @param templateName the name of the template. E.g. 
-   *        "/templates/Token.template".
-   * @param options the processing options in force, such
-   *        as "STATIC=yes" 
+   * @param templateName
+   *        the name of the template. E.g. "/templates/Token.template".
+   * @param options
+   *        the processing options in force, such as "STATIC=yes"
    */
-  public OutputFileGenerator(String templateName, Map options) {
+  public OutputFileGenerator (final String templateName, final Map options)
+  {
     this.templateName = templateName;
     this.options = options;
   }
 
   private final String templateName;
-  private final Map options; 
-  
+  private final Map options;
+
   private String currentLine;
 
   /**
    * Generate the output file.
+   * 
    * @param out
    * @throws IOException
    */
-  public void generate(PrintWriter out) throws IOException
+  public void generate (final PrintWriter out) throws IOException
   {
-    InputStream is = getClass().getResourceAsStream(templateName);
+    final InputStream is = getClass ().getResourceAsStream (templateName);
     if (is == null)
-      throw new IOException("Invalid template name: " + templateName);
-    BufferedReader in = new BufferedReader(new InputStreamReader(is)); 
-    process(in, out, false);
+      throw new IOException ("Invalid template name: " + templateName);
+    final BufferedReader in = new BufferedReader (new InputStreamReader (is));
+    process (in, out, false);
   }
-  
-  private String peekLine(BufferedReader in) throws IOException
+
+  private String peekLine (final BufferedReader in) throws IOException
   {
     if (currentLine == null)
-      currentLine = in.readLine();
-    
+      currentLine = in.readLine ();
+
     return currentLine;
   }
-  
-  private String getLine(BufferedReader in) throws IOException
+
+  private String getLine (final BufferedReader in) throws IOException
   {
-    String line = currentLine;
+    final String line = currentLine;
     currentLine = null;
-    
+
     if (line == null)
-      in.readLine();
-    
+      in.readLine ();
+
     return line;
   }
-  
-  private boolean evaluate(String condition)
+
+  private boolean evaluate (String condition)
   {
-    condition = condition.trim();
-    
+    condition = condition.trim ();
+
     try
     {
-      return new ConditionParser(new StringReader(condition)).CompilationUnit(options);
+      return new ConditionParser (new StringReader (condition)).CompilationUnit (options);
     }
-    catch (ParseException e)
+    catch (final ParseException e)
     {
       return false;
     }
   }
-  
-  private String substitute(String text) throws IOException
+
+  private String substitute (final String text) throws IOException
   {
     int startPos;
-    
-    if ( (startPos = text.indexOf("${")) == -1)
+
+    if ((startPos = text.indexOf ("${")) == -1)
     {
       return text;
     }
-    
+
     // Find matching "}".
     int braceDepth = 1;
     int endPos = startPos + 2;
-    
-    while ( endPos < text.length() && braceDepth > 0)
+
+    while (endPos < text.length () && braceDepth > 0)
     {
-      if (text.charAt(endPos) == '{')
+      if (text.charAt (endPos) == '{')
         braceDepth++;
-      else if (text.charAt(endPos) == '}')
-        braceDepth--;
-      
+      else
+        if (text.charAt (endPos) == '}')
+          braceDepth--;
+
       endPos++;
     }
-    
+
     if (braceDepth != 0)
-      throw new IOException("Mismatched \"{}\" in template string: " + text); 
-    
-    final String variableExpression = text.substring(startPos + 2, endPos - 1);
+      throw new IOException ("Mismatched \"{}\" in template string: " + text);
+
+    final String variableExpression = text.substring (startPos + 2, endPos - 1);
 
     // Find the end of the variable name
     String value = null;
-    
-    for (int i = 0; i < variableExpression.length(); i++)
+
+    for (int i = 0; i < variableExpression.length (); i++)
     {
-      char ch = variableExpression.charAt(i);
-      
-      if (ch == ':' && i < variableExpression.length() - 1 && variableExpression.charAt(i+1) == '-' )
+      final char ch = variableExpression.charAt (i);
+
+      if (ch == ':' && i < variableExpression.length () - 1 && variableExpression.charAt (i + 1) == '-')
       {
-        value = substituteWithDefault(variableExpression.substring(0, i), variableExpression.substring(i + 2));
+        value = substituteWithDefault (variableExpression.substring (0, i), variableExpression.substring (i + 2));
         break;
       }
-      else if (ch == '?')
-      {
-        value = substituteWithConditional(variableExpression.substring(0, i), variableExpression.substring(i + 1));
-        break;
-      }
-      else if (ch != '_' && !Character.isJavaIdentifierPart(ch))
-      {
-        throw new IOException("Invalid variable in " + text);
-      }
+      else
+        if (ch == '?')
+        {
+          value = substituteWithConditional (variableExpression.substring (0, i), variableExpression.substring (i + 1));
+          break;
+        }
+        else
+          if (ch != '_' && !Character.isJavaIdentifierPart (ch))
+          {
+            throw new IOException ("Invalid variable in " + text);
+          }
     }
-    
+
     if (value == null)
     {
-      value = substituteWithDefault(variableExpression, "");
+      value = substituteWithDefault (variableExpression, "");
     }
-    
-    return text.substring(0, startPos) + value + text.substring(endPos);
+
+    return text.substring (0, startPos) + value + text.substring (endPos);
   }
-  
+
   /**
    * @param substring
    * @param defaultValue
    * @return
-   * @throws IOException 
+   * @throws IOException
    */
-  private String substituteWithConditional(String variableName, String values) throws IOException
+  private String substituteWithConditional (final String variableName, final String values) throws IOException
   {
     // Split values into true and false values.
-    
-    int pos = values.indexOf(':');
+
+    final int pos = values.indexOf (':');
     if (pos == -1)
-      throw new IOException("No ':' separator in " + values);
-    
-    if (evaluate(variableName))
-      return substitute(values.substring(0, pos));
+      throw new IOException ("No ':' separator in " + values);
+
+    if (evaluate (variableName))
+      return substitute (values.substring (0, pos));
     else
-      return substitute(values.substring(pos + 1));
+      return substitute (values.substring (pos + 1));
   }
 
   /**
@@ -186,117 +201,121 @@ public class OutputFileGenerator {
    * @param defaultValue
    * @return
    */
-  private String substituteWithDefault(String variableName, String defaultValue) throws IOException
+  private String substituteWithDefault (final String variableName, final String defaultValue) throws IOException
   {
-    Object obj = options.get(variableName.trim());
-    if (obj == null || obj.toString().length() == 0)
-      return substitute(defaultValue);
-    
-    return obj.toString();
+    final Object obj = options.get (variableName.trim ());
+    if (obj == null || obj.toString ().length () == 0)
+      return substitute (defaultValue);
+
+    return obj.toString ();
   }
 
-  private void write(PrintWriter out, String text) throws IOException
+  private void write (final PrintWriter out, String text) throws IOException
   {
-    while ( text.indexOf("${") != -1)
+    while (text.indexOf ("${") != -1)
     {
-    text = substitute(text);
+      text = substitute (text);
     }
-    
-  // TODO :: Added by Sreenivas on 12 June 2013 for 6.0 release, merged in to 6.1 release for sake of compatibility by cainsley ... This needs to be removed urgently!!!
-    if (text.startsWith("\\#")) { // Hack to escape # for C++
-      text = text.substring(1);
+
+    // TODO :: Added by Sreenivas on 12 June 2013 for 6.0 release, merged in to
+    // 6.1 release for sake of compatibility by cainsley ... This needs to be
+    // removed urgently!!!
+    if (text.startsWith ("\\#"))
+    { // Hack to escape # for C++
+      text = text.substring (1);
     }
-    out.println(text);
+    out.println (text);
   }
-  
-  private void process(BufferedReader in, PrintWriter out, boolean ignoring)
-      throws IOException {
-    //    out.println("*** process ignore=" + ignoring + " : " + peekLine(in));
-    while ( peekLine(in) != null)
+
+  private void process (final BufferedReader in, final PrintWriter out, final boolean ignoring) throws IOException
+  {
+    // out.println("*** process ignore=" + ignoring + " : " + peekLine(in));
+    while (peekLine (in) != null)
     {
-      if (peekLine(in).trim().startsWith("#if"))
+      if (peekLine (in).trim ().startsWith ("#if"))
       {
-        processIf(in, out, ignoring);
-      }
-      else if (peekLine(in).trim().startsWith("#")) 
-      {
-        break;
+        processIf (in, out, ignoring);
       }
       else
-      {
-        String line = getLine(in);
-        if (!ignoring) write(out, line);
-      }
+        if (peekLine (in).trim ().startsWith ("#"))
+        {
+          break;
+        }
+        else
+        {
+          final String line = getLine (in);
+          if (!ignoring)
+            write (out, line);
+        }
     }
 
-    out.flush();
+    out.flush ();
   }
 
-  private void processIf(BufferedReader in, PrintWriter out, boolean ignoring)  throws IOException
+  private void processIf (final BufferedReader in, final PrintWriter out, final boolean ignoring) throws IOException
   {
-        String line = getLine(in).trim();
-    assert line.trim().startsWith("#if");
+    String line = getLine (in).trim ();
+    assert line.trim ().startsWith ("#if");
     boolean foundTrueCondition = false;
-        
-    boolean condition = evaluate(line.substring(3).trim());
+
+    boolean condition = evaluate (line.substring (3).trim ());
     while (true)
     {
-      process(in, out, ignoring || foundTrueCondition || !condition);
+      process (in, out, ignoring || foundTrueCondition || !condition);
       foundTrueCondition |= condition;
 
-      if (peekLine(in) == null || !peekLine(in).trim().startsWith("#elif"))
+      if (peekLine (in) == null || !peekLine (in).trim ().startsWith ("#elif"))
         break;
 
-      condition = evaluate(getLine(in).trim().substring(5).trim());
+      condition = evaluate (getLine (in).trim ().substring (5).trim ());
     }
-        
-        if (peekLine(in) != null && peekLine(in).trim().startsWith("#else"))
-        {
-          getLine(in);   // Discard the #else line
-      process(in, out, ignoring || foundTrueCondition);
-        }
-        
-        line = getLine(in);
-        
-        if (line == null)
-          throw new IOException("Missing \"#fi\"");
-        
-        if (!line.trim().startsWith("#fi"))
-          throw new IOException("Expected \"#fi\", got: " + line);
-      }
-    
-  
-  public static void main(String[] args) throws Exception
-  {
-    Map map = new HashMap();
-    map.put("falseArg", Boolean.FALSE);
-    map.put("trueArg", Boolean.TRUE);
-    map.put("stringValue", "someString");
-    
-    new OutputFileGenerator(args[0], map).generate(new PrintWriter(args[1]));
+
+    if (peekLine (in) != null && peekLine (in).trim ().startsWith ("#else"))
+    {
+      getLine (in); // Discard the #else line
+      process (in, out, ignoring || foundTrueCondition);
+    }
+
+    line = getLine (in);
+
+    if (line == null)
+      throw new IOException ("Missing \"#fi\"");
+
+    if (!line.trim ().startsWith ("#fi"))
+      throw new IOException ("Expected \"#fi\", got: " + line);
   }
 
-  public static void generateFromTemplate(
-      String template, Map<String, Object> options,
-      String outputFileName) throws IOException {
-    OutputFileGenerator gen = new OutputFileGenerator(template, options);
-    StringWriter sw = new StringWriter();
-    gen.generate(new PrintWriter(sw));
-    sw.close();
-    PrintWriter fw = null;
-    try {
-      File tmp = new File(outputFileName);
-      fw = new PrintWriter(
-              new BufferedWriter(
-              new FileWriter(tmp),
-              8092
-          )
-      );
+  public static void main (final String [] args) throws Exception
+  {
+    final Map map = new HashMap ();
+    map.put ("falseArg", Boolean.FALSE);
+    map.put ("trueArg", Boolean.TRUE);
+    map.put ("stringValue", "someString");
 
-      fw.print(sw.toString());
-    } finally {
-      if (fw != null) {
-        fw.close();
+    new OutputFileGenerator (args[0], map).generate (new PrintWriter (args[1]));
+  }
+
+  public static void generateFromTemplate (final String template,
+                                           final Map <String, Object> options,
+                                           final String outputFileName) throws IOException
+  {
+    final OutputFileGenerator gen = new OutputFileGenerator (template, options);
+    final StringWriter sw = new StringWriter ();
+    gen.generate (new PrintWriter (sw));
+    sw.close ();
+    PrintWriter fw = null;
+    try
+    {
+      final File tmp = new File (outputFileName);
+      fw = new PrintWriter (new BufferedWriter (new FileWriter (tmp), 8092));
+
+      fw.print (sw.toString ());
+    }
+    finally
+    {
+      if (fw != null)
+      {
+        fw.close ();
       }
     }
   }

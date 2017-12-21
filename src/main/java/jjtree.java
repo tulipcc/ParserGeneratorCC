@@ -26,16 +26,18 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * Intermediary between OS script and main program of application.
- * Having this intermediary allows the OS scripts to be package name
- * independent.
+ * Intermediary between OS script and main program of application. Having this
+ * intermediary allows the OS scripts to be package name independent.
  */
-public final class jjtree {
+public final class jjtree
+{
 
-  private jjtree() {}
+  private jjtree ()
+  {}
 
-  public static void main(String[] args) {
-    org.javacc.jjtree.Main.main(args);
+  public static void main (final String [] args)
+  {
+    org.javacc.jjtree.Main.main (args);
   }
 
 }

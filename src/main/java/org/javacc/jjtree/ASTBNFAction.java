@@ -27,35 +27,44 @@
  */
 package org.javacc.jjtree;
 
+public class ASTBNFAction extends JJTreeNode
+{
 
-public class ASTBNFAction extends JJTreeNode {
-
-  ASTBNFAction(int id) {
-    super(id);
+  ASTBNFAction (final int id)
+  {
+    super (id);
   }
 
-  protected Node getScopingParent(NodeScope ns)
+  protected Node getScopingParent (final NodeScope ns)
   {
-    for (Node n = this.jjtGetParent(); n != null; n = n.jjtGetParent()) {
-      if (n instanceof ASTBNFNodeScope) {
-        if (((ASTBNFNodeScope)n).node_scope == ns) {
-          return n;
-        }
-      } else if (n instanceof ASTExpansionNodeScope) {
-        if (((ASTExpansionNodeScope)n).node_scope == ns) {
+    for (Node n = this.jjtGetParent (); n != null; n = n.jjtGetParent ())
+    {
+      if (n instanceof ASTBNFNodeScope)
+      {
+        if (((ASTBNFNodeScope) n).node_scope == ns)
+        {
           return n;
         }
       }
+      else
+        if (n instanceof ASTExpansionNodeScope)
+        {
+          if (((ASTExpansionNodeScope) n).node_scope == ns)
+          {
+            return n;
+          }
+        }
     }
     return null;
   }
 
-
   /** Accept the visitor. **/
-  public Object jjtAccept(JJTreeParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+  @Override
+  public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
+  {
+    return visitor.visit (this, data);
   }
 
 }
 
-/*end*/
+/* end */

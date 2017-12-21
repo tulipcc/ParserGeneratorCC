@@ -31,11 +31,12 @@ package org.javacc.parser;
  * Describes single character descriptors in a character list.
  */
 
-public class SingleCharacter {
+public class SingleCharacter
+{
 
   /**
-   * The line and column number of the construct that corresponds
-   * most closely to this node.
+   * The line and column number of the construct that corresponds most closely
+   * to this node.
    */
   private int column;
 
@@ -46,40 +47,45 @@ public class SingleCharacter {
    */
   public char ch;
 
-  SingleCharacter()
-  {
-  }
+  SingleCharacter ()
+  {}
 
-  SingleCharacter(char c)
+  SingleCharacter (final char c)
   {
-     ch = c;
+    ch = c;
   }
 
   /**
-   * @param line the line to set
+   * @param line
+   *        the line to set
    */
-  void setLine(int line) {
+  void setLine (final int line)
+  {
     this.line = line;
   }
 
   /**
    * @return the line
    */
-  int getLine() {
+  int getLine ()
+  {
     return line;
   }
 
   /**
-   * @param column the column to set
+   * @param column
+   *        the column to set
    */
-  void setColumn(int column) {
+  void setColumn (final int column)
+  {
     this.column = column;
   }
 
   /**
    * @return the column
    */
-  int getColumn() {
+  int getColumn ()
+  {
     return column;
   }
 

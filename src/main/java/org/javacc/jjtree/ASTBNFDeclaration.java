@@ -27,18 +27,21 @@
  */
 package org.javacc.jjtree;
 
-
-public class ASTBNFDeclaration extends JJTreeNode {
-  ASTBNFDeclaration(int id) {
-    super(id);
+public class ASTBNFDeclaration extends JJTreeNode
+{
+  ASTBNFDeclaration (final int id)
+  {
+    super (id);
   }
 
   NodeScope node_scope;
 
   /** Accept the visitor. **/
-  public Object jjtAccept(JJTreeParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+  @Override
+  public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
+  {
+    return visitor.visit (this, data);
   }
 }
 
-/*end*/
+/* end */

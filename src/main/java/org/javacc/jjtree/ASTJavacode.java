@@ -27,18 +27,21 @@
  */
 package org.javacc.jjtree;
 
-
-public class ASTJavacode extends ASTProduction {
-  ASTJavacode(int id) {
-    super(id);
+public class ASTJavacode extends ASTProduction
+{
+  ASTJavacode (final int id)
+  {
+    super (id);
   }
 
   Token stmBeginLoc;
 
   /** Accept the visitor. **/
-  public Object jjtAccept(JJTreeParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+  @Override
+  public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
+  {
+    return visitor.visit (this, data);
   }
 }
 
-/*end*/
+/* end */

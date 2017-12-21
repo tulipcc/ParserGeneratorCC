@@ -3,8 +3,10 @@ package org.javacc.parser;
 import java.util.List;
 import java.util.Map;
 
-public class ParserData {
-  public enum LookaheadType {
+public class ParserData
+{
+  public enum LookaheadType
+  {
     TOKEN,
     PRODUCTION,
     SEQUENCE,
@@ -12,10 +14,11 @@ public class ParserData {
     ZERORORMORE
   };
 
-  public static class LookaheadInfo {
+  public static class LookaheadInfo
+  {
     public LookaheadType lokaheadType;
-    public List<Integer> data;
+    public List <Integer> data;
   };
 
-  Map<Integer, List<LookaheadInfo>> lookaheads;
+  Map <Integer, List <LookaheadInfo>> lookaheads;
 }

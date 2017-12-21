@@ -30,16 +30,18 @@ package org.javacc.jjtree;
 /**
  * Entry point.
  */
-public final class Main {
+public final class Main
+{
 
-  private Main() {}
+  private Main ()
+  {}
 
-  public static void main(String args[])
+  public static void main (final String args[])
   {
-    JJTree jjtree = new JJTree();
-    int result = jjtree.main(args);
-    System.exit(result);
+    final JJTree jjtree = new JJTree ();
+    final int result = jjtree.main (args);
+    System.exit (result);
   }
 }
 
-/*end*/
+/* end */

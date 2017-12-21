@@ -27,11 +27,11 @@
  */
 package org.javacc.parser;
 
-
 /**
  * Describes CPPCODE productions.
  */
 
-public class CppCodeProduction extends CodeProduction {
+public class CppCodeProduction extends CodeProduction
+{
 
 }

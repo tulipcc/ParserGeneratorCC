@@ -26,7 +26,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package org.javacc.jjdoc;
 
 import org.javacc.parser.CppCodeProduction;
@@ -39,159 +38,194 @@ import org.javacc.parser.TokenProduction;
 
 /**
  * A report generator for a grammar.
+ * 
  * @author timp
  * @since 11-Dec-2006
- *
  */
-public interface Generator {
+public interface Generator
+{
 
   /**
    * Output string with entity substitution for brackets and ampersands.
-   * @param s the String to output
+   * 
+   * @param s
+   *        the String to output
    */
-  void text(String s);
+  void text (String s);
 
   /**
    * Output String.
-   * @param s String to output
+   * 
+   * @param s
+   *        String to output
    */
-  void print(String s);
+  void print (String s);
 
   /**
    * Output document header.
    */
-  void documentStart();
+  void documentStart ();
 
   /**
    * Output document footer.
    */
-  void documentEnd();
+  void documentEnd ();
 
   /**
    * Output Special Tokens.
-   * @param s tokens to output
+   * 
+   * @param s
+   *        tokens to output
    */
-  void specialTokens(String s);
+  void specialTokens (String s);
 
-  
-  
-  void handleTokenProduction(TokenProduction tp);
-  
-//  /**
-//   * Output start of a TokenProduction.
-//   * @param tp the TokenProduction being output
-//   */
-//  void tokenStart(TokenProduction tp);
-//
-//  /**
-//   * Output end of a TokenProduction.
-//   * @param tp the TokenProduction being output
-//   */
-//  void tokenEnd(TokenProduction tp);
+  void handleTokenProduction (TokenProduction tp);
+
+  // /**
+  // * Output start of a TokenProduction.
+  // * @param tp the TokenProduction being output
+  // */
+  // void tokenStart(TokenProduction tp);
+  //
+  // /**
+  // * Output end of a TokenProduction.
+  // * @param tp the TokenProduction being output
+  // */
+  // void tokenEnd(TokenProduction tp);
 
   /**
    * Output start of non-terminal.
    */
-  void nonterminalsStart();
+  void nonterminalsStart ();
 
   /**
    * Output end of non-terminal.
    */
-  void nonterminalsEnd();
+  void nonterminalsEnd ();
 
   /**
    * Output start of tokens.
    */
-  void tokensStart();
+  void tokensStart ();
 
   /**
    * Output end of tokens.
    */
-  void tokensEnd();
+  void tokensEnd ();
 
   /**
    * Output comment from a production.
-   * @param jp the JavaCodeProduction to output
+   * 
+   * @param jp
+   *        the JavaCodeProduction to output
    */
-  void javacode(JavaCodeProduction jp);
+  void javacode (JavaCodeProduction jp);
 
   /**
    * Output comment from a production.
-   * @param cp the CppCodeProduction to output
+   * 
+   * @param cp
+   *        the CppCodeProduction to output
    */
-  void cppcode(CppCodeProduction cp);
+  void cppcode (CppCodeProduction cp);
 
   /**
    * Output start of a normal production.
-   * @param np the NormalProduction being output
+   * 
+   * @param np
+   *        the NormalProduction being output
    */
-  void productionStart(NormalProduction np);
+  void productionStart (NormalProduction np);
 
   /**
    * Output end of a normal production.
-   * @param np the NormalProduction being output
+   * 
+   * @param np
+   *        the NormalProduction being output
    */
-  void productionEnd(NormalProduction np);
+  void productionEnd (NormalProduction np);
 
   /**
    * Output start of an Expansion.
-   * @param e Expansion being output
-   * @param first whether this is the first expansion
+   * 
+   * @param e
+   *        Expansion being output
+   * @param first
+   *        whether this is the first expansion
    */
-  void expansionStart(Expansion e, boolean first);
+  void expansionStart (Expansion e, boolean first);
 
   /**
    * Output end of Expansion.
-   * @param e Expansion being output
-   * @param first whether this is the first expansion
+   * 
+   * @param e
+   *        Expansion being output
+   * @param first
+   *        whether this is the first expansion
    */
-  void expansionEnd(Expansion e, boolean first);
+  void expansionEnd (Expansion e, boolean first);
 
   /**
    * Output start of non-terminal.
-   * @param nt the NonTerminal being output
+   * 
+   * @param nt
+   *        the NonTerminal being output
    */
-  void nonTerminalStart(NonTerminal nt);
+  void nonTerminalStart (NonTerminal nt);
 
   /**
    * Output end of non-terminal.
-   * @param nt the NonTerminal being output
+   * 
+   * @param nt
+   *        the NonTerminal being output
    */
-  void nonTerminalEnd(NonTerminal nt);
+  void nonTerminalEnd (NonTerminal nt);
 
   /**
    * Output start of regular expression.
-   * @param re the RegularExpression being output
+   * 
+   * @param re
+   *        the RegularExpression being output
    */
-  void reStart(RegularExpression re);
+  void reStart (RegularExpression re);
 
   /**
    * Output end of regular expression.
-   * @param re the RegularExpression being output
+   * 
+   * @param re
+   *        the RegularExpression being output
    */
-  void reEnd(RegularExpression re);
+  void reEnd (RegularExpression re);
 
   /**
    * Log debug messages.
-   * @param message the string to log
+   * 
+   * @param message
+   *        the string to log
    */
-  void debug(String message);
+  void debug (String message);
 
   /**
    * Log informational messages.
-   * @param message the string to log
+   * 
+   * @param message
+   *        the string to log
    */
-  void info(String message);
+  void info (String message);
 
   /**
    * Log warning messages.
-   * @param message the string to log
+   * 
+   * @param message
+   *        the string to log
    */
-  void warn(String message);
+  void warn (String message);
 
   /**
    * Log error messages.
-   * @param message the string to log
+   * 
+   * @param message
+   *        the string to log
    */
-  void error(String message);
+  void error (String message);
 }

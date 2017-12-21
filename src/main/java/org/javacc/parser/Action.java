@@ -32,24 +32,26 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Describes actions that may occur on the right hand side
- * of productions.
+ * Describes actions that may occur on the right hand side of productions.
  */
 
-public class Action extends Expansion {
+public class Action extends Expansion
+{
 
   /**
-   * Contains the list of tokens that make up the action.  This
-   * list does not include the surrounding braces.
+   * Contains the list of tokens that make up the action. This list does not
+   * include the surrounding braces.
    */
-  private List<Token> action_tokens = new ArrayList<Token>();
+  private final List <Token> action_tokens = new ArrayList <> ();
 
-  public StringBuffer dump(int indent, Set alreadyDumped) {
-    StringBuffer sb = super.dump(indent, alreadyDumped);
-    alreadyDumped.add(this);
-    if (getActionTokens().size() > 0)
+  @Override
+  public StringBuffer dump (final int indent, final Set alreadyDumped)
+  {
+    final StringBuffer sb = super.dump (indent, alreadyDumped);
+    alreadyDumped.add (this);
+    if (getActionTokens ().size () > 0)
     {
-      sb.append(' ').append(getActionTokens().get(0));
+      sb.append (' ').append (getActionTokens ().get (0));
     }
     return sb;
   }
@@ -57,7 +59,8 @@ public class Action extends Expansion {
   /**
    * @return the action_tokens
    */
-  public List<Token> getActionTokens() {
+  public List <Token> getActionTokens ()
+  {
     return action_tokens;
   }
 }

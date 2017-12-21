@@ -30,97 +30,128 @@ package org.javacc.parser;
 /**
  * Output error messages and keep track of totals.
  */
-public final class JavaCCErrors {
+public final class JavaCCErrors
+{
 
   private static int parse_error_count = 0, semantic_error_count = 0, warning_count = 0;
-  private JavaCCErrors() {}
 
-  private static void printLocationInfo(Object node) {
-    if (node instanceof NormalProduction) {
-      NormalProduction n = (NormalProduction)node;
-      System.err.print("Line " + n.getLine() + ", Column " + n.getColumn() + ": ");
-    } else if (node instanceof TokenProduction) {
-      TokenProduction n = (TokenProduction)node;
-      System.err.print("Line " + n.getLine() + ", Column " + n.getColumn() + ": ");
-    } else if (node instanceof Expansion) {
-      Expansion n = (Expansion)node;
-      System.err.print("Line " + n.getLine() + ", Column " + n.getColumn() + ": ");
-    } else if (node instanceof CharacterRange) {
-      CharacterRange n = (CharacterRange)node;
-      System.err.print("Line " + n.getLine() + ", Column " + n.getColumn() + ": ");
-    } else if (node instanceof SingleCharacter) {
-      SingleCharacter n = (SingleCharacter)node;
-      System.err.print("Line " + n.getLine() + ", Column " + n.getColumn() + ": ");
-    } else if (node instanceof Token) {
-      Token t = (Token)node;
-      System.err.print("Line " + t.beginLine + ", Column " + t.beginColumn + ": ");
+  private JavaCCErrors ()
+  {}
+
+  private static void printLocationInfo (final Object node)
+  {
+    if (node instanceof NormalProduction)
+    {
+      final NormalProduction n = (NormalProduction) node;
+      System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
     }
+    else
+      if (node instanceof TokenProduction)
+      {
+        final TokenProduction n = (TokenProduction) node;
+        System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
+      }
+      else
+        if (node instanceof Expansion)
+        {
+          final Expansion n = (Expansion) node;
+          System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
+        }
+        else
+          if (node instanceof CharacterRange)
+          {
+            final CharacterRange n = (CharacterRange) node;
+            System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
+          }
+          else
+            if (node instanceof SingleCharacter)
+            {
+              final SingleCharacter n = (SingleCharacter) node;
+              System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
+            }
+            else
+              if (node instanceof Token)
+              {
+                final Token t = (Token) node;
+                System.err.print ("Line " + t.beginLine + ", Column " + t.beginColumn + ": ");
+              }
   }
 
-  public static void parse_error(Object node, String mess) {
-    System.err.print("Error: ");
-    printLocationInfo(node);
-    System.err.println(mess);
+  public static void parse_error (final Object node, final String mess)
+  {
+    System.err.print ("Error: ");
+    printLocationInfo (node);
+    System.err.println (mess);
     parse_error_count++;
   }
 
-  public static void parse_error(String mess) {
-    System.err.print("Error: ");
-    System.err.println(mess);
+  public static void parse_error (final String mess)
+  {
+    System.err.print ("Error: ");
+    System.err.println (mess);
     parse_error_count++;
   }
 
-  public static int get_parse_error_count() {
+  public static int get_parse_error_count ()
+  {
     return parse_error_count;
   }
 
-  public static void semantic_error(Object node, String mess) {
-    System.err.print("Error: ");
-    printLocationInfo(node);
-    System.err.println(mess);
+  public static void semantic_error (final Object node, final String mess)
+  {
+    System.err.print ("Error: ");
+    printLocationInfo (node);
+    System.err.println (mess);
     semantic_error_count++;
   }
 
-  public static void semantic_error(String mess) {
-    System.err.print("Error: ");
-    System.err.println(mess);
+  public static void semantic_error (final String mess)
+  {
+    System.err.print ("Error: ");
+    System.err.println (mess);
     semantic_error_count++;
   }
 
-  public static int get_semantic_error_count() {
+  public static int get_semantic_error_count ()
+  {
     return semantic_error_count;
   }
 
-  public static void warning(Object node, String mess) {
-    System.err.print("Warning: ");
-    printLocationInfo(node);
-    System.err.println(mess);
+  public static void warning (final Object node, final String mess)
+  {
+    System.err.print ("Warning: ");
+    printLocationInfo (node);
+    System.err.println (mess);
     warning_count++;
   }
 
-  public static void warning(String mess) {
-    System.err.print("Warning: ");
-    System.err.println(mess);
+  public static void warning (final String mess)
+  {
+    System.err.print ("Warning: ");
+    System.err.println (mess);
     warning_count++;
   }
 
-  public static int get_warning_count() {
+  public static int get_warning_count ()
+  {
     return warning_count;
   }
 
-  public static int get_error_count() {
+  public static int get_error_count ()
+  {
     return parse_error_count + semantic_error_count;
   }
 
-   public static void reInit()
-   {
-      parse_error_count = 0;
-      semantic_error_count = 0;
-      warning_count = 0;
-   }
+  public static void reInit ()
+  {
+    parse_error_count = 0;
+    semantic_error_count = 0;
+    warning_count = 0;
+  }
 
-   public static void fatal(String message) {
-      System.err.println("Fatal Error: " + message);
-      throw new RuntimeException("Fatal Error: " + message);
-   }
+  public static void fatal (final String message)
+  {
+    System.err.println ("Fatal Error: " + message);
+    throw new RuntimeException ("Fatal Error: " + message);
+  }
 }

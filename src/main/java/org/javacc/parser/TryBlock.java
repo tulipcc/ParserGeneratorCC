@@ -34,7 +34,8 @@ import java.util.Set;
  * Describes expansions of the form "try {...} ...".
  */
 
-public class TryBlock extends Expansion {
+public class TryBlock extends Expansion
+{
 
   /**
    * The expansion contained within the try block.
@@ -42,35 +43,36 @@ public class TryBlock extends Expansion {
   public Expansion exp;
 
   /**
-   * The types of each catch block.  Each list entry is itself a
-   * list which in turn contains tokens as entries.
+   * The types of each catch block. Each list entry is itself a list which in
+   * turn contains tokens as entries.
    */
-  public List<List<Token>> types;
+  public List <List <Token>> types;
 
   /**
-   * The exception identifiers of each catch block.  Each list entry
-   * is a token.
+   * The exception identifiers of each catch block. Each list entry is a token.
    */
-  public List<Token> ids;
+  public List <Token> ids;
 
   /**
-   * The block part of each catch block.  Each list entry is itself a
-   * list which in turn contains tokens as entries.
+   * The block part of each catch block. Each list entry is itself a list which
+   * in turn contains tokens as entries.
    */
-  public List<List<Token>> catchblks;
+  public List <List <Token>> catchblks;
 
   /**
-   * The block part of the finally block.  Each list entry is a token.
-   * If there is no finally block, this is null.
+   * The block part of the finally block. Each list entry is a token. If there
+   * is no finally block, this is null.
    */
-  public List<Token> finallyblk;
+  public List <Token> finallyblk;
 
-  public StringBuffer dump(int indent, Set alreadyDumped) {
-    StringBuffer sb = super.dump(indent, alreadyDumped);
-    if (alreadyDumped.contains(this))
+  @Override
+  public StringBuffer dump (final int indent, final Set alreadyDumped)
+  {
+    final StringBuffer sb = super.dump (indent, alreadyDumped);
+    if (alreadyDumped.contains (this))
       return sb;
-    alreadyDumped.add(this);
-    sb.append(eol).append(exp.dump(indent + 1, alreadyDumped));
+    alreadyDumped.add (this);
+    sb.append (eol).append (exp.dump (indent + 1, alreadyDumped));
     return sb;
   }
 

@@ -41,174 +41,239 @@ import org.javacc.parser.TokenProduction;
 /**
  * Output BNF in HTML 3.2 format.
  */
-public class HTMLGenerator extends TextGenerator implements Generator {
-  private Hashtable id_map = new Hashtable();
+public class HTMLGenerator extends TextGenerator implements Generator
+{
+  private final Hashtable id_map = new Hashtable ();
   private int id = 1;
 
-  public HTMLGenerator() {
-    super();
+  public HTMLGenerator ()
+  {
+    super ();
   }
 
-  protected String get_id(String nt) {
-    String i = (String)id_map.get(nt);
-    if (i == null) {
+  protected String get_id (final String nt)
+  {
+    String i = (String) id_map.get (nt);
+    if (i == null)
+    {
       i = "prod" + id++;
-      id_map.put(nt, i);
+      id_map.put (nt, i);
     }
     return i;
   }
 
-  private void println(String s) {
-    print(s + "\n");
+  private void println (final String s)
+  {
+    print (s + "\n");
   }
 
-  public void text(String s) {
+  @Override
+  public void text (final String s)
+  {
     String ss = "";
-    for (int i = 0; i < s.length(); ++i) {
-      if (s.charAt(i) == '<') {
-  ss += "&lt;";
-      } else if (s.charAt(i) == '>') {
-  ss += "&gt;";
-      } else if (s.charAt(i) == '&') {
-  ss += "&amp;";
-      } else {
-  ss += s.charAt(i);
+    for (int i = 0; i < s.length (); ++i)
+    {
+      if (s.charAt (i) == '<')
+      {
+        ss += "&lt;";
       }
+      else
+        if (s.charAt (i) == '>')
+        {
+          ss += "&gt;";
+        }
+        else
+          if (s.charAt (i) == '&')
+          {
+            ss += "&amp;";
+          }
+          else
+          {
+            ss += s.charAt (i);
+          }
     }
-    print(ss);
+    print (ss);
   }
 
-  public void print(String s) {
-    ostr.print(s);
+  @Override
+  public void print (final String s)
+  {
+    ostr.print (s);
   }
 
-  public void documentStart() {
-    ostr = create_output_stream();
-    println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">");
-    println("<HTML>");
-    println("<HEAD>");
-    if (!"".equals(JJDocOptions.getCSS())) {
-      println("<LINK REL=\"stylesheet\" type=\"text/css\" href=\"" + JJDocOptions.getCSS() + "\"/>");
+  @Override
+  public void documentStart ()
+  {
+    ostr = create_output_stream ();
+    println ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">");
+    println ("<HTML>");
+    println ("<HEAD>");
+    if (!"".equals (JJDocOptions.getCSS ()))
+    {
+      println ("<LINK REL=\"stylesheet\" type=\"text/css\" href=\"" + JJDocOptions.getCSS () + "\"/>");
     }
-    if (JJDocGlobals.input_file != null) {
-      println("<TITLE>BNF for " + JJDocGlobals.input_file + "</TITLE>");
-    } else {
-      println("<TITLE>A BNF grammar by JJDoc</TITLE>");
+    if (JJDocGlobals.input_file != null)
+    {
+      println ("<TITLE>BNF for " + JJDocGlobals.input_file + "</TITLE>");
     }
-    println("</HEAD>");
-    println("<BODY>");
-    println("<H1 ALIGN=CENTER>BNF for " + JJDocGlobals.input_file + "</H1>");
+    else
+    {
+      println ("<TITLE>A BNF grammar by JJDoc</TITLE>");
+    }
+    println ("</HEAD>");
+    println ("<BODY>");
+    println ("<H1 ALIGN=CENTER>BNF for " + JJDocGlobals.input_file + "</H1>");
   }
 
-  public void documentEnd() {
-    println("</BODY>");
-    println("</HTML>");
-    ostr.close();
+  @Override
+  public void documentEnd ()
+  {
+    println ("</BODY>");
+    println ("</HTML>");
+    ostr.close ();
   }
 
   /**
-   * Prints out comments, used for tokens and non-terminals.
-   * {@inheritDoc}
+   * Prints out comments, used for tokens and non-terminals. {@inheritDoc}
+   * 
    * @see org.javacc.jjdoc.TextGenerator#specialTokens(java.lang.String)
    */
-  public void specialTokens(String s) {
-    println(" <!-- Special token -->");
-    println(" <TR>");
-    println("  <TD>");
-    println("<PRE>");
-    print(s);
-    println("</PRE>");
-    println("  </TD>");
-    println(" </TR>");
-  }
-
-  
   @Override
-  public void handleTokenProduction(TokenProduction tp) {
-      println(" <!-- Token -->");
-      println(" <TR>");
-      println("  <TD>");
-      println("   <PRE>");
-      String text = JJDoc.getStandardTokenProductionText(tp);
-      text(text);
-      println("   </PRE>");
-      println("  </TD>");
-      println(" </TR>");
+  public void specialTokens (final String s)
+  {
+    println (" <!-- Special token -->");
+    println (" <TR>");
+    println ("  <TD>");
+    println ("<PRE>");
+    print (s);
+    println ("</PRE>");
+    println ("  </TD>");
+    println (" </TR>");
   }
 
-
-  public void nonterminalsStart() {
-    println("<H2 ALIGN=CENTER>NON-TERMINALS</H2>");
-    if (JJDocOptions.getOneTable()) {
-      println("<TABLE>");
-    }
-  }
-  public void nonterminalsEnd() {
-    if (JJDocOptions.getOneTable()) {
-      println("</TABLE>");
-    }
-  }
-
-  public void tokensStart() {
-    println("<H2 ALIGN=CENTER>TOKENS</H2>");
-    println("<TABLE>");
-  }
-  public void tokensEnd() {
-    println("</TABLE>");
+  @Override
+  public void handleTokenProduction (final TokenProduction tp)
+  {
+    println (" <!-- Token -->");
+    println (" <TR>");
+    println ("  <TD>");
+    println ("   <PRE>");
+    final String text = JJDoc.getStandardTokenProductionText (tp);
+    text (text);
+    println ("   </PRE>");
+    println ("  </TD>");
+    println (" </TR>");
   }
 
-  public void javacode(JavaCodeProduction jp) {
-	    productionStart(jp);
-	    println("<I>java code</I></TD></TR>");
-	    productionEnd(jp);
-	  }
-
-  public void cppcode(CppCodeProduction cp) {
-	    productionStart(cp);
-	    println("<I>cpp code</I></TD></TR>");
-	    productionEnd(cp);
-	  }
-
-  public void productionStart(NormalProduction np) {
-    if (!JJDocOptions.getOneTable()) {
-      println("");
-      println("<TABLE ALIGN=CENTER>");
-      println("<CAPTION><STRONG>" + np.getLhs() + "</STRONG></CAPTION>");
-    }
-    println("<TR>");
-    println("<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME=\"" + get_id(np.getLhs()) + "\">" + np.getLhs() + "</A></TD>");
-    println("<TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>");
-    print("<TD ALIGN=LEFT VALIGN=BASELINE>");
-  }
-  public void productionEnd(NormalProduction np) {
-    if (!JJDocOptions.getOneTable()) {
-      println("</TABLE>");
-      println("<HR>");
+  @Override
+  public void nonterminalsStart ()
+  {
+    println ("<H2 ALIGN=CENTER>NON-TERMINALS</H2>");
+    if (JJDocOptions.getOneTable ())
+    {
+      println ("<TABLE>");
     }
   }
 
-  public void expansionStart(Expansion e, boolean first) {
-    if (!first) {
-      println("<TR>");
-      println("<TD ALIGN=RIGHT VALIGN=BASELINE></TD>");
-      println("<TD ALIGN=CENTER VALIGN=BASELINE>|</TD>");
-      print("<TD ALIGN=LEFT VALIGN=BASELINE>");
+  @Override
+  public void nonterminalsEnd ()
+  {
+    if (JJDocOptions.getOneTable ())
+    {
+      println ("</TABLE>");
     }
   }
-  public void expansionEnd(Expansion e, boolean first) {
-    println("</TD>");
-    println("</TR>");
+
+  @Override
+  public void tokensStart ()
+  {
+    println ("<H2 ALIGN=CENTER>TOKENS</H2>");
+    println ("<TABLE>");
   }
 
-  public void nonTerminalStart(NonTerminal nt) {
-    print("<A HREF=\"#" + get_id(nt.getName()) + "\">");
-  }
-  public void nonTerminalEnd(NonTerminal nt) {
-    print("</A>");
+  @Override
+  public void tokensEnd ()
+  {
+    println ("</TABLE>");
   }
 
-  public void reStart(RegularExpression r) {
+  @Override
+  public void javacode (final JavaCodeProduction jp)
+  {
+    productionStart (jp);
+    println ("<I>java code</I></TD></TR>");
+    productionEnd (jp);
   }
-  public void reEnd(RegularExpression r) {
+
+  @Override
+  public void cppcode (final CppCodeProduction cp)
+  {
+    productionStart (cp);
+    println ("<I>cpp code</I></TD></TR>");
+    productionEnd (cp);
   }
+
+  @Override
+  public void productionStart (final NormalProduction np)
+  {
+    if (!JJDocOptions.getOneTable ())
+    {
+      println ("");
+      println ("<TABLE ALIGN=CENTER>");
+      println ("<CAPTION><STRONG>" + np.getLhs () + "</STRONG></CAPTION>");
+    }
+    println ("<TR>");
+    println ("<TD ALIGN=RIGHT VALIGN=BASELINE><A NAME=\"" + get_id (np.getLhs ()) + "\">" + np.getLhs () + "</A></TD>");
+    println ("<TD ALIGN=CENTER VALIGN=BASELINE>::=</TD>");
+    print ("<TD ALIGN=LEFT VALIGN=BASELINE>");
+  }
+
+  @Override
+  public void productionEnd (final NormalProduction np)
+  {
+    if (!JJDocOptions.getOneTable ())
+    {
+      println ("</TABLE>");
+      println ("<HR>");
+    }
+  }
+
+  @Override
+  public void expansionStart (final Expansion e, final boolean first)
+  {
+    if (!first)
+    {
+      println ("<TR>");
+      println ("<TD ALIGN=RIGHT VALIGN=BASELINE></TD>");
+      println ("<TD ALIGN=CENTER VALIGN=BASELINE>|</TD>");
+      print ("<TD ALIGN=LEFT VALIGN=BASELINE>");
+    }
+  }
+
+  @Override
+  public void expansionEnd (final Expansion e, final boolean first)
+  {
+    println ("</TD>");
+    println ("</TR>");
+  }
+
+  @Override
+  public void nonTerminalStart (final NonTerminal nt)
+  {
+    print ("<A HREF=\"#" + get_id (nt.getName ()) + "\">");
+  }
+
+  @Override
+  public void nonTerminalEnd (final NonTerminal nt)
+  {
+    print ("</A>");
+  }
+
+  @Override
+  public void reStart (final RegularExpression r)
+  {}
+
+  @Override
+  public void reEnd (final RegularExpression r)
+  {}
 }

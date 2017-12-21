@@ -1,14 +1,15 @@
 package org.javacc.parser;
 
-public interface ParserCodeGenerator {
+public interface ParserCodeGenerator
+{
   /**
-   * Genrate the code for the parser. Note that the code generator just
-   * produces a buffer.
+   * Genrate the code for the parser. Note that the code generator just produces
+   * a buffer.
    */
-  void generateCode(CodeGenerator codeGenerator, ParserData tokenizerData);
+  void generateCode (CodeGenerator codeGenerator, ParserData tokenizerData);
 
   /**
    * Complete the code generation and save any output file(s).
    */
-  void finish(CodeGenerator codeGenerator, ParserData tokenizerData);
+  void finish (CodeGenerator codeGenerator, ParserData tokenizerData);
 }

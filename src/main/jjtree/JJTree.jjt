@@ -491,11 +491,11 @@ void javacode_production() #Javacode :
     [
       "throws" n=Name()
 	{
-	  prod.throws_list.addElement(n);
+	  prod.throws_list.add(n);
 	}
       ( "," n=Name()
 	{
-	  prod.throws_list.addElement(n);
+	  prod.throws_list.add(n);
 	}
       )*
     ]
@@ -546,11 +546,11 @@ void bnf_production() #BNF :
   [
     "throws" n=Name()
         {
-	  prod.throws_list.addElement(n);
+	  prod.throws_list.add(n);
 	}
     ( "," n=Name()
         {
-	  prod.throws_list.addElement(n);
+	  prod.throws_list.add(n);
 	}
     )*
   ]

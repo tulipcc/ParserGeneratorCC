@@ -34,17 +34,19 @@ import java.util.List;
  * Describes a CODE productions.
  */
 
-public abstract class CodeProduction extends NormalProduction {
+public abstract class CodeProduction extends NormalProduction
+{
 
   /**
    * The tokens that implement this JAVACODE/CPPCODE production.
    */
-  private List<Token> code_tokens = new ArrayList<Token>();
+  private final List <Token> code_tokens = new ArrayList <> ();
 
   /**
    * @return the code_tokens
    */
-  public List<Token> getCodeTokens() {
+  public List <Token> getCodeTokens ()
+  {
     return code_tokens;
   }
 

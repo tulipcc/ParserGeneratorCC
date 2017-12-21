@@ -27,17 +27,20 @@
  */
 package org.javacc.jjtree;
 
-
-public class ASTCompilationUnit extends JJTreeNode {
-  ASTCompilationUnit(int id) {
-    super(id);
+public class ASTCompilationUnit extends JJTreeNode
+{
+  ASTCompilationUnit (final int id)
+  {
+    super (id);
   }
 
   /** Accept the visitor. **/
-  public Object jjtAccept(JJTreeParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+  @Override
+  public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
+  {
+    return visitor.visit (this, data);
   }
 
 }
 
-/*end*/
+/* end */

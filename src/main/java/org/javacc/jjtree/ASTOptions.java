@@ -2,19 +2,26 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY= */
 package org.javacc.jjtree;
 
-public class ASTOptions extends JJTreeNode{
-  public ASTOptions(int id) {
-    super(id);
+public class ASTOptions extends JJTreeNode
+{
+  public ASTOptions (final int id)
+  {
+    super (id);
   }
 
-  public ASTOptions(JJTreeParser p, int id) {
-    super(p, id);
+  public ASTOptions (final JJTreeParser p, final int id)
+  {
+    super (p, id);
   }
-
 
   /** Accept the visitor. **/
-  public Object jjtAccept(JJTreeParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+  @Override
+  public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
+  {
+    return visitor.visit (this, data);
   }
 }
-/* JavaCC - OriginalChecksum=30aa49e720b353fc345932a3b397455a (do not edit this line) */
+/*
+ * JavaCC - OriginalChecksum=30aa49e720b353fc345932a3b397455a (do not edit this
+ * line)
+ */

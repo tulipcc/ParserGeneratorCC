@@ -31,11 +31,12 @@ package org.javacc.parser;
  * Describes character range descriptors in a character list.
  */
 
-public class CharacterRange {
+public class CharacterRange
+{
 
   /**
-   * The line and column number of the construct that corresponds
-   * most closely to this node.
+   * The line and column number of the construct that corresponds most closely
+   * to this node.
    */
   private int column;
 
@@ -48,71 +49,88 @@ public class CharacterRange {
 
   private char left;
 
-  CharacterRange() { }
+  CharacterRange ()
+  {}
 
-  CharacterRange(char l, char r)
+  CharacterRange (final char l, final char r)
   {
-     if (l > r)
-        JavaCCErrors.semantic_error(this, "Invalid range : \"" + (int)l + "\" - \""
-              + (int)r + "\". First character shoud be less than or equal to the second one in a range.");
+    if (l > r)
+      JavaCCErrors.semantic_error (this,
+                                   "Invalid range : \"" +
+                                         (int) l +
+                                         "\" - \"" +
+                                         (int) r +
+                                         "\". First character shoud be less than or equal to the second one in a range.");
 
-     setLeft(l);
-     setRight(r);
+    setLeft (l);
+    setRight (r);
   }
 
   /**
-   * @param line the line to set
+   * @param line
+   *        the line to set
    */
-  void setLine(int line) {
+  void setLine (final int line)
+  {
     this.line = line;
   }
 
   /**
    * @return the line
    */
-  int getLine() {
+  int getLine ()
+  {
     return line;
   }
 
   /**
-   * @param column the column to set
+   * @param column
+   *        the column to set
    */
-  void setColumn(int column) {
+  void setColumn (final int column)
+  {
     this.column = column;
   }
 
   /**
    * @return the column
    */
-  int getColumn() {
+  int getColumn ()
+  {
     return column;
   }
 
   /**
-   * @param left the left to set
+   * @param left
+   *        the left to set
    */
-  public void setLeft(char left) {
+  public void setLeft (final char left)
+  {
     this.left = left;
   }
 
   /**
    * @return the left
    */
-  public char getLeft() {
+  public char getLeft ()
+  {
     return left;
   }
 
   /**
-   * @param right the right to set
+   * @param right
+   *        the right to set
    */
-  public void setRight(char right) {
+  public void setRight (final char right)
+  {
     this.right = right;
   }
 
   /**
    * @return the right
    */
-  public char getRight() {
+  public char getRight ()
+  {
     return right;
   }
 }

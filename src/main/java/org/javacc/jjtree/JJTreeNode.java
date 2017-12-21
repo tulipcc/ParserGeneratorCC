@@ -27,138 +27,182 @@
  */
 package org.javacc.jjtree;
 
-public class JJTreeNode extends SimpleNode {
+public class JJTreeNode extends SimpleNode
+{
 
   private int myOrdinal;
 
-  public JJTreeNode(int id) {
-    super(id);
+  public JJTreeNode (final int id)
+  {
+    super (id);
   }
 
-  public JJTreeNode(JJTreeParser p, int i) {
-    this(i);
+  public JJTreeNode (final JJTreeParser p, final int i)
+  {
+    this (i);
   }
 
-  public static Node jjtCreate(int id) {
-    return new JJTreeNode(id);
+  public static Node jjtCreate (final int id)
+  {
+    return new JJTreeNode (id);
   }
 
-  public void jjtAddChild(Node n, int i) {
-    super.jjtAddChild(n, i);
-    ((JJTreeNode)n).setOrdinal(i);
+  @Override
+  public void jjtAddChild (final Node n, final int i)
+  {
+    super.jjtAddChild (n, i);
+    ((JJTreeNode) n).setOrdinal (i);
   }
 
-  public int getOrdinal()
+  public int getOrdinal ()
   {
     return myOrdinal;
   }
 
-  public void setOrdinal(int o)
+  public void setOrdinal (final int o)
   {
     myOrdinal = o;
   }
 
-
   /*****************************************************************
-   *
-   * The following is added manually to enhance all tree nodes with
-   * attributes that store the first and last tokens corresponding to
-   * each node, as well as to print the tokens back to the specified
-   * output stream.
-   *
+   * The following is added manually to enhance all tree nodes with attributes
+   * that store the first and last tokens corresponding to each node, as well as
+   * to print the tokens back to the specified output stream.
    *****************************************************************/
 
   private Token first, last;
 
-  public Token getFirstToken() { return first; }
-  public void setFirstToken(Token t) { first = t; }
-  public Token getLastToken() { return last;  }
-  public void setLastToken(Token t) { last = t; }
+  public Token getFirstToken ()
+  {
+    return first;
+  }
 
-  String translateImage(Token t)
+  public void setFirstToken (final Token t)
+  {
+    first = t;
+  }
+
+  public Token getLastToken ()
+  {
+    return last;
+  }
+
+  public void setLastToken (final Token t)
+  {
+    last = t;
+  }
+
+  String translateImage (final Token t)
   {
     return t.image;
   }
 
-  String whiteOut(Token t)
+  String whiteOut (final Token t)
   {
-    StringBuffer sb = new StringBuffer(t.image.length());
+    final StringBuffer sb = new StringBuffer (t.image.length ());
 
-    for (int i = 0; i < t.image.length(); ++i) {
-      char ch = t.image.charAt(i);
-      if (ch != '\t' && ch != '\n' && ch != '\r' && ch != '\f') {
-        sb.append(' ');
-      } else {
-        sb.append(ch);
+    for (int i = 0; i < t.image.length (); ++i)
+    {
+      final char ch = t.image.charAt (i);
+      if (ch != '\t' && ch != '\n' && ch != '\r' && ch != '\f')
+      {
+        sb.append (' ');
+      }
+      else
+      {
+        sb.append (ch);
       }
     }
 
-    return sb.toString();
+    return sb.toString ();
   }
 
-  /* Indicates whether the token should be replaced by white space or
-     replaced with the actual node variable. */
+  /*
+   * Indicates whether the token should be replaced by white space or replaced
+   * with the actual node variable.
+   */
   private boolean whitingOut = false;
 
-  protected void print(Token t, IO io) {
+  protected void print (final Token t, final IO io)
+  {
     Token tt = t.specialToken;
-    if (tt != null) {
-      while (tt.specialToken != null) tt = tt.specialToken;
-      while (tt != null) {
-        io.print(TokenUtils.addUnicodeEscapes(translateImage(tt)));
+    if (tt != null)
+    {
+      while (tt.specialToken != null)
+        tt = tt.specialToken;
+      while (tt != null)
+      {
+        io.print (TokenUtils.addUnicodeEscapes (translateImage (tt)));
         tt = tt.next;
       }
     }
 
-    /* If we're within a node scope we modify the source in the
-       following ways:
+    /*
+     * If we're within a node scope we modify the source in the following ways:
+     * 1) we rename all references to `jjtThis' to be references to the actual
+     * node variable. 2) we replace all calls to `jjtree.currentNode()' with
+     * references to the node variable.
+     */
 
-       1) we rename all references to `jjtThis' to be references to
-       the actual node variable.
-
-       2) we replace all calls to `jjtree.currentNode()' with
-       references to the node variable. */
-
-    NodeScope s = NodeScope.getEnclosingNodeScope(this);
-    if (s == null) {
-      /* Not within a node scope so we don't need to modify the
-         source. */
-      io.print(TokenUtils.addUnicodeEscapes(translateImage(t)));
+    final NodeScope s = NodeScope.getEnclosingNodeScope (this);
+    if (s == null)
+    {
+      /*
+       * Not within a node scope so we don't need to modify the source.
+       */
+      io.print (TokenUtils.addUnicodeEscapes (translateImage (t)));
       return;
     }
 
-    if (t.image.equals("jjtThis")) {
-      io.print(s.getNodeVariable());
+    if (t.image.equals ("jjtThis"))
+    {
+      io.print (s.getNodeVariable ());
       return;
-    } else if (t.image.equals("jjtree")) {
-      if (t.next.image.equals(".")) {
-        if (t.next.next.image.equals("currentNode")) {
-          if (t.next.next.next.image.equals("(")) {
-            if (t.next.next.next.next.image.equals(")")) {
-              /* Found `jjtree.currentNode()' so go into white out
-                 mode.  We'll stay in this mode until we find the
-                 closing parenthesis. */
-              whitingOut = true;
+    }
+    else
+      if (t.image.equals ("jjtree"))
+      {
+        if (t.next.image.equals ("."))
+        {
+          if (t.next.next.image.equals ("currentNode"))
+          {
+            if (t.next.next.next.image.equals ("("))
+            {
+              if (t.next.next.next.next.image.equals (")"))
+              {
+                /*
+                 * Found `jjtree.currentNode()' so go into white out mode. We'll
+                 * stay in this mode until we find the closing parenthesis.
+                 */
+                whitingOut = true;
+              }
             }
           }
         }
       }
-    }
-    if (whitingOut) {
-      if (t.image.equals("jjtree")) {
-        io.print(s.getNodeVariable());
-        io.print(" ");
-      } else if (t.image.equals(")")) {
-        io.print(" ");
-        whitingOut = false;
-      } else {
-        for (int i = 0; i < t.image.length(); ++i) {
-          io.print(" ");
-        }
+    if (whitingOut)
+    {
+      if (t.image.equals ("jjtree"))
+      {
+        io.print (s.getNodeVariable ());
+        io.print (" ");
       }
+      else
+        if (t.image.equals (")"))
+        {
+          io.print (" ");
+          whitingOut = false;
+        }
+        else
+        {
+          for (int i = 0; i < t.image.length (); ++i)
+          {
+            io.print (" ");
+          }
+        }
       return;
     }
 
-    io.print(TokenUtils.addUnicodeEscapes(translateImage(t)));
+    io.print (TokenUtils.addUnicodeEscapes (translateImage (t)));
   }
 }

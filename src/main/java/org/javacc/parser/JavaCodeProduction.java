@@ -31,5 +31,5 @@ package org.javacc.parser;
  * Describes JAVACODE productions.
  */
 
-public class JavaCodeProduction extends CodeProduction {
-}
+public class JavaCodeProduction extends CodeProduction
+{}

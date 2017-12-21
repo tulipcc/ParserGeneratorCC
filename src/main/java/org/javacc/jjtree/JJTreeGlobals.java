@@ -30,62 +30,63 @@ package org.javacc.jjtree;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 class JJTreeGlobals
 {
-  static void initialize() {
-    toolList = new ArrayList();
+  static void initialize ()
+  {
+    toolList = new ArrayList ();
     parserName = null;
     packageName = "";
     parserImplements = null;
     parserClassBodyStart = null;
     parserImports = null;
-    productions = new HashMap();
+    productions = new HashMap ();
 
-    jjtreeOptions = new HashSet();
-    jjtreeOptions.add("JJTREE_OUTPUT_DIRECTORY");
-    jjtreeOptions.add("MULTI");
-    jjtreeOptions.add("NODE_PREFIX");
-    jjtreeOptions.add("NODE_PACKAGE");
-    jjtreeOptions.add("NODE_EXTENDS");
-    jjtreeOptions.add("NODE_CLASS");
-    jjtreeOptions.add("NODE_STACK_SIZE");
-    jjtreeOptions.add("NODE_DEFAULT_VOID");
-    jjtreeOptions.add("OUTPUT_FILE");
-    jjtreeOptions.add("CHECK_DEFINITE_NODE");
-    jjtreeOptions.add("NODE_SCOPE_HOOK");
-    jjtreeOptions.add("TRACK_TOKENS");
-    jjtreeOptions.add("NODE_FACTORY");
-    jjtreeOptions.add("NODE_USES_PARSER");
-    jjtreeOptions.add("BUILD_NODE_FILES");
-    jjtreeOptions.add("VISITOR");
-    jjtreeOptions.add("VISITOR_EXCEPTION");
-    jjtreeOptions.add("VISITOR_DATA_TYPE");
-    jjtreeOptions.add("VISITOR_RETURN_TYPE");
-    jjtreeOptions.add("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME");
-    jjtreeOptions.add("NODE_INCLUDES");
+    jjtreeOptions = new HashSet ();
+    jjtreeOptions.add ("JJTREE_OUTPUT_DIRECTORY");
+    jjtreeOptions.add ("MULTI");
+    jjtreeOptions.add ("NODE_PREFIX");
+    jjtreeOptions.add ("NODE_PACKAGE");
+    jjtreeOptions.add ("NODE_EXTENDS");
+    jjtreeOptions.add ("NODE_CLASS");
+    jjtreeOptions.add ("NODE_STACK_SIZE");
+    jjtreeOptions.add ("NODE_DEFAULT_VOID");
+    jjtreeOptions.add ("OUTPUT_FILE");
+    jjtreeOptions.add ("CHECK_DEFINITE_NODE");
+    jjtreeOptions.add ("NODE_SCOPE_HOOK");
+    jjtreeOptions.add ("TRACK_TOKENS");
+    jjtreeOptions.add ("NODE_FACTORY");
+    jjtreeOptions.add ("NODE_USES_PARSER");
+    jjtreeOptions.add ("BUILD_NODE_FILES");
+    jjtreeOptions.add ("VISITOR");
+    jjtreeOptions.add ("VISITOR_EXCEPTION");
+    jjtreeOptions.add ("VISITOR_DATA_TYPE");
+    jjtreeOptions.add ("VISITOR_RETURN_TYPE");
+    jjtreeOptions.add ("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME");
+    jjtreeOptions.add ("NODE_INCLUDES");
   }
 
-  static {
-    initialize();
+  static
+  {
+    initialize ();
   }
 
   /**
-   * This set stores the JJTree-specific options that should not be
-   * passed down to JavaCC
+   * This set stores the JJTree-specific options that should not be passed down
+   * to JavaCC
    */
   private static Set jjtreeOptions;
 
-  public static boolean isOptionJJTreeOnly(String optionName)
+  public static boolean isOptionJJTreeOnly (final String optionName)
   {
-    return jjtreeOptions.contains(optionName.toUpperCase());
+    return jjtreeOptions.contains (optionName.toUpperCase ());
   }
 
-  static List toolList = new ArrayList();
+  static List toolList = new ArrayList ();
 
   /**
    * Use this like className.
@@ -93,39 +94,41 @@ class JJTreeGlobals
   public static String parserName;
 
   /**
-   * The package that the parser lives in.  If the grammar doesn't
-   * specify a package it is the empty string.
+   * The package that the parser lives in. If the grammar doesn't specify a
+   * package it is the empty string.
    **/
   public static String packageName = "";
 
   /**
-   * The package the node files live in. If the NODE_PACKAGE option
-   * is not set, then this defaults to packageName.
+   * The package the node files live in. If the NODE_PACKAGE option is not set,
+   * then this defaults to packageName.
    **/
   public static String nodePackageName = "";
 
-  /** The <code>implements</code> token of the parser class.  If the
-   * parser doesn't have one then it is the first "{" of the parser
-   * class body.
+  /**
+   * The <code>implements</code> token of the parser class. If the parser
+   * doesn't have one then it is the first "{" of the parser class body.
    **/
   public static Token parserImplements;
 
-  /** The first token of the parser class body (the <code>{</code>).
-   * The JJTree state is inserted after this token.
+  /**
+   * The first token of the parser class body (the <code>{</code>). The JJTree
+   * state is inserted after this token.
    **/
   public static Token parserClassBodyStart;
 
-  /** The first token of the <code>import</code> list, or the
-   * position where such a list should be inserted. The import
-   * for the Node Package is inserted after this token.
+  /**
+   * The first token of the <code>import</code> list, or the position where such
+   * a list should be inserted. The import for the Node Package is inserted
+   * after this token.
    **/
   public static Token parserImports;
 
   /**
    * This is mapping from production names to ASTProduction objects.
    **/
-  static Map productions = new HashMap();
+  static Map productions = new HashMap ();
 
 }
 
-/*end*/
+/* end */

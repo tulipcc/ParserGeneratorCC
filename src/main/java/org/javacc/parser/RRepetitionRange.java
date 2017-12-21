@@ -34,7 +34,8 @@ import java.util.List;
  * Describes one-or-more regular expressions (<foo+>).
  */
 
-public class RRepetitionRange extends RegularExpression {
+public class RRepetitionRange extends RegularExpression
+{
 
   /**
    * The regular expression which is repeated one or more times.
@@ -44,31 +45,32 @@ public class RRepetitionRange extends RegularExpression {
   public int max = -1;
   public boolean hasMax;
 
-  public Nfa GenerateNfa(boolean ignoreCase)
+  @Override
+  public Nfa GenerateNfa (final boolean ignoreCase)
   {
-     List<? super Object> units = new ArrayList<Object>();
-     RSequence seq;
-     int i;
+    final List <? super Object> units = new ArrayList <> ();
+    RSequence seq;
+    int i;
 
-     for (i = 0; i < min; i++)
-     {
-        units.add(regexpr);
-     }
+    for (i = 0; i < min; i++)
+    {
+      units.add (regexpr);
+    }
 
-     if (hasMax && max == -1) // Unlimited
-     {
-        RZeroOrMore zoo = new RZeroOrMore();
-        zoo.regexpr = regexpr;
-        units.add(zoo);
-     }
+    if (hasMax && max == -1) // Unlimited
+    {
+      final RZeroOrMore zoo = new RZeroOrMore ();
+      zoo.regexpr = regexpr;
+      units.add (zoo);
+    }
 
-     while (i++ < max)
-     {
-        RZeroOrOne zoo = new RZeroOrOne();
-        zoo.regexpr = regexpr;
-        units.add(zoo);
-     }
-     seq = new RSequence(units);
-     return seq.GenerateNfa(ignoreCase);
+    while (i++ < max)
+    {
+      final RZeroOrOne zoo = new RZeroOrOne ();
+      zoo.regexpr = regexpr;
+      units.add (zoo);
+    }
+    seq = new RSequence (units);
+    return seq.GenerateNfa (ignoreCase);
   }
 }

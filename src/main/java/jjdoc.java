@@ -26,16 +26,18 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * Intermediary between OS script and main program of application.
- * Having this intermediary allows the OS scripts to be package name
- * independent.
+ * Intermediary between OS script and main program of application. Having this
+ * intermediary allows the OS scripts to be package name independent.
  */
-public final class jjdoc {
+public final class jjdoc
+{
 
-  private jjdoc() {}
+  private jjdoc ()
+  {}
 
-  public static void main(String[] args) throws Exception {
-    org.javacc.jjdoc.JJDocMain.main(args);
+  public static void main (final String [] args) throws Exception
+  {
+    org.javacc.jjdoc.JJDocMain.main (args);
   }
 
 }

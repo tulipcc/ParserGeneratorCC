@@ -3,134 +3,222 @@ package org.javacc.jjtree;
 
 public class DefaultJJTreeVisitor implements JJTreeParserVisitor
 {
-  public Object defaultVisit(SimpleNode node, Object data){
-    return node.childrenAccept(this, data);
+  public Object defaultVisit (final SimpleNode node, final Object data)
+  {
+    return node.childrenAccept (this, data);
   }
-  public Object visit(SimpleNode node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final SimpleNode node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTGrammar node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTGrammar node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTCompilationUnit node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTCompilationUnit node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTProductions node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTProductions node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTOptions node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTOptions node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTOptionBinding node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTOptionBinding node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTJavacode node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTJavacode node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTJavacodeBody node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTJavacodeBody node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNF node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNF node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFDeclaration node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFDeclaration node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFNodeScope node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFNodeScope node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTRE node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTRE node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTTokenDecls node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTTokenDecls node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTRESpec node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTRESpec node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFChoice node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFChoice node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFSequence node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFSequence node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFLookahead node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFLookahead node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTExpansionNodeScope node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTExpansionNodeScope node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFAction node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFAction node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFZeroOrOne node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFZeroOrOne node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFTryBlock node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFTryBlock node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFNonTerminal node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFNonTerminal node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFAssignment node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFAssignment node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFOneOrMore node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFOneOrMore node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFZeroOrMore node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFZeroOrMore node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTBNFParenthesized node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTBNFParenthesized node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTREStringLiteral node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTREStringLiteral node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTRENamed node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTRENamed node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTREReference node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTREReference node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTREEOF node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTREEOF node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTREChoice node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTREChoice node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTRESequence node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTRESequence node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTREOneOrMore node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTREOneOrMore node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTREZeroOrMore node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTREZeroOrMore node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTREZeroOrOne node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTREZeroOrOne node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTRRepetitionRange node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTRRepetitionRange node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTREParenthesized node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTREParenthesized node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTRECharList node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTRECharList node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTCharDescriptor node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTCharDescriptor node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTNodeDescriptor node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTNodeDescriptor node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTNodeDescriptorExpression node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTNodeDescriptorExpression node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
-  public Object visit(ASTPrimaryExpression node, Object data){
-    return defaultVisit(node, data);
+
+  public Object visit (final ASTPrimaryExpression node, final Object data)
+  {
+    return defaultVisit (node, data);
   }
 }
-/* JavaCC - OriginalChecksum=3b7689ed0de9c57e70ae4a27c1480635 (do not edit this line) */
+/*
+ * JavaCC - OriginalChecksum=3b7689ed0de9c57e70ae4a27c1480635 (do not edit this
+ * line)
+ */

@@ -30,52 +30,55 @@ package org.javacc.parser;
 import java.util.Set;
 
 /**
- * Describes expansions - entities that may occur on the
- * right hand sides of productions.  This is the base class of
- * a bunch of other more specific classes.
+ * Describes expansions - entities that may occur on the right hand sides of
+ * productions. This is the base class of a bunch of other more specific
+ * classes.
  */
 
-public class Expansion {
+public class Expansion
+{
 
   /**
-   * The line and column number of the construct that corresponds
-   * most closely to this node.
+   * The line and column number of the construct that corresponds most closely
+   * to this node.
    */
   private int line;
 
   private int column;
 
   /**
-   * A reimplementing of Object.hashCode() to be deterministic.  This uses
-   * the line and column fields to generate an arbitrary number - we assume
-   * that this method is called only after line and column are set to
-   * their actual values.
+   * A reimplementing of Object.hashCode() to be deterministic. This uses the
+   * line and column fields to generate an arbitrary number - we assume that
+   * this method is called only after line and column are set to their actual
+   * values.
    */
-  public int hashCode() {
-    return getLine() + getColumn();
+  @Override
+  public int hashCode ()
+  {
+    return getLine () + getColumn ();
   }
 
   /**
-   * An internal name for this expansion.  This is used to generate parser
+   * An internal name for this expansion. This is used to generate parser
    * routines.
    */
   String internal_name = "";
   int internal_index = -1;
 
   /**
-   * The parser routines are generated in three phases.  The generation
-   * of the second and third phase are on demand only, and the third phase
-   * can be recursive.  This variable is used to keep track of the
-   * expansions for which phase 3 generations have been already added to
-   * a list so that the recursion can be terminated.
+   * The parser routines are generated in three phases. The generation of the
+   * second and third phase are on demand only, and the third phase can be
+   * recursive. This variable is used to keep track of the expansions for which
+   * phase 3 generations have been already added to a list so that the recursion
+   * can be terminated.
    */
   boolean phase3done = false;
 
   /**
-   * The parent of this expansion node.  In case this is the top level
-   * expansion of the production it is a reference to the production node
-   * otherwise it is a reference to another Expansion node.  In case this
-   * is the top level of a lookahead expansion,then the parent is null.
+   * The parent of this expansion node. In case this is the top level expansion
+   * of the production it is a reference to the production node otherwise it is
+   * a reference to another Expansion node. In case this is the top level of a
+   * lookahead expansion,then the parent is null.
    */
   public Object parent;
 
@@ -85,10 +88,10 @@ public class Expansion {
   int ordinal;
 
   /**
-   * To avoid right-recursive loops when calculating follow sets, we use
-   * a generation number which indicates if this expansion was visited
-   * by LookaheadWalk.genFollowSet in the same generation.  New generations
-   * are obtained by incrementing the static counter below, and the current
+   * To avoid right-recursive loops when calculating follow sets, we use a
+   * generation number which indicates if this expansion was visited by
+   * LookaheadWalk.genFollowSet in the same generation. New generations are
+   * obtained by incrementing the static counter below, and the current
    * generation is stored in the non-static variable below.
    */
   public static long nextGenerationIndex = 1;
@@ -100,58 +103,73 @@ public class Expansion {
    */
   public boolean inMinimumSize = false;
 
-   public static void reInit()
-   {
-      nextGenerationIndex = 1;
-   }
-
-  private String getSimpleName() {
-    String name = getClass().getName();
-    return name.substring(name.lastIndexOf(".")+1); // strip the package name
+  public static void reInit ()
+  {
+    nextGenerationIndex = 1;
   }
 
-  public String toString() {
-    return "[" + getLine() + "," + getColumn() + " " + System.identityHashCode(this) + " " + getSimpleName() + "]";
+  private String getSimpleName ()
+  {
+    final String name = getClass ().getName ();
+    return name.substring (name.lastIndexOf (".") + 1); // strip the package
+                                                        // name
   }
 
-  protected static final String eol = System.getProperty("line.separator", "\n");
-  protected StringBuffer dumpPrefix(int indent) {
-    StringBuffer sb = new StringBuffer(128);
+  @Override
+  public String toString ()
+  {
+    return "[" + getLine () + "," + getColumn () + " " + System.identityHashCode (this) + " " + getSimpleName () + "]";
+  }
+
+  protected static final String eol = System.getProperty ("line.separator", "\n");
+
+  protected StringBuffer dumpPrefix (final int indent)
+  {
+    final StringBuffer sb = new StringBuffer (128);
     for (int i = 0; i < indent; i++)
-      sb.append("  ");
+      sb.append ("  ");
     return sb;
   }
 
-  public StringBuffer dump(int indent, Set<? super Expansion> alreadyDumped) {
-    StringBuffer value = dumpPrefix(indent).append(System.identityHashCode(this)).append(" ").append(getSimpleName());
+  public StringBuffer dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  {
+    final StringBuffer value = dumpPrefix (indent).append (System.identityHashCode (this))
+                                                  .append (" ")
+                                                  .append (getSimpleName ());
     return value;
   }
 
   /**
-   * @param column the column to set
+   * @param column
+   *        the column to set
    */
-  void setColumn(int column) {
+  void setColumn (final int column)
+  {
     this.column = column;
   }
 
   /**
    * @return the column
    */
-  int getColumn() {
+  int getColumn ()
+  {
     return column;
   }
 
   /**
-   * @param line the line to set
+   * @param line
+   *        the line to set
    */
-  void setLine(int line) {
+  void setLine (final int line)
+  {
     this.line = line;
   }
 
   /**
    * @return the line
    */
-  int getLine() {
+  int getLine ()
+  {
     return line;
   }
 }

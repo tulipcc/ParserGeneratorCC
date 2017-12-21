@@ -27,37 +27,41 @@
  */
 package org.javacc.jjtree;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
-
 
 public class ASTProduction extends JJTreeNode
 {
-  ASTProduction(int id) {
-    super(id);
+  ASTProduction (final int id)
+  {
+    super (id);
   }
 
   String name;
-  Vector throws_list = new Vector();
+  List <String> throws_list = new Vector <> ();
 
-  private Hashtable scopes = new Hashtable();
+  private final Map <NodeScope, Integer> scopes = new HashMap <> ();
   private int nextNodeScopeNumber = 0;
 
-
-  int getNodeScopeNumber(NodeScope s)
+  int getNodeScopeNumber (final NodeScope s)
   {
-    Integer i = (Integer)scopes.get(s);
-    if (i == null) {
-      i = new Integer(nextNodeScopeNumber++);
-      scopes.put(s, i);
+    Integer i = scopes.get (s);
+    if (i == null)
+    {
+      i = new Integer (nextNodeScopeNumber++);
+      scopes.put (s, i);
     }
-    return i.intValue();
+    return i.intValue ();
   }
 
   /** Accept the visitor. **/
-  public Object jjtAccept(JJTreeParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
+  @Override
+  public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
+  {
+    return visitor.visit (this, data);
   }
 }
 
-/*end*/
+/* end */

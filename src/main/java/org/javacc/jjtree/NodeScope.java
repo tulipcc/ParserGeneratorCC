@@ -27,9 +27,6 @@
  */
 package org.javacc.jjtree;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-
 public class NodeScope
 {
   ASTProduction production;
@@ -40,80 +37,87 @@ public class NodeScope
   String nodeVar;
   int scopeNumber;
 
-  NodeScope(ASTProduction p, ASTNodeDescriptor n)
+  NodeScope (final ASTProduction p, final ASTNodeDescriptor n)
   {
     production = p;
 
-    if (n == null) {
+    if (n == null)
+    {
       String nm = production.name;
-      if (JJTreeOptions.getNodeDefaultVoid()) {
+      if (JJTreeOptions.getNodeDefaultVoid ())
+      {
         nm = "void";
       }
-      node_descriptor = ASTNodeDescriptor.indefinite(nm);
-    } else {
+      node_descriptor = ASTNodeDescriptor.indefinite (nm);
+    }
+    else
+    {
       node_descriptor = n;
     }
 
-    scopeNumber = production.getNodeScopeNumber(this);
-    nodeVar = constructVariable("n");
-    closedVar = constructVariable("c");
-    exceptionVar = constructVariable("e");
+    scopeNumber = production.getNodeScopeNumber (this);
+    nodeVar = constructVariable ("n");
+    closedVar = constructVariable ("c");
+    exceptionVar = constructVariable ("e");
   }
 
-
-  boolean isVoid()
+  boolean isVoid ()
   {
-    return node_descriptor.isVoid();
+    return node_descriptor.isVoid ();
   }
 
-
-  ASTNodeDescriptor getNodeDescriptor()
+  ASTNodeDescriptor getNodeDescriptor ()
   {
     return node_descriptor;
   }
 
-
-  String getNodeDescriptorText()
+  String getNodeDescriptorText ()
   {
-    return node_descriptor.getDescriptor();
+    return node_descriptor.getDescriptor ();
   }
 
-
-  String getNodeVariable()
+  String getNodeVariable ()
   {
     return nodeVar;
   }
 
-
-  private String constructVariable(String id)
+  private String constructVariable (final String id)
   {
-    String s = "000" + scopeNumber;
-    return "jjt" + id + s.substring(s.length() - 3, s.length());
+    final String s = "000" + scopeNumber;
+    return "jjt" + id + s.substring (s.length () - 3, s.length ());
   }
 
-
-  boolean usesCloseNodeVar()
+  boolean usesCloseNodeVar ()
   {
     return true;
   }
 
-  static NodeScope getEnclosingNodeScope(Node node)
+  static NodeScope getEnclosingNodeScope (final Node node)
   {
-    if (node instanceof ASTBNFDeclaration) {
-      return ((ASTBNFDeclaration)node).node_scope;
+    if (node instanceof ASTBNFDeclaration)
+    {
+      return ((ASTBNFDeclaration) node).node_scope;
     }
-    for (Node n = node.jjtGetParent(); n != null; n = n.jjtGetParent()) {
-      if (n instanceof ASTBNFDeclaration) {
-        return ((ASTBNFDeclaration)n).node_scope;
-      } else if (n instanceof ASTBNFNodeScope) {
-        return ((ASTBNFNodeScope)n).node_scope;
-      } else if (n instanceof ASTExpansionNodeScope) {
-        return ((ASTExpansionNodeScope)n).node_scope;
+    for (Node n = node.jjtGetParent (); n != null; n = n.jjtGetParent ())
+    {
+      if (n instanceof ASTBNFDeclaration)
+      {
+        return ((ASTBNFDeclaration) n).node_scope;
       }
+      else
+        if (n instanceof ASTBNFNodeScope)
+        {
+          return ((ASTBNFNodeScope) n).node_scope;
+        }
+        else
+          if (n instanceof ASTExpansionNodeScope)
+          {
+            return ((ASTExpansionNodeScope) n).node_scope;
+          }
     }
     return null;
   }
 
 }
 
-/*end*/
+/* end */
