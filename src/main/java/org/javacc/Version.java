@@ -38,47 +38,45 @@ import java.util.Properties;
 /**
  * Supply the version number.
  */
-public class Version {
-  private Version() {}
-
+public class Version
+{
   public static final String majorVersion;
   public static final String minorVersion;
   public static final String patchVersion;
 
-  
   public static final String majorDotMinor;
   public static final String versionNumber;
 
-  static {
+  static
+  {
     String major = "??";
     String minor = "??";
     String patch = "??";
 
-    Properties props = new Properties();
-    InputStream is = Version.class.getResourceAsStream("/version.properties");
+    final Properties props = new Properties ();
+    final InputStream is = Version.class.getResourceAsStream ("/version.properties");
     if (is != null)
     {
       try
       {
-        props.load(is);
+        props.load (is);
       }
-      catch (IOException e)
+      catch (final IOException e)
       {
-        System.err.println("Could not read version.properties: " + e);
+        System.err.println ("Could not read version.properties: " + e);
       }
-      major = props.getProperty("version.major", major);
-      minor = props.getProperty("version.minor", minor);
-      patch = props.getProperty("version.patch", patch);
+      major = props.getProperty ("version.major", major);
+      minor = props.getProperty ("version.minor", minor);
+      patch = props.getProperty ("version.patch", patch);
     }
 
     majorVersion = major;
     minorVersion = minor;
     patchVersion = patch;
     majorDotMinor = majorVersion + "." + minorVersion;
-    versionNumber = majorVersion + "." + minorVersion +
-                    (patch.equals("") ? "" : "." + patch);
+    versionNumber = majorVersion + "." + minorVersion + (patch.equals ("") ? "" : "." + patch);
   }
-  
-  
-}
 
+  private Version ()
+  {}
+}
