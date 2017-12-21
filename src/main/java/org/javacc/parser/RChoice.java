@@ -42,13 +42,13 @@ public class RChoice extends RegularExpression
    * The list of choices of this regular expression. Each list component will
    * narrow to RegularExpression.
    */
-  private List choices = new ArrayList ();
+  private List <Expansion> choices = new ArrayList <> ();
 
   /**
    * @param choices
    *        the choices to set
    */
-  public void setChoices (final List choices)
+  public void setChoices (final List <Expansion> choices)
   {
     this.choices = choices;
   }
@@ -56,7 +56,7 @@ public class RChoice extends RegularExpression
   /**
    * @return the choices
    */
-  public List getChoices ()
+  public List <Expansion> getChoices ()
   {
     return choices;
   }
@@ -101,22 +101,28 @@ public class RChoice extends RegularExpression
         curRE = ((RJustName) curRE).regexpr;
 
       if (curRE instanceof RStringLiteral && ((RStringLiteral) curRE).image.length () == 1)
-        getChoices ().set (i, curRE = new RCharacterList (((RStringLiteral) curRE).image.charAt (0)));
+      {
+        curRE = new RCharacterList (((RStringLiteral) curRE).image.charAt (0));
+        getChoices ().set (i, curRE);
+      }
 
       if (curRE instanceof RCharacterList)
       {
         if (((RCharacterList) curRE).negated_list)
           ((RCharacterList) curRE).RemoveNegation ();
 
-        final List tmp = ((RCharacterList) curRE).descriptors;
+        final List <ICCCharacter> tmp = ((RCharacterList) curRE).m_descriptors;
 
         if (curCharList == null)
-          getChoices ().set (i, curRE = curCharList = new RCharacterList ());
+        {
+          curRE = curCharList = new RCharacterList ();
+          getChoices ().set (i, curRE);
+        }
         else
           getChoices ().remove (i--);
 
         for (int j = tmp.size (); j-- > 0;)
-          curCharList.descriptors.add (tmp.get (j));
+          curCharList.m_descriptors.add (tmp.get (j));
       }
 
     }

@@ -395,13 +395,13 @@ public class JJDoc extends JJDocGlobals
         returnString += "~";
       }
       returnString += "[";
-      for (final Iterator it = cl.descriptors.iterator (); it.hasNext ();)
+      for (final Iterator <ICCCharacter> it = cl.m_descriptors.iterator (); it.hasNext ();)
       {
-        final Object o = it.next ();
+        final ICCCharacter o = it.next ();
         if (o instanceof SingleCharacter)
         {
           returnString += "\"";
-          final char s[] = { ((SingleCharacter) o).m_ch };
+          final char s[] = { ((SingleCharacter) o).getChar () };
           returnString += add_escapes (new String (s));
           returnString += "\"";
         }
@@ -431,7 +431,7 @@ public class JJDoc extends JJDocGlobals
       if (re instanceof RChoice)
       {
         final RChoice c = (RChoice) re;
-        for (final Iterator it = c.getChoices ().iterator (); it.hasNext ();)
+        for (final Iterator <Expansion> it = c.getChoices ().iterator (); it.hasNext ();)
         {
           final RegularExpression sub = (RegularExpression) (it.next ());
           returnString += emitRE (sub);

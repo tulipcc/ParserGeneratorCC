@@ -47,7 +47,7 @@ public class RCharacterList extends RegularExpression
    * This is the list of descriptors of the character list. Each list entry will
    * narrow to either SingleCharacter or to CharacterRange.
    */
-  public List descriptors = new ArrayList ();
+  public List <ICCCharacter> m_descriptors = new ArrayList <> ();
 
   static final char [] diffLowerCaseRanges = { 65,
                                                90,
@@ -1563,23 +1563,27 @@ public class RCharacterList extends RegularExpression
 
   void ToCaseNeutral ()
   {
-    final int cnt = descriptors.size ();
+    final int cnt = m_descriptors.size ();
 
     for (int i = 0; i < cnt; i++)
     {
-      if (descriptors.get (i) instanceof SingleCharacter)
+      final ICCCharacter desc = m_descriptors.get (i);
+      if (desc instanceof SingleCharacter)
       {
-        final char ch = ((SingleCharacter) descriptors.get (i)).m_ch;
+        final char ch = ((SingleCharacter) desc).getChar ();
 
-        if (ch != Character.toLowerCase (ch))
-          descriptors.add (new SingleCharacter (Character.toLowerCase (ch)));
-        if (ch != Character.toUpperCase (ch))
-          descriptors.add (new SingleCharacter (Character.toUpperCase (ch)));
+        final char cLow = Character.toLowerCase (ch);
+        if (ch != cLow)
+          m_descriptors.add (new SingleCharacter (cLow));
+
+        final char cUp = Character.toUpperCase (ch);
+        if (ch != cUp)
+          m_descriptors.add (new SingleCharacter (cUp));
       }
       else
       {
-        final char l = ((CharacterRange) descriptors.get (i)).getLeft ();
-        final char r = ((CharacterRange) descriptors.get (i)).getRight ();
+        final char l = ((CharacterRange) desc).getLeft ();
+        final char r = ((CharacterRange) desc).getRight ();
         int j = 0;
 
         /* Add ranges for which lower case is different. */
@@ -1595,33 +1599,33 @@ public class RCharacterList extends RegularExpression
 
             if (r <= diffLowerCaseRanges[j + 1])
             {
-              descriptors.add (new CharacterRange (Character.toLowerCase (diffLowerCaseRanges[j]),
-                                                   (char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
-                                                           r -
-                                                           diffLowerCaseRanges[j])));
+              m_descriptors.add (new CharacterRange (Character.toLowerCase (diffLowerCaseRanges[j]),
+                                                     (char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
+                                                             r -
+                                                             diffLowerCaseRanges[j])));
               break;
             }
 
-            descriptors.add (new CharacterRange (Character.toLowerCase (diffLowerCaseRanges[j]),
-                                                 Character.toLowerCase (diffLowerCaseRanges[j + 1])));
+            m_descriptors.add (new CharacterRange (Character.toLowerCase (diffLowerCaseRanges[j]),
+                                                   Character.toLowerCase (diffLowerCaseRanges[j + 1])));
           }
           else
           {
             if (r <= diffLowerCaseRanges[j + 1])
             {
-              descriptors.add (new CharacterRange ((char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
-                                                           l -
-                                                           diffLowerCaseRanges[j]),
-                                                   (char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
-                                                           r -
-                                                           diffLowerCaseRanges[j])));
+              m_descriptors.add (new CharacterRange ((char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
+                                                             l -
+                                                             diffLowerCaseRanges[j]),
+                                                     (char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
+                                                             r -
+                                                             diffLowerCaseRanges[j])));
               break;
             }
 
-            descriptors.add (new CharacterRange ((char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
-                                                         l -
-                                                         diffLowerCaseRanges[j]),
-                                                 Character.toLowerCase (diffLowerCaseRanges[j + 1])));
+            m_descriptors.add (new CharacterRange ((char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
+                                                           l -
+                                                           diffLowerCaseRanges[j]),
+                                                   Character.toLowerCase (diffLowerCaseRanges[j + 1])));
           }
 
           j += 2;
@@ -1629,15 +1633,15 @@ public class RCharacterList extends RegularExpression
           {
             if (r <= diffLowerCaseRanges[j + 1])
             {
-              descriptors.add (new CharacterRange (Character.toLowerCase (diffLowerCaseRanges[j]),
-                                                   (char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
-                                                           r -
-                                                           diffLowerCaseRanges[j])));
+              m_descriptors.add (new CharacterRange (Character.toLowerCase (diffLowerCaseRanges[j]),
+                                                     (char) (Character.toLowerCase (diffLowerCaseRanges[j]) +
+                                                             r -
+                                                             diffLowerCaseRanges[j])));
               break;
             }
 
-            descriptors.add (new CharacterRange (Character.toLowerCase (diffLowerCaseRanges[j]),
-                                                 Character.toLowerCase (diffLowerCaseRanges[j + 1])));
+            m_descriptors.add (new CharacterRange (Character.toLowerCase (diffLowerCaseRanges[j]),
+                                                   Character.toLowerCase (diffLowerCaseRanges[j + 1])));
             j += 2;
           }
           break;
@@ -1655,33 +1659,33 @@ public class RCharacterList extends RegularExpression
 
           if (r <= diffUpperCaseRanges[j + 1])
           {
-            descriptors.add (new CharacterRange (Character.toUpperCase (diffUpperCaseRanges[j]),
-                                                 (char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
-                                                         r -
-                                                         diffUpperCaseRanges[j])));
+            m_descriptors.add (new CharacterRange (Character.toUpperCase (diffUpperCaseRanges[j]),
+                                                   (char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
+                                                           r -
+                                                           diffUpperCaseRanges[j])));
             continue;
           }
 
-          descriptors.add (new CharacterRange (Character.toUpperCase (diffUpperCaseRanges[j]),
-                                               Character.toUpperCase (diffUpperCaseRanges[j + 1])));
+          m_descriptors.add (new CharacterRange (Character.toUpperCase (diffUpperCaseRanges[j]),
+                                                 Character.toUpperCase (diffUpperCaseRanges[j + 1])));
         }
         else
         {
           if (r <= diffUpperCaseRanges[j + 1])
           {
-            descriptors.add (new CharacterRange ((char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
-                                                         l -
-                                                         diffUpperCaseRanges[j]),
-                                                 (char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
-                                                         r -
-                                                         diffUpperCaseRanges[j])));
+            m_descriptors.add (new CharacterRange ((char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
+                                                           l -
+                                                           diffUpperCaseRanges[j]),
+                                                   (char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
+                                                           r -
+                                                           diffUpperCaseRanges[j])));
             continue;
           }
 
-          descriptors.add (new CharacterRange ((char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
-                                                       l -
-                                                       diffUpperCaseRanges[j]),
-                                               Character.toUpperCase (diffUpperCaseRanges[j + 1])));
+          m_descriptors.add (new CharacterRange ((char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
+                                                         l -
+                                                         diffUpperCaseRanges[j]),
+                                                 Character.toUpperCase (diffUpperCaseRanges[j + 1])));
         }
 
         j += 2;
@@ -1689,15 +1693,15 @@ public class RCharacterList extends RegularExpression
         {
           if (r <= diffUpperCaseRanges[j + 1])
           {
-            descriptors.add (new CharacterRange (Character.toUpperCase (diffUpperCaseRanges[j]),
-                                                 (char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
-                                                         r -
-                                                         diffUpperCaseRanges[j])));
+            m_descriptors.add (new CharacterRange (Character.toUpperCase (diffUpperCaseRanges[j]),
+                                                   (char) (Character.toUpperCase (diffUpperCaseRanges[j]) +
+                                                           r -
+                                                           diffUpperCaseRanges[j])));
             break;
           }
 
-          descriptors.add (new CharacterRange (Character.toUpperCase (diffUpperCaseRanges[j]),
-                                               Character.toUpperCase (diffUpperCaseRanges[j + 1])));
+          m_descriptors.add (new CharacterRange (Character.toUpperCase (diffUpperCaseRanges[j]),
+                                                 Character.toUpperCase (diffUpperCaseRanges[j + 1])));
           j += 2;
         }
       }
@@ -1744,7 +1748,7 @@ public class RCharacterList extends RegularExpression
         SortDescriptors ();
     }
 
-    if (descriptors.size () == 0 && !negated_list)
+    if (m_descriptors.size () == 0 && !negated_list)
     {
       JavaCCErrors.semantic_error (this, "Empty character set is not allowed as it will not match any character.");
       return new Nfa ();
@@ -1756,13 +1760,14 @@ public class RCharacterList extends RegularExpression
     final NfaState finalState = retVal.end;
     int i;
 
-    for (i = 0; i < descriptors.size (); i++)
+    for (i = 0; i < m_descriptors.size (); i++)
     {
-      if (descriptors.get (i) instanceof SingleCharacter)
-        startState.AddChar (((SingleCharacter) descriptors.get (i)).m_ch);
+      final Object tmp = m_descriptors.get (i);
+      if (tmp instanceof SingleCharacter)
+        startState.AddChar (((SingleCharacter) tmp).getChar ());
       else // if (descriptors.get(i) instanceof CharacterRange)
       {
-        final CharacterRange cr = (CharacterRange) descriptors.get (i);
+        final CharacterRange cr = (CharacterRange) tmp;
 
         if (cr.getLeft () == cr.getRight ())
           startState.AddChar (cr.getLeft ());
@@ -1795,36 +1800,35 @@ public class RCharacterList extends RegularExpression
   {
     int j;
 
-    final List newDesc = new ArrayList (descriptors.size ());
+    final List <ICCCharacter> newDesc = new ArrayList <> (m_descriptors.size ());
     int cnt = 0;
 
-    Outer: for (int i = 0; i < descriptors.size (); i++)
+    Outer: for (int i = 0; i < m_descriptors.size (); i++)
     {
-      SingleCharacter s;
-      CharacterRange range;
-
-      if (descriptors.get (i) instanceof SingleCharacter)
+      if (m_descriptors.get (i) instanceof SingleCharacter)
       {
-        s = (SingleCharacter) descriptors.get (i);
+        final SingleCharacter s = (SingleCharacter) m_descriptors.get (i);
 
         for (j = 0; j < cnt; j++)
         {
-          if (newDesc.get (j) instanceof SingleCharacter)
+          final Object tmp2 = newDesc.get (j);
+          if (tmp2 instanceof SingleCharacter)
           {
-            if (((SingleCharacter) newDesc.get (j)).m_ch > s.m_ch)
+            final char c = ((SingleCharacter) tmp2).getChar ();
+            if (c > s.getChar ())
               break;
             else
-              if (((SingleCharacter) newDesc.get (j)).m_ch == s.m_ch)
+              if (c == s.getChar ())
                 continue Outer;
           }
           else
           {
-            final char l = ((CharacterRange) newDesc.get (j)).getLeft ();
+            final char l = ((CharacterRange) tmp2).getLeft ();
 
-            if (InRange (s.m_ch, (CharacterRange) newDesc.get (j)))
+            if (InRange (s.getChar (), (CharacterRange) tmp2))
               continue Outer;
             else
-              if (l > s.m_ch)
+              if (l > s.getChar ())
                 break;
           }
         }
@@ -1834,48 +1838,50 @@ public class RCharacterList extends RegularExpression
       }
       else
       {
-        range = (CharacterRange) descriptors.get (i);
+        CharacterRange range = (CharacterRange) m_descriptors.get (i);
 
         for (j = 0; j < cnt; j++)
         {
-          if (newDesc.get (j) instanceof SingleCharacter)
+          final Object tmp2 = newDesc.get (j);
+          if (tmp2 instanceof SingleCharacter)
           {
-            if (InRange (((SingleCharacter) newDesc.get (j)).m_ch, range))
+            final char c = ((SingleCharacter) tmp2).getChar ();
+            if (InRange (c, range))
             {
               newDesc.remove (j--);
               cnt--;
             }
             else
-              if (((SingleCharacter) newDesc.get (j)).m_ch > range.getRight ())
+              if (c > range.getRight ())
                 break;
           }
           else
           {
-            if (SubRange (range, (CharacterRange) newDesc.get (j)))
+            if (SubRange (range, (CharacterRange) tmp2))
             {
               continue Outer;
             }
             else
-              if (SubRange ((CharacterRange) newDesc.get (j), range))
+              if (SubRange ((CharacterRange) tmp2, range))
               {
                 newDesc.set (j, range);
                 continue Outer;
               }
               else
-                if (Overlaps (range, (CharacterRange) newDesc.get (j)))
+                if (Overlaps (range, (CharacterRange) tmp2))
                 {
-                  range.setLeft ((char) (((CharacterRange) newDesc.get (j)).getRight () + 1));
+                  range.setLeft ((char) (((CharacterRange) tmp2).getRight () + 1));
                 }
                 else
-                  if (Overlaps ((CharacterRange) newDesc.get (j), range))
+                  if (Overlaps ((CharacterRange) tmp2, range))
                   {
                     final CharacterRange tmp = range;
-                    ((CharacterRange) newDesc.get (j)).setRight ((char) (range.getLeft () + 1));
-                    range = (CharacterRange) newDesc.get (j);
+                    ((CharacterRange) tmp2).setRight ((char) (range.getLeft () + 1));
+                    range = (CharacterRange) tmp2;
                     newDesc.set (j, tmp);
                   }
                   else
-                    if (((CharacterRange) newDesc.get (j)).getLeft () > range.getRight ())
+                    if (((CharacterRange) tmp2).getLeft () > range.getRight ())
                       break;
           }
         }
@@ -1885,7 +1891,7 @@ public class RCharacterList extends RegularExpression
       }
     }
 
-    descriptors = newDesc;
+    m_descriptors = newDesc;
   }
 
   void RemoveNegation ()
@@ -1904,14 +1910,15 @@ public class RCharacterList extends RegularExpression
      * + (int)r + " "); } } System.out.println("");
      */
 
-    final List newDescriptors = new ArrayList ();
+    final List <ICCCharacter> newDescriptors = new ArrayList <> ();
     int lastRemoved = -1; // One less than the first valid character.
 
-    for (i = 0; i < descriptors.size (); i++)
+    for (i = 0; i < m_descriptors.size (); i++)
     {
-      if (descriptors.get (i) instanceof SingleCharacter)
+      final Object tmp = m_descriptors.get (i);
+      if (tmp instanceof SingleCharacter)
       {
-        final char c = ((SingleCharacter) descriptors.get (i)).m_ch;
+        final char c = ((SingleCharacter) tmp).getChar ();
 
         if (c >= 0 && c <= lastRemoved + 1)
         {
@@ -1925,8 +1932,8 @@ public class RCharacterList extends RegularExpression
       }
       else
       {
-        final char l = ((CharacterRange) descriptors.get (i)).getLeft ();
-        final char r = ((CharacterRange) descriptors.get (i)).getRight ();
+        final char l = ((CharacterRange) tmp).getLeft ();
+        final char r = ((CharacterRange) tmp).getRight ();
 
         if (l >= 0 && l <= lastRemoved + 1)
         {
@@ -1953,7 +1960,7 @@ public class RCharacterList extends RegularExpression
         newDescriptors.add (new CharacterRange ((char) (lastRemoved + 1), (char) 0xff));
     }
 
-    descriptors = newDescriptors;
+    m_descriptors = newDescriptors;
     negated_list = false;
 
     /*
@@ -1971,8 +1978,8 @@ public class RCharacterList extends RegularExpression
 
   RCharacterList (final char c)
   {
-    descriptors = new ArrayList ();
-    descriptors.add (new SingleCharacter (c));
+    m_descriptors = new ArrayList <> ();
+    m_descriptors.add (new SingleCharacter (c));
     negated_list = false;
     ordinal = Integer.MAX_VALUE;
   }
@@ -1981,6 +1988,6 @@ public class RCharacterList extends RegularExpression
   public boolean CanMatchAnyChar ()
   {
     // Return true only if it is ~[]
-    return negated_list && (descriptors == null || descriptors.size () == 0);
+    return negated_list && (m_descriptors == null || m_descriptors.size () == 0);
   }
 }

@@ -31,23 +31,23 @@ package org.javacc.parser;
  * Describes character range descriptors in a character list.
  */
 
-public class CharacterRange
+public class CharacterRange implements ICCCharacter
 {
 
   /**
    * The line and column number of the construct that corresponds most closely
    * to this node.
    */
-  private int column;
+  private int m_nColumn;
 
-  private int line;
+  private int m_nLine;
 
   /**
    * The leftmost and the rightmost characters in this character range.
    */
-  private char right;
+  private char m_nRight;
 
-  private char left;
+  private char m_nLeft;
 
   CharacterRange ()
   {}
@@ -72,7 +72,7 @@ public class CharacterRange
    */
   void setLine (final int line)
   {
-    this.line = line;
+    this.m_nLine = line;
   }
 
   /**
@@ -80,7 +80,7 @@ public class CharacterRange
    */
   int getLine ()
   {
-    return line;
+    return m_nLine;
   }
 
   /**
@@ -89,7 +89,7 @@ public class CharacterRange
    */
   void setColumn (final int column)
   {
-    this.column = column;
+    this.m_nColumn = column;
   }
 
   /**
@@ -97,7 +97,7 @@ public class CharacterRange
    */
   int getColumn ()
   {
-    return column;
+    return m_nColumn;
   }
 
   /**
@@ -106,7 +106,7 @@ public class CharacterRange
    */
   public void setLeft (final char left)
   {
-    this.left = left;
+    this.m_nLeft = left;
   }
 
   /**
@@ -114,7 +114,7 @@ public class CharacterRange
    */
   public char getLeft ()
   {
-    return left;
+    return m_nLeft;
   }
 
   /**
@@ -123,7 +123,7 @@ public class CharacterRange
    */
   public void setRight (final char right)
   {
-    this.right = right;
+    this.m_nRight = right;
   }
 
   /**
@@ -131,6 +131,6 @@ public class CharacterRange
    */
   public char getRight ()
   {
-    return right;
+    return m_nRight;
   }
 }

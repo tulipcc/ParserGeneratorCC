@@ -1031,13 +1031,13 @@ void expansion_choices(Container c1) :
   ( "|" expansion(c2)
 	{
 	  if (morethanone) {
-	    ch.getChoices().add(c2.member);
+	    ch.getChoices().add((Expansion)c2.member);
 	    ((Expansion)c2.member).parent = ch;
 	  } else {
 	    morethanone = true;
 	    ch = new Choice((Expansion)c1.member);
 	    ((Expansion)c1.member).parent = ch;
-	    ch.getChoices().add(c2.member);
+	    ch.getChoices().add((Expansion)c2.member);
 	    ((Expansion)c2.member).parent = ch;
 	  }
 	}
@@ -1405,14 +1405,14 @@ void complex_regular_expression_choices(Container c1) :
   ( "|" complex_regular_expression(c2)
 	{
 	  if (morethanone) {
-	    ch.getChoices().add(c2.member);
+	    ch.getChoices().add((Expansion)c2.member);
 	  } else {
 	    morethanone = true;
 	    ch = new RChoice();
 	    ch.setLine(((RegularExpression)c1.member).getLine());
 	    ch.setColumn(((RegularExpression)c1.member).getColumn());
-	    ch.getChoices().add(c1.member);
-	    ch.getChoices().add(c2.member);
+	    ch.getChoices().add((Expansion)c1.member);
+	    ch.getChoices().add((Expansion)c2.member);
 	  }
 	}
   )*
@@ -1522,11 +1522,11 @@ void character_list(Container c1) :
   ]
   "[" [ character_descriptor(c2)
 	{
-	  chlist.descriptors.add(c2.member);
+	  chlist.m_descriptors.add((ICCCharacter) c2.member);
 	}
         ( "," character_descriptor(c2)
 	{
-	  chlist.descriptors.add(c2.member);
+	  chlist.m_descriptors.add((ICCCharacter) c2.member);
 	}
         )*
       ]
@@ -1559,14 +1559,14 @@ void character_descriptor(Container c) :
 	    CharacterRange cr = new CharacterRange();
 	    cr.setLine(t.beginLine);
 	    cr.setColumn(t.beginColumn);
-        cr.setLeft(c1);
-        cr.setRight(c2);
+      cr.setLeft(c1);
+      cr.setRight(c2);
 	    c.member = cr;
 	  } else {
 	    SingleCharacter sc = new SingleCharacter();
 	    sc.setLine(t.beginLine);
 	    sc.setColumn(t.beginColumn);
-	    sc.ch = c1;
+	    sc.setChar (c1);
 	    c.member = sc;
 	  }
 	}

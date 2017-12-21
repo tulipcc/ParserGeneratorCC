@@ -28,73 +28,13 @@
 package org.javacc.parser;
 
 /**
- * Describes single character descriptors in a character list.
+ * An object container. Used to pass references to objects as parameter.
+ * 
+ * @author Philip Helger
+ * @param <T>
+ *        Member type
  */
-
-public final class SingleCharacter implements ICCCharacter
+public class ContainerTyped <T>
 {
-  /**
-   * The line and column number of the construct that corresponds most closely
-   * to this node.
-   */
-  private int m_nColumn;
-
-  private int m_nLine;
-
-  /**
-   * The character of this descriptor.
-   */
-  private char m_ch;
-
-  SingleCharacter ()
-  {}
-
-  SingleCharacter (final char c)
-  {
-    m_ch = c;
-  }
-
-  /**
-   * @param line
-   *        the line to set
-   */
-  void setLine (final int line)
-  {
-    this.m_nLine = line;
-  }
-
-  /**
-   * @return the line
-   */
-  int getLine ()
-  {
-    return m_nLine;
-  }
-
-  /**
-   * @param column
-   *        the column to set
-   */
-  void setColumn (final int column)
-  {
-    this.m_nColumn = column;
-  }
-
-  /**
-   * @return the column
-   */
-  int getColumn ()
-  {
-    return m_nColumn;
-  }
-
-  public char getChar ()
-  {
-    return m_ch;
-  }
-
-  public void setChar (final char ch)
-  {
-    m_ch = ch;
-  }
+  public T member;
 }

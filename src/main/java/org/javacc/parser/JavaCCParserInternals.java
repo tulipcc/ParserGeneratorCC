@@ -37,7 +37,7 @@ import java.util.List;
 public abstract class JavaCCParserInternals extends JavaCCGlobals
 {
 
-  static protected void initialize ()
+  protected static void initialize ()
   {
     final Integer i = new Integer (0);
     lexstate_S2I.put ("DEFAULT", i);
@@ -45,12 +45,12 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     simple_tokens_table.put ("DEFAULT", new Hashtable ());
   }
 
-  static protected void addcuname (final String id)
+  protected static void addcuname (final String id)
   {
     cu_name = id;
   }
 
-  static protected void compare (final Token t, final String id1, final String id2)
+  protected static void compare (final Token t, final String id1, final String id2)
   {
     if (!id2.equals (id1))
     {
@@ -63,7 +63,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
   static private boolean insertionpoint1set = false;
   static private boolean insertionpoint2set = false;
 
-  static protected void setinsertionpoint (final Token t, final int no)
+  protected static void setinsertionpoint (final Token t, final int no)
   {
     do
     {
@@ -90,7 +90,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     first_cu_token = t;
   }
 
-  static protected void insertionpointerrors (final Token t)
+  protected static void insertionpointerrors (final Token t)
   {
     while (first_cu_token != t)
     {
@@ -103,17 +103,17 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     }
   }
 
-  static protected void set_initial_cu_token (final Token t)
+  protected static void set_initial_cu_token (final Token t)
   {
     first_cu_token = t;
   }
 
-  static protected void addproduction (final NormalProduction p)
+  protected static void addproduction (final NormalProduction p)
   {
     bnfproductions.add (p);
   }
 
-  static protected void production_addexpansion (final BNFProduction p, final Expansion e)
+  protected static void production_addexpansion (final BNFProduction p, final Expansion e)
   {
     e.parent = p;
     p.setExpansion (e);
@@ -121,7 +121,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
 
   static private int nextFreeLexState = 1;
 
-  static protected void addregexpr (final TokenProduction p)
+  protected static void addregexpr (final TokenProduction p)
   {
     Integer ii;
     rexprlist.add (p);
@@ -157,7 +157,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     }
   }
 
-  static protected void add_token_manager_decls (final Token t, final List decls)
+  protected static void add_token_manager_decls (final Token t, final List decls)
   {
     if (token_mgr_decls != null)
     {
@@ -175,7 +175,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     }
   }
 
-  static protected void add_inline_regexpr (final RegularExpression r)
+  protected static void add_inline_regexpr (final RegularExpression r)
   {
     if (!(r instanceof REndOfFile))
     {
@@ -194,7 +194,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     }
   }
 
-  static protected boolean hexchar (final char ch)
+  protected static boolean hexchar (final char ch)
   {
     if (ch >= '0' && ch <= '9')
       return true;
@@ -205,7 +205,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     return false;
   }
 
-  static protected int hexval (final char ch)
+  protected static int hexval (final char ch)
   {
     if (ch >= '0' && ch <= '9')
       return (ch) - ('0');
@@ -214,7 +214,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     return (ch) - ('a') + 10;
   }
 
-  static protected String remove_escapes_and_quotes (final Token t, final String str)
+  protected static String remove_escapes_and_quotes (final Token t, final String str)
   {
     String retval = "";
     int index = 1;
@@ -340,7 +340,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     return retval;
   }
 
-  static protected char character_descriptor_assign (final Token t, final String s)
+  protected static char character_descriptor_assign (final Token t, final String s)
   {
     if (s.length () != 1)
     {
@@ -353,7 +353,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     }
   }
 
-  static protected char character_descriptor_assign (final Token t, final String s, final String left)
+  protected static char character_descriptor_assign (final Token t, final String s, final String left)
   {
     if (s.length () != 1)
     {
@@ -377,7 +377,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
       }
   }
 
-  static protected void makeTryBlock (final Token tryLoc,
+  protected static void makeTryBlock (final Token tryLoc,
                                       final Container result,
                                       final Container nestedExp,
                                       final List types,
