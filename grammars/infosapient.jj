@@ -333,12 +333,12 @@ FzyRule compileRule()        :
 FzyPremise premise(FzyRule r)        :
 {
   Token t                         = null;
-  StringBuffer premiseTxt         = null;
+  StringBuilder premiseTxt         = null;
   FzyPremise premise              = new FzyPremise(r);
   FzyClauseComponent  eClause     = null;
 }
 {
-    t = "if"                      { premiseTxt = new StringBuffer(t.image);}
+    t = "if"                      { premiseTxt = new StringBuilder(t.image);}
 
    eClause = expression(r)        { premiseTxt = premiseTxt.append(" ").append(eClause.toText());
                                     premise.setComponent(eClause);
@@ -439,7 +439,7 @@ FzyClauseComponent expression(FzyRule r)                 :
 FzyClauseComponent parenClause(FzyRule r) :
 {
   FzyClauseComponent fcc;
-  StringBuffer text = new StringBuffer(10);
+  StringBuilder text = new StringBuilder(10);
   
 }
 {

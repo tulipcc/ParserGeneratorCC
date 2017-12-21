@@ -180,7 +180,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
    */
   static String replaceBackslash (final String str)
   {
-    StringBuffer b;
+    StringBuilder b;
     int i = 0;
     final int len = str.length ();
 
@@ -191,7 +191,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
       return str;
 
     char c;
-    b = new StringBuffer ();
+    b = new StringBuilder ();
     for (i = 0; i < len; i++)
       if ((c = str.charAt (i)) == '\\')
         b.append ("\\\\");
@@ -205,7 +205,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
    * Read the version from the comment in the specified file. This method does
    * not try to recover from invalid comment syntax, but rather returns version
    * 0.0 (which will always be taken to mean the file is out of date).
-   * 
+   *
    * @param fileName
    *        eg Token.java
    * @return The version as a double, eg 4.1

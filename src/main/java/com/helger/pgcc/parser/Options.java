@@ -312,7 +312,7 @@ public class Options
    */
   public static String getOptionsString (final String [] interestingOptions)
   {
-    final StringBuffer sb = new StringBuffer ();
+    final StringBuilder sb = new StringBuilder ();
 
     for (int i = 0; i < interestingOptions.length; i++)
     {
@@ -921,7 +921,7 @@ public class Options
   }
 
   /**
-   * Should the generated code use StringBuilder rather than StringBuffer?
+   * Should the generated code use StringBuilder rather than StringBuilder?
    *
    * @return
    */
@@ -1021,12 +1021,12 @@ public class Options
     // processing into a single Enum class
     if (isOutputLanguageJava () && getGenerateStringBuilder ())
     {
-      return getGenerateStringBuilder () ? "StringBuilder" : "StringBuffer";
+      return getGenerateStringBuilder () ? "StringBuilder" : "StringBuilder";
     }
     else
       if (getOutputLanguage ().equals (OUTPUT_LANGUAGE__CPP))
       {
-        return "StringBuffer";
+        return "StringBuilder";
       }
       else
       {

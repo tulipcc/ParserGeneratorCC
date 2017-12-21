@@ -47,7 +47,7 @@ public class AddAcceptVisitor extends UnparseVisitor
 
       /** Attempt to make the new code match the indentation of the
           node. */
-      StringBuffer pre = new StringBuffer("");
+      StringBuilder pre = new StringBuilder("");
       for (int i = 1; i < node.getFirstToken().beginColumn; ++i) {
 	pre.append(' ');
       }

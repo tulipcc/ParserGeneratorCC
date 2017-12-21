@@ -65,7 +65,7 @@ public final class TokenUtils
 
   static String addUnicodeEscapes (final String str)
   {
-    final StringBuffer buff = new StringBuffer (str.length ());
+    final StringBuilder buff = new StringBuilder (str.length ());
     char ch;
     for (int i = 0; i < str.length (); i++)
     {

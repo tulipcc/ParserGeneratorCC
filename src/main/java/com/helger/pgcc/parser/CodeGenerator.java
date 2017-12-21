@@ -20,10 +20,10 @@ import com.helger.pgcc.utils.OutputFileGenerator;
 
 public class CodeGenerator
 {
-  protected StringBuffer mainBuffer = new StringBuffer ();
-  protected StringBuffer includeBuffer = new StringBuffer ();
-  protected StringBuffer staticsBuffer = new StringBuffer ();
-  protected StringBuffer outputBuffer = mainBuffer;
+  protected StringBuilder mainBuffer = new StringBuilder ();
+  protected StringBuilder includeBuffer = new StringBuilder ();
+  protected StringBuilder staticsBuffer = new StringBuilder ();
+  protected StringBuilder outputBuffer = mainBuffer;
 
   public void genStringLiteralArrayCPP (final String varName, final String [] arr)
   {
@@ -110,7 +110,7 @@ public class CodeGenerator
   }
 
   // HACK
-  private void fixupLongLiterals (final StringBuffer sb)
+  private void fixupLongLiterals (final StringBuilder sb)
   {
     for (int i = 0; i < sb.length () - 1; i++)
     {
@@ -131,7 +131,7 @@ public class CodeGenerator
     }
   }
 
-  public void saveOutput (final String fileName, final StringBuffer sb)
+  public void saveOutput (final String fileName, final StringBuilder sb)
   {
     PrintWriter fw = null;
     if (!isJavaLanguage ())

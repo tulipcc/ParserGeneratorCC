@@ -623,7 +623,7 @@ public class ParseEngine
   // Print CPPCODE method header.
   private String generateCPPMethodheader (final CppCodeProduction p)
   {
-    final StringBuffer sig = new StringBuffer ();
+    final StringBuilder sig = new StringBuilder ();
     String ret, params;
     Token t = null;
 
@@ -680,7 +680,7 @@ public class ParseEngine
   // Print method header and return the ERROR_RETURN string.
   private String generateCPPMethodheader (final BNFProduction p, Token t)
   {
-    final StringBuffer sig = new StringBuffer ();
+    final StringBuilder sig = new StringBuilder ();
     String ret, params;
 
     final String method_name = p.getLhs ();
@@ -739,7 +739,7 @@ public class ParseEngine
       else
         default_return = "0"; // 0 converts to most (all?) basic types.
 
-    final StringBuffer ret_val = new StringBuffer ("\n#if !defined ERROR_RET_" + method_name + "\n");
+    final StringBuilder ret_val = new StringBuilder ("\n#if !defined ERROR_RET_" + method_name + "\n");
     ret_val.append ("#define ERROR_RET_" + method_name + " " + default_return + "\n");
     ret_val.append ("#endif\n");
     ret_val.append ("#define __ERROR_RET__ ERROR_RET_" + method_name + "\n");
@@ -1391,7 +1391,7 @@ public class ParseEngine
           if (seq instanceof NonTerminal)
           {
             final NonTerminal e_nrw = (NonTerminal) seq;
-            final NormalProduction ntprod = (NormalProduction) (production_table.get (e_nrw.getName ()));
+            final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
             if (ntprod instanceof CodeProduction)
             {
               break; // nothing to do here
@@ -1445,7 +1445,7 @@ public class ParseEngine
         // fact, we rely here on the fact that the "name" fields of both these
         // variables are the same.
         final NonTerminal e_nrw = (NonTerminal) e;
-        final NormalProduction ntprod = (NormalProduction) (production_table.get (e_nrw.getName ()));
+        final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
         if (ntprod instanceof CodeProduction)
         {
           // nothing to do here
@@ -1604,7 +1604,7 @@ public class ParseEngine
         // fact, we rely here on the fact that the "name" fields of both these
         // variables are the same.
         final NonTerminal e_nrw = (NonTerminal) e;
-        final NormalProduction ntprod = (NormalProduction) (production_table.get (e_nrw.getName ()));
+        final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
         if (ntprod instanceof CodeProduction)
         {
           codeGenerator.genCodeLine ("    if (true) { jj_la = 0; jj_scanpos = jj_lastpos; " + genReturn (false) + "}");
@@ -1808,7 +1808,7 @@ public class ParseEngine
       if (e instanceof NonTerminal)
       {
         final NonTerminal e_nrw = (NonTerminal) e;
-        final NormalProduction ntprod = (NormalProduction) (production_table.get (e_nrw.getName ()));
+        final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
         if (ntprod instanceof CodeProduction)
         {
           retval = Integer.MAX_VALUE;
@@ -2118,7 +2118,7 @@ public class ParseEngine
       if (e instanceof NonTerminal)
       {
         final NonTerminal e_nrw = (NonTerminal) e;
-        final NormalProduction ntprod = (NormalProduction) (production_table.get (e_nrw.getName ()));
+        final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
         if (ntprod instanceof CodeProduction)
         {
           // javacode, true - always (warn?)
@@ -2178,7 +2178,7 @@ public class ParseEngine
               Expansion tmp = (Expansion) e_nrw.units.get (1);
               while (tmp instanceof NonTerminal)
               {
-                final NormalProduction ntprod = (NormalProduction) (production_table.get (((NonTerminal) tmp).getName ()));
+                final NormalProduction ntprod = (production_table.get (((NonTerminal) tmp).getName ()));
                 if (ntprod instanceof CodeProduction)
                   break;
                 tmp = ntprod.getExpansion ();

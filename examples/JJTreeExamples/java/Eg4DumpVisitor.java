@@ -50,7 +50,7 @@ public class Eg4DumpVisitor implements Eg4Visitor
   private int indent = 0;
 
   private String indentString() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < indent; ++i) {
       sb.append(' ');
     }

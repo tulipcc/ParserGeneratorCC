@@ -330,7 +330,7 @@ public class OutputFile
 
   private static final String toHexString (final byte [] bytes)
   {
-    final StringBuffer sb = new StringBuffer (32);
+    final StringBuilder sb = new StringBuilder (32);
     for (final byte b : bytes)
     {
       sb.append (HEX_DIGITS[(b & 0xF0) >> 4]).append (HEX_DIGITS[b & 0x0F]);
