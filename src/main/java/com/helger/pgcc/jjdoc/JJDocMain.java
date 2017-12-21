@@ -28,6 +28,13 @@
 
 package com.helger.pgcc.jjdoc;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCParser;
 import com.helger.pgcc.parser.Main;
@@ -103,7 +110,6 @@ public final class JJDocMain extends JJDocGlobals
    */
   public static int mainProgram (final String args[]) throws Exception
   {
-
     Main.reInitAll ();
     JJDocOptions.init ();
 
@@ -115,10 +121,7 @@ public final class JJDocMain extends JJDocGlobals
       help_message ();
       return 1;
     }
-    else
-    {
-      info ("(type \"jjdoc\" with no arguments for help)");
-    }
+    info ("(type \"jjdoc\" with no arguments for help)");
 
     if (Options.isOption (args[args.length - 1]))
     {
@@ -138,7 +141,7 @@ public final class JJDocMain extends JJDocGlobals
     if (args[args.length - 1].equals ("-"))
     {
       info ("Reading from standard input . . .");
-      parser = new JavaCCParser (new java.io.DataInputStream (System.in));
+      parser = new JavaCCParser (new DataInputStream (System.in));
       JJDocGlobals.input_file = "standard input";
       JJDocGlobals.output_file = "standard output";
     }
@@ -147,7 +150,7 @@ public final class JJDocMain extends JJDocGlobals
       info ("Reading from file " + args[args.length - 1] + " . . .");
       try
       {
-        final java.io.File fp = new java.io.File (args[args.length - 1]);
+        final File fp = new File (args[args.length - 1]);
         if (!fp.exists ())
         {
           error ("File " + args[args.length - 1] + " not found.");
@@ -159,16 +162,16 @@ public final class JJDocMain extends JJDocGlobals
           return 1;
         }
         JJDocGlobals.input_file = fp.getName ();
-        parser = new JavaCCParser (new java.io.BufferedReader (new java.io.InputStreamReader (new java.io.FileInputStream (args[args.length -
-                                                                                                                                1]),
-                                                                                              Options.getGrammarEncoding ())));
+        parser = new JavaCCParser (new BufferedReader (new InputStreamReader (new FileInputStream (args[args.length -
+                                                                                                        1]),
+                                                                              Options.getGrammarEncoding ())));
       }
       catch (final SecurityException se)
       {
         error ("Security violation while trying to open " + args[args.length - 1]);
         return 1;
       }
-      catch (final java.io.FileNotFoundException e)
+      catch (final FileNotFoundException e)
       {
         error ("File " + args[args.length - 1] + " not found.");
         return 1;
@@ -176,39 +179,36 @@ public final class JJDocMain extends JJDocGlobals
     }
     try
     {
-
       parser.javacc_input ();
       JJDoc.start ();
 
-      if (JavaCCErrors.get_error_count () == 0)
+      if (JavaCCErrors.getErrorCount () == 0)
       {
-        if (JavaCCErrors.get_warning_count () == 0)
+        if (JavaCCErrors.getWarningCount () == 0)
         {
           info ("Grammar documentation generated successfully in " + JJDocGlobals.output_file);
         }
         else
         {
-          info ("Grammar documentation generated with 0 errors and " +
-                JavaCCErrors.get_warning_count () +
-                " warnings.");
+          info ("Grammar documentation generated with 0 errors and " + JavaCCErrors.getWarningCount () + " warnings.");
         }
         return 0;
       }
 
       error ("Detected " +
-             JavaCCErrors.get_error_count () +
+             JavaCCErrors.getErrorCount () +
              " errors and " +
-             JavaCCErrors.get_warning_count () +
+             JavaCCErrors.getWarningCount () +
              " warnings.");
-      return (JavaCCErrors.get_error_count () == 0) ? 0 : 1;
+      return (JavaCCErrors.getErrorCount () == 0) ? 0 : 1;
     }
     catch (final com.helger.pgcc.parser.MetaParseException e)
     {
       error (e.toString ());
       error ("Detected " +
-             JavaCCErrors.get_error_count () +
+             JavaCCErrors.getErrorCount () +
              " errors and " +
-             JavaCCErrors.get_warning_count () +
+             JavaCCErrors.getWarningCount () +
              " warnings.");
       return 1;
     }
@@ -216,9 +216,9 @@ public final class JJDocMain extends JJDocGlobals
     {
       error (e.toString ());
       error ("Detected " +
-             (JavaCCErrors.get_error_count () + 1) +
+             (JavaCCErrors.getErrorCount () + 1) +
              " errors and " +
-             JavaCCErrors.get_warning_count () +
+             JavaCCErrors.getWarningCount () +
              " warnings.");
       return 1;
     }

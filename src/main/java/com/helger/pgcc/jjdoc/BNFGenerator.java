@@ -27,6 +27,9 @@
  */
 package com.helger.pgcc.jjdoc;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +44,9 @@ import com.helger.pgcc.parser.RJustName;
 import com.helger.pgcc.parser.RegularExpression;
 import com.helger.pgcc.parser.TokenProduction;
 
-public class BNFGenerator implements Generator
+public class BNFGenerator implements IDocGenerator
 {
-  private final Map <String, String> id_map = new HashMap <String, String> ();
+  private final Map <String, String> id_map = new HashMap <> ();
   private int id = 1;
   protected PrintWriter ostr;
   private boolean printing = true;
@@ -66,27 +69,25 @@ public class BNFGenerator implements Generator
     {
       if (JJDocGlobals.input_file.equals ("standard input"))
       {
-        return new java.io.PrintWriter (new java.io.OutputStreamWriter (System.out));
+        return new PrintWriter (new OutputStreamWriter (System.out));
+      }
+
+      final String ext = ".bnf";
+      final int i = JJDocGlobals.input_file.lastIndexOf ('.');
+      if (i == -1)
+      {
+        JJDocGlobals.output_file = JJDocGlobals.input_file + ext;
       }
       else
       {
-        final String ext = ".bnf";
-        final int i = JJDocGlobals.input_file.lastIndexOf ('.');
-        if (i == -1)
+        final String suffix = JJDocGlobals.input_file.substring (i);
+        if (suffix.equals (ext))
         {
           JJDocGlobals.output_file = JJDocGlobals.input_file + ext;
         }
         else
         {
-          final String suffix = JJDocGlobals.input_file.substring (i);
-          if (suffix.equals (ext))
-          {
-            JJDocGlobals.output_file = JJDocGlobals.input_file + ext;
-          }
-          else
-          {
-            JJDocGlobals.output_file = JJDocGlobals.input_file.substring (0, i) + ext;
-          }
+          JJDocGlobals.output_file = JJDocGlobals.input_file.substring (0, i) + ext;
         }
       }
     }
@@ -96,12 +97,12 @@ public class BNFGenerator implements Generator
     }
     try
     {
-      ostr = new java.io.PrintWriter (new java.io.FileWriter (JJDocGlobals.output_file));
+      ostr = new PrintWriter (new FileWriter (JJDocGlobals.output_file));
     }
-    catch (final java.io.IOException e)
+    catch (final IOException e)
     {
       error ("JJDoc: can't open output stream on file " + JJDocGlobals.output_file + ".  Using standard output.");
-      ostr = new java.io.PrintWriter (new java.io.OutputStreamWriter (System.out));
+      ostr = new PrintWriter (new OutputStreamWriter (System.out));
     }
 
     return ostr;

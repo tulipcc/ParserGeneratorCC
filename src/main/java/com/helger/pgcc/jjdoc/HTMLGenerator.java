@@ -28,7 +28,8 @@
 
 package com.helger.pgcc.jjdoc;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.helger.pgcc.parser.CppCodeProduction;
 import com.helger.pgcc.parser.Expansion;
@@ -41,25 +42,17 @@ import com.helger.pgcc.parser.TokenProduction;
 /**
  * Output BNF in HTML 3.2 format.
  */
-public class HTMLGenerator extends TextGenerator implements Generator
+public class HTMLGenerator extends TextGenerator
 {
-  private final Hashtable id_map = new Hashtable ();
+  private final Map <String, String> id_map = new HashMap <> ();
   private int id = 1;
 
   public HTMLGenerator ()
-  {
-    super ();
-  }
+  {}
 
   protected String get_id (final String nt)
   {
-    String i = (String) id_map.get (nt);
-    if (i == null)
-    {
-      i = "prod" + id++;
-      id_map.put (nt, i);
-    }
-    return i;
+    return id_map.computeIfAbsent (nt, k -> "prod" + id++);
   }
 
   private void println (final String s)
@@ -70,29 +63,25 @@ public class HTMLGenerator extends TextGenerator implements Generator
   @Override
   public void text (final String s)
   {
-    String ss = "";
-    for (int i = 0; i < s.length (); ++i)
-    {
-      if (s.charAt (i) == '<')
+    final StringBuilder ret = new StringBuilder (s.length () * 2);
+    for (final char c : s.toCharArray ())
+      switch (c)
       {
-        ss += "&lt;";
+        case '<':
+          ret.append ("&lt;");
+          break;
+        case '>':
+          ret.append ("&gt;");
+          break;
+        case '&':
+          ret.append ("&amp;");
+          break;
+        default:
+          ret.append (c);
+          break;
       }
-      else
-        if (s.charAt (i) == '>')
-        {
-          ss += "&gt;";
-        }
-        else
-          if (s.charAt (i) == '&')
-          {
-            ss += "&amp;";
-          }
-          else
-          {
-            ss += s.charAt (i);
-          }
-    }
-    print (ss);
+
+    print (ret.toString ());
   }
 
   @Override
@@ -135,7 +124,7 @@ public class HTMLGenerator extends TextGenerator implements Generator
 
   /**
    * Prints out comments, used for tokens and non-terminals. {@inheritDoc}
-   * 
+   *
    * @see org.javacc.jjdoc.TextGenerator#specialTokens(java.lang.String)
    */
   @Override

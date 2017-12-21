@@ -99,7 +99,7 @@ public class JJTreeNode extends SimpleNode
 
   String whiteOut (final Token t)
   {
-    final StringBuffer sb = new StringBuffer (t.image.length ());
+    final StringBuilder sb = new StringBuilder (t.image.length ());
 
     for (int i = 0; i < t.image.length (); ++i)
     {

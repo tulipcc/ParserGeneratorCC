@@ -501,7 +501,7 @@ public class CodeGenerator
 
       if (o instanceof Map <?, ?>)
       {
-        options.putAll ((Map <String, Object>) o);
+        options.putAll ((Map <String, ?>) o);
       }
       else
       {

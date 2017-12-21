@@ -5,11 +5,11 @@ package com.helger.pgcc.utils;
  */
 public class OptionInfo implements Comparable <OptionInfo>
 {
-  String _name;
-  OptionType _type;
-  Object _default;
+  private final String _name;
+  private final OptionType _type;
+  private final Comparable <?> _default;
 
-  public OptionInfo (final String name, final OptionType type, final Object default1)
+  public OptionInfo (final String name, final OptionType type, final Comparable <?> default1)
   {
     _name = name;
     _type = type;
@@ -26,7 +26,7 @@ public class OptionInfo implements Comparable <OptionInfo>
     return _type;
   }
 
-  public Object getDefault ()
+  public Comparable <?> getDefault ()
   {
     return _default;
   }

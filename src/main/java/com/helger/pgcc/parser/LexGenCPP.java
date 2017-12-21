@@ -272,7 +272,7 @@ public class LexGenCPP extends LexGen // CodeGenerator implements
   @Override
   public void start () throws IOException
   {
-    if (!Options.getBuildTokenManager () || Options.getUserTokenManager () || JavaCCErrors.get_error_count () > 0)
+    if (!Options.getBuildTokenManager () || Options.getUserTokenManager () || JavaCCErrors.getErrorCount () > 0)
       return;
 
     keepLineCol = Options.getKeepLineColumn ();

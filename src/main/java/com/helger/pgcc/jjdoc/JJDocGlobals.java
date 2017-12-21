@@ -47,15 +47,15 @@ public class JJDocGlobals extends JavaCCGlobals
   /**
    * The Generator to create output with.
    */
-  public static Generator generator;
+  public static IDocGenerator s_generator;
 
   /**
    * @param generator
    *        The generator to set.
    */
-  public static void setGenerator (final Generator generator)
+  public static void setGenerator (final IDocGenerator generator)
   {
-    JJDocGlobals.generator = generator;
+    JJDocGlobals.s_generator = generator;
   }
 
   /**
@@ -64,57 +64,57 @@ public class JJDocGlobals extends JavaCCGlobals
    *
    * @return the generator configured in options or set by setter.
    */
-  public static Generator getGenerator ()
+  public static IDocGenerator getGenerator ()
   {
-    if (generator == null)
+    if (s_generator == null)
     {
       if (JJDocOptions.getText ())
       {
-        generator = new TextGenerator ();
+        s_generator = new TextGenerator ();
       }
       else
         if (JJDocOptions.getBNF ())
         {
-          generator = new BNFGenerator ();
+          s_generator = new BNFGenerator ();
         }
         else
           if (JJDocOptions.getXText ())
           {
-            generator = new XTextGenerator ();
+            s_generator = new XTextGenerator ();
           }
           else
           {
-            generator = new HTMLGenerator ();
+            s_generator = new HTMLGenerator ();
           }
     }
     else
     {
       if (JJDocOptions.getText ())
       {
-        if (generator instanceof HTMLGenerator)
+        if (s_generator instanceof HTMLGenerator)
         {
-          generator = new TextGenerator ();
+          s_generator = new TextGenerator ();
         }
       }
       else
         if (JJDocOptions.getBNF ())
         {
-          generator = new BNFGenerator ();
+          s_generator = new BNFGenerator ();
         }
         else
           if (JJDocOptions.getXText ())
           {
-            generator = new XTextGenerator ();
+            s_generator = new XTextGenerator ();
           }
           else
           {
-            if (generator instanceof TextGenerator)
+            if (s_generator instanceof TextGenerator)
             {
-              generator = new HTMLGenerator ();
+              s_generator = new HTMLGenerator ();
             }
           }
     }
-    return generator;
+    return s_generator;
   }
 
   /**

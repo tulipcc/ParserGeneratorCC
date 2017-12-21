@@ -763,7 +763,7 @@ void javacode_production() :
   Block(p.getCodeTokens())
 	{
 	  p.setLastToken(getToken(0));
-	  addproduction(p);
+	  addProduction(p);
 	}
 }
 
@@ -805,7 +805,7 @@ void cppcode_production() :
   Block(p.getCodeTokens())
 	{
 	  p.setLastToken(getToken(0));
-	  addproduction(p);
+	  addProduction(p);
 	}
 }
 
@@ -851,8 +851,8 @@ void bnf_production() :
 	{
 	  p.setLastToken(t);
 	  p.setJumpPatched(jumpPatched);
-	  production_addexpansion(p, (Expansion)(c.member));
-	  addproduction(p);
+	  productionAddExpansion(p, (Expansion)(c.member));
+	  addProduction(p);
 	}
 }
 

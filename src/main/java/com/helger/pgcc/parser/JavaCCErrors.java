@@ -134,12 +134,12 @@ public final class JavaCCErrors
     warning_count++;
   }
 
-  public static int get_warning_count ()
+  public static int getWarningCount ()
   {
     return warning_count;
   }
 
-  public static int get_error_count ()
+  public static int getErrorCount ()
   {
     return parse_error_count + semantic_error_count;
   }

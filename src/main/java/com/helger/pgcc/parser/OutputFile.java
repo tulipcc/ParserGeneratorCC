@@ -171,7 +171,7 @@ public class OutputFile
   /**
    * Output a warning if the file was created with an incompatible version of
    * JavaCC.
-   * 
+   *
    * @param fileName
    * @param versionId
    */
@@ -179,10 +179,8 @@ public class OutputFile
   {
     final String firstLine = "/* " + JavaCCGlobals.getIdString (toolName, file.getName ()) + " Version ";
 
-    try
+    try (final BufferedReader reader = new BufferedReader (new FileReader (file)))
     {
-      final BufferedReader reader = new BufferedReader (new FileReader (file));
-
       String line;
       while ((line = reader.readLine ()) != null)
       {
@@ -290,7 +288,7 @@ public class OutputFile
   /**
    * Close the OutputFile, writing any necessary trailer information (such as a
    * checksum).
-   * 
+   *
    * @throws IOException
    */
   public void close () throws IOException

@@ -78,7 +78,7 @@ public class JavaCCInterpreter
       LexGen.generateDataOnly = true;
       lg.start ();
       final TokenizerData td = LexGen.tokenizerData;
-      if (JavaCCErrors.get_error_count () == 0)
+      if (JavaCCErrors.getErrorCount () == 0)
       {
         tokenize (td, input);
       }
@@ -86,9 +86,9 @@ public class JavaCCInterpreter
     catch (final MetaParseException e)
     {
       System.out.println ("Detected " +
-                          JavaCCErrors.get_error_count () +
+                          JavaCCErrors.getErrorCount () +
                           " errors and " +
-                          JavaCCErrors.get_warning_count () +
+                          JavaCCErrors.getWarningCount () +
                           " warnings.");
       System.exit (1);
     }
@@ -96,9 +96,9 @@ public class JavaCCInterpreter
     {
       System.out.println (e.toString ());
       System.out.println ("Detected " +
-                          (JavaCCErrors.get_error_count () + 1) +
+                          (JavaCCErrors.getErrorCount () + 1) +
                           " errors and " +
-                          JavaCCErrors.get_warning_count () +
+                          JavaCCErrors.getWarningCount () +
                           " warnings.");
       System.exit (1);
     }

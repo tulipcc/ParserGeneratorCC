@@ -33,7 +33,7 @@ public class ParseGenCPP extends ParseGen
 
     Token t = null;
 
-    if (JavaCCErrors.get_error_count () != 0)
+    if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ();
 
     final List <String> tn = new ArrayList <> (toolNames);

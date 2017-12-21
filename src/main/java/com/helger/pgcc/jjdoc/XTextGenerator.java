@@ -28,7 +28,8 @@
 
 package com.helger.pgcc.jjdoc;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.helger.pgcc.parser.CppCodeProduction;
 import com.helger.pgcc.parser.Expansion;
@@ -40,30 +41,25 @@ import com.helger.pgcc.parser.RegularExpression;
 import com.helger.pgcc.parser.TokenProduction;
 
 /**
- * Output BNF in HTML 3.2 format.
+ * Output BNF in XText format.
  */
-public class XTextGenerator extends TextGenerator implements Generator
+public class XTextGenerator extends TextGenerator
 {
-  private final Hashtable id_map = new Hashtable ();
+  private final Map <String, String> id_map = new HashMap <> ();
   private int id = 1;
 
   static final String sep = "\n";
 
   public XTextGenerator ()
-  {
-    super ();
-  }
+  {}
 
   @Override
   public void handleTokenProduction (final TokenProduction tp)
   {
-
     final StringBuilder sb = new StringBuilder ();
 
-    for (final Object aElement : tp.respecs)
+    for (final RegExprSpec res : tp.respecs)
     {
-      final RegExprSpec res = (RegExprSpec) aElement;
-
       final String regularExpressionText = JJDoc.emitRE (res.rexp);
       sb.append (regularExpressionText);
 
@@ -83,13 +79,7 @@ public class XTextGenerator extends TextGenerator implements Generator
 
   protected String get_id (final String nt)
   {
-    String i = (String) id_map.get (nt);
-    if (i == null)
-    {
-      i = "prod" + id++;
-      id_map.put (nt, i);
-    }
-    return i;
+    return id_map.computeIfAbsent (nt, k -> "prod" + id++);
   }
 
   private void println (final String s)
@@ -100,18 +90,6 @@ public class XTextGenerator extends TextGenerator implements Generator
   @Override
   public void text (final String s)
   {
-    // String ss = "";
-    // for (int i = 0; i < s.length(); ++i) {
-    // if (s.charAt(i) == '<') {
-    // ss += "&lt;";
-    // } else if (s.charAt(i) == '>') {
-    // ss += "&gt;";
-    // } else if (s.charAt(i) == '&') {
-    // ss += "&amp;";
-    // } else {
-    // ss += s.charAt(i);
-    // }
-    // }
     print (s);
   }
 
@@ -156,9 +134,8 @@ public class XTextGenerator extends TextGenerator implements Generator
 
   /**
    * Prints out comments, used for tokens and non-terminals. {@inheritDoc}
-   * 
-   * @see org.javacc.jjdoc.TextGenerator#specialTokens(java.lang.String)
    */
+
   @Override
   public void specialTokens (final String s)
   {
@@ -281,5 +258,4 @@ public class XTextGenerator extends TextGenerator implements Generator
   @Override
   public void reEnd (final RegularExpression r)
   {}
-
 }

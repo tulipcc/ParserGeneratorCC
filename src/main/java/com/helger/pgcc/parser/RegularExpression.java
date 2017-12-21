@@ -37,7 +37,6 @@ import java.util.Set;
 
 public abstract class RegularExpression extends Expansion
 {
-
   /**
    * The label of the regular expression (if any). If no label is present, this
    * is set to "".

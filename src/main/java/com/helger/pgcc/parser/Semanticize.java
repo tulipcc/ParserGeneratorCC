@@ -28,10 +28,9 @@
 package com.helger.pgcc.parser;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Semanticize extends JavaCCGlobals
 {
@@ -59,7 +58,7 @@ public class Semanticize extends JavaCCGlobals
   static public void start () throws MetaParseException
   {
 
-    if (JavaCCErrors.get_error_count () != 0)
+    if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ();
 
     if (Options.getLookahead () > 1 && !Options.getForceLaCheck () && Options.getSanityCheck ())
@@ -216,24 +215,21 @@ public class Semanticize extends JavaCCGlobals
      */
 
     tokenCount = 1;
-    for (final TokenProduction aTokenProduction : rexprlist)
+    for (final TokenProduction tp : rexprlist)
     {
-      final TokenProduction tp = (aTokenProduction);
       final List <RegExprSpec> respecs = tp.respecs;
       if (tp.lexStates == null)
       {
         tp.lexStates = new String [lexstate_I2S.size ()];
-        int i = 0;
-        for (final Enumeration <String> enum1 = lexstate_I2S.elements (); enum1.hasMoreElements ();)
-        {
-          tp.lexStates[i++] = (enum1.nextElement ());
-        }
+        lexstate_I2S.values ().toArray (tp.lexStates);
       }
-      final Hashtable table[] = new Hashtable [tp.lexStates.length];
+
+      final Map <String, Map <String, RegularExpression>> table[] = new Map [tp.lexStates.length];
       for (int i = 0; i < tp.lexStates.length; i++)
       {
-        table[i] = (Hashtable) simple_tokens_table.get (tp.lexStates[i]);
+        table[i] = simple_tokens_table.get (tp.lexStates[i]);
       }
+
       for (final RegExprSpec aRegExprSpec : respecs)
       {
         final RegExprSpec res = (aRegExprSpec);
@@ -245,7 +241,7 @@ public class Semanticize extends JavaCCGlobals
           for (int i = 0; i < table.length; i++)
           {
             // Get table of all case variants of "sl.image" into table2.
-            Hashtable table2 = (Hashtable) (table[i].get (sl.image.toUpperCase ()));
+            Map <String, RegularExpression> table2 = table[i].get (sl.image.toUpperCase ());
             if (table2 == null)
             {
               // There are no case variants of "sl.image" earlier than the
@@ -255,7 +251,7 @@ public class Semanticize extends JavaCCGlobals
               {
                 sl.ordinal = tokenCount++;
               }
-              table2 = new Hashtable ();
+              table2 = new HashMap <> ();
               table2.put (sl.image, sl);
               table[i].put (sl.image.toUpperCase (), table2);
             }
@@ -294,14 +290,13 @@ public class Semanticize extends JavaCCGlobals
                   // This has to be explicit. A warning needs to be given with
                   // respect
                   // to all previous strings.
-                  String pos = "";
+                  final StringBuilder pos = new StringBuilder ();
                   int count = 0;
-                  for (final Enumeration <RegularExpression> enum2 = table2.elements (); enum2.hasMoreElements ();)
+                  for (final RegularExpression rexp : table2.values ())
                   {
-                    final RegularExpression rexp = (enum2.nextElement ());
                     if (count != 0)
-                      pos += ",";
-                    pos += " line " + rexp.getLine ();
+                      pos.append (",");
+                    pos.append (" line ").append (rexp.getLine ());
                     count++;
                   }
                   if (count == 1)
@@ -327,7 +322,7 @@ public class Semanticize extends JavaCCGlobals
                 else
                 {
                   // The rest of the cases do not involve IGNORE_CASE.
-                  final RegularExpression re = (RegularExpression) table2.get (sl.image);
+                  final RegularExpression re = table2.get (sl.image);
                   if (re == null)
                   {
                     if (sl.ordinal == 0)
@@ -514,7 +509,7 @@ public class Semanticize extends JavaCCGlobals
       }
     }
 
-    if (JavaCCErrors.get_error_count () != 0)
+    if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ();
 
     // The following code sets the value of the "emptyPossible" field of
@@ -539,7 +534,7 @@ public class Semanticize extends JavaCCGlobals
       }
     }
 
-    if (Options.getSanityCheck () && JavaCCErrors.get_error_count () == 0)
+    if (Options.getSanityCheck () && JavaCCErrors.getErrorCount () == 0)
     {
 
       // The following code checks that all ZeroOrMore, ZeroOrOne, and OneOrMore
@@ -606,7 +601,7 @@ public class Semanticize extends JavaCCGlobals
       /*
        * The following code performs the lookahead ambiguity checking.
        */
-      if (JavaCCErrors.get_error_count () == 0)
+      if (JavaCCErrors.getErrorCount () == 0)
       {
         for (final NormalProduction aNormalProduction : bnfproductions)
         {
@@ -616,7 +611,7 @@ public class Semanticize extends JavaCCGlobals
 
     } // matches "if (Options.getSanityCheck()) {"
 
-    if (JavaCCErrors.get_error_count () != 0)
+    if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ();
 
   }
@@ -626,20 +621,19 @@ public class Semanticize extends JavaCCGlobals
   // Checks to see if the "str" is superceded by another equal (except case)
   // string
   // in table.
-  public static boolean hasIgnoreCase (final Hashtable <String, RegularExpression> table, final String str)
+  public static boolean hasIgnoreCase (final Map <String, RegularExpression> table, final String str)
   {
-    RegularExpression rexp;
-    rexp = (table.get (str));
+    final RegularExpression rexp = table.get (str);
     if (rexp != null && !rexp.tpContext.ignoreCase)
     {
       return false;
     }
-    for (final Enumeration <RegularExpression> enumeration = table.elements (); enumeration.hasMoreElements ();)
+
+    for (final RegularExpression aRegEx : table.values ())
     {
-      rexp = (enumeration.nextElement ());
-      if (rexp.tpContext.ignoreCase)
+      if (aRegEx.tpContext.ignoreCase)
       {
-        other = rexp;
+        other = aRegEx;
         return true;
       }
     }
@@ -872,9 +866,9 @@ public class Semanticize extends JavaCCGlobals
     else
       if (rexp instanceof RChoice)
       {
-        for (final Iterator it = ((RChoice) rexp).getChoices ().iterator (); it.hasNext ();)
+        for (final Object aElement : ((RChoice) rexp).getChoices ())
         {
-          if (rexpWalk ((RegularExpression) it.next ()))
+          if (rexpWalk ((RegularExpression) aElement))
           {
             return true;
           }
@@ -1058,7 +1052,7 @@ public class Semanticize extends JavaCCGlobals
       if (e instanceof NonTerminal)
       {
         final NonTerminal nt = (NonTerminal) e;
-        if ((nt.setProd ((NormalProduction) production_table.get (nt.getName ()))) == null)
+        if ((nt.setProd (production_table.get (nt.getName ()))) == null)
         {
           JavaCCErrors.semantic_error (e, "Non-terminal " + nt.getName () + " has not been defined.");
         }

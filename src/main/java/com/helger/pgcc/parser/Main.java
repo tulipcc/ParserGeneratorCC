@@ -163,19 +163,14 @@ public class Main
     {
       return name;
     }
-    else
-    {
-      final int charsToPad = maxLengthInt - nameLength;
-      final StringBuilder sb = new StringBuilder (charsToPad);
-      sb.append (name);
 
-      for (int i = 0; i < charsToPad; i++)
-      {
-        sb.append (" ");
-      }
+    final int charsToPad = maxLengthInt - nameLength;
+    final StringBuilder sb = new StringBuilder (charsToPad);
+    sb.append (name);
+    for (int i = 0; i < charsToPad; i++)
+      sb.append (" ");
 
-      return sb.toString ();
-    }
+    return sb.toString ();
   }
 
   /**
@@ -340,9 +335,9 @@ public class Main
           unhandledLanguageExit (outputLanguage);
         }
 
-      if ((JavaCCErrors.get_error_count () == 0) && (isBuildParser || Options.getBuildTokenManager ()))
+      if ((JavaCCErrors.getErrorCount () == 0) && (isBuildParser || Options.getBuildTokenManager ()))
       {
-        if (JavaCCErrors.get_warning_count () == 0)
+        if (JavaCCErrors.getWarningCount () == 0)
         {
           if (isBuildParser)
           {
@@ -351,26 +346,26 @@ public class Main
         }
         else
         {
-          System.out.println ("Parser generated with 0 errors and " + JavaCCErrors.get_warning_count () + " warnings.");
+          System.out.println ("Parser generated with 0 errors and " + JavaCCErrors.getWarningCount () + " warnings.");
         }
         return 0;
       }
       else
       {
         System.out.println ("Detected " +
-                            JavaCCErrors.get_error_count () +
+                            JavaCCErrors.getErrorCount () +
                             " errors and " +
-                            JavaCCErrors.get_warning_count () +
+                            JavaCCErrors.getWarningCount () +
                             " warnings.");
-        return (JavaCCErrors.get_error_count () == 0) ? 0 : 1;
+        return (JavaCCErrors.getErrorCount () == 0) ? 0 : 1;
       }
     }
     catch (final MetaParseException e)
     {
       System.out.println ("Detected " +
-                          JavaCCErrors.get_error_count () +
+                          JavaCCErrors.getErrorCount () +
                           " errors and " +
-                          JavaCCErrors.get_warning_count () +
+                          JavaCCErrors.getWarningCount () +
                           " warnings.");
       return 1;
     }
@@ -378,9 +373,9 @@ public class Main
     {
       System.out.println (e.toString ());
       System.out.println ("Detected " +
-                          (JavaCCErrors.get_error_count () + 1) +
+                          (JavaCCErrors.getErrorCount () + 1) +
                           " errors and " +
-                          JavaCCErrors.get_warning_count () +
+                          JavaCCErrors.getWarningCount () +
                           " warnings.");
       return 1;
     }

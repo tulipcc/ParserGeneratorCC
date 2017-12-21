@@ -41,11 +41,11 @@ public class JJDoc extends JJDocGlobals
 
   static void start ()
   {
-    generator = getGenerator ();
-    generator.documentStart ();
-    emitTokenProductions (generator, rexprlist);
-    emitNormalProductions (generator, bnfproductions);
-    generator.documentEnd ();
+    s_generator = getGenerator ();
+    s_generator.documentStart ();
+    emitTokenProductions (s_generator, rexprlist);
+    emitNormalProductions (s_generator, bnfproductions);
+    s_generator.documentEnd ();
   }
 
   private static Token getPrecedingSpecialToken (final Token tok)
@@ -58,7 +58,7 @@ public class JJDoc extends JJDocGlobals
     return (t != tok) ? t : null;
   }
 
-  private static void emitTopLevelSpecialTokens (Token tok, final Generator gen)
+  private static void emitTopLevelSpecialTokens (Token tok, final IDocGenerator gen)
   {
     if (tok == null)
     {
@@ -87,7 +87,7 @@ public class JJDoc extends JJDocGlobals
    * instanceof TokenProduction) ); }
    */
 
-  private static void emitTokenProductions (final Generator gen, final List prods)
+  private static void emitTokenProductions (final IDocGenerator gen, final List prods)
   {
     gen.tokensStart ();
     // FIXME there are many empty productions here
@@ -158,7 +158,7 @@ public class JJDoc extends JJDocGlobals
     return token;
   }
 
-  private static void emitNormalProductions (final Generator gen, final List prods)
+  private static void emitNormalProductions (final IDocGenerator gen, final List prods)
   {
     gen.nonterminalsStart ();
     for (final Iterator it = prods.iterator (); it.hasNext ();)
@@ -203,7 +203,7 @@ public class JJDoc extends JJDocGlobals
     gen.nonterminalsEnd ();
   }
 
-  private static void emitExpansionTree (final Expansion exp, final Generator gen)
+  private static void emitExpansionTree (final Expansion exp, final IDocGenerator gen)
   {
     // gen.text("[->" + exp.getClass().getName() + "]");
     if (exp instanceof Action)
@@ -262,10 +262,10 @@ public class JJDoc extends JJDocGlobals
     // gen.text("[<-" + exp.getClass().getName() + "]");
   }
 
-  private static void emitExpansionAction (final Action a, final Generator gen)
+  private static void emitExpansionAction (final Action a, final IDocGenerator gen)
   {}
 
-  private static void emitExpansionChoice (final Choice c, final Generator gen)
+  private static void emitExpansionChoice (final Choice c, final IDocGenerator gen)
   {
     for (final Iterator it = c.getChoices ().iterator (); it.hasNext ();)
     {
@@ -278,24 +278,24 @@ public class JJDoc extends JJDocGlobals
     }
   }
 
-  private static void emitExpansionLookahead (final Lookahead l, final Generator gen)
+  private static void emitExpansionLookahead (final Lookahead l, final IDocGenerator gen)
   {}
 
-  private static void emitExpansionNonTerminal (final NonTerminal nt, final Generator gen)
+  private static void emitExpansionNonTerminal (final NonTerminal nt, final IDocGenerator gen)
   {
     gen.nonTerminalStart (nt);
     gen.text (nt.getName ());
     gen.nonTerminalEnd (nt);
   }
 
-  private static void emitExpansionOneOrMore (final OneOrMore o, final Generator gen)
+  private static void emitExpansionOneOrMore (final OneOrMore o, final IDocGenerator gen)
   {
     gen.text ("( ");
     emitExpansionTree (o.expansion, gen);
     gen.text (" )+");
   }
 
-  private static void emitExpansionRegularExpression (final RegularExpression r, final Generator gen)
+  private static void emitExpansionRegularExpression (final RegularExpression r, final IDocGenerator gen)
   {
     final String reRendered = emitRE (r);
     if (!reRendered.equals (""))
@@ -306,7 +306,7 @@ public class JJDoc extends JJDocGlobals
     }
   }
 
-  private static void emitExpansionSequence (final Sequence s, final Generator gen)
+  private static void emitExpansionSequence (final Sequence s, final IDocGenerator gen)
   {
     boolean firstUnit = true;
     for (final Object aElement : s.units)
@@ -334,7 +334,7 @@ public class JJDoc extends JJDocGlobals
     }
   }
 
-  private static void emitExpansionTryBlock (final TryBlock t, final Generator gen)
+  private static void emitExpansionTryBlock (final TryBlock t, final IDocGenerator gen)
   {
     final boolean needParens = t.exp instanceof Choice;
     if (needParens)
@@ -348,14 +348,14 @@ public class JJDoc extends JJDocGlobals
     }
   }
 
-  private static void emitExpansionZeroOrMore (final ZeroOrMore z, final Generator gen)
+  private static void emitExpansionZeroOrMore (final ZeroOrMore z, final IDocGenerator gen)
   {
     gen.text ("( ");
     emitExpansionTree (z.expansion, gen);
     gen.text (" )*");
   }
 
-  private static void emitExpansionZeroOrOne (final ZeroOrOne z, final Generator gen)
+  private static void emitExpansionZeroOrOne (final ZeroOrOne z, final IDocGenerator gen)
   {
     gen.text ("( ");
     emitExpansionTree (z.expansion, gen);

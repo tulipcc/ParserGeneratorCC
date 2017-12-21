@@ -28,7 +28,7 @@
 
 package com.helger.pgcc.parser;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,13 +36,12 @@ import java.util.List;
  */
 public abstract class JavaCCParserInternals extends JavaCCGlobals
 {
-
   protected static void initialize ()
   {
-    final Integer i = new Integer (0);
+    final Integer i = Integer.valueOf (0);
     lexstate_S2I.put ("DEFAULT", i);
     lexstate_I2S.put (i, "DEFAULT");
-    simple_tokens_table.put ("DEFAULT", new Hashtable ());
+    simple_tokens_table.put ("DEFAULT", new HashMap <> ());
   }
 
   protected static void addcuname (final String id)
@@ -58,10 +57,10 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     }
   }
 
-  static private List <Token> add_cu_token_here = cu_to_insertion_point_1;
-  static private Token first_cu_token;
-  static private boolean insertionpoint1set = false;
-  static private boolean insertionpoint2set = false;
+  private static List <Token> add_cu_token_here = cu_to_insertion_point_1;
+  private static Token first_cu_token;
+  private static boolean insertionpoint1set = false;
+  private static boolean insertionpoint2set = false;
 
   protected static void setinsertionpoint (final Token t, final int no)
   {
@@ -108,18 +107,18 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     first_cu_token = t;
   }
 
-  protected static void addproduction (final NormalProduction p)
+  protected static void addProduction (final NormalProduction p)
   {
     bnfproductions.add (p);
   }
 
-  protected static void production_addexpansion (final BNFProduction p, final Expansion e)
+  protected static void productionAddExpansion (final BNFProduction p, final Expansion e)
   {
     e.parent = p;
     p.setExpansion (e);
   }
 
-  static private int nextFreeLexState = 1;
+  private static int nextFreeLexState = 1;
 
   protected static void addregexpr (final TokenProduction p)
   {
@@ -149,15 +148,15 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
       }
       if (lexstate_S2I.get (p.lexStates[i]) == null)
       {
-        ii = new Integer (nextFreeLexState++);
+        ii = Integer.valueOf (nextFreeLexState++);
         lexstate_S2I.put (p.lexStates[i], ii);
         lexstate_I2S.put (ii, p.lexStates[i]);
-        simple_tokens_table.put (p.lexStates[i], new Hashtable ());
+        simple_tokens_table.put (p.lexStates[i], new HashMap <> ());
       }
     }
   }
 
-  protected static void add_token_manager_decls (final Token t, final List decls)
+  protected static void add_token_manager_decls (final Token t, final List <Token> decls)
   {
     if (token_mgr_decls != null)
     {

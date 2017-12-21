@@ -282,8 +282,7 @@ public class Options
 
   public static Map <String, Object> getOptions ()
   {
-    final HashMap <String, Object> ret = new HashMap <> (optionValues);
-    return ret;
+    return new HashMap <> (optionValues);
   }
 
   /**
@@ -514,7 +513,7 @@ public class Options
     }
 
     String name;
-    Object Val;
+    Object val;
 
     // Look for the first ":" or "=", which will separate the option name
     // from its value (if any).
@@ -538,12 +537,12 @@ public class Options
       name = s.toUpperCase ();
       if (optionValues.containsKey (name))
       {
-        Val = Boolean.TRUE;
+        val = Boolean.TRUE;
       }
       else
         if (name.length () > 2 && name.charAt (0) == 'N' && name.charAt (1) == 'O')
         {
-          Val = Boolean.FALSE;
+          val = Boolean.FALSE;
           name = name.substring (2);
         }
         else
@@ -557,12 +556,12 @@ public class Options
       name = s.substring (0, index).toUpperCase ();
       if (s.substring (index + 1).equalsIgnoreCase ("TRUE"))
       {
-        Val = Boolean.TRUE;
+        val = Boolean.TRUE;
       }
       else
         if (s.substring (index + 1).equalsIgnoreCase ("FALSE"))
         {
-          Val = Boolean.FALSE;
+          val = Boolean.FALSE;
         }
         else
         {
@@ -574,18 +573,18 @@ public class Options
               System.out.println ("Warning: Bad option value in \"" + arg + "\" will be ignored.");
               return;
             }
-            Val = new Integer (i);
+            val = new Integer (i);
           }
           catch (final NumberFormatException e)
           {
-            Val = s.substring (index + 1);
+            val = s.substring (index + 1);
             if (s.length () > index + 2)
             {
               // i.e., there is space for two '"'s in value
               if (s.charAt (index + 1) == '"' && s.charAt (s.length () - 1) == '"')
               {
                 // remove the two '"'s.
-                Val = s.substring (index + 2, s.length () - 1);
+                val = s.substring (index + 2, s.length () - 1);
               }
             }
           }
@@ -598,7 +597,7 @@ public class Options
       return;
     }
     final Object valOrig = optionValues.get (name);
-    if (Val.getClass () != valOrig.getClass ())
+    if (val.getClass () != valOrig.getClass ())
     {
       System.out.println ("Warning: Bad option value in \"" + arg + "\" will be ignored.");
       return;
@@ -609,13 +608,13 @@ public class Options
       return;
     }
 
-    Val = upgradeValue (name, Val);
+    val = upgradeValue (name, val);
 
-    optionValues.put (name, Val);
+    optionValues.put (name, val);
     cmdLineSetting.add (name);
     if (name.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
     {
-      processCPPNamespaceOption ((String) Val);
+      processCPPNamespaceOption ((String) val);
     }
   }
 
@@ -1003,10 +1002,7 @@ public class Options
     {
       return System.getProperties ().getProperty ("file.encoding");
     }
-    else
-    {
-      return stringValue (USEROPTION__GRAMMAR_ENCODING);
-    }
+    return stringValue (USEROPTION__GRAMMAR_ENCODING);
   }
 
   /**

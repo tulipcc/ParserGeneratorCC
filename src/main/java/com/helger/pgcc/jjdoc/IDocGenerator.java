@@ -38,16 +38,16 @@ import com.helger.pgcc.parser.TokenProduction;
 
 /**
  * A report generator for a grammar.
- * 
+ *
  * @author timp
  * @since 11-Dec-2006
  */
-public interface Generator
+public interface IDocGenerator
 {
 
   /**
    * Output string with entity substitution for brackets and ampersands.
-   * 
+   *
    * @param s
    *        the String to output
    */
@@ -55,7 +55,7 @@ public interface Generator
 
   /**
    * Output String.
-   * 
+   *
    * @param s
    *        String to output
    */
@@ -73,7 +73,7 @@ public interface Generator
 
   /**
    * Output Special Tokens.
-   * 
+   *
    * @param s
    *        tokens to output
    */
@@ -115,7 +115,7 @@ public interface Generator
 
   /**
    * Output comment from a production.
-   * 
+   *
    * @param jp
    *        the JavaCodeProduction to output
    */
@@ -123,7 +123,7 @@ public interface Generator
 
   /**
    * Output comment from a production.
-   * 
+   *
    * @param cp
    *        the CppCodeProduction to output
    */
@@ -131,7 +131,7 @@ public interface Generator
 
   /**
    * Output start of a normal production.
-   * 
+   *
    * @param np
    *        the NormalProduction being output
    */
@@ -139,7 +139,7 @@ public interface Generator
 
   /**
    * Output end of a normal production.
-   * 
+   *
    * @param np
    *        the NormalProduction being output
    */
@@ -147,7 +147,7 @@ public interface Generator
 
   /**
    * Output start of an Expansion.
-   * 
+   *
    * @param e
    *        Expansion being output
    * @param first
@@ -157,7 +157,7 @@ public interface Generator
 
   /**
    * Output end of Expansion.
-   * 
+   *
    * @param e
    *        Expansion being output
    * @param first
@@ -167,7 +167,7 @@ public interface Generator
 
   /**
    * Output start of non-terminal.
-   * 
+   *
    * @param nt
    *        the NonTerminal being output
    */
@@ -175,7 +175,7 @@ public interface Generator
 
   /**
    * Output end of non-terminal.
-   * 
+   *
    * @param nt
    *        the NonTerminal being output
    */
@@ -183,7 +183,7 @@ public interface Generator
 
   /**
    * Output start of regular expression.
-   * 
+   *
    * @param re
    *        the RegularExpression being output
    */
@@ -191,7 +191,7 @@ public interface Generator
 
   /**
    * Output end of regular expression.
-   * 
+   *
    * @param re
    *        the RegularExpression being output
    */
@@ -199,7 +199,7 @@ public interface Generator
 
   /**
    * Log debug messages.
-   * 
+   *
    * @param message
    *        the string to log
    */
@@ -207,7 +207,7 @@ public interface Generator
 
   /**
    * Log informational messages.
-   * 
+   *
    * @param message
    *        the string to log
    */
@@ -215,7 +215,7 @@ public interface Generator
 
   /**
    * Log warning messages.
-   * 
+   *
    * @param message
    *        the string to log
    */
@@ -223,7 +223,7 @@ public interface Generator
 
   /**
    * Log error messages.
-   * 
+   *
    * @param message
    *        the string to log
    */

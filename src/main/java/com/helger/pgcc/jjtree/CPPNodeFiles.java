@@ -594,7 +594,7 @@ final class CPPNodeFiles
 
   private static String getVisitMethodName (final String className)
   {
-    final StringBuffer sb = new StringBuffer ("visit");
+    final StringBuilder sb = new StringBuilder ("visit");
     if (Options.booleanValue ("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME"))
     {
       sb.append (Character.toUpperCase (className.charAt (0)));

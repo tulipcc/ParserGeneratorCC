@@ -47,14 +47,14 @@ public class NonTerminal extends Expansion
   /**
    * The name of the non-terminal.
    */
-  private String name;
+  private String m_name;
 
   /**
    * The list of all tokens in the argument list.
    */
-  private List <Token> argument_tokens = new ArrayList <> ();
+  private List <Token> m_argumentTokens = new ArrayList <> ();
 
-  private List <Token> parametrized_type__tokens = new ArrayList <> ();
+  private List <Token> m_parametrizedTypeTokens = new ArrayList <> ();
   /**
    * The production this non-terminal corresponds to.
    */
@@ -63,7 +63,7 @@ public class NonTerminal extends Expansion
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final StringBuilder value = super.dump (indent, alreadyDumped).append (' ').append (name);
+    final StringBuilder value = super.dump (indent, alreadyDumped).append (' ').append (m_name);
     return value;
   }
 
@@ -90,7 +90,7 @@ public class NonTerminal extends Expansion
    */
   public void setName (final String name)
   {
-    this.name = name;
+    this.m_name = name;
   }
 
   /**
@@ -98,7 +98,7 @@ public class NonTerminal extends Expansion
    */
   public String getName ()
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -107,7 +107,7 @@ public class NonTerminal extends Expansion
    */
   public void setParametrizedTypeTokens (final List <Token> argument_tokens)
   {
-    this.argument_tokens = argument_tokens;
+    this.m_argumentTokens = argument_tokens;
   }
 
   /**
@@ -115,7 +115,7 @@ public class NonTerminal extends Expansion
    */
   public List <Token> getParametrizedTypeTokens ()
   {
-    return parametrized_type__tokens;
+    return m_parametrizedTypeTokens;
   }
 
   /**
@@ -124,7 +124,7 @@ public class NonTerminal extends Expansion
    */
   public void setArgumentTokens (final List <Token> parametrized_type__tokens)
   {
-    this.parametrized_type__tokens = parametrized_type__tokens;
+    this.m_parametrizedTypeTokens = parametrized_type__tokens;
   }
 
   /**
@@ -132,7 +132,7 @@ public class NonTerminal extends Expansion
    */
   public List <Token> getArgumentTokens ()
   {
-    return argument_tokens;
+    return m_argumentTokens;
   }
 
   /**

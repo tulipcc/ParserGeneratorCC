@@ -62,7 +62,7 @@ public class ParseGen extends CodeGenerator implements JavaCCParserConstants
 
     Token t = null;
 
-    if (JavaCCErrors.get_error_count () != 0)
+    if (JavaCCErrors.getErrorCount () != 0)
     {
       throw new MetaParseException ();
     }

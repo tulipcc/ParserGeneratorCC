@@ -368,7 +368,7 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
 
   public void start () throws IOException
   {
-    if (!Options.getBuildTokenManager () || Options.getUserTokenManager () || JavaCCErrors.get_error_count () > 0)
+    if (!Options.getBuildTokenManager () || Options.getUserTokenManager () || JavaCCErrors.getErrorCount () > 0)
       return;
 
     final String codeGeneratorClass = Options.getTokenManagerCodeGenerator ();

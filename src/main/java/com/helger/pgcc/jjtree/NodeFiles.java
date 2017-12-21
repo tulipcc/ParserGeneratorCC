@@ -56,7 +56,7 @@ final class NodeFiles
    */
   static final String nodeVersion = Version.majorDotMinor;
 
-  static Set nodesGenerated = new HashSet ();
+  static Set <String> nodesGenerated = new HashSet <> ();
 
   static void ensure (final IO io, final String nodeType)
   {
@@ -281,7 +281,7 @@ final class NodeFiles
 
   private static String getVisitMethodName (final String className)
   {
-    final StringBuffer sb = new StringBuffer ("visit");
+    final StringBuilder sb = new StringBuilder ("visit");
     if (Options.booleanValue ("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME"))
     {
       sb.append (Character.toUpperCase (className.charAt (0)));
@@ -309,7 +309,7 @@ final class NodeFiles
       final OutputFile outputFile = new OutputFile (file);
       final PrintWriter ostr = outputFile.getPrintWriter ();
 
-      final List nodeNames = ASTNodeDescriptor.getNodeNames ();
+      final List <String> nodeNames = ASTNodeDescriptor.getNodeNames ();
 
       generatePrologue (ostr);
       ostr.println ("public class " + className + " implements " + visitorClass () + "{");
@@ -336,7 +336,7 @@ final class NodeFiles
       {
         for (int i = 0; i < nodeNames.size (); ++i)
         {
-          final String n = (String) nodeNames.get (i);
+          final String n = nodeNames.get (i);
           if (n.equals ("void"))
           {
             continue;
@@ -379,53 +379,50 @@ final class NodeFiles
 
   private static void generateNode_java (final OutputFile outputFile) throws IOException
   {
-    final PrintWriter ostr = outputFile.getPrintWriter ();
+    try (final PrintWriter ostr = outputFile.getPrintWriter ())
+    {
+      generatePrologue (ostr);
 
-    generatePrologue (ostr);
+      final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+      options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
 
-    final Map options = new HashMap (Options.getOptions ());
-    options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      final OutputFileGenerator generator = new OutputFileGenerator ("/templates/Node.template", options);
 
-    final OutputFileGenerator generator = new OutputFileGenerator ("/templates/Node.template", options);
-
-    generator.generate (ostr);
-
-    ostr.close ();
+      generator.generate (ostr);
+    }
   }
 
   private static void generateSimpleNode_java (final OutputFile outputFile) throws IOException
   {
-    final PrintWriter ostr = outputFile.getPrintWriter ();
+    try (final PrintWriter ostr = outputFile.getPrintWriter ())
+    {
+      generatePrologue (ostr);
 
-    generatePrologue (ostr);
+      final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+      options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
 
-    final Map options = new HashMap (Options.getOptions ());
-    options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
-    options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
+      final OutputFileGenerator generator = new OutputFileGenerator ("/templates/SimpleNode.template", options);
 
-    final OutputFileGenerator generator = new OutputFileGenerator ("/templates/SimpleNode.template", options);
-
-    generator.generate (ostr);
-
-    ostr.close ();
+      generator.generate (ostr);
+    }
   }
 
   private static void generateMULTINode_java (final OutputFile outputFile, final String nodeType) throws IOException
   {
-    final PrintWriter ostr = outputFile.getPrintWriter ();
+    try (final PrintWriter ostr = outputFile.getPrintWriter ())
+    {
+      generatePrologue (ostr);
 
-    generatePrologue (ostr);
+      final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+      options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      options.put ("NODE_TYPE", nodeType);
+      options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
 
-    final Map options = new HashMap (Options.getOptions ());
-    options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
-    options.put ("NODE_TYPE", nodeType);
-    options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
+      final OutputFileGenerator generator = new OutputFileGenerator ("/templates/MultiNode.template", options);
 
-    final OutputFileGenerator generator = new OutputFileGenerator ("/templates/MultiNode.template", options);
-
-    generator.generate (ostr);
-
-    ostr.close ();
+      generator.generate (ostr);
+    }
   }
 
 }
