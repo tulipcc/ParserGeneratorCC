@@ -50,9 +50,9 @@ PARSER_BEGIN(JavaCCParser)
  * by JavaCCParser itself.
  */
 
-package org.javacc.parser;
+package com.helger.pgcc.parser;
 
-import static org.javacc.parser.Options.*;
+import static com.helger.pgcc.parser.Options.*;
 
 import java.util.List;
 import java.util.ArrayList;

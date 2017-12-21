@@ -9,14 +9,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.javacc.parser.JavaCCErrors;
-import org.javacc.parser.JavaCCParser;
-import org.javacc.parser.LexGen;
-import org.javacc.parser.Main;
-import org.javacc.parser.MetaParseException;
-import org.javacc.parser.Options;
-import org.javacc.parser.Semanticize;
-import org.javacc.parser.TokenizerData;
+import com.helger.pgcc.parser.JavaCCErrors;
+import com.helger.pgcc.parser.JavaCCParser;
+import com.helger.pgcc.parser.LexGen;
+import com.helger.pgcc.parser.Main;
+import com.helger.pgcc.parser.MetaParseException;
+import com.helger.pgcc.parser.Options;
+import com.helger.pgcc.parser.Semanticize;
+import com.helger.pgcc.parser.TokenizerData;
 
 public class JavaCCInterpreter
 {

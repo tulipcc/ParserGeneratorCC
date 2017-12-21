@@ -5,8 +5,8 @@
  * by JavaCCParser itself.
  */
 
-package org.javacc.parser;
-import static org.javacc.parser.Options.*;
+package com.helger.pgcc.parser;
+import static com.helger.pgcc.parser.Options.*;
 import java.util.List;
 import java.util.ArrayList;
 

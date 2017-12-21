@@ -37,7 +37,7 @@ public final class jjdoc
 
   public static void main (final String [] args) throws Exception
   {
-    org.javacc.jjdoc.JJDocMain.main (args);
+    com.helger.pgcc.jjdoc.JJDocMain.main (args);
   }
 
 }

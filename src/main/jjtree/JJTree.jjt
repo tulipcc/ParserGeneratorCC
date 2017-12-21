@@ -39,7 +39,7 @@ options {
 
 PARSER_BEGIN(JJTreeParser)
 
-package org.javacc.jjtree;
+package com.helger.pgcc.jjtree;
 
 public class JJTreeParser {
 

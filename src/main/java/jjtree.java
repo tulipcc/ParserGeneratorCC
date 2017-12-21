@@ -37,7 +37,7 @@ public final class jjtree
 
   public static void main (final String [] args)
   {
-    org.javacc.jjtree.Main.main (args);
+    com.helger.pgcc.jjtree.Main.main (args);
   }
 
 }

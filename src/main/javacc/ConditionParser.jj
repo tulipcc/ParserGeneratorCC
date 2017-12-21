@@ -36,7 +36,7 @@ options {
 
 PARSER_BEGIN(ConditionParser)
 
-package org.javacc.utils;
+package com.helger.pgcc.utils;
 
 import java.io.StringReader;
 import java.util.Map;
