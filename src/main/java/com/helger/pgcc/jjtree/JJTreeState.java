@@ -75,7 +75,7 @@ final class JJTreeState
     {
       final OutputFile outputFile = new OutputFile (file);
       final PrintWriter ostr = outputFile.getPrintWriter ();
-      NodeFiles.generatePrologue (ostr);
+      JavaNodeFiles.generatePrologue (ostr);
       insertState (ostr);
       outputFile.close ();
     }

@@ -161,14 +161,14 @@ public class JavaCodeGenerator extends DefaultJJTreeVisitor
         {
           node.print (t, io);
           openJJTreeComment (io, null);
-          io.getOut ().print (" " + NodeFiles.nodeConstants () + ", ");
+          io.getOut ().print (" " + JavaNodeFiles.nodeConstants () + ", ");
           closeJJTreeComment (io);
         }
         else
         {
           // t is pointing at the opening brace of the class body.
           openJJTreeComment (io, null);
-          io.getOut ().print ("implements " + NodeFiles.nodeConstants ());
+          io.getOut ().print ("implements " + JavaNodeFiles.nodeConstants ());
           closeJJTreeComment (io);
           node.print (t, io);
         }
@@ -349,7 +349,7 @@ public class JavaCodeGenerator extends DefaultJJTreeVisitor
     /*
      * Ensure that there is a template definition file for the node type.
      */
-    NodeFiles.ensure (io, type);
+    JavaNodeFiles.ensure (io, type);
 
     io.print (indent + nodeClass + " " + ns.nodeVar + " = ");
     final String p = Options.getStatic () ? "null" : "this";

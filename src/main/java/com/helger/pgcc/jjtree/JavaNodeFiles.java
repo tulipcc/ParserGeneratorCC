@@ -45,9 +45,9 @@ import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.OutputFile;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
-final class NodeFiles
+final class JavaNodeFiles
 {
-  private NodeFiles ()
+  private JavaNodeFiles ()
   {}
 
   /**

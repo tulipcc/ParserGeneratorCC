@@ -96,11 +96,26 @@
     </license>
   </licenses>
   
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-commons-parent-pom</artifactId>
+        <version>9.0.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
   <dependencies>
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-commons</artifactId>
-      <version>9.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-security</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

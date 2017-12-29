@@ -443,9 +443,8 @@ final class CPPNodeFiles
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), name + ".h");
     headersForJJTreeH.add (file.getName ());
 
-    try
+    try (final OutputFile outputFile = new OutputFile (file))
     {
-      final OutputFile outputFile = new OutputFile (file);
       final PrintWriter ostr = outputFile.getPrintWriter ();
 
       final List <String> nodeIds = ASTNodeDescriptor.getNodeIds ();
@@ -492,8 +491,6 @@ final class CPPNodeFiles
       }
 
       ostr.println ("#endif");
-      ostr.close ();
-
     }
     catch (final IOException ex)
     {

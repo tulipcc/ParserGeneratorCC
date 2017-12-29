@@ -25,7 +25,6 @@
 
 package com.helger.pgcc.parser;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,8 +39,11 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.annotation.WillCloseWhenClosed;
 
+import com.helger.commons.io.stream.NonBlockingBufferedOutputStream;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
+import com.helger.commons.io.stream.NullOutputStream;
 import com.helger.pgcc.Version;
+import com.helger.security.messagedigest.EMessageDigestAlgorithm;
 
 /**
  * This class handles the creation and maintenance of the boiler-plate classes,
@@ -69,7 +71,7 @@ public class OutputFile implements AutoCloseable
 
   TrapClosePrintWriter m_pw;
   DigestOutputStream dos;
-  String toolName = JavaCCGlobals.m_toolName;
+  String m_toolName = JavaCCGlobals.m_toolName;
   final File m_file;
   final String m_compatibleVersion;
   final String [] m_options;
@@ -177,7 +179,7 @@ public class OutputFile implements AutoCloseable
    */
   private void checkVersion (final File file, final String versionId)
   {
-    final String firstLine = "/* " + JavaCCGlobals.getIdString (toolName, file.getName ()) + " Version ";
+    final String firstLine = "/* " + JavaCCGlobals.getIdString (m_toolName, file.getName ()) + " Version ";
 
     try (final BufferedReader reader = new BufferedReader (new FileReader (file)))
     {
@@ -262,21 +264,21 @@ public class OutputFile implements AutoCloseable
   {
     if (m_pw == null)
     {
-      MessageDigest digest;
+      MessageDigest digest = EMessageDigestAlgorithm.MD5.createMessageDigest ();
       try
       {
         digest = MessageDigest.getInstance ("MD5");
       }
       catch (final NoSuchAlgorithmException e)
       {
-        throw (IOException) (new IOException ("No MD5 implementation").initCause (e));
+        throw new IOException ("No MD5 implementation", e);
       }
-      dos = new DigestOutputStream (new BufferedOutputStream (new FileOutputStream (m_file)), digest);
+      dos = new DigestOutputStream (new NonBlockingBufferedOutputStream (new FileOutputStream (m_file)), digest);
       m_pw = new TrapClosePrintWriter (dos);
 
       // Write the headers....
       final String version = m_compatibleVersion == null ? Version.versionNumber : m_compatibleVersion;
-      m_pw.println ("/* " + JavaCCGlobals.getIdString (toolName, m_file.getName ()) + " Version " + version + " */");
+      m_pw.println ("/* " + JavaCCGlobals.getIdString (m_toolName, m_file.getName ()) + " Version " + version + " */");
       if (m_options != null)
       {
         m_pw.println ("/* JavaCCOptions:" + Options.getOptionsString (m_options) + " */");
@@ -296,13 +298,13 @@ public class OutputFile implements AutoCloseable
     // Possibly rename the .java.tmp to .java??
     if (m_pw != null)
     {
-      m_pw.println (MD5_LINE_PART_1 + getMD5sum () + MD5_LINE_PART_2);
+      m_pw.println (MD5_LINE_PART_1 + _getMD5sum () + MD5_LINE_PART_2);
       m_pw.closePrintWriter ();
       // file.renameTo(dest)
     }
   }
 
-  private String getMD5sum ()
+  private String _getMD5sum ()
   {
     m_pw.flush ();
     final byte [] digest = dos.getMessageDigest ().digest ();
@@ -328,7 +330,7 @@ public class OutputFile implements AutoCloseable
 
   private static final String toHexString (final byte [] bytes)
   {
-    final StringBuilder sb = new StringBuilder (32);
+    final StringBuilder sb = new StringBuilder (bytes.length * 2);
     for (final byte b : bytes)
     {
       sb.append (HEX_DIGITS[(b & 0xF0) >> 4]).append (HEX_DIGITS[b & 0x0F]);
@@ -336,30 +338,14 @@ public class OutputFile implements AutoCloseable
     return sb.toString ();
   }
 
-  private static class NullOutputStream extends OutputStream
-  {
-
-    @Override
-    public void write (final byte [] arg0, final int arg1, final int arg2) throws IOException
-    {}
-
-    @Override
-    public void write (final byte [] arg0) throws IOException
-    {}
-
-    @Override
-    public void write (final int arg0) throws IOException
-    {}
-  }
-
-  private class TrapClosePrintWriter extends PrintWriter
+  private final class TrapClosePrintWriter extends PrintWriter
   {
     public TrapClosePrintWriter (final OutputStream os)
     {
       super (os);
     }
 
-    public void closePrintWriter ()
+    void closePrintWriter ()
     {
       super.close ();
     }
@@ -376,7 +362,7 @@ public class OutputFile implements AutoCloseable
    */
   public String getToolName ()
   {
-    return toolName;
+    return m_toolName;
   }
 
   /**
@@ -385,7 +371,7 @@ public class OutputFile implements AutoCloseable
    */
   public void setToolName (final String toolName)
   {
-    this.toolName = toolName;
+    this.m_toolName = toolName;
   }
 
   public String getPath ()
