@@ -99,11 +99,11 @@ public class JavaCCParser extends JavaCCParserInternals {
 
   protected static boolean isJavaLanguage()
   {
-    return language == Language.java;
+    return s_language == ELanguage.JAVA;
   }
   protected static boolean isCppLanguage()
   {
-    return language == Language.cpp;
+    return s_language == ELanguage.CPP;
   }
 
   /*
