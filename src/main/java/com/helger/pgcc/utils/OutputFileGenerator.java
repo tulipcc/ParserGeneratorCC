@@ -25,18 +25,26 @@
 
 package com.helger.pgcc.utils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.WillNotClose;
+
+import com.helger.commons.ValueEnforcer;
+import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.io.file.SimpleFileIO;
+import com.helger.commons.io.stream.NonBlockingBufferedReader;
+import com.helger.commons.io.stream.NonBlockingStringReader;
+import com.helger.commons.io.stream.NonBlockingStringWriter;
+import com.helger.commons.system.ENewLineMode;
+import com.helger.commons.system.SystemHelper;
 
 /**
  * Generates boiler-plate files from templates. Only very basic template
@@ -48,6 +56,11 @@ import java.util.Map;
  */
 public class OutputFileGenerator
 {
+  private final String m_templateName;
+  private final Map <String, Object> m_options;
+  private ENewLineMode m_eNewLineMode = ENewLineMode.DEFAULT;
+
+  private String m_currentLine;
 
   /**
    * @param templateName
@@ -55,44 +68,49 @@ public class OutputFileGenerator
    * @param options
    *        the processing options in force, such as "STATIC=yes"
    */
-  public OutputFileGenerator (final String templateName, final Map options)
+  public OutputFileGenerator (final String templateName, final Map <String, Object> options)
   {
-    this.templateName = templateName;
-    this.options = options;
+    m_templateName = templateName;
+    m_options = options;
   }
 
-  private final String templateName;
-  private final Map options;
-
-  private String currentLine;
+  @Nonnull
+  public OutputFileGenerator setNewLineMode (@Nonnull final ENewLineMode eNewLineMode)
+  {
+    ValueEnforcer.notNull (eNewLineMode, "NewLineMode");
+    m_eNewLineMode = eNewLineMode;
+    return this;
+  }
 
   /**
    * Generate the output file.
-   * 
+   *
    * @param out
    * @throws IOException
    */
-  public void generate (final PrintWriter out) throws IOException
+  public void generate (@WillNotClose final Writer out) throws IOException
   {
-    final InputStream is = getClass ().getResourceAsStream (templateName);
+    final InputStream is = getClass ().getResourceAsStream (m_templateName);
     if (is == null)
-      throw new IOException ("Invalid template name: " + templateName);
-    final BufferedReader in = new BufferedReader (new InputStreamReader (is));
-    process (in, out, false);
+      throw new IOException ("Invalid template name: " + m_templateName);
+    try (final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is)))
+    {
+      _process (in, out, false);
+    }
   }
 
-  private String peekLine (final BufferedReader in) throws IOException
+  private String _peekLine (final NonBlockingBufferedReader in) throws IOException
   {
-    if (currentLine == null)
-      currentLine = in.readLine ();
+    if (m_currentLine == null)
+      m_currentLine = in.readLine ();
 
-    return currentLine;
+    return m_currentLine;
   }
 
-  private String getLine (final BufferedReader in) throws IOException
+  private String _getLine (final NonBlockingBufferedReader in) throws IOException
   {
-    final String line = currentLine;
-    currentLine = null;
+    final String line = m_currentLine;
+    m_currentLine = null;
 
     if (line == null)
       in.readLine ();
@@ -100,13 +118,11 @@ public class OutputFileGenerator
     return line;
   }
 
-  private boolean evaluate (String condition)
+  private boolean _evaluate (final String condition)
   {
-    condition = condition.trim ();
-
-    try
+    try (final NonBlockingStringReader aReader = new NonBlockingStringReader (condition.trim ()))
     {
-      return new ConditionParser (new StringReader (condition)).CompilationUnit (options);
+      return new ConditionParser (aReader).CompilationUnit (m_options);
     }
     catch (final ParseException e)
     {
@@ -114,11 +130,10 @@ public class OutputFileGenerator
     }
   }
 
-  private String substitute (final String text) throws IOException
+  private String _substitute (final String text) throws IOException
   {
-    int startPos;
-
-    if ((startPos = text.indexOf ("${")) == -1)
+    final int startPos = text.indexOf ("${");
+    if (startPos == -1)
     {
       return text;
     }
@@ -152,25 +167,23 @@ public class OutputFileGenerator
 
       if (ch == ':' && i < variableExpression.length () - 1 && variableExpression.charAt (i + 1) == '-')
       {
-        value = substituteWithDefault (variableExpression.substring (0, i), variableExpression.substring (i + 2));
+        value = _substituteWithDefault (variableExpression.substring (0, i), variableExpression.substring (i + 2));
         break;
       }
-      else
-        if (ch == '?')
-        {
-          value = substituteWithConditional (variableExpression.substring (0, i), variableExpression.substring (i + 1));
-          break;
-        }
-        else
-          if (ch != '_' && !Character.isJavaIdentifierPart (ch))
-          {
-            throw new IOException ("Invalid variable in " + text);
-          }
+      if (ch == '?')
+      {
+        value = _substituteWithConditional (variableExpression.substring (0, i), variableExpression.substring (i + 1));
+        break;
+      }
+      if (ch != '_' && !Character.isJavaIdentifierPart (ch))
+      {
+        throw new IOException ("Invalid variable in " + text);
+      }
     }
 
     if (value == null)
     {
-      value = substituteWithDefault (variableExpression, "");
+      value = _substituteWithDefault (variableExpression, "");
     }
 
     return text.substring (0, startPos) + value + text.substring (endPos);
@@ -182,7 +195,7 @@ public class OutputFileGenerator
    * @return
    * @throws IOException
    */
-  private String substituteWithConditional (final String variableName, final String values) throws IOException
+  private String _substituteWithConditional (final String variableName, final String values) throws IOException
   {
     // Split values into true and false values.
 
@@ -190,10 +203,10 @@ public class OutputFileGenerator
     if (pos == -1)
       throw new IOException ("No ':' separator in " + values);
 
-    if (evaluate (variableName))
-      return substitute (values.substring (0, pos));
-    else
-      return substitute (values.substring (pos + 1));
+    if (_evaluate (variableName))
+      return _substitute (values.substring (0, pos));
+
+    return _substitute (values.substring (pos + 1));
   }
 
   /**
@@ -201,82 +214,90 @@ public class OutputFileGenerator
    * @param defaultValue
    * @return
    */
-  private String substituteWithDefault (final String variableName, final String defaultValue) throws IOException
+  private String _substituteWithDefault (final String variableName, final String defaultValue) throws IOException
   {
-    final Object obj = options.get (variableName.trim ());
+    final Object obj = m_options.get (variableName.trim ());
     if (obj == null || obj.toString ().length () == 0)
-      return substitute (defaultValue);
+      return _substitute (defaultValue);
 
     return obj.toString ();
   }
 
-  private void write (final PrintWriter out, String text) throws IOException
+  private void _write (final Writer out, final String sText) throws IOException
   {
+    String text = sText;
     while (text.indexOf ("${") != -1)
     {
-      text = substitute (text);
+      text = _substitute (text);
     }
 
     // TODO :: Added by Sreenivas on 12 June 2013 for 6.0 release, merged in to
     // 6.1 release for sake of compatibility by cainsley ... This needs to be
     // removed urgently!!!
     if (text.startsWith ("\\#"))
-    { // Hack to escape # for C++
+    {
+      // Hack to escape # for C++
       text = text.substring (1);
     }
-    out.println (text);
+
+    out.write (text);
+    out.write (m_eNewLineMode.getText ());
   }
 
-  private void process (final BufferedReader in, final PrintWriter out, final boolean ignoring) throws IOException
+  private void _process (final NonBlockingBufferedReader in,
+                         final Writer out,
+                         final boolean ignoring) throws IOException
   {
     // out.println("*** process ignore=" + ignoring + " : " + peekLine(in));
-    while (peekLine (in) != null)
+    while (_peekLine (in) != null)
     {
-      if (peekLine (in).trim ().startsWith ("#if"))
+      if (_peekLine (in).trim ().startsWith ("#if"))
       {
-        processIf (in, out, ignoring);
+        _processIf (in, out, ignoring);
       }
       else
-        if (peekLine (in).trim ().startsWith ("#"))
+        if (_peekLine (in).trim ().startsWith ("#"))
         {
           break;
         }
         else
         {
-          final String line = getLine (in);
+          final String line = _getLine (in);
           if (!ignoring)
-            write (out, line);
+            _write (out, line);
         }
     }
 
     out.flush ();
   }
 
-  private void processIf (final BufferedReader in, final PrintWriter out, final boolean ignoring) throws IOException
+  private void _processIf (final NonBlockingBufferedReader in,
+                           final Writer out,
+                           final boolean ignoring) throws IOException
   {
-    String line = getLine (in).trim ();
+    String line = _getLine (in).trim ();
     assert line.trim ().startsWith ("#if");
     boolean foundTrueCondition = false;
 
-    boolean condition = evaluate (line.substring (3).trim ());
+    boolean condition = _evaluate (line.substring (3).trim ());
     while (true)
     {
-      process (in, out, ignoring || foundTrueCondition || !condition);
+      _process (in, out, ignoring || foundTrueCondition || !condition);
       foundTrueCondition |= condition;
 
-      if (peekLine (in) == null || !peekLine (in).trim ().startsWith ("#elif"))
+      if (_peekLine (in) == null || !_peekLine (in).trim ().startsWith ("#elif"))
         break;
 
-      condition = evaluate (getLine (in).trim ().substring (5).trim ());
+      condition = _evaluate (_getLine (in).trim ().substring (5).trim ());
     }
 
-    if (peekLine (in) != null && peekLine (in).trim ().startsWith ("#else"))
+    if (_peekLine (in) != null && _peekLine (in).trim ().startsWith ("#else"))
     {
-      getLine (in); // Discard the #else line
-      process (in, out, ignoring || foundTrueCondition);
+      _getLine (in); // Discard the #else line
+      _process (in, out, ignoring || foundTrueCondition);
     }
 
-    line = getLine (in);
+    line = _getLine (in);
 
     if (line == null)
       throw new IOException ("Missing \"#fi\"");
@@ -287,36 +308,27 @@ public class OutputFileGenerator
 
   public static void main (final String [] args) throws Exception
   {
-    final Map map = new HashMap ();
+    final Map <String, Object> map = new HashMap <> ();
     map.put ("falseArg", Boolean.FALSE);
     map.put ("trueArg", Boolean.TRUE);
     map.put ("stringValue", "someString");
 
-    new OutputFileGenerator (args[0], map).generate (new PrintWriter (args[1]));
+    try (final Writer aWriter = FileHelper.getBufferedWriter (new File (args[1]), SystemHelper.getSystemCharset ()))
+    {
+      new OutputFileGenerator (args[0], map).generate (aWriter);
+    }
   }
 
-  public static void generateFromTemplate (final String template,
+  public static void generateFromTemplate (final String templateFile,
                                            final Map <String, Object> options,
-                                           final String outputFileName) throws IOException
+                                           final String outputFileName,
+                                           @Nonnull final Charset aOutputCharset) throws IOException
   {
-    final OutputFileGenerator gen = new OutputFileGenerator (template, options);
-    final StringWriter sw = new StringWriter ();
-    gen.generate (new PrintWriter (sw));
-    sw.close ();
-    PrintWriter fw = null;
-    try
+    final OutputFileGenerator aOutputGenerator = new OutputFileGenerator (templateFile, options);
+    try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())
     {
-      final File tmp = new File (outputFileName);
-      fw = new PrintWriter (new BufferedWriter (new FileWriter (tmp), 8092));
-
-      fw.print (sw.toString ());
-    }
-    finally
-    {
-      if (fw != null)
-      {
-        fw.close ();
-      }
+      aOutputGenerator.generate (sw);
+      SimpleFileIO.writeFile (new File (outputFileName), sw.getAsString (), aOutputCharset);
     }
   }
 }
