@@ -370,7 +370,7 @@ public class CodeGenerator
 
     genCommaSeperatedString (superInterfaces);
     genCodeLine (" {");
-    if (Options.getOutputLanguage ().equals (Options.OUTPUT_LANGUAGE__CPP))
+    if (Options.isOutputLanguageCpp ())
     {
       genCodeLine ("public:");
     }
