@@ -59,37 +59,37 @@ class JJTreeOptions extends Options
   {
     Options.init ();
 
-    Options.optionValues.put ("MULTI", Boolean.FALSE);
-    Options.optionValues.put ("NODE_DEFAULT_VOID", Boolean.FALSE);
-    Options.optionValues.put ("NODE_SCOPE_HOOK", Boolean.FALSE);
-    Options.optionValues.put ("NODE_USES_PARSER", Boolean.FALSE);
-    Options.optionValues.put ("BUILD_NODE_FILES", Boolean.TRUE);
-    Options.optionValues.put ("VISITOR", Boolean.FALSE);
-    Options.optionValues.put ("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME", Boolean.FALSE);
-    Options.optionValues.put ("TRACK_TOKENS", Boolean.FALSE);
+    Options.s_optionValues.put ("MULTI", Boolean.FALSE);
+    Options.s_optionValues.put ("NODE_DEFAULT_VOID", Boolean.FALSE);
+    Options.s_optionValues.put ("NODE_SCOPE_HOOK", Boolean.FALSE);
+    Options.s_optionValues.put ("NODE_USES_PARSER", Boolean.FALSE);
+    Options.s_optionValues.put ("BUILD_NODE_FILES", Boolean.TRUE);
+    Options.s_optionValues.put ("VISITOR", Boolean.FALSE);
+    Options.s_optionValues.put ("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME", Boolean.FALSE);
+    Options.s_optionValues.put ("TRACK_TOKENS", Boolean.FALSE);
 
-    Options.optionValues.put ("NODE_PREFIX", "AST");
-    Options.optionValues.put ("NODE_PACKAGE", "");
-    Options.optionValues.put ("NODE_EXTENDS", "");
-    Options.optionValues.put ("NODE_CLASS", "");
-    Options.optionValues.put ("NODE_FACTORY", "");
-    Options.optionValues.put ("NODE_INCLUDES", "");
-    Options.optionValues.put ("OUTPUT_FILE", "");
-    Options.optionValues.put ("VISITOR_DATA_TYPE", "");
-    Options.optionValues.put ("VISITOR_RETURN_TYPE", "Object");
-    Options.optionValues.put ("VISITOR_EXCEPTION", "");
+    Options.s_optionValues.put ("NODE_PREFIX", "AST");
+    Options.s_optionValues.put ("NODE_PACKAGE", "");
+    Options.s_optionValues.put ("NODE_EXTENDS", "");
+    Options.s_optionValues.put ("NODE_CLASS", "");
+    Options.s_optionValues.put ("NODE_FACTORY", "");
+    Options.s_optionValues.put ("NODE_INCLUDES", "");
+    Options.s_optionValues.put ("OUTPUT_FILE", "");
+    Options.s_optionValues.put ("VISITOR_DATA_TYPE", "");
+    Options.s_optionValues.put ("VISITOR_RETURN_TYPE", "Object");
+    Options.s_optionValues.put ("VISITOR_EXCEPTION", "");
 
-    Options.optionValues.put ("JJTREE_OUTPUT_DIRECTORY", "");
+    Options.s_optionValues.put ("JJTREE_OUTPUT_DIRECTORY", "");
 
     // TODO :: 2013/07/23 -- This appears to be a duplicate from the parent
     // class
-    Options.optionValues.put (Options.USEROPTION__JDK_VERSION, "1.5");
+    Options.s_optionValues.put (Options.USEROPTION__JDK_VERSION, "1.5");
 
     // Also appears to be a duplicate
-    Options.optionValues.put (Options.USEROPTION__CPP_NAMESPACE, "");
+    Options.s_optionValues.put (Options.USEROPTION__CPP_NAMESPACE, "");
 
     // Also appears to be a duplicate
-    Options.optionValues.put (Options.USEROPTION__CPP_IGNORE_ACTIONS, Boolean.FALSE);
+    Options.s_optionValues.put (Options.USEROPTION__CPP_IGNORE_ACTIONS, Boolean.FALSE);
   }
 
   /**

@@ -33,7 +33,7 @@ package com.helger.pgcc.parser;
 import java.util.Set;
 
 import com.helger.pgcc.utils.OptionInfo;
-import com.helger.pgcc.utils.OptionType;
+import com.helger.pgcc.utils.EOptionType;
 
 /**
  * Entry point.
@@ -86,18 +86,18 @@ public class Main
     {
       final int length = i.getName ().length ();
 
-      if (i.getType () == OptionType.INTEGER)
+      if (i.getType () == EOptionType.INTEGER)
       {
         maxLengthInt = length > maxLengthInt ? length : maxLengthInt;
       }
       else
-        if (i.getType () == OptionType.BOOLEAN)
+        if (i.getType () == EOptionType.BOOLEAN)
         {
           maxLengthBool = length > maxLengthBool ? length : maxLengthBool;
 
         }
         else
-          if (i.getType () == OptionType.STRING)
+          if (i.getType () == EOptionType.STRING)
           {
             maxLengthString = length > maxLengthString ? length : maxLengthString;
 
@@ -114,7 +114,7 @@ public class Main
       System.out.println ("");
       for (final OptionInfo i : options)
       {
-        printOptionInfo (OptionType.INTEGER, i, maxLengthInt);
+        printOptionInfo (EOptionType.INTEGER, i, maxLengthInt);
       }
       System.out.println ("");
     }
@@ -125,7 +125,7 @@ public class Main
       System.out.println ("");
       for (final OptionInfo i : options)
       {
-        printOptionInfo (OptionType.BOOLEAN, i, maxLengthBool);
+        printOptionInfo (EOptionType.BOOLEAN, i, maxLengthBool);
       }
       System.out.println ("");
     }
@@ -136,13 +136,13 @@ public class Main
       System.out.println ("");
       for (final OptionInfo i : options)
       {
-        printOptionInfo (OptionType.STRING, i, maxLengthString);
+        printOptionInfo (EOptionType.STRING, i, maxLengthString);
       }
       System.out.println ("");
     }
   }
 
-  private static void printOptionInfo (final OptionType filter, final OptionInfo optionInfo, final int padLength)
+  private static void printOptionInfo (final EOptionType filter, final OptionInfo optionInfo, final int padLength)
   {
     if (optionInfo.getType () == filter)
     {

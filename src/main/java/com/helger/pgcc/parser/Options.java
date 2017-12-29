@@ -31,18 +31,25 @@
 package com.helger.pgcc.parser;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.id.IHasID;
+import com.helger.commons.lang.EnumHelper;
+import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
-import com.helger.pgcc.utils.OptionType;
 
 /**
  * A class with static state that stores all option information.
@@ -126,16 +133,36 @@ public class Options
    * Various constants relating to possible values for certain options
    */
 
-  public static final String OUTPUT_LANGUAGE__CPP = "c++";
   public static final String OUTPUT_LANGUAGE__JAVA = "java";
+  public static final String OUTPUT_LANGUAGE__CPP = "c++";
 
-  public static enum Language
+  public static enum ELanguage implements IHasID <String>
   {
-    java,
-    cpp;
+    JAVA (OUTPUT_LANGUAGE__JAVA),
+    CPP (OUTPUT_LANGUAGE__CPP);
+
+    private final String m_sID;
+
+    private ELanguage (@Nonnull @Nonempty final String sID)
+    {
+      m_sID = sID;
+    }
+
+    @Nonnull
+    @Nonempty
+    public String getID ()
+    {
+      return m_sID;
+    }
+
+    @Nullable
+    public static ELanguage getFromIDCaseInsensitiveOrNull (@Nullable final String sID)
+    {
+      return EnumHelper.getFromIDCaseInsensitiveOrNull (ELanguage.class, sID);
+    }
   }
 
-  public static Language language = Language.java;
+  public static ELanguage s_language = ELanguage.JAVA;
 
   /**
    * 2013/07/22 -- GWT Compliant Output -- no external dependencies on GWT, but
@@ -157,66 +184,66 @@ public class Options
   {
     final TreeSet <OptionInfo> temp = new TreeSet <> ();
 
-    temp.add (new OptionInfo (USEROPTION__PARSER_SUPER_CLASS, OptionType.STRING, null));
-    temp.add (new OptionInfo (USEROPTION__TOKEN_MANAGER_SUPER_CLASS, OptionType.STRING, null));
-    temp.add (new OptionInfo (USEROPTION__LOOKAHEAD, OptionType.INTEGER, new Integer (1)));
+    temp.add (new OptionInfo (USEROPTION__PARSER_SUPER_CLASS, EOptionType.STRING, null));
+    temp.add (new OptionInfo (USEROPTION__TOKEN_MANAGER_SUPER_CLASS, EOptionType.STRING, null));
+    temp.add (new OptionInfo (USEROPTION__LOOKAHEAD, EOptionType.INTEGER, Integer.valueOf (1)));
 
-    temp.add (new OptionInfo (USEROPTION__CHOICE_AMBIGUITY_CHECK, OptionType.INTEGER, new Integer (2)));
-    temp.add (new OptionInfo (USEROPTION__OTHER_AMBIGUITY_CHECK, OptionType.INTEGER, new Integer (1)));
-    temp.add (new OptionInfo (USEROPTION__STATIC, OptionType.BOOLEAN, Boolean.TRUE));
-    temp.add (new OptionInfo (USEROPTION__PARSER_CODE_GENERATOR, OptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__TOKEN_MANAGER_CODE_GENERATOR, OptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__NO_DFA, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__DEBUG_PARSER, OptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__CHOICE_AMBIGUITY_CHECK, EOptionType.INTEGER, Integer.valueOf (2)));
+    temp.add (new OptionInfo (USEROPTION__OTHER_AMBIGUITY_CHECK, EOptionType.INTEGER, Integer.valueOf (1)));
+    temp.add (new OptionInfo (USEROPTION__STATIC, EOptionType.BOOLEAN, Boolean.TRUE));
+    temp.add (new OptionInfo (USEROPTION__PARSER_CODE_GENERATOR, EOptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__TOKEN_MANAGER_CODE_GENERATOR, EOptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__NO_DFA, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__DEBUG_PARSER, EOptionType.BOOLEAN, Boolean.FALSE));
 
-    temp.add (new OptionInfo (USEROPTION__DEBUG_LOOKAHEAD, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__DEBUG_TOKEN_MANAGER, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__ERROR_REPORTING, OptionType.BOOLEAN, Boolean.TRUE));
-    temp.add (new OptionInfo (USEROPTION__JAVA_UNICODE_ESCAPE, OptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__DEBUG_LOOKAHEAD, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__DEBUG_TOKEN_MANAGER, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__ERROR_REPORTING, EOptionType.BOOLEAN, Boolean.TRUE));
+    temp.add (new OptionInfo (USEROPTION__JAVA_UNICODE_ESCAPE, EOptionType.BOOLEAN, Boolean.FALSE));
 
-    temp.add (new OptionInfo (USEROPTION__UNICODE_INPUT, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__IGNORE_CASE, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__USER_TOKEN_MANAGER, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__USER_CHAR_STREAM, OptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__UNICODE_INPUT, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__IGNORE_CASE, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__USER_TOKEN_MANAGER, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__USER_CHAR_STREAM, EOptionType.BOOLEAN, Boolean.FALSE));
 
-    temp.add (new OptionInfo (USEROPTION__BUILD_PARSER, OptionType.BOOLEAN, Boolean.TRUE));
-    temp.add (new OptionInfo (USEROPTION__BUILD_TOKEN_MANAGER, OptionType.BOOLEAN, Boolean.TRUE));
-    temp.add (new OptionInfo (USEROPTION__TOKEN_MANAGER_USES_PARSER, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__SANITY_CHECK, OptionType.BOOLEAN, Boolean.TRUE));
+    temp.add (new OptionInfo (USEROPTION__BUILD_PARSER, EOptionType.BOOLEAN, Boolean.TRUE));
+    temp.add (new OptionInfo (USEROPTION__BUILD_TOKEN_MANAGER, EOptionType.BOOLEAN, Boolean.TRUE));
+    temp.add (new OptionInfo (USEROPTION__TOKEN_MANAGER_USES_PARSER, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__SANITY_CHECK, EOptionType.BOOLEAN, Boolean.TRUE));
 
-    temp.add (new OptionInfo (USEROPTION__FORCE_LA_CHECK, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__COMMON_TOKEN_ACTION, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__CACHE_TOKENS, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__KEEP_LINE_COLUMN, OptionType.BOOLEAN, Boolean.TRUE));
+    temp.add (new OptionInfo (USEROPTION__FORCE_LA_CHECK, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__COMMON_TOKEN_ACTION, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__CACHE_TOKENS, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__KEEP_LINE_COLUMN, EOptionType.BOOLEAN, Boolean.TRUE));
 
-    temp.add (new OptionInfo (USEROPTION__GENERATE_CHAINED_EXCEPTION, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__GENERATE_GENERICS, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__GENERATE_BOILERPLATE, OptionType.BOOLEAN, Boolean.TRUE));
-    temp.add (new OptionInfo (USEROPTION__GENERATE_STRING_BUILDER, OptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__GENERATE_CHAINED_EXCEPTION, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__GENERATE_GENERICS, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__GENERATE_BOILERPLATE, EOptionType.BOOLEAN, Boolean.TRUE));
+    temp.add (new OptionInfo (USEROPTION__GENERATE_STRING_BUILDER, EOptionType.BOOLEAN, Boolean.FALSE));
 
-    temp.add (new OptionInfo (USEROPTION__GENERATE_ANNOTATIONS, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC, OptionType.BOOLEAN, Boolean.TRUE));
-    temp.add (new OptionInfo (USEROPTION__OUTPUT_DIRECTORY, OptionType.STRING, "."));
-    temp.add (new OptionInfo (USEROPTION__JDK_VERSION, OptionType.STRING, "1.5"));
+    temp.add (new OptionInfo (USEROPTION__GENERATE_ANNOTATIONS, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC, EOptionType.BOOLEAN, Boolean.TRUE));
+    temp.add (new OptionInfo (USEROPTION__OUTPUT_DIRECTORY, EOptionType.STRING, "."));
+    temp.add (new OptionInfo (USEROPTION__JDK_VERSION, EOptionType.STRING, "1.5"));
 
-    temp.add (new OptionInfo (USEROPTION__TOKEN_EXTENDS, OptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__TOKEN_FACTORY, OptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__GRAMMAR_ENCODING, OptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__OUTPUT_LANGUAGE, OptionType.STRING, OUTPUT_LANGUAGE__JAVA));
-    language = Language.java;
+    temp.add (new OptionInfo (USEROPTION__TOKEN_EXTENDS, EOptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__TOKEN_FACTORY, EOptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__GRAMMAR_ENCODING, EOptionType.STRING, ""));
+    s_language = ELanguage.JAVA;
+    temp.add (new OptionInfo (USEROPTION__OUTPUT_LANGUAGE, EOptionType.STRING, s_language.getID ()));
 
-    temp.add (new OptionInfo (USEROPTION__JAVA_TEMPLATE_TYPE, OptionType.STRING, JAVA_TEMPLATE_TYPE_CLASSIC));
-    temp.add (new OptionInfo (USEROPTION__CPP_NAMESPACE, OptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__CPP_TOKEN_INCLUDES, OptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__CPP_PARSER_INCLUDES, OptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__JAVA_TEMPLATE_TYPE, EOptionType.STRING, JAVA_TEMPLATE_TYPE_CLASSIC));
+    temp.add (new OptionInfo (USEROPTION__CPP_NAMESPACE, EOptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__CPP_TOKEN_INCLUDES, EOptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__CPP_PARSER_INCLUDES, EOptionType.STRING, ""));
 
-    temp.add (new OptionInfo (USEROPTION__CPP_TOKEN_MANAGER_INCLUDES, OptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__CPP_IGNORE_ACTIONS, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__CPP_STOP_ON_FIRST_ERROR, OptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__CPP_TOKEN_MANAGER_SUPERCLASS, OptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__CPP_TOKEN_MANAGER_INCLUDES, EOptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__CPP_IGNORE_ACTIONS, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__CPP_STOP_ON_FIRST_ERROR, EOptionType.BOOLEAN, Boolean.FALSE));
+    temp.add (new OptionInfo (USEROPTION__CPP_TOKEN_MANAGER_SUPERCLASS, EOptionType.STRING, ""));
 
-    temp.add (new OptionInfo (USEROPTION__DEPTH_LIMIT, OptionType.INTEGER, new Integer (0)));
-    temp.add (new OptionInfo (USEROPTION__CPP_STACK_LIMIT, OptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__DEPTH_LIMIT, EOptionType.INTEGER, Integer.valueOf (0)));
+    temp.add (new OptionInfo (USEROPTION__CPP_STACK_LIMIT, EOptionType.STRING, ""));
 
     userOptions = Collections.unmodifiableSet (temp);
   }
@@ -227,26 +254,26 @@ public class Options
    * of legal options. Its initial values define the default option values, and
    * the option types can be determined from these values too.
    */
-  protected static Map <String, Object> optionValues = null;
+  protected static Map <String, Object> s_optionValues = null;
 
   /**
    * Initialize for JavaCC
    */
   public static void init ()
   {
-    optionValues = new HashMap <> ();
-    cmdLineSetting = new HashSet <> ();
-    inputFileSetting = new HashSet <> ();
+    s_optionValues = new HashMap <> ();
+    s_cmdLineSetting = new HashSet <> ();
+    s_inputFileSetting = new HashSet <> ();
 
     for (final OptionInfo t : userOptions)
     {
-      optionValues.put (t.getName (), t.getDefault ());
+      s_optionValues.put (t.getName (), t.getDefault ());
     }
 
     {
-      final Object object = optionValues.get (USEROPTION__JAVA_TEMPLATE_TYPE);
+      final Object object = s_optionValues.get (USEROPTION__JAVA_TEMPLATE_TYPE);
       final boolean isLegacy = JAVA_TEMPLATE_TYPE_CLASSIC.equals (object);
-      optionValues.put (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING, isLegacy);
+      s_optionValues.put (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING, isLegacy);
     }
 
   }
@@ -256,7 +283,7 @@ public class Options
    */
   public static int intValue (final String option)
   {
-    return ((Integer) optionValues.get (option)).intValue ();
+    return ((Integer) s_optionValues.get (option)).intValue ();
   }
 
   /**
@@ -264,7 +291,7 @@ public class Options
    */
   public static boolean booleanValue (final String option)
   {
-    return ((Boolean) optionValues.get (option)).booleanValue ();
+    return ((Boolean) s_optionValues.get (option)).booleanValue ();
   }
 
   /**
@@ -272,17 +299,17 @@ public class Options
    */
   public static String stringValue (final String option)
   {
-    return (String) optionValues.get (option);
+    return (String) s_optionValues.get (option);
   }
 
   public static Object objectValue (final String option)
   {
-    return optionValues.get (option);
+    return s_optionValues.get (option);
   }
 
   public static Map <String, Object> getOptions ()
   {
-    return new HashMap <> (optionValues);
+    return new HashMap <> (s_optionValues);
   }
 
   /**
@@ -290,14 +317,14 @@ public class Options
    * to see if the options set from the command line and the ones set in the
    * input files clash in any way.
    */
-  private static Set <String> cmdLineSetting = null;
+  private static Set <String> s_cmdLineSetting = null;
 
   /**
    * Keep track of what options were set from the grammar file. We use this to
    * see if the options set from the command line and the ones set in the input
    * files clash in any way.
    */
-  private static Set <String> inputFileSetting = null;
+  private static Set <String> s_inputFileSetting = null;
 
   /**
    * Returns a string representation of the specified options of interest. Used
@@ -314,16 +341,12 @@ public class Options
   {
     final StringBuilder sb = new StringBuilder ();
 
-    for (int i = 0; i < interestingOptions.length; i++)
+    for (final String key : interestingOptions)
     {
-      final String key = interestingOptions[i];
-      sb.append (key);
-      sb.append ('=');
-      sb.append (optionValues.get (key));
-      if (i != interestingOptions.length - 1)
-      {
+      if (sb.length () > 0)
         sb.append (',');
-      }
+
+      sb.append (key).append ('=').append (s_optionValues.get (key));
     }
 
     return sb.toString ();
@@ -359,38 +382,34 @@ public class Options
    *        The option's value.
    * @return The upgraded value.
    */
-  public static Object upgradeValue (final String name, Object value)
+  @Nonnull
+  public static Object upgradeValue (@Nonnull final String name, @Nonnull final Object value)
   {
     if (name.equalsIgnoreCase ("NODE_FACTORY") && value.getClass () == Boolean.class)
     {
-      if (((Boolean) value).booleanValue ())
-      {
-        value = "*";
-      }
-      else
-      {
-        value = "";
-      }
+      return ((Boolean) value).booleanValue () ? "*" : "";
     }
 
     return value;
   }
 
-  public static void setInputFileOption (final Object nameloc, final Object valueloc, final String name, Object value)
+  public static void setInputFileOption (final Object nameloc,
+                                         final Object valueloc,
+                                         @Nonnull final String name,
+                                         @Nonnull Object value)
   {
-    final String nameUpperCase = name.toUpperCase ();
-    if (!optionValues.containsKey (nameUpperCase))
+    final String nameUpperCase = name.toUpperCase (Locale.US);
+    if (!s_optionValues.containsKey (nameUpperCase))
     {
       JavaCCErrors.warning (nameloc, "Bad option name \"" + name + "\".  Option setting will be ignored.");
       return;
     }
-    final Object existingValue = optionValues.get (nameUpperCase);
+    final Object existingValue = s_optionValues.get (nameUpperCase);
 
     value = upgradeValue (name, value);
 
     if (existingValue != null)
     {
-
       final boolean isIndirectProperty = nameUpperCase.equalsIgnoreCase (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING);
 
       Object object = null;
@@ -414,13 +433,13 @@ public class Options
         return;
       }
 
-      if (inputFileSetting.contains (nameUpperCase))
+      if (s_inputFileSetting.contains (nameUpperCase))
       {
         JavaCCErrors.warning (nameloc, "Duplicate option setting for \"" + name + "\" will be ignored.");
         return;
       }
 
-      if (cmdLineSetting.contains (nameUpperCase))
+      if (s_cmdLineSetting.contains (nameUpperCase))
       {
         if (!existingValue.equals (value))
         {
@@ -430,8 +449,8 @@ public class Options
       }
     }
 
-    optionValues.put (nameUpperCase, value);
-    inputFileSetting.add (nameUpperCase);
+    s_optionValues.put (nameUpperCase, value);
+    s_inputFileSetting.add (nameUpperCase);
 
     // Special case logic block here for setting indirect flags
 
@@ -446,19 +465,19 @@ public class Options
                                         "\" for \"" +
                                         name +
                                         "\".  Option setting will be ignored. Valid options : " +
-                                        getAllValidJavaTemplateTypes ());
+                                        _getAllValidJavaTemplateTypes ());
         return;
       }
 
       final boolean isLegacy = JAVA_TEMPLATE_TYPE_CLASSIC.equals (templateType);
-      optionValues.put (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING, isLegacy);
+      s_optionValues.put (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING, isLegacy);
     }
     else
-
       if (nameUpperCase.equalsIgnoreCase (USEROPTION__OUTPUT_LANGUAGE))
       {
         final String outputLanguage = (String) value;
-        if (!isValidOutputLanguage (outputLanguage))
+        final ELanguage eOutLanguage = getOutputLanguage (outputLanguage);
+        if (eOutLanguage == null)
         {
           JavaCCErrors.warning (valueloc,
                                 "Bad option value \"" +
@@ -466,31 +485,26 @@ public class Options
                                           "\" for \"" +
                                           name +
                                           "\".  Option setting will be ignored. Valid options : " +
-                                          getAllValidLanguages ());
+                                          _getAllValidLanguages ());
           return;
         }
-        if (isOutputLanguageJava ())
-          language = Language.java;
-        else
-          if (isOutputLanguageCpp ())
-            language = Language.cpp;
+        s_language = eOutLanguage;
       }
       else
-
         if (nameUpperCase.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
         {
           processCPPNamespaceOption ((String) value);
         }
   }
 
-  private static String getAllValidJavaTemplateTypes ()
+  private static String _getAllValidJavaTemplateTypes ()
   {
-    return Arrays.toString (supportedJavaTemplateTypes.toArray (new String [supportedJavaTemplateTypes.size ()]));
+    return "[" + StringHelper.getImploded (", ", s_supportedJavaTemplateTypes) + "]";
   }
 
-  private static String getAllValidLanguages ()
+  private static String _getAllValidLanguages ()
   {
-    return Arrays.toString (supportedLanguages.toArray (new String [supportedLanguages.size ()]));
+    return "[" + StringHelper.getImplodedMapped (", ", ELanguage.values (), ELanguage::getID) + "]";
   }
 
   /**
@@ -535,7 +549,7 @@ public class Options
     if (index < 0)
     {
       name = s.toUpperCase ();
-      if (optionValues.containsKey (name))
+      if (s_optionValues.containsKey (name))
       {
         val = Boolean.TRUE;
       }
@@ -573,7 +587,7 @@ public class Options
               System.out.println ("Warning: Bad option value in \"" + arg + "\" will be ignored.");
               return;
             }
-            val = new Integer (i);
+            val = Integer.valueOf (i);
           }
           catch (final NumberFormatException e)
           {
@@ -591,18 +605,18 @@ public class Options
         }
     }
 
-    if (!optionValues.containsKey (name))
+    if (!s_optionValues.containsKey (name))
     {
       System.out.println ("Warning: Bad option \"" + arg + "\" will be ignored.");
       return;
     }
-    final Object valOrig = optionValues.get (name);
+    final Object valOrig = s_optionValues.get (name);
     if (val.getClass () != valOrig.getClass ())
     {
       System.out.println ("Warning: Bad option value in \"" + arg + "\" will be ignored.");
       return;
     }
-    if (cmdLineSetting.contains (name))
+    if (s_cmdLineSetting.contains (name))
     {
       System.out.println ("Warning: Duplicate option setting \"" + arg + "\" will be ignored.");
       return;
@@ -610,8 +624,8 @@ public class Options
 
     val = upgradeValue (name, val);
 
-    optionValues.put (name, val);
-    cmdLineSetting.add (name);
+    s_optionValues.put (name, val);
+    s_cmdLineSetting.add (name);
     if (name.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
     {
       processCPPNamespaceOption ((String) val);
@@ -622,21 +636,22 @@ public class Options
   {
     if (getDebugLookahead () && !getDebugParser ())
     {
-      if (cmdLineSetting.contains (USEROPTION__DEBUG_PARSER) || inputFileSetting.contains (USEROPTION__DEBUG_PARSER))
+      if (s_cmdLineSetting.contains (USEROPTION__DEBUG_PARSER) ||
+          s_inputFileSetting.contains (USEROPTION__DEBUG_PARSER))
       {
         JavaCCErrors.warning ("True setting of option DEBUG_LOOKAHEAD overrides " +
                               "false setting of option DEBUG_PARSER.");
       }
-      optionValues.put (USEROPTION__DEBUG_PARSER, Boolean.TRUE);
+      s_optionValues.put (USEROPTION__DEBUG_PARSER, Boolean.TRUE);
     }
 
     // Now set the "GENERATE" options from the supplied (or default) JDK
     // version.
 
-    optionValues.put (USEROPTION__GENERATE_CHAINED_EXCEPTION, Boolean.valueOf (jdkVersionAtLeast (1.4)));
-    optionValues.put (USEROPTION__GENERATE_GENERICS, Boolean.valueOf (jdkVersionAtLeast (1.5)));
-    optionValues.put (USEROPTION__GENERATE_STRING_BUILDER, Boolean.valueOf (jdkVersionAtLeast (1.5)));
-    optionValues.put (USEROPTION__GENERATE_ANNOTATIONS, Boolean.valueOf (jdkVersionAtLeast (1.5)));
+    s_optionValues.put (USEROPTION__GENERATE_CHAINED_EXCEPTION, Boolean.valueOf (jdkVersionAtLeast (1.4)));
+    s_optionValues.put (USEROPTION__GENERATE_GENERICS, Boolean.valueOf (jdkVersionAtLeast (1.5)));
+    s_optionValues.put (USEROPTION__GENERATE_STRING_BUILDER, Boolean.valueOf (jdkVersionAtLeast (1.5)));
+    s_optionValues.put (USEROPTION__GENERATE_ANNOTATIONS, Boolean.valueOf (jdkVersionAtLeast (1.5)));
   }
 
   /**
@@ -1021,41 +1036,31 @@ public class Options
     // processing into a single Enum class
     if (isOutputLanguageJava () && getGenerateStringBuilder ())
     {
-      return getGenerateStringBuilder () ? "StringBuilder" : "StringBuilder";
+      return getGenerateStringBuilder () ? "StringBuilder" : "StringBuffer";
     }
-    else
-      if (getOutputLanguage ().equals (OUTPUT_LANGUAGE__CPP))
-      {
-        return "StringBuilder";
-      }
-      else
-      {
-        throw new RuntimeException ("Output language type not fully implemented : " + getOutputLanguage ());
-      }
+    if (getOutputLanguage ().equals (OUTPUT_LANGUAGE__CPP))
+    {
+      return "StringBuffer";
+    }
+    throw new RuntimeException ("Output language type not fully implemented : " + getOutputLanguage ());
   }
 
-  private static final Set <String> supportedJavaTemplateTypes = new HashSet <> ();
+  private static final Set <String> s_supportedJavaTemplateTypes = new HashSet <> ();
   static
   {
-    supportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_CLASSIC);
-    supportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_MODERN);
+    s_supportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_CLASSIC);
+    s_supportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_MODERN);
   }
 
-  private static final Set <String> supportedLanguages = new HashSet <> ();
-  static
+  @Nullable
+  public static ELanguage getOutputLanguage (@Nullable final String language)
   {
-    supportedLanguages.add (OUTPUT_LANGUAGE__JAVA);
-    supportedLanguages.add (OUTPUT_LANGUAGE__CPP);
+    return ELanguage.getFromIDCaseInsensitiveOrNull (language);
   }
 
-  public static boolean isValidOutputLanguage (final String language)
+  public static boolean isValidJavaTemplateType (@Nullable final String type)
   {
-    return language == null ? false : supportedLanguages.contains (language.toLowerCase ());
-  }
-
-  public static boolean isValidJavaTemplateType (final String type)
-  {
-    return type == null ? false : supportedJavaTemplateTypes.contains (type.toLowerCase ());
+    return type == null ? false : s_supportedJavaTemplateTypes.contains (type.toLowerCase (Locale.US));
   }
 
   /**
@@ -1073,7 +1078,7 @@ public class Options
 
   public static void setStringOption (final String optionName, final String optionValue)
   {
-    optionValues.put (optionName, optionValue);
+    s_optionValues.put (optionName, optionValue);
     if (optionName.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
     {
       processCPPNamespaceOption (optionValue);
@@ -1094,9 +1099,9 @@ public class Options
         expanded_ns = expanded_ns + "\nnamespace " + st.nextToken () + " {";
         ns_close = ns_close + "\n}";
       }
-      optionValues.put (NONUSER_OPTION__NAMESPACE_OPEN, expanded_ns);
-      optionValues.put (NONUSER_OPTION__HAS_NAMESPACE, Boolean.TRUE);
-      optionValues.put (NONUSER_OPTION__NAMESPACE_CLOSE, ns_close);
+      s_optionValues.put (NONUSER_OPTION__NAMESPACE_OPEN, expanded_ns);
+      s_optionValues.put (NONUSER_OPTION__HAS_NAMESPACE, Boolean.TRUE);
+      s_optionValues.put (NONUSER_OPTION__NAMESPACE_CLOSE, ns_close);
     }
   }
 
@@ -1150,7 +1155,7 @@ public class Options
 
   public static boolean isTokenManagerRequiresParserAccess ()
   {
-    return getTokenManagerUsesParser () && (!getStatic ());
+    return getTokenManagerUsesParser () && !getStatic ();
   }
 
   /**
@@ -1175,10 +1180,7 @@ public class Options
     {
       return "";
     }
-    else
-    {
-      return limit;
-    }
+    return limit;
   }
 
   /**

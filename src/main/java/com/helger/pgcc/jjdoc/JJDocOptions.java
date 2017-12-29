@@ -53,13 +53,13 @@ public class JJDocOptions extends Options
   {
     Options.init ();
 
-    Options.optionValues.put ("ONE_TABLE", Boolean.TRUE);
-    Options.optionValues.put ("TEXT", Boolean.FALSE);
-    Options.optionValues.put ("XTEXT", Boolean.FALSE);
-    Options.optionValues.put ("BNF", Boolean.FALSE);
+    Options.s_optionValues.put ("ONE_TABLE", Boolean.TRUE);
+    Options.s_optionValues.put ("TEXT", Boolean.FALSE);
+    Options.s_optionValues.put ("XTEXT", Boolean.FALSE);
+    Options.s_optionValues.put ("BNF", Boolean.FALSE);
 
-    Options.optionValues.put ("OUTPUT_FILE", "");
-    Options.optionValues.put ("CSS", "");
+    Options.s_optionValues.put ("OUTPUT_FILE", "");
+    Options.s_optionValues.put ("CSS", "");
   }
 
   /**

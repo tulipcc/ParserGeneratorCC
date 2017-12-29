@@ -3,7 +3,7 @@ package com.helger.pgcc.utils;
 /**
  * @author Chris Ainsley
  */
-public enum OptionType
+public enum EOptionType
 {
   BOOLEAN,
   INTEGER,

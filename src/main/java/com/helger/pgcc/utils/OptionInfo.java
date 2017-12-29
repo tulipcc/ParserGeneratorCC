@@ -1,82 +1,69 @@
 package com.helger.pgcc.utils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.helger.commons.compare.IComparable;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
+
 /**
  * @author Chris Ainsley
  */
-public class OptionInfo implements Comparable <OptionInfo>
+public class OptionInfo implements IComparable <OptionInfo>
 {
-  private final String _name;
-  private final OptionType _type;
-  private final Comparable <?> _default;
+  private final String m_name;
+  private final EOptionType m_type;
+  private final Comparable <?> m_default;
 
-  public OptionInfo (final String name, final OptionType type, final Comparable <?> default1)
+  public OptionInfo (@Nonnull final String name,
+                     @Nonnull final EOptionType type,
+                     @Nullable final Comparable <?> default1)
   {
-    _name = name;
-    _type = type;
-    _default = default1;
+    m_name = name;
+    m_type = type;
+    m_default = default1;
   }
 
+  @Nonnull
   public String getName ()
   {
-    return _name;
+    return m_name;
   }
 
-  public OptionType getType ()
+  @Nonnull
+  public EOptionType getType ()
   {
-    return _type;
+    return m_type;
   }
 
+  @Nullable
   public Comparable <?> getDefault ()
   {
-    return _default;
+    return m_default;
   }
 
   @Override
   public int hashCode ()
   {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((_default == null) ? 0 : _default.hashCode ());
-    result = prime * result + ((_name == null) ? 0 : _name.hashCode ());
-    result = prime * result + ((_type == null) ? 0 : _type.hashCode ());
-    return result;
+    return new HashCodeGenerator (this).append (m_name).append (m_type).append (m_default).getHashCode ();
   }
 
   @Override
-  public boolean equals (final Object obj)
+  public boolean equals (final Object o)
   {
-    if (this == obj)
+    if (o == this)
       return true;
-    if (obj == null)
+    if (o == null || !getClass ().equals (o.getClass ()))
       return false;
-    if (getClass () != obj.getClass ())
-      return false;
-    final OptionInfo other = (OptionInfo) obj;
-    if (_default == null)
-    {
-      if (other._default != null)
-        return false;
-    }
-    else
-      if (!_default.equals (other._default))
-        return false;
-    if (_name == null)
-    {
-      if (other._name != null)
-        return false;
-    }
-    else
-      if (!_name.equals (other._name))
-        return false;
-    if (_type != other._type)
-      return false;
-    return true;
+    final OptionInfo rhs = (OptionInfo) o;
+    return m_name.equals (rhs.m_name) && m_type.equals (rhs.m_type) && EqualsHelper.equals (m_default, rhs.m_default);
   }
 
   @Override
   public int compareTo (final OptionInfo o)
   {
-    return this._name.compareTo (o._name);
+    return m_name.compareTo (o.m_name);
   }
 
 }
