@@ -50,7 +50,7 @@ public class ZeroOrMore extends Expansion
     this.setLine (token.beginLine);
     this.setColumn (token.beginColumn);
     this.expansion = expansion;
-    this.expansion.parent = this;
+    this.expansion.m_parent = this;
   }
 
   @Override

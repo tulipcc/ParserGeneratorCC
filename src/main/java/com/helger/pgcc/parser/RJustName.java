@@ -39,12 +39,12 @@ public class RJustName extends RegularExpression
   /**
    * "regexpr" points to the regular expression denoted by the name.
    */
-  public RegularExpression regexpr;
+  public RegularExpression m_regexpr;
 
   @Override
   public Nfa GenerateNfa (final boolean ignoreCase)
   {
-    return regexpr.GenerateNfa (ignoreCase);
+    return m_regexpr.GenerateNfa (ignoreCase);
   }
 
   public RJustName ()
@@ -54,7 +54,7 @@ public class RJustName extends RegularExpression
   {
     this.setLine (token.beginLine);
     this.setColumn (token.beginColumn);
-    this.label = image;
+    this.m_label = image;
   }
 
 }

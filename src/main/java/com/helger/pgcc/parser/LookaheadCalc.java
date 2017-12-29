@@ -99,9 +99,9 @@ public class LookaheadCalc extends JavaCCGlobals
           ret += " \"" + add_escapes (((RStringLiteral) re).m_image) + "\"";
         }
         else
-          if (re.label != null && !re.label.equals (""))
+          if (re.m_label != null && !re.m_label.equals (""))
           {
-            ret += " <" + re.label + ">";
+            ret += " <" + re.m_label + ">";
           }
           else
           {
@@ -239,7 +239,7 @@ public class LookaheadCalc extends JavaCCGlobals
       return false;
     }
     final Sequence seq = (Sequence) exp;
-    final Object obj = seq.units.get (0);
+    final Object obj = seq.m_units.get (0);
     if (!(obj instanceof Lookahead))
     {
       return false;
@@ -301,7 +301,7 @@ public class LookaheadCalc extends JavaCCGlobals
       first = LookaheadWalk.sizeLimitedMatches;
       LookaheadWalk.sizeLimitedMatches = new ArrayList <> ();
       LookaheadWalk.considerSemanticLA = false;
-      LookaheadWalk.genFollowSet (v, exp, Expansion.nextGenerationIndex++);
+      LookaheadWalk.genFollowSet (v, exp, Expansion.s_nextGenerationIndex++);
       follow = LookaheadWalk.sizeLimitedMatches;
       if (la == 1)
       {

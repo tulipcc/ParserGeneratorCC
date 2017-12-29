@@ -128,9 +128,9 @@ public class ParseEngine
           if (exp instanceof Sequence)
           {
             final Sequence seq = (Sequence) exp;
-            for (int i = 0; i < seq.units.size (); i++)
+            for (int i = 0; i < seq.m_units.size (); i++)
             {
-              final Expansion [] units = seq.units.toArray (new Expansion [seq.units.size ()]);
+              final Expansion [] units = seq.m_units.toArray (new Expansion [seq.m_units.size ()]);
               if (units[i] instanceof Lookahead && ((Lookahead) units[i]).isExplicit ())
               {
                 // An explicit lookahead (rather than one generated implicitly).
@@ -197,7 +197,7 @@ public class ParseEngine
   {
     if (exp instanceof RegularExpression)
     {
-      firstSet[((RegularExpression) exp).ordinal] = true;
+      firstSet[((RegularExpression) exp).m_ordinal] = true;
     }
     else
       if (exp instanceof NonTerminal)
@@ -220,14 +220,14 @@ public class ParseEngine
           if (exp instanceof Sequence)
           {
             final Sequence seq = (Sequence) exp;
-            final Object obj = seq.units.get (0);
+            final Object obj = seq.m_units.get (0);
             if ((obj instanceof Lookahead) && (((Lookahead) obj).getActionTokens ().size () != 0))
             {
               jj2LA = true;
             }
-            for (int i = 0; i < seq.units.size (); i++)
+            for (int i = 0; i < seq.m_units.size (); i++)
             {
-              final Expansion unit = (Expansion) seq.units.get (i);
+              final Expansion unit = (Expansion) seq.m_units.get (i);
               // Javacode productions can not have FIRST sets. Instead we
               // generate the FIRST set
               // for the preceding LOOKAHEAD (the semantic checks should have
@@ -235,17 +235,17 @@ public class ParseEngine
               // the LOOKAHEAD is suitable).
               if (unit instanceof NonTerminal && ((NonTerminal) unit).getProd () instanceof CodeProduction)
               {
-                if (i > 0 && seq.units.get (i - 1) instanceof Lookahead)
+                if (i > 0 && seq.m_units.get (i - 1) instanceof Lookahead)
                 {
-                  final Lookahead la = (Lookahead) seq.units.get (i - 1);
+                  final Lookahead la = (Lookahead) seq.m_units.get (i - 1);
                   genFirstSet (la.getLaExpansion ());
                 }
               }
               else
               {
-                genFirstSet ((Expansion) (seq.units.get (i)));
+                genFirstSet ((Expansion) (seq.m_units.get (i)));
               }
-              if (!Semanticize.emptyExpansionExists ((Expansion) (seq.units.get (i))))
+              if (!Semanticize.emptyExpansionExists ((Expansion) (seq.m_units.get (i))))
               {
                 break;
               }
@@ -511,10 +511,10 @@ public class ParseEngine
         }
         jj2index++;
         // At this point, la.la_expansion.internal_name must be "".
-        la.getLaExpansion ().internal_name = "_" + jj2index;
-        la.getLaExpansion ().internal_index = jj2index;
+        la.getLaExpansion ().m_internal_name = "_" + jj2index;
+        la.getLaExpansion ().m_internal_index = jj2index;
         phase2list.add (la);
-        retval += "jj_2" + la.getLaExpansion ().internal_name + "(" + la.getAmount () + ")";
+        retval += "jj_2" + la.getLaExpansion ().m_internal_name + "(" + la.getAmount () + ")";
         if (la.getActionTokens ().size () != 0)
         {
           // In addition, there is also a semantic lookahead. So concatenate
@@ -974,10 +974,10 @@ public class ParseEngine
     {
       final RegularExpression e_nrw = (RegularExpression) e;
       retval += "\n";
-      if (e_nrw.lhsTokens.size () != 0)
+      if (e_nrw.m_lhsTokens.size () != 0)
       {
-        codeGenerator.printTokenSetup ((e_nrw.lhsTokens.get (0)));
-        for (final Object aElement : e_nrw.lhsTokens)
+        codeGenerator.printTokenSetup ((e_nrw.m_lhsTokens.get (0)));
+        for (final Object aElement : e_nrw.m_lhsTokens)
         {
           t = (Token) aElement;
           retval += codeGenerator.getStringToPrint (t);
@@ -985,22 +985,22 @@ public class ParseEngine
         retval += codeGenerator.getTrailingComments (t);
         retval += " = ";
       }
-      final String tail = e_nrw.rhsToken == null ? ");" : (isJavaDialect ? ")." : ")->") + e_nrw.rhsToken.image + ";";
-      if (e_nrw.label.equals (""))
+      final String tail = e_nrw.m_rhsToken == null ? ");" : (isJavaDialect ? ")." : ")->") + e_nrw.m_rhsToken.image + ";";
+      if (e_nrw.m_label.equals (""))
       {
-        final Object label = names_of_tokens.get (new Integer (e_nrw.ordinal));
+        final Object label = names_of_tokens.get (new Integer (e_nrw.m_ordinal));
         if (label != null)
         {
           retval += "jj_consume_token(" + (String) label + tail;
         }
         else
         {
-          retval += "jj_consume_token(" + e_nrw.ordinal + tail;
+          retval += "jj_consume_token(" + e_nrw.m_ordinal + tail;
         }
       }
       else
       {
-        retval += "jj_consume_token(" + e_nrw.label + tail;
+        retval += "jj_consume_token(" + e_nrw.m_label + tail;
       }
 
       if (!isJavaDialect && Options.booleanValue (Options.USEROPTION__CPP_STOP_ON_FIRST_ERROR))
@@ -1082,7 +1082,7 @@ public class ParseEngine
             {
               nestedSeq = (Sequence) (e_nrw.getChoices ().get (i));
               actions[i] = phase1ExpansionGen (nestedSeq);
-              conds[i] = (Lookahead) (nestedSeq.units.get (0));
+              conds[i] = (Lookahead) (nestedSeq.m_units.get (0));
             }
             retval = buildLookaheadChecker (conds, actions);
           }
@@ -1093,24 +1093,24 @@ public class ParseEngine
               // We skip the first element in the following iteration since it
               // is the
               // Lookahead object.
-              for (int i = 1; i < e_nrw.units.size (); i++)
+              for (int i = 1; i < e_nrw.m_units.size (); i++)
               {
                 // For C++, since we are not using exceptions, we will protect
                 // all the
                 // expansion choices with if (!error)
                 boolean wrap_in_block = false;
-                if (!JavaCCGlobals.jjtreeGenerated && !isJavaDialect)
+                if (!JavaCCGlobals.s_jjtreeGenerated && !isJavaDialect)
                 {
                   // for the last one, if it's an action, we will not protect
                   // it.
-                  final Expansion elem = (Expansion) e_nrw.units.get (i);
-                  if (!(elem instanceof Action) || !(e.parent instanceof BNFProduction) || i != e_nrw.units.size () - 1)
+                  final Expansion elem = (Expansion) e_nrw.m_units.get (i);
+                  if (!(elem instanceof Action) || !(e.m_parent instanceof BNFProduction) || i != e_nrw.m_units.size () - 1)
                   {
                     wrap_in_block = true;
                     retval += "\nif (" + (isJavaDialect ? "true" : "!hasError") + ") {";
                   }
                 }
-                retval += phase1ExpansionGen ((Expansion) (e_nrw.units.get (i)));
+                retval += phase1ExpansionGen ((Expansion) (e_nrw.m_units.get (i)));
                 if (wrap_in_block)
                 {
                   retval += "\n}";
@@ -1125,7 +1125,7 @@ public class ParseEngine
                 Lookahead la;
                 if (nested_e instanceof Sequence)
                 {
-                  la = (Lookahead) (((Sequence) nested_e).units.get (0));
+                  la = (Lookahead) (((Sequence) nested_e).m_units.get (0));
                 }
                 else
                 {
@@ -1170,7 +1170,7 @@ public class ParseEngine
                   Lookahead la;
                   if (nested_e instanceof Sequence)
                   {
-                    la = (Lookahead) (((Sequence) nested_e).units.get (0));
+                    la = (Lookahead) (((Sequence) nested_e).m_units.get (0));
                   }
                   else
                   {
@@ -1213,7 +1213,7 @@ public class ParseEngine
                     Lookahead la;
                     if (nested_e instanceof Sequence)
                     {
-                      la = (Lookahead) (((Sequence) nested_e).units.get (0));
+                      la = (Lookahead) (((Sequence) nested_e).m_units.get (0));
                     }
                     else
                     {
@@ -1310,12 +1310,12 @@ public class ParseEngine
                                  "private " +
                                  Options.getBooleanType () +
                                  " jj_2" +
-                                 e.internal_name +
+                                 e.m_internal_name +
                                  "(int xla)");
     }
     else
     {
-      codeGenerator.genCodeLine (" inline bool ", "jj_2" + e.internal_name + "(int xla)");
+      codeGenerator.genCodeLine (" inline bool ", "jj_2" + e.m_internal_name + "(int xla)");
     }
     codeGenerator.genCodeLine (" {");
     codeGenerator.genCodeLine ("    jj_la = xla; jj_lastpos = jj_scanpos = token;");
@@ -1328,19 +1328,19 @@ public class ParseEngine
 
     if (isJavaDialect)
     {
-      codeGenerator.genCodeLine ("    try { return (!jj_3" + e.internal_name + "()" + ret_suffix + "); }");
+      codeGenerator.genCodeLine ("    try { return (!jj_3" + e.m_internal_name + "()" + ret_suffix + "); }");
       codeGenerator.genCodeLine ("    catch(LookaheadSuccess ls) { return true; }");
     }
     else
     {
       codeGenerator.genCodeLine ("    jj_done = false;");
-      codeGenerator.genCodeLine ("    return (!jj_3" + e.internal_name + "() || jj_done)" + ret_suffix + ";");
+      codeGenerator.genCodeLine ("    return (!jj_3" + e.m_internal_name + "() || jj_done)" + ret_suffix + ";");
     }
     if (Options.getErrorReporting ())
     {
       codeGenerator.genCodeLine ((isJavaDialect ? "    finally " : " ") +
                                  "{ jj_save(" +
-                                 (Integer.parseInt (e.internal_name.substring (1)) - 1) +
+                                 (Integer.parseInt (e.m_internal_name.substring (1)) - 1) +
                                  ", xla); }");
     }
     codeGenerator.genCodeLine ("  }");
@@ -1360,7 +1360,7 @@ public class ParseEngine
     if (Options.getDebugLookahead () && jj3_expansion != null)
     {
       String tracecode = "trace_return(\"" +
-                         JavaCCGlobals.addUnicodeEscapes (((NormalProduction) jj3_expansion.parent).getLhs ()) +
+                         JavaCCGlobals.addUnicodeEscapes (((NormalProduction) jj3_expansion.m_parent).getLhs ()) +
                          "(LOOKAHEAD " +
                          (value ? "FAILED" : "SUCCEEDED") +
                          ")\");";
@@ -1379,13 +1379,13 @@ public class ParseEngine
   private void generate3R (final Expansion e, final Phase3Data inf)
   {
     Expansion seq = e;
-    if (e.internal_name.equals (""))
+    if (e.m_internal_name.equals (""))
     {
       while (true)
       {
-        if (seq instanceof Sequence && ((Sequence) seq).units.size () == 2)
+        if (seq instanceof Sequence && ((Sequence) seq).m_units.size () == 2)
         {
-          seq = (Expansion) ((Sequence) seq).units.get (1);
+          seq = (Expansion) ((Sequence) seq).m_units.get (1);
         }
         else
           if (seq instanceof NonTerminal)
@@ -1407,7 +1407,7 @@ public class ParseEngine
 
       if (seq instanceof RegularExpression)
       {
-        e.internal_name = "jj_scan_token(" + ((RegularExpression) seq).ordinal + ")";
+        e.m_internal_name = "jj_scan_token(" + ((RegularExpression) seq).m_ordinal + ")";
         return;
       }
 
@@ -1418,8 +1418,8 @@ public class ParseEngine
       // System.out.println(" ***** seq: " + seq.internal_name + "; size: " +
       // ((Sequence)seq).units.size());
       // }
-      e.internal_name = "R_" + gensymindex;
-      e.internal_index = gensymindex;
+      e.m_internal_name = "R_" + gensymindex;
+      e.m_internal_index = gensymindex;
     }
     Phase3Data p3d = (Phase3Data) (phase3table.get (e));
     if (p3d == null || p3d.count < inf.count)
@@ -1472,9 +1472,9 @@ public class ParseEngine
             // the
             // Lookahead object.
             int cnt = inf.count;
-            for (int i = 1; i < e_nrw.units.size (); i++)
+            for (int i = 1; i < e_nrw.m_units.size (); i++)
             {
-              final Expansion eseq = (Expansion) (e_nrw.units.get (i));
+              final Expansion eseq = (Expansion) (e_nrw.m_units.get (i));
               setupPhase3Builds (new Phase3Data (eseq, cnt));
               cnt -= minimumSize (eseq);
               if (cnt <= 0)
@@ -1514,10 +1514,10 @@ public class ParseEngine
 
   private String genjj_3Call (final Expansion e)
   {
-    if (e.internal_name.startsWith ("jj_scan_token"))
-      return e.internal_name;
+    if (e.m_internal_name.startsWith ("jj_scan_token"))
+      return e.m_internal_name;
     else
-      return "jj_3" + e.internal_name + "()";
+      return "jj_3" + e.m_internal_name + "()";
   }
 
   Hashtable generated = new Hashtable ();
@@ -1526,7 +1526,7 @@ public class ParseEngine
   {
     final Expansion e = inf.exp;
     Token t = null;
-    if (e.internal_name.startsWith ("jj_scan_token"))
+    if (e.m_internal_name.startsWith ("jj_scan_token"))
       return;
 
     if (!recursive_call)
@@ -1538,12 +1538,12 @@ public class ParseEngine
                                    "private " +
                                    Options.getBooleanType () +
                                    " jj_3" +
-                                   e.internal_name +
+                                   e.m_internal_name +
                                    "()");
       }
       else
       {
-        codeGenerator.genCodeLine (" inline bool ", "jj_3" + e.internal_name + "()");
+        codeGenerator.genCodeLine (" inline bool ", "jj_3" + e.m_internal_name + "()");
       }
 
       codeGenerator.genCodeLine (" {");
@@ -1557,7 +1557,7 @@ public class ParseEngine
       }
       genStackCheck (false);
       xsp_declared = false;
-      if (Options.getDebugLookahead () && e.parent instanceof NormalProduction)
+      if (Options.getDebugLookahead () && e.m_parent instanceof NormalProduction)
       {
         codeGenerator.genCode ("    ");
         if (Options.getErrorReporting ())
@@ -1565,7 +1565,7 @@ public class ParseEngine
           codeGenerator.genCode ("if (!jj_rescan) ");
         }
         codeGenerator.genCodeLine ("trace_call(\"" +
-                                   JavaCCGlobals.addUnicodeEscapes (((NormalProduction) e.parent).getLhs ()) +
+                                   JavaCCGlobals.addUnicodeEscapes (((NormalProduction) e.m_parent).getLhs ()) +
                                    "(LOOKING AHEAD...)\");");
         jj3_expansion = e;
       }
@@ -1577,21 +1577,21 @@ public class ParseEngine
     if (e instanceof RegularExpression)
     {
       final RegularExpression e_nrw = (RegularExpression) e;
-      if (e_nrw.label.equals (""))
+      if (e_nrw.m_label.equals (""))
       {
-        final Object label = names_of_tokens.get (new Integer (e_nrw.ordinal));
+        final Object label = names_of_tokens.get (new Integer (e_nrw.m_ordinal));
         if (label != null)
         {
           codeGenerator.genCodeLine ("    if (jj_scan_token(" + (String) label + ")) " + genReturn (true));
         }
         else
         {
-          codeGenerator.genCodeLine ("    if (jj_scan_token(" + e_nrw.ordinal + ")) " + genReturn (true));
+          codeGenerator.genCodeLine ("    if (jj_scan_token(" + e_nrw.m_ordinal + ")) " + genReturn (true));
         }
       }
       else
       {
-        codeGenerator.genCodeLine ("    if (jj_scan_token(" + e_nrw.label + ")) " + genReturn (true));
+        codeGenerator.genCodeLine ("    if (jj_scan_token(" + e_nrw.m_label + ")) " + genReturn (true));
       }
       // codeGenerator.genCodeLine(" if (jj_la == 0 && jj_scanpos == jj_lastpos)
       // " + genReturn(false));
@@ -1636,7 +1636,7 @@ public class ParseEngine
           for (int i = 0; i < e_nrw.getChoices ().size (); i++)
           {
             nested_seq = (Sequence) (e_nrw.getChoices ().get (i));
-            final Lookahead la = (Lookahead) (nested_seq.units.get (0));
+            final Lookahead la = (Lookahead) (nested_seq.m_units.get (0));
             if (la.getActionTokens ().size () != 0)
             {
               // We have semantic lookahead that must be evaluated.
@@ -1689,9 +1689,9 @@ public class ParseEngine
             // the
             // Lookahead object.
             int cnt = inf.count;
-            for (int i = 1; i < e_nrw.units.size (); i++)
+            for (int i = 1; i < e_nrw.m_units.size (); i++)
             {
-              final Expansion eseq = (Expansion) (e_nrw.units.get (i));
+              final Expansion eseq = (Expansion) (e_nrw.m_units.get (i));
               buildPhase3Routine (new Phase3Data (eseq, cnt), true);
 
               // System.out.println("minimumSize: line: " + eseq.line + ",
@@ -1794,12 +1794,12 @@ public class ParseEngine
   int minimumSize (final Expansion e, final int oldMin)
   {
     int retval = 0; // should never be used. Will be bad if it is.
-    if (e.inMinimumSize)
+    if (e.m_inMinimumSize)
     {
       // recursive search for minimum size unnecessary.
       return Integer.MAX_VALUE;
     }
-    e.inMinimumSize = true;
+    e.m_inMinimumSize = true;
     if (e instanceof RegularExpression)
     {
       retval = 1;
@@ -1845,9 +1845,9 @@ public class ParseEngine
             // We skip the first element in the following iteration since it is
             // the
             // Lookahead object.
-            for (int i = 1; i < e_nrw.units.size (); i++)
+            for (int i = 1; i < e_nrw.m_units.size (); i++)
             {
-              final Expansion eseq = (Expansion) (e_nrw.units.get (i));
+              final Expansion eseq = (Expansion) (e_nrw.m_units.get (i));
               final int mineseq = minimumSize (eseq);
               if (min == Integer.MAX_VALUE || mineseq == Integer.MAX_VALUE)
               {
@@ -1895,7 +1895,7 @@ public class ParseEngine
                       {
                         retval = 0;
                       }
-    e.inMinimumSize = false;
+    e.m_inMinimumSize = false;
     return retval;
   }
 
@@ -2112,7 +2112,7 @@ public class ParseEngine
     if (e instanceof RegularExpression)
     {
       final RegularExpression e_nrw = (RegularExpression) e;
-      System.err.println ("TOKEN, " + e_nrw.ordinal);
+      System.err.println ("TOKEN, " + e_nrw.m_ordinal);
     }
     else
       if (e instanceof NonTerminal)
@@ -2128,7 +2128,7 @@ public class ParseEngine
         {
           final Expansion ntexp = ntprod.getExpansion ();
           // nt exp's table.
-          System.err.println ("PRODUCTION, " + ntexp.internal_index);
+          System.err.println ("PRODUCTION, " + ntexp.m_internal_index);
           // buildPhase3Table(new Phase3Data(ntexp, inf.count));
         }
       }
@@ -2143,7 +2143,7 @@ public class ParseEngine
             if (i > 0)
               System.err.print ("\n|");
             nested_seq = (Sequence) (e_nrw.getChoices ().get (i));
-            final Lookahead la = (Lookahead) (nested_seq.units.get (0));
+            final Lookahead la = (Lookahead) (nested_seq.m_units.get (0));
             if (la.getActionTokens ().size () != 0)
             {
               System.err.print ("SEMANTIC,");
@@ -2160,13 +2160,13 @@ public class ParseEngine
           {
             final Sequence e_nrw = (Sequence) e;
             int cnt = inf.count;
-            if (e_nrw.units.size () > 2)
+            if (e_nrw.m_units.size () > 2)
             {
               System.err.println ("SEQ, " + cnt);
-              for (int i = 1; i < e_nrw.units.size (); i++)
+              for (int i = 1; i < e_nrw.m_units.size (); i++)
               {
                 System.err.print ("   ");
-                final Expansion eseq = (Expansion) (e_nrw.units.get (i));
+                final Expansion eseq = (Expansion) (e_nrw.m_units.get (i));
                 buildPhase3Table (new Phase3Data (eseq, cnt));
                 cnt -= minimumSize (eseq);
                 if (cnt <= 0)
@@ -2175,7 +2175,7 @@ public class ParseEngine
             }
             else
             {
-              Expansion tmp = (Expansion) e_nrw.units.get (1);
+              Expansion tmp = (Expansion) e_nrw.m_units.get (1);
               while (tmp instanceof NonTerminal)
               {
                 final NormalProduction ntprod = (production_table.get (((NonTerminal) tmp).getName ()));
@@ -2197,20 +2197,20 @@ public class ParseEngine
               if (e instanceof OneOrMore)
               {
                 final OneOrMore e_nrw = (OneOrMore) e;
-                System.err.println ("SEQ PROD " + e_nrw.expansion.internal_index);
-                System.err.println ("ZEROORMORE " + e_nrw.expansion.internal_index);
+                System.err.println ("SEQ PROD " + e_nrw.expansion.m_internal_index);
+                System.err.println ("ZEROORMORE " + e_nrw.expansion.m_internal_index);
               }
               else
                 if (e instanceof ZeroOrMore)
                 {
                   final ZeroOrMore e_nrw = (ZeroOrMore) e;
-                  System.err.print ("ZEROORMORE, " + e_nrw.expansion.internal_index);
+                  System.err.print ("ZEROORMORE, " + e_nrw.expansion.m_internal_index);
                 }
                 else
                   if (e instanceof ZeroOrOne)
                   {
                     final ZeroOrOne e_nrw = (ZeroOrOne) e;
-                    System.err.println ("ZERORONE, " + e_nrw.expansion.internal_index);
+                    System.err.println ("ZERORONE, " + e_nrw.expansion.m_internal_index);
                   }
                   else
                   {

@@ -8,13 +8,13 @@ import static com.helger.pgcc.parser.JavaCCGlobals.cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.cu_to_insertion_point_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.jj2index;
-import static com.helger.pgcc.parser.JavaCCGlobals.jjtreeGenerated;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
 import static com.helger.pgcc.parser.JavaCCGlobals.lookaheadNeeded;
 import static com.helger.pgcc.parser.JavaCCGlobals.maskVals;
 import static com.helger.pgcc.parser.JavaCCGlobals.maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.tokenCount;
-import static com.helger.pgcc.parser.JavaCCGlobals.toolName;
-import static com.helger.pgcc.parser.JavaCCGlobals.toolNames;
+import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ public class ParseGenCPP extends ParseGenJava
     if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ();
 
-    final List <String> tn = new ArrayList <> (toolNames);
-    tn.add (toolName);
+    final List <String> tn = new ArrayList <> (s_toolNames);
+    tn.add (m_toolName);
     switchToStaticsFile ();
 
     switchToIncludeFile ();
@@ -76,14 +76,14 @@ public class ParseGenCPP extends ParseGenJava
 
     genCodeLine ("#include \"" + cu_name + "Constants.h\"");
 
-    if (jjtreeGenerated)
+    if (s_jjtreeGenerated)
     {
       genCodeLine ("#include \"JJT" + cu_name + "State.h\"");
     }
 
     genCodeLine ("#include \"ErrorHandler.h\"");
 
-    if (jjtreeGenerated)
+    if (s_jjtreeGenerated)
     {
       genCodeLine ("#include \"" + cu_name + "Tree.h\"");
     }
@@ -261,7 +261,7 @@ public class ParseGenCPP extends ParseGenJava
     {
       genCodeLine ("    jj_ntk = -1;");
     }
-    if (jjtreeGenerated)
+    if (s_jjtreeGenerated)
     {
       genCodeLine ("    jjtree.reset();");
     }
@@ -788,7 +788,7 @@ public class ParseGenCPP extends ParseGenJava
       t1 = t1.next;
     }
     genCodeLine ("\n");
-    if (jjtreeGenerated)
+    if (s_jjtreeGenerated)
     {
       genCodeLine ("  JJT" + cu_name + "State jjtree;");
     }

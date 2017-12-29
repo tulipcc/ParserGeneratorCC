@@ -37,12 +37,22 @@ import java.util.Set;
 
 public class Action extends Expansion
 {
-
   /**
    * Contains the list of tokens that make up the action. This list does not
    * include the surrounding braces.
    */
   private final List <Token> action_tokens = new ArrayList <> ();
+
+  public Action ()
+  {}
+
+  /**
+   * @return the action_tokens
+   */
+  public List <Token> getActionTokens ()
+  {
+    return action_tokens;
+  }
 
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
@@ -54,13 +64,5 @@ public class Action extends Expansion
       sb.append (' ').append (getActionTokens ().get (0));
     }
     return sb;
-  }
-
-  /**
-   * @return the action_tokens
-   */
-  public List <Token> getActionTokens ()
-  {
-    return action_tokens;
   }
 }

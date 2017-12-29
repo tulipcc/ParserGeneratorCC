@@ -41,25 +41,25 @@ public abstract class RegularExpression extends Expansion
    * The label of the regular expression (if any). If no label is present, this
    * is set to "".
    */
-  public String label = "";
+  public String m_label = "";
 
   /**
    * The ordinal value assigned to the regular expression. It is used for
    * internal processing and passing information between the parser and the
    * lexical analyzer.
    */
-  int ordinal;
+  int m_ordinal;
 
   /**
    * The LHS to which the token value of the regular expression is assigned. In
    * case there is no LHS, then the list remains empty.
    */
-  public List <Token> lhsTokens = new ArrayList <> ();
+  public List <Token> m_lhsTokens = new ArrayList <> ();
 
   /**
    * We now allow qualified access to token members. Store it here.
    */
-  public Token rhsToken;
+  public Token m_rhsToken;
 
   /**
    * This flag is set if the regular expression has a label prefixed with the #
@@ -95,7 +95,7 @@ public abstract class RegularExpression extends Expansion
   {
     final StringBuilder sb = super.dump (indent, alreadyDumped);
     alreadyDumped.add (this);
-    sb.append (' ').append (label);
+    sb.append (' ').append (m_label);
     return sb;
   }
 }

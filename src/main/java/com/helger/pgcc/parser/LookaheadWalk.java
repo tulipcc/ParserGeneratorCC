@@ -62,7 +62,7 @@ public final class LookaheadWalk
           mnew.match[j] = m.match[j];
         }
         mnew.firstFreeLoc = m.firstFreeLoc;
-        mnew.match[mnew.firstFreeLoc++] = ((RegularExpression) exp).ordinal;
+        mnew.match[mnew.firstFreeLoc++] = ((RegularExpression) exp).m_ordinal;
         if (mnew.firstFreeLoc == MatchInfo.laLimit)
         {
           sizeLimitedMatches.add (mnew);
@@ -101,9 +101,9 @@ public final class LookaheadWalk
           {
             List <MatchInfo> v = partialMatches;
             final Sequence seq = (Sequence) exp;
-            for (int i = 0; i < seq.units.size (); i++)
+            for (int i = 0; i < seq.m_units.size (); i++)
             {
-              v = genFirstSet (v, (Expansion) seq.units.get (i));
+              v = genFirstSet (v, (Expansion) seq.m_units.get (i));
               if (v.size () == 0)
                 break;
             }
@@ -194,7 +194,7 @@ public final class LookaheadWalk
     }
     // System.out.println("*** Parent: " + exp.parent);
     exp.myGeneration = generation;
-    if (exp.parent == null)
+    if (exp.m_parent == null)
     {
       final List <MatchInfo> retval = new ArrayList <> ();
       listAppend (retval, partialMatches);
@@ -202,9 +202,9 @@ public final class LookaheadWalk
     }
     else
 
-      if (exp.parent instanceof NormalProduction)
+      if (exp.m_parent instanceof NormalProduction)
       {
-        final List parents = ((NormalProduction) exp.parent).getParents ();
+        final List parents = ((NormalProduction) exp.m_parent).getParents ();
         final List <MatchInfo> retval = new ArrayList <> ();
         // System.out.println("1; gen: " + generation + "; exp: " + exp);
         for (int i = 0; i < parents.size (); i++)
@@ -216,13 +216,13 @@ public final class LookaheadWalk
       }
       else
 
-        if (exp.parent instanceof Sequence)
+        if (exp.m_parent instanceof Sequence)
         {
-          final Sequence seq = (Sequence) exp.parent;
+          final Sequence seq = (Sequence) exp.m_parent;
           List <MatchInfo> v = partialMatches;
-          for (int i = exp.ordinal + 1; i < seq.units.size (); i++)
+          for (int i = exp.m_ordinal + 1; i < seq.m_units.size (); i++)
           {
-            v = genFirstSet (v, (Expansion) seq.units.get (i));
+            v = genFirstSet (v, (Expansion) seq.m_units.get (i));
             if (v.size () == 0)
               return v;
           }
@@ -237,14 +237,14 @@ public final class LookaheadWalk
           if (v2.size () != 0)
           {
             // System.out.println("3; gen: " + generation + "; exp: " + exp);
-            v2 = genFollowSet (v2, seq, Expansion.nextGenerationIndex++);
+            v2 = genFollowSet (v2, seq, Expansion.s_nextGenerationIndex++);
           }
           listAppend (v2, v1);
           return v2;
         }
         else
 
-          if (exp.parent instanceof OneOrMore || exp.parent instanceof ZeroOrMore)
+          if (exp.m_parent instanceof OneOrMore || exp.m_parent instanceof ZeroOrMore)
           {
             final List <MatchInfo> moreMatches = new ArrayList <> ();
             listAppend (moreMatches, partialMatches);
@@ -262,12 +262,12 @@ public final class LookaheadWalk
             if (v1.size () != 0)
             {
               // System.out.println("4; gen: " + generation + "; exp: " + exp);
-              v1 = genFollowSet (v1, (Expansion) exp.parent, generation);
+              v1 = genFollowSet (v1, (Expansion) exp.m_parent, generation);
             }
             if (v2.size () != 0)
             {
               // System.out.println("5; gen: " + generation + "; exp: " + exp);
-              v2 = genFollowSet (v2, (Expansion) exp.parent, Expansion.nextGenerationIndex++);
+              v2 = genFollowSet (v2, (Expansion) exp.m_parent, Expansion.s_nextGenerationIndex++);
             }
             listAppend (v2, v1);
             return v2;
@@ -275,7 +275,7 @@ public final class LookaheadWalk
           else
           {
             // System.out.println("6; gen: " + generation + "; exp: " + exp);
-            return genFollowSet (partialMatches, (Expansion) exp.parent, generation);
+            return genFollowSet (partialMatches, (Expansion) exp.m_parent, generation);
           }
   }
 

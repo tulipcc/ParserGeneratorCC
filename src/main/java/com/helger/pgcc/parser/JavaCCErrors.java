@@ -32,10 +32,9 @@ package com.helger.pgcc.parser;
  */
 public final class JavaCCErrors
 {
-
-  private static int parse_error_count = 0;
-  private static int semantic_error_count = 0;
-  private static int warning_count = 0;
+  private static int s_parse_error_count = 0;
+  private static int s_semantic_error_count = 0;
+  private static int s_warning_count = 0;
 
   private JavaCCErrors ()
   {}
@@ -84,19 +83,19 @@ public final class JavaCCErrors
     System.err.print ("Error: ");
     printLocationInfo (node);
     System.err.println (mess);
-    parse_error_count++;
+    s_parse_error_count++;
   }
 
   public static void parse_error (final String mess)
   {
     System.err.print ("Error: ");
     System.err.println (mess);
-    parse_error_count++;
+    s_parse_error_count++;
   }
 
   public static int get_parse_error_count ()
   {
-    return parse_error_count;
+    return s_parse_error_count;
   }
 
   public static void semantic_error (final Object node, final String mess)
@@ -104,19 +103,19 @@ public final class JavaCCErrors
     System.err.print ("Error: ");
     printLocationInfo (node);
     System.err.println (mess);
-    semantic_error_count++;
+    s_semantic_error_count++;
   }
 
   public static void semantic_error (final String mess)
   {
     System.err.print ("Error: ");
     System.err.println (mess);
-    semantic_error_count++;
+    s_semantic_error_count++;
   }
 
   public static int get_semantic_error_count ()
   {
-    return semantic_error_count;
+    return s_semantic_error_count;
   }
 
   public static void warning (final Object node, final String mess)
@@ -124,31 +123,31 @@ public final class JavaCCErrors
     System.err.print ("Warning: ");
     printLocationInfo (node);
     System.err.println (mess);
-    warning_count++;
+    s_warning_count++;
   }
 
   public static void warning (final String mess)
   {
     System.err.print ("Warning: ");
     System.err.println (mess);
-    warning_count++;
+    s_warning_count++;
   }
 
   public static int getWarningCount ()
   {
-    return warning_count;
+    return s_warning_count;
   }
 
   public static int getErrorCount ()
   {
-    return parse_error_count + semantic_error_count;
+    return s_parse_error_count + s_semantic_error_count;
   }
 
   public static void reInit ()
   {
-    parse_error_count = 0;
-    semantic_error_count = 0;
-    warning_count = 0;
+    s_parse_error_count = 0;
+    s_semantic_error_count = 0;
+    s_warning_count = 0;
   }
 
   public static void fatal (final String message)

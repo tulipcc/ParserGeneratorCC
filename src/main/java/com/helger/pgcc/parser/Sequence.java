@@ -32,18 +32,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
 /**
  * Describes expansions that are sequences of expansion units. (c1 c2 ...)
  */
-
 public class Sequence extends Expansion
 {
-
   /**
    * The list of units in this expansion sequence. Each List component will
    * narrow to Expansion.
    */
-  public List <? super Object> units = new ArrayList <> ();
+  final List <Expansion> m_units = new ArrayList <> ();
 
   public Sequence ()
   {}
@@ -52,7 +53,24 @@ public class Sequence extends Expansion
   {
     this.setLine (token.beginLine);
     this.setColumn (token.beginColumn);
-    this.units.add (lookahead);
+    this.m_units.add (lookahead);
+  }
+
+  public void addUnit (final Expansion aObj)
+  {
+    m_units.add (aObj);
+  }
+
+  @Nonnull
+  public Iterable <Expansion> units ()
+  {
+    return m_units;
+  }
+
+  @Nonnegative
+  public int getUnitCount ()
+  {
+    return m_units.size ();
   }
 
   @Override
@@ -65,9 +83,8 @@ public class Sequence extends Expansion
 
     alreadyDumped.add (this);
     final StringBuilder sb = super.dump (indent, alreadyDumped);
-    for (final Object aObject : units)
+    for (final Expansion next : m_units)
     {
-      final Expansion next = (Expansion) aObject;
       sb.append (eol).append (next.dump (indent + 1, alreadyDumped));
     }
     return sb;

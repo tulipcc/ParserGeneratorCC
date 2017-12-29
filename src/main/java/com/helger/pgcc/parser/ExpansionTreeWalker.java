@@ -27,8 +27,6 @@
  */
 package com.helger.pgcc.parser;
 
-import java.util.Iterator;
-
 /**
  * A set of routines that walk down the Expansion tree in various ways.
  */
@@ -56,9 +54,9 @@ public final class ExpansionTreeWalker
       else
         if (node instanceof Sequence)
         {
-          for (final Object aElement : ((Sequence) node).units)
+          for (final Expansion aElement : ((Sequence) node).m_units)
           {
-            preOrderWalk ((Expansion) aElement, opObj);
+            preOrderWalk (aElement, opObj);
           }
         }
         else
@@ -80,7 +78,7 @@ public final class ExpansionTreeWalker
                 if (node instanceof Lookahead)
                 {
                   final Expansion nested_e = ((Lookahead) node).getLaExpansion ();
-                  if (!(nested_e instanceof Sequence && (Expansion) (((Sequence) nested_e).units.get (0)) == node))
+                  if (!(nested_e instanceof Sequence && (((Sequence) nested_e).m_units.get (0)) == node))
                   {
                     preOrderWalk (nested_e, opObj);
                   }
@@ -93,15 +91,15 @@ public final class ExpansionTreeWalker
                   else
                     if (node instanceof RChoice)
                     {
-                      for (final Iterator it = ((RChoice) node).getChoices ().iterator (); it.hasNext ();)
+                      for (final Expansion aExpansion : ((RChoice) node).getChoices ())
                       {
-                        preOrderWalk ((Expansion) it.next (), opObj);
+                        preOrderWalk (aExpansion, opObj);
                       }
                     }
                     else
                       if (node instanceof RSequence)
                       {
-                        for (final Object aElement : ((RSequence) node).units)
+                        for (final Object aElement : ((RSequence) node).m_units)
                         {
                           preOrderWalk ((Expansion) aElement, opObj);
                         }
@@ -147,7 +145,7 @@ public final class ExpansionTreeWalker
       else
         if (node instanceof Sequence)
         {
-          for (final Object aElement : ((Sequence) node).units)
+          for (final Object aElement : ((Sequence) node).m_units)
           {
             postOrderWalk ((Expansion) aElement, opObj);
           }
@@ -171,7 +169,7 @@ public final class ExpansionTreeWalker
                 if (node instanceof Lookahead)
                 {
                   final Expansion nested_e = ((Lookahead) node).getLaExpansion ();
-                  if (!(nested_e instanceof Sequence && (Expansion) (((Sequence) nested_e).units.get (0)) == node))
+                  if (!(nested_e instanceof Sequence && (((Sequence) nested_e).m_units.get (0)) == node))
                   {
                     postOrderWalk (nested_e, opObj);
                   }
@@ -184,15 +182,15 @@ public final class ExpansionTreeWalker
                   else
                     if (node instanceof RChoice)
                     {
-                      for (final Iterator it = ((RChoice) node).getChoices ().iterator (); it.hasNext ();)
+                      for (final Object aElement : ((RChoice) node).getChoices ())
                       {
-                        postOrderWalk ((Expansion) it.next (), opObj);
+                        postOrderWalk ((Expansion) aElement, opObj);
                       }
                     }
                     else
                       if (node instanceof RSequence)
                       {
-                        for (final Object aElement : ((RSequence) node).units)
+                        for (final Object aElement : ((RSequence) node).m_units)
                         {
                           postOrderWalk ((Expansion) aElement, opObj);
                         }

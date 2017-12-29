@@ -114,7 +114,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
 
   protected static void productionAddExpansion (final BNFProduction p, final Expansion e)
   {
-    e.parent = p;
+    e.m_parent = p;
     p.setExpansion (e);
   }
 
@@ -346,10 +346,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
       JavaCCErrors.parse_error (t, "String in character list may contain only one character.");
       return ' ';
     }
-    else
-    {
-      return s.charAt (0);
-    }
+    return s.charAt (0);
   }
 
   protected static char character_descriptor_assign (final Token t, final String s, final String left)
@@ -359,30 +356,26 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
       JavaCCErrors.parse_error (t, "String in character list may contain only one character.");
       return ' ';
     }
-    else
-      if ((left.charAt (0)) > (s.charAt (0)))
-      {
-        JavaCCErrors.parse_error (t,
-                                  "Right end of character range \'" +
-                                     s +
-                                     "\' has a lower ordinal value than the left end of character range \'" +
-                                     left +
-                                     "\'.");
-        return left.charAt (0);
-      }
-      else
-      {
-        return s.charAt (0);
-      }
+    if (left.charAt (0) > s.charAt (0))
+    {
+      JavaCCErrors.parse_error (t,
+                                "Right end of character range \'" +
+                                   s +
+                                   "\' has a lower ordinal value than the left end of character range \'" +
+                                   left +
+                                   "\'.");
+      return left.charAt (0);
+    }
+    return s.charAt (0);
   }
 
   protected static void makeTryBlock (final Token tryLoc,
                                       final Container result,
                                       final Container nestedExp,
-                                      final List types,
-                                      final List ids,
-                                      final List catchblks,
-                                      final List finallyblk)
+                                      final List <List <Token>> types,
+                                      final List <Token> ids,
+                                      final List <List <Token>> catchblks,
+                                      final List <Token> finallyblk)
   {
     if (catchblks.size () == 0 && finallyblk == null)
     {
@@ -393,8 +386,8 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     tblk.setLine (tryLoc.beginLine);
     tblk.setColumn (tryLoc.beginColumn);
     tblk.exp = (Expansion) (nestedExp.member);
-    tblk.exp.parent = tblk;
-    tblk.exp.ordinal = 0;
+    tblk.exp.m_parent = tblk;
+    tblk.exp.m_ordinal = 0;
     tblk.types = types;
     tblk.ids = ids;
     tblk.catchblks = catchblks;

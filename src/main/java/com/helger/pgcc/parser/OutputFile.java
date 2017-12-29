@@ -70,7 +70,7 @@ public class OutputFile
 
   DigestOutputStream dos;
 
-  String toolName = JavaCCGlobals.toolName;
+  String toolName = JavaCCGlobals.m_toolName;
 
   final File file;
 

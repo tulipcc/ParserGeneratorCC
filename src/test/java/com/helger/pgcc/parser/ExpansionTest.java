@@ -48,7 +48,7 @@ public final class ExpansionTest extends TestCase {
         assertEquals(t.beginColumn, zoo.getColumn());
         assertEquals(t.beginLine, zoo.getLine());
         assertEquals(e, zoo.expansion);
-        assertSame(e.parent, zoo);
+        assertSame(e.m_parent, zoo);
     }
 
     public void testZeroOrMoreConstructor() {
@@ -56,7 +56,7 @@ public final class ExpansionTest extends TestCase {
         assertEquals(t.beginColumn, zom.getColumn());
         assertEquals(t.beginLine, zom.getLine());
         assertEquals(e, zom.expansion);
-        assertEquals(e.parent, zom);
+        assertEquals(e.m_parent, zom);
     }
 
     public void testRZeroOrMoreConstructor() {
@@ -81,7 +81,7 @@ public final class ExpansionTest extends TestCase {
         assertEquals(t.beginColumn, oom.getColumn());
         assertEquals(t.beginLine, oom.getLine());
         assertEquals(rce, oom.expansion);
-        assertEquals(rce.parent, oom);
+        assertEquals(rce.m_parent, oom);
     }
 
 
@@ -106,7 +106,7 @@ public final class ExpansionTest extends TestCase {
         RJustName r = new RJustName(t, "hey");
         assertEquals(t.beginColumn, r.getColumn());
         assertEquals(t.beginLine, r.getLine());
-        assertEquals("hey", r.label);
+        assertEquals("hey", r.m_label);
     }
 
     public void testSequenceConstructor() {
@@ -114,6 +114,6 @@ public final class ExpansionTest extends TestCase {
         Sequence s = new Sequence(t, la);
         assertEquals(t.beginColumn, s.getColumn());
         assertEquals(t.beginLine, s.getLine());
-        assertSame(la, s.units.get(0));
+        assertSame(la, s.m_units.get(0));
     }
 }

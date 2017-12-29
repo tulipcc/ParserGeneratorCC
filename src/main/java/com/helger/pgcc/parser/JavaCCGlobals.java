@@ -52,29 +52,29 @@ public class JavaCCGlobals
   /**
    * String that identifies the JavaCC generated files.
    */
-  protected static final String toolName = "JavaCC";
+  protected static final String m_toolName = "ParserGeneratorCC";
 
   /**
    * The name of the grammar file being processed.
    */
-  public static String fileName;
+  public static String s_fileName;
 
   /**
    * The name of the original file (before processing by JJTree). Currently this
    * is the same as fileName.
    */
-  public static String origFileName;
+  public static String s_origFileName;
 
   /**
    * Set to true if this file has been processed by JJTree.
    */
-  public static boolean jjtreeGenerated;
+  public static boolean s_jjtreeGenerated;
 
   /**
    * The list of tools that have participated in generating the input grammar
    * file.
    */
-  public static List <String> toolNames;
+  public static List <String> s_toolNames;
 
   /**
    * This prints the banner line when the various tools are invoked. This takes
@@ -647,10 +647,10 @@ public class JavaCCGlobals
 
   public static void reInit ()
   {
-    fileName = null;
-    origFileName = null;
-    jjtreeGenerated = false;
-    toolNames = null;
+    s_fileName = null;
+    s_origFileName = null;
+    s_jjtreeGenerated = false;
+    s_toolNames = null;
     cu_name = null;
     cu_to_insertion_point_1 = new ArrayList <> ();
     cu_to_insertion_point_2 = new ArrayList <> ();

@@ -314,8 +314,8 @@ public class RStringLiteral extends RegularExpression
     KindInfo info;
     int len;
 
-    if (maxStrKind <= ordinal)
-      maxStrKind = ordinal + 1;
+    if (maxStrKind <= m_ordinal)
+      maxStrKind = m_ordinal + 1;
 
     if ((len = m_image.length ()) > maxLen)
       maxLen = len;
@@ -349,11 +349,11 @@ public class RStringLiteral extends RegularExpression
         temp.put (s, info = new KindInfo (LexGenJava.maxOrdinal));
 
       if (i + 1 == len)
-        info.InsertFinalKind (ordinal);
+        info.InsertFinalKind (m_ordinal);
       else
-        info.InsertValidKind (ordinal);
+        info.InsertValidKind (m_ordinal);
 
-      if (!Options.getIgnoreCase () && LexGenJava.ignoreCase[ordinal] && c != Character.toLowerCase (c))
+      if (!Options.getIgnoreCase () && LexGenJava.ignoreCase[m_ordinal] && c != Character.toLowerCase (c))
       {
         s = ("" + m_image.charAt (i)).toLowerCase ();
 
@@ -366,12 +366,12 @@ public class RStringLiteral extends RegularExpression
           temp.put (s, info = new KindInfo (LexGenJava.maxOrdinal));
 
         if (i + 1 == len)
-          info.InsertFinalKind (ordinal);
+          info.InsertFinalKind (m_ordinal);
         else
-          info.InsertValidKind (ordinal);
+          info.InsertValidKind (m_ordinal);
       }
 
-      if (!Options.getIgnoreCase () && LexGenJava.ignoreCase[ordinal] && c != Character.toUpperCase (c))
+      if (!Options.getIgnoreCase () && LexGenJava.ignoreCase[m_ordinal] && c != Character.toUpperCase (c))
       {
         s = ("" + m_image.charAt (i)).toUpperCase ();
 
@@ -384,14 +384,14 @@ public class RStringLiteral extends RegularExpression
           temp.put (s, info = new KindInfo (LexGenJava.maxOrdinal));
 
         if (i + 1 == len)
-          info.InsertFinalKind (ordinal);
+          info.InsertFinalKind (m_ordinal);
         else
-          info.InsertValidKind (ordinal);
+          info.InsertValidKind (m_ordinal);
       }
     }
 
-    maxLenForActive[ordinal / 64] = Math.max (maxLenForActive[ordinal / 64], len - 1);
-    allImages[ordinal] = m_image;
+    maxLenForActive[m_ordinal / 64] = Math.max (maxLenForActive[m_ordinal / 64], len - 1);
+    allImages[m_ordinal] = m_image;
   }
 
   @Override
@@ -484,8 +484,8 @@ public class RStringLiteral extends RegularExpression
     if (re instanceof RStringLiteral)
       return " \"" + JavaCCGlobals.add_escapes (((RStringLiteral) re).m_image) + "\"";
     else
-      if (!re.label.equals (""))
-        return " <" + re.label + ">";
+      if (!re.m_label.equals (""))
+        return " <" + re.m_label + ">";
       else
         return " <token of kind " + kind + ">";
   }

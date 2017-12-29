@@ -98,7 +98,7 @@ public class RChoice extends RegularExpression
       curRE = (RegularExpression) getChoices ().get (i);
 
       while (curRE instanceof RJustName)
-        curRE = ((RJustName) curRE).regexpr;
+        curRE = ((RJustName) curRE).m_regexpr;
 
       if (curRE instanceof RStringLiteral && ((RStringLiteral) curRE).m_image.length () == 1)
       {
@@ -137,7 +137,7 @@ public class RChoice extends RegularExpression
       curRE = (RegularExpression) getChoices ().get (i);
 
       while (curRE instanceof RJustName)
-        curRE = ((RJustName) curRE).regexpr;
+        curRE = ((RJustName) curRE).m_regexpr;
 
       if (curRE instanceof RChoice)
       {
@@ -157,19 +157,19 @@ public class RChoice extends RegularExpression
     {
       if (!(curRE = (RegularExpression) getChoices ().get (i)).private_rexp &&
           // curRE instanceof RJustName &&
-          curRE.ordinal > 0 &&
-          curRE.ordinal < ordinal &&
-          LexGenJava.lexStates[curRE.ordinal] == LexGenJava.lexStates[ordinal])
+          curRE.m_ordinal > 0 &&
+          curRE.m_ordinal < m_ordinal &&
+          LexGenJava.lexStates[curRE.m_ordinal] == LexGenJava.lexStates[m_ordinal])
       {
-        if (label != null)
+        if (m_label != null)
           JavaCCErrors.warning (this,
-                                "Regular Expression choice : " + curRE.label + " can never be matched as : " + label);
+                                "Regular Expression choice : " + curRE.m_label + " can never be matched as : " + m_label);
         else
           JavaCCErrors.warning (this,
                                 "Regular Expression choice : " +
-                                      curRE.label +
+                                      curRE.m_label +
                                       " can never be matched as token of kind : " +
-                                      ordinal);
+                                      m_ordinal);
       }
 
       if (!curRE.private_rexp && curRE instanceof RStringLiteral)

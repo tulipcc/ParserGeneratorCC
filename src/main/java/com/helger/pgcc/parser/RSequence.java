@@ -28,7 +28,10 @@
 package com.helger.pgcc.parser;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import com.helger.commons.ValueEnforcer;
 
 /**
  * Describes regular expressions which are sequences of other regular
@@ -42,13 +45,35 @@ public class RSequence extends RegularExpression
    * The list of units in this regular expression sequence. Each list component
    * will narrow to RegularExpression.
    */
-  public List <? super Object> units = new ArrayList <> ();
+  final List <RegularExpression> m_units;
+
+  RSequence ()
+  {
+    m_units = new ArrayList <> ();
+  }
+
+  RSequence (final List <RegularExpression> seq)
+  {
+    m_ordinal = Integer.MAX_VALUE;
+    m_units = seq;
+  }
+
+  public void addUnit (final RegularExpression ex)
+  {
+    ValueEnforcer.notNull (ex, "RegEx");
+    m_units.add (ex);
+  }
+
+  public Iterator <RegularExpression> iterator ()
+  {
+    return m_units.iterator ();
+  }
 
   @Override
   public Nfa GenerateNfa (final boolean ignoreCase)
   {
-    if (units.size () == 1)
-      return ((RegularExpression) units.get (0)).GenerateNfa (ignoreCase);
+    if (m_units.size () == 1)
+      return m_units.get (0).GenerateNfa (ignoreCase);
 
     final Nfa retVal = new Nfa ();
     final NfaState startState = retVal.start;
@@ -58,13 +83,13 @@ public class RSequence extends RegularExpression
 
     RegularExpression curRE;
 
-    curRE = (RegularExpression) units.get (0);
+    curRE = m_units.get (0);
     temp1 = curRE.GenerateNfa (ignoreCase);
     startState.AddMove (temp1.start);
 
-    for (int i = 1; i < units.size (); i++)
+    for (int i = 1; i < m_units.size (); i++)
     {
-      curRE = (RegularExpression) units.get (i);
+      curRE = m_units.get (i);
 
       temp2 = curRE.GenerateNfa (ignoreCase);
       temp1.end.AddMove (temp2.start);
@@ -74,14 +99,5 @@ public class RSequence extends RegularExpression
     temp2.end.AddMove (finalState);
 
     return retVal;
-  }
-
-  RSequence ()
-  {}
-
-  RSequence (final List <? super Object> seq)
-  {
-    ordinal = Integer.MAX_VALUE;
-    units = seq;
   }
 }

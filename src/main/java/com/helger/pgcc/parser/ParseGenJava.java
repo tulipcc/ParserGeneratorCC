@@ -37,14 +37,14 @@ import static com.helger.pgcc.parser.JavaCCGlobals.cu_to_insertion_point_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.jj2index;
-import static com.helger.pgcc.parser.JavaCCGlobals.jjtreeGenerated;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
 import static com.helger.pgcc.parser.JavaCCGlobals.lookaheadNeeded;
 import static com.helger.pgcc.parser.JavaCCGlobals.maskVals;
 import static com.helger.pgcc.parser.JavaCCGlobals.maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.staticOpt;
 import static com.helger.pgcc.parser.JavaCCGlobals.tokenCount;
-import static com.helger.pgcc.parser.JavaCCGlobals.toolName;
-import static com.helger.pgcc.parser.JavaCCGlobals.toolNames;
+import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,8 +69,8 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
 
     if (Options.getBuildParser ())
     {
-      final List <String> tn = new ArrayList <> (toolNames);
-      tn.add (toolName);
+      final List <String> tn = new ArrayList <> (s_toolNames);
+      tn.add (m_toolName);
 
       // This is the first line generated -- the the comment line at the top of
       // the generated parser
@@ -298,7 +298,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
           {
             genCodeLine ("	 jj_lookingAhead = false;");
           }
-          if (jjtreeGenerated)
+          if (s_jjtreeGenerated)
           {
             genCodeLine ("	 jjtree.reset();");
           }
@@ -446,7 +446,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
             {
               genCodeLine ("    jj_depth = -1;");
             }
-            if (jjtreeGenerated)
+            if (s_jjtreeGenerated)
             {
               genCodeLine ("	 jjtree.reset();");
             }
@@ -601,7 +601,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
           {
             genCodeLine ("    jj_depth = -1;");
           }
-          if (jjtreeGenerated)
+          if (s_jjtreeGenerated)
           {
             genCodeLine ("	 jjtree.reset();");
           }
@@ -695,7 +695,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
       {
         genCodeLine ("    jj_depth = -1;");
       }
-      if (jjtreeGenerated)
+      if (s_jjtreeGenerated)
       {
         genCodeLine ("	 jjtree.reset();");
       }

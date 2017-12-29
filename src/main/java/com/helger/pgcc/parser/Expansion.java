@@ -37,33 +37,22 @@ import java.util.Set;
 
 public class Expansion
 {
+  protected static final String eol = System.getProperty ("line.separator", "\n");
 
   /**
    * The line and column number of the construct that corresponds most closely
    * to this node.
    */
-  private int line;
+  private int m_line;
 
-  private int column;
-
-  /**
-   * A reimplementing of Object.hashCode() to be deterministic. This uses the
-   * line and column fields to generate an arbitrary number - we assume that
-   * this method is called only after line and column are set to their actual
-   * values.
-   */
-  @Override
-  public int hashCode ()
-  {
-    return getLine () + getColumn ();
-  }
+  private int m_column;
 
   /**
    * An internal name for this expansion. This is used to generate parser
    * routines.
    */
-  String internal_name = "";
-  int internal_index = -1;
+  String m_internal_name = "";
+  int m_internal_index = -1;
 
   /**
    * The parser routines are generated in three phases. The generation of the
@@ -72,7 +61,7 @@ public class Expansion
    * phase 3 generations have been already added to a list so that the recursion
    * can be terminated.
    */
-  boolean phase3done = false;
+  boolean m_phase3done = false;
 
   /**
    * The parent of this expansion node. In case this is the top level expansion
@@ -80,12 +69,12 @@ public class Expansion
    * a reference to another Expansion node. In case this is the top level of a
    * lookahead expansion,then the parent is null.
    */
-  public Object parent;
+  public Object m_parent;
 
   /**
    * The ordinal of this node with respect to its parent.
    */
-  int ordinal;
+  int m_ordinal;
 
   /**
    * To avoid right-recursive loops when calculating follow sets, we use a
@@ -94,34 +83,26 @@ public class Expansion
    * obtained by incrementing the static counter below, and the current
    * generation is stored in the non-static variable below.
    */
-  public static long nextGenerationIndex = 1;
+  public static long s_nextGenerationIndex = 1;
   public long myGeneration = 0;
 
   /**
    * This flag is used for bookkeeping by the minimumSize method in class
    * ParseEngine.
    */
-  public boolean inMinimumSize = false;
+  public boolean m_inMinimumSize = false;
 
   public static void reInit ()
   {
-    nextGenerationIndex = 1;
+    s_nextGenerationIndex = 1;
   }
 
-  private String getSimpleName ()
+  private String _getSimpleName ()
   {
     final String name = getClass ().getName ();
-    return name.substring (name.lastIndexOf (".") + 1); // strip the package
-                                                        // name
+    // strip the package name
+    return name.substring (name.lastIndexOf (".") + 1);
   }
-
-  @Override
-  public String toString ()
-  {
-    return "[" + getLine () + "," + getColumn () + " " + System.identityHashCode (this) + " " + getSimpleName () + "]";
-  }
-
-  protected static final String eol = System.getProperty ("line.separator", "\n");
 
   protected StringBuilder dumpPrefix (final int indent)
   {
@@ -142,7 +123,7 @@ public class Expansion
   {
     final StringBuilder value = dumpPrefix (indent).append (System.identityHashCode (this))
                                                    .append (" ")
-                                                   .append (getSimpleName ());
+                                                   .append (_getSimpleName ());
     return value;
   }
 
@@ -152,7 +133,7 @@ public class Expansion
    */
   void setColumn (final int column)
   {
-    this.column = column;
+    this.m_column = column;
   }
 
   /**
@@ -160,7 +141,7 @@ public class Expansion
    */
   int getColumn ()
   {
-    return column;
+    return m_column;
   }
 
   /**
@@ -169,7 +150,7 @@ public class Expansion
    */
   void setLine (final int line)
   {
-    this.line = line;
+    this.m_line = line;
   }
 
   /**
@@ -177,6 +158,24 @@ public class Expansion
    */
   int getLine ()
   {
-    return line;
+    return m_line;
+  }
+
+  /**
+   * A reimplementing of Object.hashCode() to be deterministic. This uses the
+   * line and column fields to generate an arbitrary number - we assume that
+   * this method is called only after line and column are set to their actual
+   * values.
+   */
+  @Override
+  public int hashCode ()
+  {
+    return getLine () + getColumn ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return "[" + getLine () + "," + getColumn () + " " + System.identityHashCode (this) + " " + _getSimpleName () + "]";
   }
 }

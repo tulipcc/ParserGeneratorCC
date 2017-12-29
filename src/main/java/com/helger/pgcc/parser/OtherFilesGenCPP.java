@@ -67,8 +67,8 @@ public class OtherFilesGenCPP extends JavaCCGlobals implements JavaCCParserConst
       throw new Error ();
     }
 
-    final List <String> tn = new ArrayList <> (toolNames);
-    tn.add (toolName);
+    final List <String> tn = new ArrayList <> (s_toolNames);
+    tn.add (m_toolName);
     ostr.println ("/* " + getIdString (tn, cu_name + "Constants.java") + " */");
 
     if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
@@ -114,7 +114,7 @@ public class OtherFilesGenCPP extends JavaCCGlobals implements JavaCCParserConst
     {
       re = it.next ();
       ostr.println ("  /** RegularExpression Id. */");
-      ostr.println (constPrefix + "  int " + re.label + " = " + re.ordinal + ";");
+      ostr.println (constPrefix + "  int " + re.m_label + " = " + re.m_ordinal + ";");
     }
     ostr.println ("");
 
@@ -145,9 +145,9 @@ public class OtherFilesGenCPP extends JavaCCGlobals implements JavaCCParserConst
           printCharArray (ostr, "\"" + ((RStringLiteral) re).m_image + "\"");
         }
         else
-          if (!re.label.equals (""))
+          if (!re.m_label.equals (""))
           {
-            printCharArray (ostr, "\"<" + re.label + ">\"");
+            printCharArray (ostr, "\"<" + re.m_label + ">\"");
           }
           else
           {
@@ -155,7 +155,7 @@ public class OtherFilesGenCPP extends JavaCCGlobals implements JavaCCParserConst
             {
               JavaCCErrors.warning (re, "Consider giving this non-string token a label for better error reporting.");
             }
-            printCharArray (ostr, "\"<token of kind " + re.ordinal + ">\"");
+            printCharArray (ostr, "\"<token of kind " + re.m_ordinal + ">\"");
           }
         ostr.println (";");
       }

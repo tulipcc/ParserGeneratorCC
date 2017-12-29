@@ -116,8 +116,8 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
       throw new Error ();
     }
 
-    final List <String> tn = new ArrayList <> (toolNames);
-    tn.add (toolName);
+    final List <String> tn = new ArrayList <> (s_toolNames);
+    tn.add (m_toolName);
     ostr.println ("/* " + getIdString (tn, cu_name + CONSTANTS_FILENAME_SUFFIX) + " */");
 
     if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
@@ -159,7 +159,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
     {
       re = it.next ();
       ostr.println ("  /** RegularExpression Id. */");
-      ostr.println ("  int " + re.label + " = " + re.ordinal + ";");
+      ostr.println ("  int " + re.m_label + " = " + re.m_ordinal + ";");
     }
     ostr.println ("");
     if (!Options.getUserTokenManager () && Options.getBuildTokenManager ())
@@ -189,9 +189,9 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
           ostr.println ("\"\\\"" + add_escapes (add_escapes (((RStringLiteral) re).m_image)) + "\\\"\",");
         }
         else
-          if (!re.label.equals (""))
+          if (!re.m_label.equals (""))
           {
-            ostr.println ("\"<" + re.label + ">\",");
+            ostr.println ("\"<" + re.m_label + ">\",");
           }
           else
           {
@@ -199,7 +199,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
             {
               JavaCCErrors.warning (re, "Consider giving this non-string token a label for better error reporting.");
             }
-            ostr.println ("\"<token of kind " + re.ordinal + ">\",");
+            ostr.println ("\"<token of kind " + re.m_ordinal + ">\",");
           }
 
       }

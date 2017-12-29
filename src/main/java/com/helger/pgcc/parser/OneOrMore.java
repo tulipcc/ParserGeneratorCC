@@ -50,7 +50,7 @@ public class OneOrMore extends Expansion
     this.setLine (t.beginLine);
     this.setColumn (t.beginColumn);
     this.expansion = e;
-    expansion.parent = this;
+    expansion.m_parent = this;
   }
 
   @Override

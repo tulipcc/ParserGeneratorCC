@@ -32,7 +32,6 @@ package com.helger.pgcc.parser;
 
 import java.util.Set;
 
-import com.helger.pgcc.parser.Options.ELanguage;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
 
@@ -253,9 +252,9 @@ public class Main
     try
     {
       System.out.println ("Reading from file " + args[args.length - 1] + " . . .");
-      JavaCCGlobals.fileName = JavaCCGlobals.origFileName = args[args.length - 1];
-      JavaCCGlobals.jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", args[args.length - 1]);
-      JavaCCGlobals.toolNames = JavaCCGlobals.getToolNames (args[args.length - 1]);
+      JavaCCGlobals.s_fileName = JavaCCGlobals.s_origFileName = args[args.length - 1];
+      JavaCCGlobals.s_jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", args[args.length - 1]);
+      JavaCCGlobals.s_toolNames = JavaCCGlobals.getToolNames (args[args.length - 1]);
       parser.javacc_input ();
 
       // 2012/05/02 - Moved this here as cannot evaluate output language

@@ -38,8 +38,8 @@ import static com.helger.pgcc.parser.JavaCCGlobals.lexstate_I2S;
 import static com.helger.pgcc.parser.JavaCCGlobals.nextStateForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.rexprlist;
 import static com.helger.pgcc.parser.JavaCCGlobals.token_mgr_decls;
-import static com.helger.pgcc.parser.JavaCCGlobals.toolName;
-import static com.helger.pgcc.parser.JavaCCGlobals.toolNames;
+import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,8 +60,8 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
   {
     int i, j;
 
-    final List <String> tn = new ArrayList <> (toolNames);
-    tn.add (toolName);
+    final List <String> tn = new ArrayList <> (s_toolNames);
+    tn.add (m_toolName);
 
     switchToStaticsFile ();
 
@@ -216,8 +216,8 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
       RegularExpression re;
       for (i = 0; i < respecs.size (); i++)
-        if (maxOrdinal <= (re = respecs.get (i).rexp).ordinal)
-          maxOrdinal = re.ordinal + 1;
+        if (maxOrdinal <= (re = respecs.get (i).rexp).m_ordinal)
+          maxOrdinal = re.m_ordinal + 1;
     }
 
     kinds = new int [maxOrdinal];
@@ -324,27 +324,27 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
           final RegExprSpec respec = rexps.get (j);
           curRE = respec.rexp;
 
-          rexprs[curKind = curRE.ordinal] = curRE;
-          lexStates[curRE.ordinal] = lexStateIndex;
-          ignoreCase[curRE.ordinal] = ignore;
+          rexprs[curKind = curRE.m_ordinal] = curRE;
+          lexStates[curRE.m_ordinal] = lexStateIndex;
+          ignoreCase[curRE.m_ordinal] = ignore;
 
           if (curRE.private_rexp)
           {
-            kinds[curRE.ordinal] = -1;
+            kinds[curRE.m_ordinal] = -1;
             continue;
           }
 
           if (curRE instanceof RStringLiteral && !((RStringLiteral) curRE).m_image.equals (""))
           {
-            ((RStringLiteral) curRE).GenerateDfa (this, curRE.ordinal);
+            ((RStringLiteral) curRE).GenerateDfa (this, curRE.m_ordinal);
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
               mixed[lexStateIndex] = true;
           }
           else
             if (curRE.CanMatchAnyChar ())
             {
-              if (canMatchAnyChar[lexStateIndex] == -1 || canMatchAnyChar[lexStateIndex] > curRE.ordinal)
-                canMatchAnyChar[lexStateIndex] = curRE.ordinal;
+              if (canMatchAnyChar[lexStateIndex] == -1 || canMatchAnyChar[lexStateIndex] > curRE.m_ordinal)
+                canMatchAnyChar[lexStateIndex] = curRE.m_ordinal;
             }
             else
             {
@@ -355,54 +355,54 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
               temp = curRE.GenerateNfa (ignore);
               temp.end.isFinal = true;
-              temp.end.kind = curRE.ordinal;
+              temp.end.kind = curRE.m_ordinal;
               initialState.AddMove (temp.start);
             }
 
-          if (kinds.length < curRE.ordinal)
+          if (kinds.length < curRE.m_ordinal)
           {
-            final int [] tmp = new int [curRE.ordinal + 1];
+            final int [] tmp = new int [curRE.m_ordinal + 1];
 
             System.arraycopy (kinds, 0, tmp, 0, kinds.length);
             kinds = tmp;
           }
           // System.out.println(" ordina : " + curRE.ordinal);
 
-          kinds[curRE.ordinal] = kind;
+          kinds[curRE.m_ordinal] = kind;
 
           if (respec.nextState != null && !respec.nextState.equals (lexStateName[lexStateIndex]))
-            newLexState[curRE.ordinal] = respec.nextState;
+            newLexState[curRE.m_ordinal] = respec.nextState;
 
           if (respec.act != null && respec.act.getActionTokens () != null && respec.act.getActionTokens ().size () > 0)
-            actions[curRE.ordinal] = respec.act;
+            actions[curRE.m_ordinal] = respec.act;
 
           switch (kind)
           {
             case TokenProduction.SPECIAL:
-              hasSkipActions |= (actions[curRE.ordinal] != null) || (newLexState[curRE.ordinal] != null);
+              hasSkipActions |= (actions[curRE.m_ordinal] != null) || (newLexState[curRE.m_ordinal] != null);
               hasSpecial = true;
-              toSpecial[curRE.ordinal / 64] |= 1L << (curRE.ordinal % 64);
-              toSkip[curRE.ordinal / 64] |= 1L << (curRE.ordinal % 64);
+              toSpecial[curRE.m_ordinal / 64] |= 1L << (curRE.m_ordinal % 64);
+              toSkip[curRE.m_ordinal / 64] |= 1L << (curRE.m_ordinal % 64);
               break;
             case TokenProduction.SKIP:
-              hasSkipActions |= (actions[curRE.ordinal] != null);
+              hasSkipActions |= (actions[curRE.m_ordinal] != null);
               hasSkip = true;
-              toSkip[curRE.ordinal / 64] |= 1L << (curRE.ordinal % 64);
+              toSkip[curRE.m_ordinal / 64] |= 1L << (curRE.m_ordinal % 64);
               break;
             case TokenProduction.MORE:
-              hasMoreActions |= (actions[curRE.ordinal] != null);
+              hasMoreActions |= (actions[curRE.m_ordinal] != null);
               hasMore = true;
-              toMore[curRE.ordinal / 64] |= 1L << (curRE.ordinal % 64);
+              toMore[curRE.m_ordinal / 64] |= 1L << (curRE.m_ordinal % 64);
 
-              if (newLexState[curRE.ordinal] != null)
-                canReachOnMore[GetIndex (newLexState[curRE.ordinal])] = true;
+              if (newLexState[curRE.m_ordinal] != null)
+                canReachOnMore[GetIndex (newLexState[curRE.m_ordinal])] = true;
               else
                 canReachOnMore[lexStateIndex] = true;
 
               break;
             case TokenProduction.TOKEN:
-              hasTokenActions |= (actions[curRE.ordinal] != null);
-              toToken[curRE.ordinal / 64] |= 1L << (curRE.ordinal % 64);
+              hasTokenActions |= (actions[curRE.m_ordinal] != null);
+              toToken[curRE.m_ordinal / 64] |= 1L << (curRE.m_ordinal % 64);
               break;
           }
         }

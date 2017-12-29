@@ -35,15 +35,13 @@ import java.util.Set;
 /**
  * Describes expansions where one of many choices is taken (c1|c2|...).
  */
-
 public class Choice extends Expansion
 {
-
   /**
    * The list of choices of this expansion unit. Each List component will narrow
    * to ExpansionUnit.
    */
-  private List <? super Object> choices = new ArrayList <> ();
+  private List <Expansion> m_choices = new ArrayList <> ();
 
   public Choice ()
   {}
@@ -65,17 +63,17 @@ public class Choice extends Expansion
    * @param choices
    *        the choices to set
    */
-  public void setChoices (final List <? super Object> choices)
+  public void setChoices (final List <Expansion> choices)
   {
-    this.choices = choices;
+    this.m_choices = choices;
   }
 
   /**
    * @return the choices
    */
-  public List <? super Object> getChoices ()
+  public List <Expansion> getChoices ()
   {
-    return choices;
+    return m_choices;
   }
 
   @Override
@@ -85,9 +83,8 @@ public class Choice extends Expansion
     if (alreadyDumped.contains (this))
       return sb;
     alreadyDumped.add (this);
-    for (final Object aExpansion : getChoices ())
+    for (final Expansion next : getChoices ())
     {
-      final Expansion next = (Expansion) aExpansion;
       sb.append (eol).append (next.dump (indent + 1, alreadyDumped));
     }
     return sb;

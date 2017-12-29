@@ -38,63 +38,64 @@ import java.util.Set;
 
 public class NormalProduction
 {
+  protected static String eol = System.getProperty ("line.separator", "\n");
 
   /**
    * The line and column number of the construct that corresponds most closely
    * to this node.
    */
-  private int column;
+  private int m_column;
 
-  private int line;
+  private int m_line;
 
   /**
    * The NonTerminal nodes which refer to this production.
    */
-  private List <? super Expansion> parents = new ArrayList <> ();
+  private List <? super Expansion> m_parents = new ArrayList <> ();
 
   /**
    * The access modifier of this production.
    */
-  private String accessMod;
+  private String m_accessMod;
 
   /**
    * The name of the non-terminal of this production.
    */
-  private String lhs;
+  private String m_lhs;
 
   /**
    * The tokens that make up the return type of this production.
    */
-  private final List <Token> return_type_tokens = new ArrayList <> ();
+  private final List <Token> m_return_type_tokens = new ArrayList <> ();
 
   /**
    * The tokens that make up the parameters of this production.
    */
-  private final List <Token> parameter_list_tokens = new ArrayList <> ();
+  private final List <Token> m_parameter_list_tokens = new ArrayList <> ();
 
   /**
    * Each entry in this list is a list of tokens that represents an exception in
    * the throws list of this production. This list does not include
    * ParseException which is always thrown.
    */
-  private List throws_list = new ArrayList ();
+  private List <List <Token>> m_throws_list = new ArrayList <> ();
 
   /**
    * The RHS of this production. Not used for JavaCodeProduction.
    */
-  private Expansion expansion;
+  private Expansion m_expansion;
 
   /**
    * This boolean flag is true if this production can expand to empty.
    */
-  private boolean emptyPossible = false;
+  private boolean m_emptyPossible = false;
 
   /**
    * A list of all non-terminals that this one can expand to without having to
    * consume any tokens. Also an index that shows how many pointers exist.
    */
-  private NormalProduction [] leftExpansions = new NormalProduction [10];
-  int leIndex = 0;
+  private NormalProduction [] m_leftExpansions = new NormalProduction [10];
+  int m_leIndex = 0;
 
   /**
    * The following variable is used to maintain state information for the
@@ -104,17 +105,15 @@ public class NormalProduction
    * traversed. i.e., -1 indicates partially processed, and 1 indicates fully
    * processed.
    */
-  private int walkStatus = 0;
+  private int m_walkStatus = 0;
 
   /**
    * The first and last tokens from the input stream that represent this
    * production.
    */
-  private Token lastToken;
+  private Token m_lastToken;
 
-  private Token firstToken;
-
-  protected String eol = System.getProperty ("line.separator", "\n");
+  private Token m_firstToken;
 
   protected StringBuilder dumpPrefix (final int indent)
   {
@@ -157,7 +156,7 @@ public class NormalProduction
    */
   public void setLine (final int line)
   {
-    this.line = line;
+    this.m_line = line;
   }
 
   /**
@@ -165,7 +164,7 @@ public class NormalProduction
    */
   public int getLine ()
   {
-    return line;
+    return m_line;
   }
 
   /**
@@ -174,7 +173,7 @@ public class NormalProduction
    */
   public void setColumn (final int column)
   {
-    this.column = column;
+    this.m_column = column;
   }
 
   /**
@@ -182,7 +181,7 @@ public class NormalProduction
    */
   public int getColumn ()
   {
-    return column;
+    return m_column;
   }
 
   /**
@@ -191,7 +190,7 @@ public class NormalProduction
    */
   void setParents (final List <? super Expansion> parents)
   {
-    this.parents = parents;
+    this.m_parents = parents;
   }
 
   /**
@@ -199,7 +198,7 @@ public class NormalProduction
    */
   List <? super Expansion> getParents ()
   {
-    return parents;
+    return m_parents;
   }
 
   /**
@@ -208,7 +207,7 @@ public class NormalProduction
    */
   public void setAccessMod (final String accessMod)
   {
-    this.accessMod = accessMod;
+    this.m_accessMod = accessMod;
   }
 
   /**
@@ -216,7 +215,7 @@ public class NormalProduction
    */
   public String getAccessMod ()
   {
-    return accessMod;
+    return m_accessMod;
   }
 
   /**
@@ -225,7 +224,7 @@ public class NormalProduction
    */
   public void setLhs (final String lhs)
   {
-    this.lhs = lhs;
+    this.m_lhs = lhs;
   }
 
   /**
@@ -233,7 +232,7 @@ public class NormalProduction
    */
   public String getLhs ()
   {
-    return lhs;
+    return m_lhs;
   }
 
   /**
@@ -241,7 +240,7 @@ public class NormalProduction
    */
   public List <Token> getReturnTypeTokens ()
   {
-    return return_type_tokens;
+    return m_return_type_tokens;
   }
 
   /**
@@ -249,24 +248,24 @@ public class NormalProduction
    */
   public List <Token> getParameterListTokens ()
   {
-    return parameter_list_tokens;
+    return m_parameter_list_tokens;
   }
 
   /**
    * @param throws_list
    *        the throws_list to set
    */
-  public void setThrowsList (final List throws_list)
+  public void setThrowsList (final List <List <Token>> throws_list)
   {
-    this.throws_list = throws_list;
+    this.m_throws_list = throws_list;
   }
 
   /**
    * @return the throws_list
    */
-  public List getThrowsList ()
+  public List <List <Token>> getThrowsList ()
   {
-    return throws_list;
+    return m_throws_list;
   }
 
   /**
@@ -275,7 +274,7 @@ public class NormalProduction
    */
   public void setExpansion (final Expansion expansion)
   {
-    this.expansion = expansion;
+    this.m_expansion = expansion;
   }
 
   /**
@@ -283,7 +282,7 @@ public class NormalProduction
    */
   public Expansion getExpansion ()
   {
-    return expansion;
+    return m_expansion;
   }
 
   /**
@@ -292,7 +291,7 @@ public class NormalProduction
    */
   boolean setEmptyPossible (final boolean emptyPossible)
   {
-    this.emptyPossible = emptyPossible;
+    this.m_emptyPossible = emptyPossible;
     return emptyPossible;
   }
 
@@ -301,7 +300,7 @@ public class NormalProduction
    */
   boolean isEmptyPossible ()
   {
-    return emptyPossible;
+    return m_emptyPossible;
   }
 
   /**
@@ -310,7 +309,7 @@ public class NormalProduction
    */
   void setLeftExpansions (final NormalProduction [] leftExpansions)
   {
-    this.leftExpansions = leftExpansions;
+    this.m_leftExpansions = leftExpansions;
   }
 
   /**
@@ -318,7 +317,7 @@ public class NormalProduction
    */
   NormalProduction [] getLeftExpansions ()
   {
-    return leftExpansions;
+    return m_leftExpansions;
   }
 
   /**
@@ -327,7 +326,7 @@ public class NormalProduction
    */
   void setWalkStatus (final int walkStatus)
   {
-    this.walkStatus = walkStatus;
+    this.m_walkStatus = walkStatus;
   }
 
   /**
@@ -335,7 +334,7 @@ public class NormalProduction
    */
   int getWalkStatus ()
   {
-    return walkStatus;
+    return m_walkStatus;
   }
 
   /**
@@ -344,7 +343,7 @@ public class NormalProduction
    */
   public Token setFirstToken (final Token firstToken)
   {
-    this.firstToken = firstToken;
+    this.m_firstToken = firstToken;
     return firstToken;
   }
 
@@ -353,7 +352,7 @@ public class NormalProduction
    */
   public Token getFirstToken ()
   {
-    return firstToken;
+    return m_firstToken;
   }
 
   /**
@@ -362,7 +361,7 @@ public class NormalProduction
    */
   public void setLastToken (final Token lastToken)
   {
-    this.lastToken = lastToken;
+    this.m_lastToken = lastToken;
   }
 
   /**
@@ -370,7 +369,7 @@ public class NormalProduction
    */
   public Token getLastToken ()
   {
-    return lastToken;
+    return m_lastToken;
   }
 
 }

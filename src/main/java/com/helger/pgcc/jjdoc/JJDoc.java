@@ -309,9 +309,8 @@ public class JJDoc extends JJDocGlobals
   private static void emitExpansionSequence (final Sequence s, final IDocGenerator gen)
   {
     boolean firstUnit = true;
-    for (final Object aElement : s.units)
+    for (final Expansion e : s.units ())
     {
-      final Expansion e = (Expansion) aElement;
       if (e instanceof Lookahead || e instanceof Action)
       {
         continue;
@@ -365,7 +364,7 @@ public class JJDoc extends JJDocGlobals
   public static String emitRE (final RegularExpression re)
   {
     String returnString = "";
-    final boolean hasLabel = !re.label.equals ("");
+    final boolean hasLabel = !re.m_label.equals ("");
     final boolean justName = re instanceof RJustName;
     final boolean eof = re instanceof REndOfFile;
     final boolean isString = re instanceof RStringLiteral;
@@ -382,7 +381,7 @@ public class JJDoc extends JJDocGlobals
         }
         if (hasLabel)
         {
-          returnString += re.label;
+          returnString += re.m_label;
           returnString += ": ";
         }
       }
@@ -450,7 +449,7 @@ public class JJDoc extends JJDocGlobals
           if (re instanceof RJustName)
           {
             final RJustName jn = (RJustName) re;
-            returnString += jn.label;
+            returnString += jn.m_label;
           }
           else
             if (re instanceof ROneOrMore)
@@ -464,9 +463,9 @@ public class JJDoc extends JJDocGlobals
               if (re instanceof RSequence)
               {
                 final RSequence s = (RSequence) re;
-                for (final Iterator it = s.units.iterator (); it.hasNext ();)
+                for (final Iterator <RegularExpression> it = s.iterator (); it.hasNext ();)
                 {
-                  final RegularExpression sub = (RegularExpression) (it.next ());
+                  final RegularExpression sub = (it.next ());
                   boolean needParens = false;
                   if (sub instanceof RChoice)
                   {

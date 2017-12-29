@@ -67,9 +67,9 @@ public class NfaStateTest extends JavaCCTestCase
       final JavaCCParser parser = new JavaCCParser (new BufferedReader (new InputStreamReader (new FileInputStream (parserInput),
                                                                                                Options.getGrammarEncoding ())));
       parser.javacc_input ();
-      JavaCCGlobals.fileName = JavaCCGlobals.origFileName = parserInput;
-      JavaCCGlobals.jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", parserInput);
-      JavaCCGlobals.toolNames = JavaCCGlobals.getToolNames (parserInput);
+      JavaCCGlobals.s_fileName = JavaCCGlobals.s_origFileName = parserInput;
+      JavaCCGlobals.s_jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", parserInput);
+      JavaCCGlobals.s_toolNames = JavaCCGlobals.getToolNames (parserInput);
       Semanticize.start ();
       new LexGenJava ().start ();
     }

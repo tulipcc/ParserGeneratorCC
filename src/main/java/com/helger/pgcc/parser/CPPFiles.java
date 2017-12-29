@@ -3,12 +3,12 @@
 
 package com.helger.pgcc.parser;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.Version;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
@@ -51,20 +51,15 @@ public class CPPFiles extends JavaCCGlobals implements JavaCCParserConstants
    */
   static String replaceBackslash (final String str)
   {
-    StringBuilder b;
-    int i = 0;
-    final int len = str.length ();
-
-    while (i < len && str.charAt (i++) != '\\')
-      ;
-
-    if (i == len) // No backslash found.
+    if (str.indexOf ('\\') < 0)
+    {
+      // No backslash found.
       return str;
+    }
 
-    char c;
-    b = new StringBuilder ();
-    for (i = 0; i < len; i++)
-      if ((c = str.charAt (i)) == '\\')
+    final StringBuilder b = new StringBuilder (str.length () * 2);
+    for (final char c : str.toCharArray ())
+      if (c == '\\')
         b.append ("\\\\");
       else
         b.append (c);
@@ -84,7 +79,7 @@ public class CPPFiles extends JavaCCGlobals implements JavaCCParserConstants
    */
   static double getVersion (final String fileName)
   {
-    final String commentHeader = "/* " + getIdString (toolName, fileName) + " Version ";
+    final String commentHeader = "/* " + getIdString (m_toolName, fileName) + " Version ";
     final File file = new File (Options.getOutputDirectory (), replaceBackslash (fileName));
 
     if (!file.exists ())
@@ -101,10 +96,8 @@ public class CPPFiles extends JavaCCGlobals implements JavaCCParserConstants
       }
     }
 
-    BufferedReader reader = null;
-    try
+    try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
     {
-      reader = new BufferedReader (new FileReader (file));
       String str;
       double version = 0.0;
 
@@ -140,18 +133,6 @@ public class CPPFiles extends JavaCCGlobals implements JavaCCParserConstants
     {
       return 0.0;
     }
-    finally
-    {
-      if (reader != null)
-      {
-        try
-        {
-          reader.close ();
-        }
-        catch (final IOException e)
-        {}
-      }
-    }
   }
 
   private static void genFile (final String name, final String version, final String [] parameters)
@@ -166,11 +147,12 @@ public class CPPFiles extends JavaCCGlobals implements JavaCCParserConstants
         return;
       }
 
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-      final OutputFileGenerator generator = new OutputFileGenerator ("/templates/cpp/" + name + ".template",
-                                                                     Options.getOptions ());
-      generator.generate (ostr);
-      ostr.close ();
+      try (final PrintWriter ostr = outputFile.getPrintWriter ())
+      {
+        final OutputFileGenerator generator = new OutputFileGenerator ("/templates/cpp/" + name + ".template",
+                                                                       Options.getOptions ());
+        generator.generate (ostr);
+      }
     }
     catch (final IOException e)
     {

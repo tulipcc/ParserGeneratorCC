@@ -5,19 +5,17 @@ package com.helger.pgcc.parser;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.addUnicodeEscapes;
 import static com.helger.pgcc.parser.JavaCCGlobals.cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.jjtreeGenerated;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
 import com.helger.commons.io.stream.NonBlockingBufferedWriter;
-import com.helger.pgcc.parser.Options.ELanguage;
+import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 public class CodeGenerator
@@ -88,7 +86,7 @@ public class CodeGenerator
         m_includeBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
       }
 
-      if (jjtreeGenerated)
+      if (s_jjtreeGenerated)
       {
         m_mainBuffer.insert (0, "#include \"SimpleNode.h\"\n");
       }
@@ -114,7 +112,6 @@ public class CodeGenerator
   {
     for (int i = 0; i < sb.length () - 1; i++)
     {
-      final int beg = i;
       final char c1 = sb.charAt (i);
       final char c2 = sb.charAt (i + 1);
       if (Character.isDigit (c1) || (c1 == '0' && c2 == 'x'))
@@ -379,6 +376,7 @@ public class CodeGenerator
     }
   }
 
+  @Deprecated
   protected final boolean isJavaLanguage ()
   {
     // TODO :: CBA -- Require Unification of output language specific processing
@@ -508,9 +506,10 @@ public class CodeGenerator
     }
 
     final OutputFileGenerator gen = new OutputFileGenerator (name, options);
-    final StringWriter sw = new StringWriter ();
-    gen.generate (new PrintWriter (sw));
-    sw.close ();
-    genCode (sw.toString ());
+    try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())
+    {
+      gen.generate (sw);
+      genCode (sw.getAsString ());
+    }
   }
 }

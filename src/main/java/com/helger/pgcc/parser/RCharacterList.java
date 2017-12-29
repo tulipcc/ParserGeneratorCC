@@ -1981,7 +1981,7 @@ public class RCharacterList extends RegularExpression
     m_descriptors = new ArrayList <> ();
     m_descriptors.add (new SingleCharacter (c));
     negated_list = false;
-    ordinal = Integer.MAX_VALUE;
+    m_ordinal = Integer.MAX_VALUE;
   }
 
   @Override
