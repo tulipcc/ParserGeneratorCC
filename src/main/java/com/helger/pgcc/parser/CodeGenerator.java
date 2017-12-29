@@ -298,19 +298,18 @@ public class CodeGenerator
    */
   public void genAnnotation (final String ann)
   {
-    if (Options.isOutputLanguageJava ())
+    switch (Options.getOutputLanguageType ())
     {
-      genCode ("@" + ann);
-    }
-    else
-      if (Options.getOutputLanguage ().equals (Options.OUTPUT_LANGUAGE__CPP))
-      { // For now, it's only C++ for now
+      case JAVA:
+        genCode ("@" + ann);
+        break;
+      case CPP:
+        // For now, it's only C++ for now
         genCode ("/*" + ann + "*/");
-      }
-      else
-      {
-        throw new RuntimeException ("Unknown language : " + Options.getOutputLanguage ());
-      }
+        break;
+      default:
+        throw new IllegalStateException ("Unknown language : " + Options.getOutputLanguageType ());
+    }
   }
 
   /**

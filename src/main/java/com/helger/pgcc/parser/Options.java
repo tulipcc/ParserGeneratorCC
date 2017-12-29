@@ -1066,9 +1066,16 @@ public class Options
   /**
    * @return the output language. default java
    */
+  @Deprecated
   public static String getOutputLanguage ()
   {
     return stringValue (USEROPTION__OUTPUT_LANGUAGE);
+  }
+
+  @Nonnull
+  public static ELanguage getOutputLanguageType ()
+  {
+    return s_language;
   }
 
   public static String getJavaTemplateType ()
@@ -1109,45 +1116,39 @@ public class Options
   {
     // TODO :: CBA -- Require Unification of output language specific
     // processing into a single Enum class
-    if (isOutputLanguageJava ())
+    switch (s_language)
     {
-      return "long";
-    }
-    else
-      if (getOutputLanguage ().equals (OUTPUT_LANGUAGE__CPP))
-      {
+      case JAVA:
+        return "long";
+      case CPP:
         return "unsigned long long";
-      }
-      else
-      {
-        throw new RuntimeException ("Language type not fully supported : " + getOutputLanguage ());
-      }
+      default:
+        throw new RuntimeException ("Language type not fully supported: " + s_language);
+    }
   }
 
   public static String getBooleanType ()
   {
     // TODO :: CBA -- Require Unification of output language specific
     // processing into a single Enum class
-    if (isOutputLanguageJava ())
+    switch (s_language)
     {
-      return "boolean";
-    }
-    else
-      if (getOutputLanguage ().equals (OUTPUT_LANGUAGE__CPP))
-      {
+      case JAVA:
+        return "boolean";
+      case CPP:
         return "bool";
-      }
-      else
-      {
-        throw new RuntimeException ("Language type not fully supported : " + getOutputLanguage ());
-      }
+      default:
+        throw new RuntimeException ("Language type not fully supported: " + s_language);
+    }
   }
 
+  @Deprecated
   public static boolean isOutputLanguageJava ()
   {
     return getOutputLanguage ().equalsIgnoreCase (OUTPUT_LANGUAGE__JAVA);
   }
 
+  @Deprecated
   public static boolean isOutputLanguageCpp ()
   {
     return getOutputLanguage ().equalsIgnoreCase (OUTPUT_LANGUAGE__CPP);
