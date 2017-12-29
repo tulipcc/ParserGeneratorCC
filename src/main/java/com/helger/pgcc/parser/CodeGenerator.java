@@ -473,10 +473,7 @@ public class CodeGenerator
     {
       return "CharStream";
     }
-    else
-    {
-      return Options.getJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream";
-    }
+    return Options.getJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream";
   }
 
   @SuppressWarnings ("unchecked")
