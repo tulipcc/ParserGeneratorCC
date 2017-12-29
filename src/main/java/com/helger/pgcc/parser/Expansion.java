@@ -29,6 +29,8 @@ package com.helger.pgcc.parser;
 
 import java.util.Set;
 
+import com.helger.commons.annotation.OverrideOnDemand;
+
 /**
  * Describes expansions - entities that may occur on the right hand sides of
  * productions. This is the base class of a bunch of other more specific
@@ -119,8 +121,11 @@ public class Expansion
    *        what was already dumped?
    * @return String
    */
+  @OverrideOnDemand
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
+    // lol
+    assert alreadyDumped.size () >= 0;
     final StringBuilder value = dumpPrefix (indent).append (System.identityHashCode (this))
                                                    .append (" ")
                                                    .append (_getSimpleName ());

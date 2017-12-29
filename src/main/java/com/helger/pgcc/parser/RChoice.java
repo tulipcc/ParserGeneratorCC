@@ -37,18 +37,17 @@ import java.util.List;
 
 public class RChoice extends RegularExpression
 {
-
   /**
    * The list of choices of this regular expression. Each list component will
    * narrow to RegularExpression.
    */
-  private List <Expansion> choices = new ArrayList <> ();
+  private List <RegularExpression> choices = new ArrayList <> ();
 
   /**
    * @param choices
    *        the choices to set
    */
-  public void setChoices (final List <Expansion> choices)
+  public void setChoices (final List <RegularExpression> choices)
   {
     this.choices = choices;
   }
@@ -56,7 +55,7 @@ public class RChoice extends RegularExpression
   /**
    * @return the choices
    */
-  public List <Expansion> getChoices ()
+  public List <RegularExpression> getChoices ()
   {
     return choices;
   }
@@ -67,7 +66,7 @@ public class RChoice extends RegularExpression
     CompressCharLists ();
 
     if (getChoices ().size () == 1)
-      return ((RegularExpression) getChoices ().get (0)).GenerateNfa (ignoreCase);
+      return getChoices ().get (0).GenerateNfa (ignoreCase);
 
     final Nfa retVal = new Nfa ();
     final NfaState startState = retVal.start;
@@ -76,7 +75,7 @@ public class RChoice extends RegularExpression
     for (int i = 0; i < getChoices ().size (); i++)
     {
       Nfa temp;
-      final RegularExpression curRE = (RegularExpression) getChoices ().get (i);
+      final RegularExpression curRE = getChoices ().get (i);
 
       temp = curRE.GenerateNfa (ignoreCase);
 
@@ -95,7 +94,7 @@ public class RChoice extends RegularExpression
 
     for (int i = 0; i < getChoices ().size (); i++)
     {
-      curRE = (RegularExpression) getChoices ().get (i);
+      curRE = getChoices ().get (i);
 
       while (curRE instanceof RJustName)
         curRE = ((RJustName) curRE).m_regexpr;
@@ -134,7 +133,7 @@ public class RChoice extends RegularExpression
 
     for (int i = 0; i < getChoices ().size (); i++)
     {
-      curRE = (RegularExpression) getChoices ().get (i);
+      curRE = getChoices ().get (i);
 
       while (curRE instanceof RJustName)
         curRE = ((RJustName) curRE).m_regexpr;
@@ -155,7 +154,7 @@ public class RChoice extends RegularExpression
 
     for (int i = 0; i < getChoices ().size (); i++)
     {
-      if (!(curRE = (RegularExpression) getChoices ().get (i)).private_rexp &&
+      if (!(curRE = getChoices ().get (i)).private_rexp &&
           // curRE instanceof RJustName &&
           curRE.m_ordinal > 0 &&
           curRE.m_ordinal < m_ordinal &&
@@ -163,7 +162,10 @@ public class RChoice extends RegularExpression
       {
         if (m_label != null)
           JavaCCErrors.warning (this,
-                                "Regular Expression choice : " + curRE.m_label + " can never be matched as : " + m_label);
+                                "Regular Expression choice : " +
+                                      curRE.m_label +
+                                      " can never be matched as : " +
+                                      m_label);
         else
           JavaCCErrors.warning (this,
                                 "Regular Expression choice : " +

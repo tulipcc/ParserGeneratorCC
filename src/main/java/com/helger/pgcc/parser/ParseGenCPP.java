@@ -8,17 +8,16 @@ import static com.helger.pgcc.parser.JavaCCGlobals.cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.cu_to_insertion_point_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.jj2index;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
 import static com.helger.pgcc.parser.JavaCCGlobals.lookaheadNeeded;
+import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.maskVals;
 import static com.helger.pgcc.parser.JavaCCGlobals.maskindex;
-import static com.helger.pgcc.parser.JavaCCGlobals.tokenCount;
-import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
+import static com.helger.pgcc.parser.JavaCCGlobals.tokenCount;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -176,9 +175,9 @@ public class ParseGenCPP extends ParseGenJava
         if (maskVals.size () > 0)
         {
           genCodeLine ("  unsigned int jj_la1_" + i + "[] = {");
-          for (final Iterator it = maskVals.iterator (); it.hasNext ();)
+          for (final Object aElement : maskVals)
           {
-            final int [] tokenMask = (int []) (it.next ());
+            final int [] tokenMask = (int []) (aElement);
             genCode ("0x" + Integer.toHexString (tokenMask[i]) + ",");
           }
           genCodeLine ("};");
@@ -766,7 +765,7 @@ public class ParseGenCPP extends ParseGenJava
     if (cu_from_insertion_point_2.size () != 0)
     {
       printTokenSetup ((cu_from_insertion_point_2.get (0)));
-      ccol = 1;
+      m_ccol = 1;
       for (final Object name : cu_from_insertion_point_2)
       {
         t = (Token) name;
@@ -797,10 +796,7 @@ public class ParseGenCPP extends ParseGenJava
 
     genCodeLine ("};");
 
-    saveOutput (Options.getOutputDirectory () +
-                File.separator +
-                cu_name +
-                getFileExtension (Options.getOutputLanguage ()));
+    saveOutput (Options.getOutputDirectory () + File.separator + cu_name + getFileExtension ());
   }
 
   public static void reInit ()

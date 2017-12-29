@@ -4,7 +4,6 @@
 package com.helger.pgcc.jjtree;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -390,12 +389,8 @@ public class CPPCodeGenerator extends DefaultJJTreeVisitor
     io.println (indent + "}");
   }
 
-  private void insertCatchBlocks (final NodeScope ns,
-                                  final IO io,
-                                  final Collection <String> thrown_names,
-                                  final String indent)
+  private void insertCatchBlocks (final NodeScope ns, final IO io, final String indent)
   {
-    final String thrown;
     // if (thrown_names.hasMoreElements()) {
     io.println (indent + "} catch (...) {"); // " + ns.exceptionVar + ") {");
 
@@ -429,7 +424,7 @@ public class CPPCodeGenerator extends DefaultJJTreeVisitor
     openJJTreeComment (io, null);
     io.println ();
 
-    insertCatchBlocks (ns, io, ns.production.throws_list, indent);
+    insertCatchBlocks (ns, io, indent);
 
     io.println (indent + "} {");
     if (ns.usesCloseNodeVar ())
@@ -452,7 +447,7 @@ public class CPPCodeGenerator extends DefaultJJTreeVisitor
        * Should really make the nonterminal explicitly maintain its name.
        */
       final String nt = expansion_unit.getFirstToken ().image;
-      final ASTProduction prod = (ASTProduction) JJTreeGlobals.productions.get (nt);
+      final ASTProduction prod = JJTreeGlobals.productions.get (nt);
       if (prod != null)
       {
         for (final String t : prod.throws_list)
@@ -479,7 +474,7 @@ public class CPPCodeGenerator extends DefaultJJTreeVisitor
     // Maintain order
     final Map <String, String> thrown_set = new LinkedHashMap <> ();
     findThrown (ns, thrown_set, expansion_unit);
-    insertCatchBlocks (ns, io, thrown_set.keySet (), indent);
+    insertCatchBlocks (ns, io, indent);
 
     io.println (indent + "} {");
     if (ns.usesCloseNodeVar ())

@@ -27,10 +27,11 @@
  */
 package com.helger.pgcc.jjtree;
 
+import com.helger.commons.annotation.OverrideOnDemand;
+
 public class JJTreeNode extends SimpleNode
 {
-
-  private int myOrdinal;
+  private int m_nMyOrdinal;
 
   public JJTreeNode (final int id)
   {
@@ -56,12 +57,12 @@ public class JJTreeNode extends SimpleNode
 
   public int getOrdinal ()
   {
-    return myOrdinal;
+    return m_nMyOrdinal;
   }
 
   public void setOrdinal (final int o)
   {
-    myOrdinal = o;
+    m_nMyOrdinal = o;
   }
 
   /*****************************************************************
@@ -70,7 +71,8 @@ public class JJTreeNode extends SimpleNode
    * to print the tokens back to the specified output stream.
    *****************************************************************/
 
-  private Token first, last;
+  private Token first;
+  private Token last;
 
   public Token getFirstToken ()
   {
@@ -92,26 +94,22 @@ public class JJTreeNode extends SimpleNode
     last = t;
   }
 
+  @OverrideOnDemand
   String translateImage (final Token t)
   {
     return t.image;
   }
 
-  String whiteOut (final Token t)
+  static final String whiteOut (final Token t)
   {
     final StringBuilder sb = new StringBuilder (t.image.length ());
 
-    for (int i = 0; i < t.image.length (); ++i)
+    for (final char ch : t.image.toCharArray ())
     {
-      final char ch = t.image.charAt (i);
       if (ch != '\t' && ch != '\n' && ch != '\r' && ch != '\f')
-      {
         sb.append (' ');
-      }
       else
-      {
         sb.append (ch);
-      }
     }
 
     return sb.toString ();

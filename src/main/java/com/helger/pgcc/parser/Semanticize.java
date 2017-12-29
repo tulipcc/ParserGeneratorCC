@@ -338,7 +338,8 @@ public class Semanticize extends JavaCCGlobals
                       // implicit.
                       if (tp.lexStates[i].equals ("DEFAULT"))
                       {
-                        JavaCCErrors.semantic_error (sl, "Duplicate definition of string token \"" + sl.m_image + "\".");
+                        JavaCCErrors.semantic_error (sl,
+                                                     "Duplicate definition of string token \"" + sl.m_image + "\".");
                       }
                       else
                       {
@@ -462,7 +463,7 @@ public class Semanticize extends JavaCCGlobals
           {
 
             final RJustName jn = (RJustName) res.rexp;
-            final RegularExpression rexp = (RegularExpression) named_tokens_table.get (jn.m_label);
+            final RegularExpression rexp = named_tokens_table.get (jn.m_label);
             if (rexp == null)
             {
               jn.m_ordinal = tokenCount++;
@@ -850,25 +851,19 @@ public class Semanticize extends JavaCCGlobals
               JavaCCErrors.semantic_error (jn.m_regexpr, "Loop in regular expression detected: \"" + loopString + "\"");
               return false;
             }
-            else
-            {
-              jn.m_regexpr.walkStatus = 1;
-              return true;
-            }
-          }
-          else
-          {
             jn.m_regexpr.walkStatus = 1;
-            return false;
+            return true;
           }
+          jn.m_regexpr.walkStatus = 1;
+          return false;
         }
     }
     else
       if (rexp instanceof RChoice)
       {
-        for (final Object aElement : ((RChoice) rexp).getChoices ())
+        for (final RegularExpression aElement : ((RChoice) rexp).getChoices ())
         {
-          if (rexpWalk ((RegularExpression) aElement))
+          if (rexpWalk (aElement))
           {
             return true;
           }
@@ -929,7 +924,7 @@ public class Semanticize extends JavaCCGlobals
       if (e instanceof RJustName)
       {
         final RJustName jn = (RJustName) e;
-        final RegularExpression rexp = (RegularExpression) named_tokens_table.get (jn.m_label);
+        final RegularExpression rexp = named_tokens_table.get (jn.m_label);
         if (rexp == null)
         {
           JavaCCErrors.semantic_error (e, "Undefined lexical token name \"" + jn.m_label + "\".");

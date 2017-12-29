@@ -12,7 +12,6 @@ package com.helger.pgcc.jjtree;
 
 public class Token
 {
-
   /**
    * An integer that describes the kind of this token. This numbering system is
    * determined by JavaCCParser, and a table of these numbers is stored in the

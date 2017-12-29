@@ -14,7 +14,7 @@ import java.util.Map;
 public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
 {
   private static final String TokenManagerTemplate = "/templates/TableDrivenTokenManager.template";
-  private final CodeGenerator codeGenerator = new CodeGenerator ();
+  private final CodeGenerator m_codeGenerator = new CodeGenerator ();
 
   @Override
   public void generateCode (final TokenizerData tokenizerData)
@@ -35,10 +35,10 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     options.put ("generatedStates", tokenizerData.nfa.size ());
     try
     {
-      codeGenerator.writeTemplate (TokenManagerTemplate, options);
-      dumpDfaTables (codeGenerator, tokenizerData);
-      dumpNfaTables (codeGenerator, tokenizerData);
-      dumpMatchInfo (codeGenerator, tokenizerData);
+      m_codeGenerator.writeTemplate (TokenManagerTemplate, options);
+      _dumpDfaTables (m_codeGenerator, tokenizerData);
+      dumpNfaTables (m_codeGenerator, tokenizerData);
+      _dumpMatchInfo (m_codeGenerator, tokenizerData);
     }
     catch (final IOException ioe)
     {
@@ -46,21 +46,20 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     }
   }
 
-  @Override
   public void finish (final TokenizerData tokenizerData)
   {
     // TODO(sreeni) : Fix this mess.
-    codeGenerator.genCodeLine ("\n}");
+    m_codeGenerator.genCodeLine ("\n}");
     if (!Options.getBuildParser ())
       return;
     final String fileName = Options.getOutputDirectory () +
                             File.separator +
                             tokenizerData.parserName +
                             "TokenManager.java";
-    codeGenerator.saveOutput (fileName);
+    m_codeGenerator.saveOutput (fileName);
   }
 
-  private void dumpDfaTables (final CodeGenerator codeGenerator, final TokenizerData tokenizerData)
+  private void _dumpDfaTables (final CodeGenerator codeGenerator, final TokenizerData tokenizerData)
   {
     final Map <Integer, int []> startAndSize = new HashMap <> ();
     int i = 0;
@@ -80,11 +79,11 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
       {
         if (j > 0)
           codeGenerator.genCodeLine (", ");
-        codeGenerator.genCode (s.length ());
+        codeGenerator.genCode (Integer.toString (s.length ()));
         for (int k = 0; k < s.length (); k++)
         {
           codeGenerator.genCode (", ");
-          codeGenerator.genCode ((int) s.charAt (k));
+          codeGenerator.genCode (Integer.toString (s.charAt (k)));
           i++;
         }
         final int kind = kinds.get (j);
@@ -174,11 +173,11 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
       }
       codeGenerator.genCode ("{");
       int k = 0;
-      for (final int st : tmp.compositeStates)
+      for (final Integer st : tmp.compositeStates)
       {
         if (k++ > 0)
           codeGenerator.genCode (", ");
-        codeGenerator.genCode (st);
+        codeGenerator.genCode (st.toString ());
       }
       codeGenerator.genCode ("}");
     }
@@ -193,14 +192,14 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
       // TODO(sreeni) : Fix this mess.
       if (tmp == null)
       {
-        codeGenerator.genCode (Integer.MAX_VALUE);
+        codeGenerator.genCode (Integer.toString (Integer.MAX_VALUE));
         continue;
       }
-      codeGenerator.genCode (tmp.kind);
+      codeGenerator.genCode (Integer.toString (tmp.kind));
     }
     codeGenerator.genCodeLine ("};");
 
-    codeGenerator.genCodeLine ("private static final int[][]  jjnextStateSet = {");
+    codeGenerator.genCodeLine ("private static final int[][] jjnextStateSet = {");
     for (int i = 0; i < nfa.size (); i++)
     {
       final TokenizerData.NfaState tmp = nfa.get (i);
@@ -213,38 +212,38 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
       }
       int k = 0;
       codeGenerator.genCode ("{");
-      for (final int s : tmp.nextStates)
+      for (final Integer s : tmp.nextStates)
       {
         if (k++ > 0)
           codeGenerator.genCode (", ");
-        codeGenerator.genCode (s);
+        codeGenerator.genCode (s.toString ());
       }
       codeGenerator.genCode ("}");
     }
     codeGenerator.genCodeLine ("};");
 
-    codeGenerator.genCodeLine ("private static final int[] jjInitStates  = {");
+    codeGenerator.genCodeLine ("private static final int[] jjInitStates = {");
     int k = 0;
-    for (final int i : tokenizerData.initialStates.keySet ())
+    for (final Integer a : tokenizerData.initialStates.values ())
     {
       if (k++ > 0)
         codeGenerator.genCode (", ");
-      codeGenerator.genCode (tokenizerData.initialStates.get (i));
+      codeGenerator.genCode (a.toString ());
     }
     codeGenerator.genCodeLine ("};");
 
     codeGenerator.genCodeLine ("private static final int[] canMatchAnyChar = {");
     k = 0;
-    for (int i = 0; i < tokenizerData.wildcardKind.size (); i++)
+    for (final Integer a : tokenizerData.wildcardKind.values ())
     {
       if (k++ > 0)
         codeGenerator.genCode (", ");
-      codeGenerator.genCode (tokenizerData.wildcardKind.get (i));
+      codeGenerator.genCode (a.toString ());
     }
     codeGenerator.genCodeLine ("};");
   }
 
-  private void dumpMatchInfo (final CodeGenerator codeGenerator, final TokenizerData tokenizerData)
+  private void _dumpMatchInfo (final CodeGenerator codeGenerator, final TokenizerData tokenizerData)
   {
     final Map <Integer, TokenizerData.MatchInfo> allMatches = tokenizerData.allMatches;
 
@@ -331,21 +330,21 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     final String staticString = Options.getStatic () ? "static " : "";
     // Token actions.
     codeGenerator.genCodeLine (staticString + "void TokenLexicalActions(Token matchedToken) {");
-    dumpLexicalActions (allMatches, TokenizerData.MatchType.TOKEN, "matchedToken.kind", codeGenerator);
+    _dumpLexicalActions (allMatches, TokenizerData.MatchType.TOKEN, "matchedToken.kind", codeGenerator);
     codeGenerator.genCodeLine ("}");
 
     // Skip actions.
     // TODO(sreeni) : Streamline this mess.
 
     codeGenerator.genCodeLine (staticString + "void SkipLexicalActions(Token matchedToken) {");
-    dumpLexicalActions (allMatches, TokenizerData.MatchType.SKIP, "jjmatchedKind", codeGenerator);
-    dumpLexicalActions (allMatches, TokenizerData.MatchType.SPECIAL_TOKEN, "jjmatchedKind", codeGenerator);
+    _dumpLexicalActions (allMatches, TokenizerData.MatchType.SKIP, "jjmatchedKind", codeGenerator);
+    _dumpLexicalActions (allMatches, TokenizerData.MatchType.SPECIAL_TOKEN, "jjmatchedKind", codeGenerator);
     codeGenerator.genCodeLine ("}");
 
     // More actions.
     codeGenerator.genCodeLine (staticString + "void MoreLexicalActions() {");
     codeGenerator.genCodeLine ("jjimageLen += (lengthOfMatch = jjmatchedPos + 1);");
-    dumpLexicalActions (allMatches, TokenizerData.MatchType.MORE, "jjmatchedKind", codeGenerator);
+    _dumpLexicalActions (allMatches, TokenizerData.MatchType.MORE, "jjmatchedKind", codeGenerator);
     codeGenerator.genCodeLine ("}");
 
     codeGenerator.genCodeLine ("public String[] lexStateNames = {");
@@ -358,7 +357,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     codeGenerator.genCodeLine ("};");
   }
 
-  private void dumpLexicalActions (final Map <Integer, TokenizerData.MatchInfo> allMatches,
+  private void _dumpLexicalActions (final Map <Integer, TokenizerData.MatchInfo> allMatches,
                                    final TokenizerData.MatchType matchType,
                                    final String kindString,
                                    final CodeGenerator codeGenerator)

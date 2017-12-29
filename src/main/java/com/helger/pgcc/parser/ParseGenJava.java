@@ -37,14 +37,14 @@ import static com.helger.pgcc.parser.JavaCCGlobals.cu_to_insertion_point_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.jj2index;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
 import static com.helger.pgcc.parser.JavaCCGlobals.lookaheadNeeded;
+import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.maskVals;
 import static com.helger.pgcc.parser.JavaCCGlobals.maskindex;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 import static com.helger.pgcc.parser.JavaCCGlobals.staticOpt;
 import static com.helger.pgcc.parser.JavaCCGlobals.tokenCount;
-import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -83,7 +83,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
       {
         final Object firstToken = cu_to_insertion_point_1.get (0);
         printTokenSetup ((Token) firstToken);
-        ccol = 1;
+        m_ccol = 1;
         for (final Iterator <Token> it = cu_to_insertion_point_1.iterator (); it.hasNext ();)
         {
           t = it.next ();
@@ -1154,7 +1154,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
       if (cu_from_insertion_point_2.size () != 0)
       {
         printTokenSetup ((cu_from_insertion_point_2.get (0)));
-        ccol = 1;
+        m_ccol = 1;
         for (final Object aElement : cu_from_insertion_point_2)
         {
           t = (Token) aElement;
@@ -1164,10 +1164,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
       }
       genCodeLine ("");
 
-      saveOutput (Options.getOutputDirectory () +
-                  File.separator +
-                  cu_name +
-                  getFileExtension (Options.getOutputLanguage ()));
+      saveOutput (Options.getOutputDirectory () + File.separator + cu_name + getFileExtension ());
 
     } // matches "if (Options.getBuildParser())"
 

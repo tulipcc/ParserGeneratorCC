@@ -48,24 +48,24 @@ public class JJDoc extends JJDocGlobals
     s_generator.documentEnd ();
   }
 
-  private static Token getPrecedingSpecialToken (final Token tok)
+  private static Token _getPrecedingSpecialToken (final Token tok)
   {
     Token t = tok;
     while (t.specialToken != null)
     {
       t = t.specialToken;
     }
-    return (t != tok) ? t : null;
+    return t != tok ? t : null;
   }
 
-  private static void emitTopLevelSpecialTokens (Token tok, final IDocGenerator gen)
+  private static void emitTopLevelSpecialTokens (final Token aTok, final IDocGenerator gen)
   {
-    if (tok == null)
+    if (aTok == null)
     {
       // Strange ...
       return;
     }
-    tok = getPrecedingSpecialToken (tok);
+    Token tok = _getPrecedingSpecialToken (aTok);
     String s = "";
     if (tok != null)
     {
@@ -87,13 +87,13 @@ public class JJDoc extends JJDocGlobals
    * instanceof TokenProduction) ); }
    */
 
-  private static void emitTokenProductions (final IDocGenerator gen, final List prods)
+  private static void emitTokenProductions (final IDocGenerator gen, final List <TokenProduction> prods)
   {
     gen.tokensStart ();
     // FIXME there are many empty productions here
-    for (final Iterator it = prods.iterator (); it.hasNext ();)
+    for (final TokenProduction aTokenProduction : prods)
     {
-      final TokenProduction tp = (TokenProduction) it.next ();
+      final TokenProduction tp = aTokenProduction;
       emitTopLevelSpecialTokens (tp.firstToken, gen);
 
       gen.handleTokenProduction (tp);
@@ -136,9 +136,9 @@ public class JJDoc extends JJDocGlobals
         token += " [IGNORE_CASE]";
       }
       token += " : {\n";
-      for (final Iterator it2 = tp.respecs.iterator (); it2.hasNext ();)
+      for (final Iterator <RegExprSpec> it2 = tp.respecs.iterator (); it2.hasNext ();)
       {
-        final RegExprSpec res = (RegExprSpec) it2.next ();
+        final RegExprSpec res = it2.next ();
 
         token += emitRE (res.rexp);
 
@@ -158,12 +158,11 @@ public class JJDoc extends JJDocGlobals
     return token;
   }
 
-  private static void emitNormalProductions (final IDocGenerator gen, final List prods)
+  private static void emitNormalProductions (final IDocGenerator gen, final List <NormalProduction> prods)
   {
     gen.nonterminalsStart ();
-    for (final Iterator it = prods.iterator (); it.hasNext ();)
+    for (final NormalProduction np : prods)
     {
-      final NormalProduction np = (NormalProduction) it.next ();
       emitTopLevelSpecialTokens (np.getFirstToken (), gen);
       if (np instanceof BNFProduction)
       {
@@ -263,23 +262,25 @@ public class JJDoc extends JJDocGlobals
   }
 
   private static void emitExpansionAction (final Action a, final IDocGenerator gen)
-  {}
+  {
+    gen.doNothing (a);
+  }
 
   private static void emitExpansionChoice (final Choice c, final IDocGenerator gen)
   {
-    for (final Iterator it = c.getChoices ().iterator (); it.hasNext ();)
+    for (final Iterator <Expansion> it = c.getChoices ().iterator (); it.hasNext ();)
     {
-      final Expansion e = (Expansion) (it.next ());
+      final Expansion e = it.next ();
       emitExpansionTree (e, gen);
       if (it.hasNext ())
-      {
         gen.text (" | ");
-      }
     }
   }
 
   private static void emitExpansionLookahead (final Lookahead l, final IDocGenerator gen)
-  {}
+  {
+    gen.doNothing (l);
+  }
 
   private static void emitExpansionNonTerminal (final NonTerminal nt, final IDocGenerator gen)
   {
@@ -430,9 +431,9 @@ public class JJDoc extends JJDocGlobals
       if (re instanceof RChoice)
       {
         final RChoice c = (RChoice) re;
-        for (final Iterator <Expansion> it = c.getChoices ().iterator (); it.hasNext ();)
+        for (final Iterator <RegularExpression> it = c.getChoices ().iterator (); it.hasNext ();)
         {
-          final RegularExpression sub = (RegularExpression) (it.next ());
+          final RegularExpression sub = (it.next ());
           returnString += emitRE (sub);
           if (it.hasNext ())
           {

@@ -41,5 +41,3 @@ public class ASTLHS extends JJTreeNode
     return visitor.visit (this, data);
   }
 }
-
-/* end */

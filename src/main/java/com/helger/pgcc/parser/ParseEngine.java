@@ -53,11 +53,11 @@ import java.util.Map;
 
 public class ParseEngine
 {
-
   private int gensymindex = 0;
   private int indentamt;
   private boolean jj2LA;
   private CodeGenerator codeGenerator;
+  @Deprecated
   private final boolean isJavaDialect = Options.isOutputLanguageJava ();
 
   /**
@@ -105,7 +105,7 @@ public class ParseEngine
       if (exp instanceof NonTerminal)
       {
         final NormalProduction prod = ((NonTerminal) exp).getProd ();
-        if (prod instanceof CodeProduction)
+        if (prod instanceof AbstractCodeProduction)
         {
           return true;
         }
@@ -202,7 +202,7 @@ public class ParseEngine
     else
       if (exp instanceof NonTerminal)
       {
-        if (!(((NonTerminal) exp).getProd () instanceof CodeProduction))
+        if (!(((NonTerminal) exp).getProd () instanceof AbstractCodeProduction))
         {
           genFirstSet (((BNFProduction) (((NonTerminal) exp).getProd ())).getExpansion ());
         }
@@ -233,7 +233,7 @@ public class ParseEngine
               // for the preceding LOOKAHEAD (the semantic checks should have
               // made sure that
               // the LOOKAHEAD is suitable).
-              if (unit instanceof NonTerminal && ((NonTerminal) unit).getProd () instanceof CodeProduction)
+              if (unit instanceof NonTerminal && ((NonTerminal) unit).getProd () instanceof AbstractCodeProduction)
               {
                 if (i > 0 && seq.m_units.get (i - 1) instanceof Lookahead)
                 {
@@ -348,42 +348,38 @@ public class ParseEngine
           // treat this case as the default last action.
           break;
         }
-        else
+        // This case is when there is only semantic lookahead
+        // (without any preceding syntactic lookahead). In this
+        // case, an "if" statement is generated.
+        switch (state)
         {
-          // This case is when there is only semantic lookahead
-          // (without any preceding syntactic lookahead). In this
-          // case, an "if" statement is generated.
-          switch (state)
-          {
-            case NOOPENSTM:
-              retval += "\n" + "if (";
-              indentAmt++;
-              break;
-            case OPENIF:
-              retval += "\u0002\n" + "} else if (";
-              break;
-            case OPENSWITCH:
-              retval += "\u0002\n" + "default:" + "\u0001";
-              if (Options.getErrorReporting ())
-              {
-                retval += "\njj_la1[" + maskindex + "] = jj_gen;";
-                maskindex++;
-              }
-              maskVals.add (tokenMask);
-              retval += "\n" + "if (";
-              indentAmt++;
-          }
-          codeGenerator.printTokenSetup ((la.getActionTokens ().get (0)));
-          for (final Object aElement : la.getActionTokens ())
-          {
-            t = (Token) aElement;
-            retval += codeGenerator.getStringToPrint (t);
-          }
-          retval += codeGenerator.getTrailingComments (t);
-          retval += ") {\u0001" + actions[index];
-          state = OPENIF;
+          case NOOPENSTM:
+            retval += "\n" + "if (";
+            indentAmt++;
+            break;
+          case OPENIF:
+            retval += "\u0002\n" + "} else if (";
+            break;
+          case OPENSWITCH:
+            retval += "\u0002\n" + "default:" + "\u0001";
+            if (Options.getErrorReporting ())
+            {
+              retval += "\njj_la1[" + maskindex + "] = jj_gen;";
+              maskindex++;
+            }
+            maskVals.add (tokenMask);
+            retval += "\n" + "if (";
+            indentAmt++;
         }
-
+        codeGenerator.printTokenSetup ((la.getActionTokens ().get (0)));
+        for (final Object aElement : la.getActionTokens ())
+        {
+          t = (Token) aElement;
+          retval += codeGenerator.getStringToPrint (t);
+        }
+        retval += codeGenerator.getTrailingComments (t);
+        retval += ") {\u0001" + actions[index];
+        state = OPENIF;
       }
       else
         if (la.getAmount () == 1 && la.getActionTokens ().size () == 0)
@@ -615,7 +611,7 @@ public class ParseEngine
                 }
                 else
                 {
-                  codeGenerator.genCode (ch);
+                  codeGenerator.genCode (Character.toString (ch));
                 }
     }
   }
@@ -1390,7 +1386,7 @@ public class ParseEngine
           {
             final NonTerminal e_nrw = (NonTerminal) seq;
             final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
-            if (ntprod instanceof CodeProduction)
+            if (ntprod instanceof AbstractCodeProduction)
             {
               break; // nothing to do here
             }
@@ -1444,7 +1440,7 @@ public class ParseEngine
         // variables are the same.
         final NonTerminal e_nrw = (NonTerminal) e;
         final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
-        if (ntprod instanceof CodeProduction)
+        if (ntprod instanceof AbstractCodeProduction)
         {
           // nothing to do here
         }
@@ -1603,7 +1599,7 @@ public class ParseEngine
         // variables are the same.
         final NonTerminal e_nrw = (NonTerminal) e;
         final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
-        if (ntprod instanceof CodeProduction)
+        if (ntprod instanceof AbstractCodeProduction)
         {
           codeGenerator.genCodeLine ("    if (true) { jj_la = 0; jj_scanpos = jj_lastpos; " + genReturn (false) + "}");
         }
@@ -1807,7 +1803,7 @@ public class ParseEngine
       {
         final NonTerminal e_nrw = (NonTerminal) e;
         final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
-        if (ntprod instanceof CodeProduction)
+        if (ntprod instanceof AbstractCodeProduction)
         {
           retval = Integer.MAX_VALUE;
           // Make caller think this is unending (for we do not go beyond
@@ -2117,7 +2113,7 @@ public class ParseEngine
       {
         final NonTerminal e_nrw = (NonTerminal) e;
         final NormalProduction ntprod = (production_table.get (e_nrw.getName ()));
-        if (ntprod instanceof CodeProduction)
+        if (ntprod instanceof AbstractCodeProduction)
         {
           // javacode, true - always (warn?)
           System.err.println ("JAVACODE_PROD, true");
@@ -2177,7 +2173,7 @@ public class ParseEngine
               while (tmp instanceof NonTerminal)
               {
                 final NormalProduction ntprod = (production_table.get (((NonTerminal) tmp).getName ()));
-                if (ntprod instanceof CodeProduction)
+                if (ntprod instanceof AbstractCodeProduction)
                   break;
                 tmp = ntprod.getExpansion ();
               }

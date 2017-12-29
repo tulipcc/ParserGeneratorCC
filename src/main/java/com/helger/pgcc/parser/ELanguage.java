@@ -40,6 +40,16 @@ public enum ELanguage implements IHasID <String>
     return this == CPP;
   }
 
+  public boolean hasStaticsFile ()
+  {
+    return this == CPP;
+  }
+
+  public boolean hasIncludeFile ()
+  {
+    return this == CPP;
+  }
+
   @Nullable
   public static ELanguage getFromIDCaseInsensitiveOrNull (@Nullable final String sID)
   {

@@ -40,6 +40,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.annotation.WillCloseWhenClosed;
 
+import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.Version;
 
 /**
@@ -59,24 +60,20 @@ import com.helger.pgcc.Version;
  *
  * @author Paul Cager
  */
-public class OutputFile
+public class OutputFile implements AutoCloseable
 {
   private static final String MD5_LINE_PART_1 = "/* JavaCC - OriginalChecksum=";
   private static final String MD5_LINE_PART_1q = "/\\* JavaCC - OriginalChecksum=";
   private static final String MD5_LINE_PART_2 = " (do not edit this line) */";
   private static final String MD5_LINE_PART_2q = " \\(do not edit this line\\) \\*/";
 
-  TrapClosePrintWriter pw;
-
+  TrapClosePrintWriter m_pw;
   DigestOutputStream dos;
-
   String toolName = JavaCCGlobals.m_toolName;
-
-  final File file;
-
-  final String compatibleVersion;
-
-  final String [] options;
+  final File m_file;
+  final String m_compatibleVersion;
+  final String [] m_options;
+  public boolean needToWrite = true;
 
   /**
    * Create a new OutputFile.
@@ -92,9 +89,9 @@ public class OutputFile
    */
   public OutputFile (final File file, final String compatibleVersion, final String [] options) throws IOException
   {
-    this.file = file;
-    this.compatibleVersion = compatibleVersion;
-    this.options = options;
+    this.m_file = file;
+    this.m_compatibleVersion = compatibleVersion;
+    this.m_options = options;
 
     if (file.exists ())
     {
@@ -102,57 +99,60 @@ public class OutputFile
       // stored
       // in the file.
 
-      final BufferedReader br = new BufferedReader (new FileReader (file));
-      MessageDigest digest;
-      try
+      try (final NonBlockingBufferedReader br = new NonBlockingBufferedReader (new FileReader (file)))
       {
-        digest = MessageDigest.getInstance ("MD5");
-      }
-      catch (final NoSuchAlgorithmException e)
-      {
-        throw (IOException) (new IOException ("No MD5 implementation").initCause (e));
-      }
-      final DigestOutputStream digestStream = new DigestOutputStream (new NullOutputStream (), digest);
-      final PrintWriter pw = new PrintWriter (digestStream);
-      String line;
-      String existingMD5 = null;
-      while ((line = br.readLine ()) != null)
-      {
-        if (line.startsWith (MD5_LINE_PART_1))
+        MessageDigest digest;
+        try
         {
-          existingMD5 = line.replaceAll (MD5_LINE_PART_1q, "").replaceAll (MD5_LINE_PART_2q, "");
+          digest = MessageDigest.getInstance ("MD5");
         }
-        else
+        catch (final NoSuchAlgorithmException e)
         {
-          pw.println (line);
+          throw new IOException ("No MD5 implementation", e);
         }
-      }
-
-      pw.close ();
-      final String calculatedDigest = toHexString (digestStream.getMessageDigest ().digest ());
-
-      if (existingMD5 == null || !existingMD5.equals (calculatedDigest))
-      {
-        // No checksum in file, or checksum differs.
-        needToWrite = false;
-
-        if (compatibleVersion != null)
+        try (final DigestOutputStream digestStream = new DigestOutputStream (new NullOutputStream (), digest);
+             final PrintWriter pw = new PrintWriter (digestStream))
         {
-          checkVersion (file, compatibleVersion);
-        }
+          String line;
+          String existingMD5 = null;
+          while ((line = br.readLine ()) != null)
+          {
+            if (line.startsWith (MD5_LINE_PART_1))
+            {
+              existingMD5 = line.replaceAll (MD5_LINE_PART_1q, "").replaceAll (MD5_LINE_PART_2q, "");
+            }
+            else
+            {
+              pw.println (line);
+            }
+          }
 
-        if (options != null)
-        {
-          checkOptions (file, options);
-        }
+          final String calculatedDigest = toHexString (digestStream.getMessageDigest ().digest ());
 
-      }
-      else
-      {
-        // The file has not been altered since JavaCC created it.
-        // Rebuild it.
-        System.out.println ("File \"" + file.getName () + "\" is being rebuilt.");
-        needToWrite = true;
+          if (existingMD5 == null || !existingMD5.equals (calculatedDigest))
+          {
+            // No checksum in file, or checksum differs.
+            needToWrite = false;
+
+            if (compatibleVersion != null)
+            {
+              checkVersion (file, compatibleVersion);
+            }
+
+            if (options != null)
+            {
+              checkOptions (file, options);
+            }
+
+          }
+          else
+          {
+            // The file has not been altered since JavaCC created it.
+            // Rebuild it.
+            System.out.println ("File \"" + file.getName () + "\" is being rebuilt.");
+            needToWrite = true;
+          }
+        }
       }
     }
     else
@@ -167,8 +167,6 @@ public class OutputFile
   {
     this (file, null, null);
   }
-
-  public boolean needToWrite = true;
 
   /**
    * Output a warning if the file was created with an incompatible version of
@@ -262,7 +260,7 @@ public class OutputFile
   @WillCloseWhenClosed
   public PrintWriter getPrintWriter () throws IOException
   {
-    if (pw == null)
+    if (m_pw == null)
     {
       MessageDigest digest;
       try
@@ -273,43 +271,40 @@ public class OutputFile
       {
         throw (IOException) (new IOException ("No MD5 implementation").initCause (e));
       }
-      dos = new DigestOutputStream (new BufferedOutputStream (new FileOutputStream (file)), digest);
-      pw = new TrapClosePrintWriter (dos);
+      dos = new DigestOutputStream (new BufferedOutputStream (new FileOutputStream (m_file)), digest);
+      m_pw = new TrapClosePrintWriter (dos);
 
       // Write the headers....
-      final String version = compatibleVersion == null ? Version.versionNumber : compatibleVersion;
-      pw.println ("/* " + JavaCCGlobals.getIdString (toolName, file.getName ()) + " Version " + version + " */");
-      if (options != null)
+      final String version = m_compatibleVersion == null ? Version.versionNumber : m_compatibleVersion;
+      m_pw.println ("/* " + JavaCCGlobals.getIdString (toolName, m_file.getName ()) + " Version " + version + " */");
+      if (m_options != null)
       {
-        pw.println ("/* JavaCCOptions:" + Options.getOptionsString (options) + " */");
+        m_pw.println ("/* JavaCCOptions:" + Options.getOptionsString (m_options) + " */");
       }
     }
 
-    return pw;
+    return m_pw;
   }
 
   /**
    * Close the OutputFile, writing any necessary trailer information (such as a
    * checksum).
-   *
-   * @throws IOException
    */
-  public void close () throws IOException
+  public void close ()
   {
-
     // Write the trailer (checksum).
     // Possibly rename the .java.tmp to .java??
-    if (pw != null)
+    if (m_pw != null)
     {
-      pw.println (MD5_LINE_PART_1 + getMD5sum () + MD5_LINE_PART_2);
-      pw.closePrintWriter ();
+      m_pw.println (MD5_LINE_PART_1 + getMD5sum () + MD5_LINE_PART_2);
+      m_pw.closePrintWriter ();
       // file.renameTo(dest)
     }
   }
 
   private String getMD5sum ()
   {
-    pw.flush ();
+    m_pw.flush ();
     final byte [] digest = dos.getMessageDigest ().digest ();
     return toHexString (digest);
   }
@@ -359,7 +354,6 @@ public class OutputFile
 
   private class TrapClosePrintWriter extends PrintWriter
   {
-
     public TrapClosePrintWriter (final OutputStream os)
     {
       super (os);
@@ -373,14 +367,7 @@ public class OutputFile
     @Override
     public void close ()
     {
-      try
-      {
-        OutputFile.this.close ();
-      }
-      catch (final IOException e)
-      {
-        System.err.println ("Could not close " + file.getAbsolutePath ());
-      }
+      OutputFile.this.close ();
     }
   }
 
@@ -403,6 +390,6 @@ public class OutputFile
 
   public String getPath ()
   {
-    return file.getAbsolutePath ();
+    return m_file.getAbsolutePath ();
   }
 }

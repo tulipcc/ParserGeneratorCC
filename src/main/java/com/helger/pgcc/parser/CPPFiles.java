@@ -47,27 +47,6 @@ public class CPPFiles extends JavaCCGlobals implements JavaCCParserConstants
   static final String tokenMgrErrorVersion = Version.majorDotMinor;
 
   /**
-   * Replaces all backslahes with double backslashes.
-   */
-  static String replaceBackslash (final String str)
-  {
-    if (str.indexOf ('\\') < 0)
-    {
-      // No backslash found.
-      return str;
-    }
-
-    final StringBuilder b = new StringBuilder (str.length () * 2);
-    for (final char c : str.toCharArray ())
-      if (c == '\\')
-        b.append ("\\\\");
-      else
-        b.append (c);
-
-    return b.toString ();
-  }
-
-  /**
    * Read the version from the comment in the specified file. This method does
    * not try to recover from invalid comment syntax, but rather returns version
    * 0.0 (which will always be taken to mean the file is out of date).

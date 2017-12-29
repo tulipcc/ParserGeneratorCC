@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,15 +39,15 @@ class JJTreeGlobals
 {
   static void initialize ()
   {
-    toolList = new ArrayList ();
+    toolList = new ArrayList <> ();
     parserName = null;
     packageName = "";
     parserImplements = null;
     parserClassBodyStart = null;
     parserImports = null;
-    productions = new HashMap ();
+    productions = new HashMap <> ();
 
-    jjtreeOptions = new HashSet ();
+    jjtreeOptions = new HashSet <> ();
     jjtreeOptions.add ("JJTREE_OUTPUT_DIRECTORY");
     jjtreeOptions.add ("MULTI");
     jjtreeOptions.add ("NODE_PREFIX");
@@ -79,14 +80,14 @@ class JJTreeGlobals
    * This set stores the JJTree-specific options that should not be passed down
    * to JavaCC
    */
-  private static Set jjtreeOptions;
+  private static Set <String> jjtreeOptions;
 
   public static boolean isOptionJJTreeOnly (final String optionName)
   {
-    return jjtreeOptions.contains (optionName.toUpperCase ());
+    return jjtreeOptions.contains (optionName.toUpperCase (Locale.US));
   }
 
-  static List toolList = new ArrayList ();
+  static List <String> toolList = new ArrayList <> ();
 
   /**
    * Use this like className.
@@ -127,8 +128,5 @@ class JJTreeGlobals
   /**
    * This is mapping from production names to ASTProduction objects.
    **/
-  static Map productions = new HashMap ();
-
+  static Map <String, ASTProduction> productions = new HashMap <> ();
 }
-
-/* end */

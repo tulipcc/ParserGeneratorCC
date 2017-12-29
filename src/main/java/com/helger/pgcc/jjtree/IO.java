@@ -94,8 +94,7 @@ final class IO
 
   void println (final String s)
   {
-    out.print (s);
-    out.println ();
+    out.println (s);
   }
 
   void println ()

@@ -37,11 +37,11 @@ import static com.helger.pgcc.parser.JavaCCGlobals.cu_to_insertion_point_1;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.lexstate_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.nextStateForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.rexprlist;
-import static com.helger.pgcc.parser.JavaCCGlobals.token_mgr_decls;
-import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
+import static com.helger.pgcc.parser.JavaCCGlobals.token_mgr_decls;
 
 import java.io.File;
 import java.io.IOException;
@@ -123,7 +123,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     tn.add (m_toolName);
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
-    genCodeLine ("/* " + getIdString (tn, tokMgrClassName + getFileExtension (Options.getOutputLanguage ())) + " */");
+    genCodeLine ("/* " + getIdString (tn, tokMgrClassName + getFileExtension ()) + " */");
 
     int l = 0, kind;
     i = 1;
@@ -145,8 +145,8 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
               kind == CLASS ||
               kind == INTERFACE)
           {
-            cline = (cu_to_insertion_point_1.get (l)).beginLine;
-            ccol = (cu_to_insertion_point_1.get (l)).beginColumn;
+            m_cline = (cu_to_insertion_point_1.get (l)).beginLine;
+            m_ccol = (cu_to_insertion_point_1.get (l)).beginColumn;
             for (j = l; j < i; j++)
             {
               printToken ((cu_to_insertion_point_1.get (j)));
@@ -179,16 +179,16 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
     if (token_mgr_decls != null && token_mgr_decls.size () > 0)
     {
-      Token t = (Token) token_mgr_decls.get (0);
+      Token t = token_mgr_decls.get (0);
       boolean commonTokenActionSeen = false;
       final boolean commonTokenActionNeeded = Options.getCommonTokenAction ();
 
-      printTokenSetup ((Token) token_mgr_decls.get (0));
-      ccol = 1;
+      printTokenSetup (token_mgr_decls.get (0));
+      m_ccol = 1;
 
       for (j = 0; j < token_mgr_decls.size (); j++)
       {
-        t = (Token) token_mgr_decls.get (j);
+        t = token_mgr_decls.get (j);
         if (t.kind == IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
           commonTokenActionSeen = t.image.equals ("CommonTokenAction");
 
@@ -582,10 +582,10 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       final StringBuilder tokenMgrDecls = new StringBuilder ();
       if (token_mgr_decls != null && token_mgr_decls.size () > 0)
       {
-        final Token t = (Token) token_mgr_decls.get (0);
+        final Token t = token_mgr_decls.get (0);
         for (int j = 0; j < token_mgr_decls.size (); j++)
         {
-          tokenMgrDecls.append (((Token) token_mgr_decls.get (j)).image + " ");
+          tokenMgrDecls.append (token_mgr_decls.get (j).image + " ");
         }
       }
       tokenizerData.setDecls (tokenMgrDecls.toString ());
@@ -698,10 +698,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
-    final String fileName = Options.getOutputDirectory () +
-                            File.separator +
-                            tokMgrClassName +
-                            getFileExtension (Options.getOutputLanguage ());
+    final String fileName = Options.getOutputDirectory () + File.separator + tokMgrClassName + getFileExtension ();
 
     if (Options.getBuildParser ())
     {
@@ -761,8 +758,8 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         JavaCCErrors.warning (rexprs[initMatch[i]],
                               "Regular expression" +
                                                     ((rexprs[initMatch[i]].m_label.equals ("")) ? ""
-                                                                                              : (" for " +
-                                                                                                 rexprs[initMatch[i]].m_label)) +
+                                                                                                : (" for " +
+                                                                                                   rexprs[initMatch[i]].m_label)) +
                                                     " can be matched by the empty string (\"\") in lexical state " +
                                                     lexStateName[i] +
                                                     ". This can result in an endless loop of " +
@@ -772,8 +769,8 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         JavaCCErrors.warning (rexprs[initMatch[i]],
                               "Regular expression" +
                                                     ((rexprs[initMatch[i]].m_label.equals ("")) ? ""
-                                                                                              : (" for " +
-                                                                                                 rexprs[initMatch[i]].m_label)) +
+                                                                                                : (" for " +
+                                                                                                   rexprs[initMatch[i]].m_label)) +
                                                     " can be matched by the empty string (\"\") in lexical state " +
                                                     lexStateName[i] +
                                                     ". This regular expression along with the " +
@@ -1432,7 +1429,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         }
 
         printTokenSetup (act.getActionTokens ().get (0));
-        ccol = 1;
+        m_ccol = 1;
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
@@ -1508,7 +1505,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
         genCodeLine ("         jjimageLen = 0;");
         printTokenSetup (act.getActionTokens ().get (0));
-        ccol = 1;
+        m_ccol = 1;
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
@@ -1595,7 +1592,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         }
 
         printTokenSetup (act.getActionTokens ().get (0));
-        ccol = 1;
+        m_ccol = 1;
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
@@ -1661,5 +1658,4 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     tokenizerData = new TokenizerData ();
     generateDataOnly = false;
   }
-
 }

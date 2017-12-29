@@ -268,6 +268,7 @@ public class OutputFileGenerator
         }
     }
 
+    // Important to flush at the end!
     out.flush ();
   }
 

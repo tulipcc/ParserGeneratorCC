@@ -34,43 +34,40 @@ public class ASTOptionBinding extends JJTreeNode
     super (id);
   }
 
-  private boolean suppressed = false;
-  private String name;
+  private boolean m_suppressed = false;
+  private String m_name;
 
   void initialize (final String n, final String v)
   {
-    name = n;
+    m_name = n;
 
     // If an option is specific to JJTree it should not be written out
     // to the output file for JavaCC.
 
-    if (JJTreeGlobals.isOptionJJTreeOnly (name))
+    if (JJTreeGlobals.isOptionJJTreeOnly (m_name))
     {
-      suppressed = true;
+      m_suppressed = true;
     }
   }
 
   boolean isSuppressed ()
   {
-    return suppressed;
+    return m_suppressed;
   }
 
-  void suppressOption (final boolean s)
+  void suppressOption (final boolean bSuppressed)
   {
-    suppressed = s;
+    m_suppressed = bSuppressed;
   }
 
   @Override
   String translateImage (final Token t)
   {
-    if (suppressed)
+    if (m_suppressed)
     {
       return whiteOut (t);
     }
-    else
-    {
-      return t.image;
-    }
+    return t.image;
   }
 
   /** Accept the visitor. **/
@@ -80,5 +77,3 @@ public class ASTOptionBinding extends JJTreeNode
     return visitor.visit (this, data);
   }
 }
-
-/* end */

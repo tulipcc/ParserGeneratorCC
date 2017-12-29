@@ -163,7 +163,7 @@ public class JavaCCGlobals
    * defined with a label). The index to the table is the image of the label and
    * the contents of the table are of type "RegularExpression".
    */
-  public static Map named_tokens_table = new HashMap ();
+  public static Map <String, RegularExpression> named_tokens_table = new HashMap <> ();
 
   /**
    * Contains the same entries as "named_tokens_table", but this is an ordered
@@ -261,9 +261,9 @@ public class JavaCCGlobals
     return false;
   }
 
-  private static List <String> makeToolNameList (final String str)
+  private static List <String> _makeToolNameList (final String str)
   {
-    final List retVal = new ArrayList ();
+    final List <String> retVal = new ArrayList <> ();
 
     int limit1 = str.indexOf ('\n');
     if (limit1 == -1)
@@ -314,40 +314,29 @@ public class JavaCCGlobals
   public static List <String> getToolNames (final String fileName)
   {
     final char [] buf = new char [256];
-    FileReader stream = null;
-    int read, total = 0;
+    int total = 0;
 
-    try
+    try (final FileReader stream = new FileReader (fileName))
     {
-      stream = new FileReader (fileName);
-
-      for (;;)
+      int read;
+      while (true)
         if ((read = stream.read (buf, total, buf.length - total)) != -1)
         {
-          if ((total += read) == buf.length)
+          total += read;
+          if (total == buf.length)
             break;
         }
         else
           break;
 
-      return makeToolNameList (new String (buf, 0, total));
+      return _makeToolNameList (new String (buf, 0, total));
     }
     catch (final FileNotFoundException e1)
     {}
     catch (final IOException e2)
     {
       if (total > 0)
-        return makeToolNameList (new String (buf, 0, total));
-    }
-    finally
-    {
-      if (stream != null)
-        try
-        {
-          stream.close ();
-        }
-        catch (final Exception e3)
-        {}
+        return _makeToolNameList (new String (buf, 0, total));
     }
 
     return new ArrayList <> ();
@@ -541,7 +530,7 @@ public class JavaCCGlobals
     }
 
     if (t != null)
-      printTrailingComments (t, ostr);
+      printTrailingComments (t);
   }
 
   protected static void printLeadingComments (final Token t, final PrintWriter ostr)
@@ -562,13 +551,6 @@ public class JavaCCGlobals
       cline++;
       ccol = 1;
     }
-  }
-
-  protected static void printTrailingComments (final Token t, final PrintWriter ostr)
-  {
-    if (t.next == null)
-      return;
-    printLeadingComments (t.next);
   }
 
   protected static String printTokenOnly (final Token t)
@@ -676,7 +658,7 @@ public class JavaCCGlobals
     nextStateForEof = null;
   }
 
-  static String getFileExtension (final String language)
+  static String getFileExtension ()
   {
     switch (Options.getOutputLanguageType ())
     {
@@ -685,7 +667,28 @@ public class JavaCCGlobals
       case CPP:
         return ".cc";
       default:
-        throw new IllegalStateException ("Unsupported type: " + Options.getOutputLanguageType ());
+        throw new UnsupportedLanguageException (Options.getOutputLanguageType ());
     }
+  }
+
+  /**
+   * Replaces all backslahes with double backslashes.
+   */
+  static String replaceBackslash (final String str)
+  {
+    if (str.indexOf ('\\') < 0)
+    {
+      // No backslash found.
+      return str;
+    }
+
+    final StringBuilder b = new StringBuilder (str.length () * 2);
+    for (final char c : str.toCharArray ())
+      if (c == '\\')
+        b.append ("\\\\");
+      else
+        b.append (c);
+
+    return b.toString ();
   }
 }

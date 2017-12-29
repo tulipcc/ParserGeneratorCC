@@ -12,7 +12,6 @@ package com.helger.pgcc.parser;
 
 public class Token
 {
-
   /**
    * An integer that describes the kind of this token. This numbering system is
    * determined by JavaCCParser, and a table of these numbers is stored in the
@@ -55,18 +54,6 @@ public class Token
    * regular token). If there is no such token, this field is null.
    */
   public Token specialToken;
-
-  /**
-   * An optional attribute value of the Token. Tokens which are not used as
-   * syntactic sugar will often contain meaningful values that will be used
-   * later on by the compiler or interpreter. This attribute value is often
-   * different from the image. Any subclass of Token that actually wants to
-   * return a non-null value can override this method as appropriate.
-   */
-  public Object getValue ()
-  {
-    return null;
-  }
 
   /**
    * No-argument contructor
@@ -122,6 +109,18 @@ public class Token
   public String toString ()
   {
     return image;
+  }
+
+  /**
+   * An optional attribute value of the Token. Tokens which are not used as
+   * syntactic sugar will often contain meaningful values that will be used
+   * later on by the compiler or interpreter. This attribute value is often
+   * different from the image. Any subclass of Token that actually wants to
+   * return a non-null value can override this method as appropriate.
+   */
+  public Object getValue ()
+  {
+    return null;
   }
 
   /**

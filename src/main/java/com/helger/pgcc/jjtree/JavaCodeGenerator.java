@@ -410,7 +410,6 @@ public class JavaCodeGenerator extends DefaultJJTreeVisitor
     }
     if (JJTreeOptions.getNodeScopeHook ())
     {
-      final int i = closeNode.lastIndexOf (",");
       io.println (indent + "if (jjtree.nodeCreated()) {");
       io.println (indent + " jjtreeCloseNodeScope(" + ns.nodeVar + ");");
       io.println (indent + "}");
@@ -511,7 +510,7 @@ public class JavaCodeGenerator extends DefaultJJTreeVisitor
        * Should really make the nonterminal explicitly maintain its name.
        */
       final String nt = expansion_unit.getFirstToken ().image;
-      final ASTProduction prod = (ASTProduction) JJTreeGlobals.productions.get (nt);
+      final ASTProduction prod = JJTreeGlobals.productions.get (nt);
       if (prod != null)
       {
         for (final String t : prod.throws_list)

@@ -176,32 +176,6 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
   public static final JavaResourceTemplateLocations RESOURCES_JAVA_MODERN = new JavaModernResourceTemplateLocationImpl ();
 
   /**
-   * Replaces all backslahes with double backslashes.
-   */
-  static String replaceBackslash (final String str)
-  {
-    StringBuilder b;
-    int i = 0;
-    final int len = str.length ();
-
-    while (i < len && str.charAt (i++) != '\\')
-      ;
-
-    if (i == len) // No backslash found.
-      return str;
-
-    char c;
-    b = new StringBuilder ();
-    for (i = 0; i < len; i++)
-      if ((c = str.charAt (i)) == '\\')
-        b.append ("\\\\");
-      else
-        b.append (c);
-
-    return b.toString ();
-  }
-
-  /**
    * Read the version from the comment in the specified file. This method does
    * not try to recover from invalid comment syntax, but rather returns version
    * 0.0 (which will always be taken to mean the file is out of date).
@@ -230,10 +204,8 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
       }
     }
 
-    BufferedReader reader = null;
-    try
+    try (final BufferedReader reader = new BufferedReader (new FileReader (file)))
     {
-      reader = new BufferedReader (new FileReader (file));
       String str;
       double version = 0.0;
 
@@ -268,18 +240,6 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
     catch (final IOException ioe)
     {
       return 0.0;
-    }
-    finally
-    {
-      if (reader != null)
-      {
-        try
-        {
-          reader.close ();
-        }
-        catch (final IOException e)
-        {}
-      }
     }
   }
 
@@ -351,36 +311,35 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
         return;
       }
 
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-
-      if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+      try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
           {
-            cline = (cu_to_insertion_point_1.get (0)).beginLine;
-            ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
-            for (int j = 0; j <= i; j++)
+            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              cline = (cu_to_insertion_point_1.get (0)).beginLine;
+              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              for (int j = 0; j <= i; j++)
+              {
+                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              }
+              ostr.println ("");
+              ostr.println ("");
+              break;
             }
-            ostr.println ("");
-            ostr.println ("");
-            break;
           }
         }
+        final String prefix = (Options.getStatic () ? "static " : "");
+        final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+        options.put ("PREFIX", prefix);
+
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getSimpleCharStreamTemplateResourceUrl (),
+                                                                       options);
+
+        generator.generate (ostr);
       }
-      final String prefix = (Options.getStatic () ? "static " : "");
-      final Map options = new HashMap (Options.getOptions ());
-      options.put ("PREFIX", prefix);
-
-      final OutputFileGenerator generator = new OutputFileGenerator (locations.getSimpleCharStreamTemplateResourceUrl (),
-                                                                     options);
-
-      generator.generate (ostr);
-
-      ostr.close ();
     }
     catch (final IOException e)
     {
@@ -405,33 +364,32 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
         return;
       }
 
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-
-      if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+      try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
           {
-            cline = (cu_to_insertion_point_1.get (0)).beginLine;
-            ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
-            for (int j = 0; j <= i; j++)
+            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              cline = (cu_to_insertion_point_1.get (0)).beginLine;
+              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              for (int j = 0; j <= i; j++)
+              {
+                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              }
+              ostr.println ("");
+              ostr.println ("");
+              break;
             }
-            ostr.println ("");
-            ostr.println ("");
-            break;
           }
         }
+
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (),
+                                                                       Options.getOptions ());
+
+        generator.generate (ostr);
       }
-
-      final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (),
-                                                                     Options.getOptions ());
-
-      generator.generate (ostr);
-
-      ostr.close ();
     }
     catch (final IOException e)
     {
@@ -475,32 +433,31 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
         return;
       }
 
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-
-      if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+      try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
           {
-            cline = (cu_to_insertion_point_1.get (0)).beginLine;
-            ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
-            for (int j = 0; j <= i; j++)
+            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              cline = (cu_to_insertion_point_1.get (0)).beginLine;
+              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              for (int j = 0; j <= i; j++)
+              {
+                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              }
+              ostr.println ("");
+              ostr.println ("");
+              break;
             }
-            ostr.println ("");
-            ostr.println ("");
-            break;
           }
         }
+
+        final OutputFileGenerator generator = new OutputFileGenerator (templatePath, Options.getOptions ());
+
+        generator.generate (ostr);
       }
-
-      final OutputFileGenerator generator = new OutputFileGenerator (templatePath, Options.getOptions ());
-
-      generator.generate (ostr);
-
-      ostr.close ();
     }
     catch (final IOException e)
     {
@@ -535,33 +492,32 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
         return;
       }
 
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-
-      if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+      try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
           {
-            cline = (cu_to_insertion_point_1.get (0)).beginLine;
-            ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
-            for (int j = 0; j <= i; j++)
+            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              cline = (cu_to_insertion_point_1.get (0)).beginLine;
+              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              for (int j = 0; j <= i; j++)
+              {
+                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              }
+              ostr.println ("");
+              ostr.println ("");
+              break;
             }
-            ostr.println ("");
-            ostr.println ("");
-            break;
           }
         }
+
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getParseExceptionTemplateResourceUrl (),
+                                                                       Options.getOptions ());
+
+        generator.generate (ostr);
       }
-
-      final OutputFileGenerator generator = new OutputFileGenerator (locations.getParseExceptionTemplateResourceUrl (),
-                                                                     Options.getOptions ());
-
-      generator.generate (ostr);
-
-      ostr.close ();
     }
     catch (final IOException e)
     {
@@ -587,34 +543,32 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
         return;
       }
 
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-
-      if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+      try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
           {
-            cline = (cu_to_insertion_point_1.get (0)).beginLine;
-            ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
-            for (int j = 0; j <= i; j++)
+            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              cline = (cu_to_insertion_point_1.get (0)).beginLine;
+              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              for (int j = 0; j <= i; j++)
+              {
+                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+              }
+              ostr.println ("");
+              ostr.println ("");
+              break;
             }
-            ostr.println ("");
-            ostr.println ("");
-            break;
           }
         }
+
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenMgrErrorTemplateResourceUrl (),
+                                                                       Options.getOptions ());
+
+        generator.generate (ostr);
       }
-
-      final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenMgrErrorTemplateResourceUrl (),
-                                                                     Options.getOptions ());
-
-      generator.generate (ostr);
-
-      ostr.close ();
-
     }
     catch (final IOException e)
     {

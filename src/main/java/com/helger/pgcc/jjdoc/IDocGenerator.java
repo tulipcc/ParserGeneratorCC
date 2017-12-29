@@ -28,6 +28,7 @@
 
 package com.helger.pgcc.jjdoc;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.pgcc.parser.CppCodeProduction;
 import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.JavaCodeProduction;
@@ -44,7 +45,6 @@ import com.helger.pgcc.parser.TokenProduction;
  */
 public interface IDocGenerator
 {
-
   /**
    * Output string with entity substitution for brackets and ampersands.
    *
@@ -228,4 +228,15 @@ public interface IDocGenerator
    *        the string to log
    */
   void error (String message);
+
+  /**
+   * Dummy method to ensure parameters are used...
+   *
+   * @param o
+   *        anything
+   */
+  default void doNothing (final Object o)
+  {
+    ValueEnforcer.notNull (o, "any");
+  }
 }

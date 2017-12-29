@@ -35,11 +35,11 @@ import static com.helger.pgcc.parser.JavaCCGlobals.actForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.lexstate_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.nextStateForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.rexprlist;
-import static com.helger.pgcc.parser.JavaCCGlobals.token_mgr_decls;
-import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
+import static com.helger.pgcc.parser.JavaCCGlobals.token_mgr_decls;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ import java.util.List;
  * Generate lexer.
  */
 public class LexGenCPP extends LexGenJava // CodeGenerator implements
-                                      // JavaCCParserConstants
+// JavaCCParserConstants
 {
   @Override
   void PrintClassHead ()
@@ -113,17 +113,17 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
     if (token_mgr_decls != null && token_mgr_decls.size () > 0)
     {
-      Token t = (Token) token_mgr_decls.get (0);
+      Token t = token_mgr_decls.get (0);
       boolean commonTokenActionSeen = false;
       final boolean commonTokenActionNeeded = Options.getCommonTokenAction ();
 
-      printTokenSetup ((Token) token_mgr_decls.get (0));
-      ccol = 1;
+      printTokenSetup (token_mgr_decls.get (0));
+      m_ccol = 1;
 
       switchToMainFile ();
       for (j = 0; j < token_mgr_decls.size (); j++)
       {
-        t = (Token) token_mgr_decls.get (j);
+        t = token_mgr_decls.get (j);
         if (t.kind == IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
         {
           commonTokenActionSeen = t.image.equals ("CommonTokenAction");
@@ -527,10 +527,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
     switchToStaticsFile ();
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
-    final String fileName = Options.getOutputDirectory () +
-                            File.separator +
-                            tokMgrClassName +
-                            getFileExtension (Options.getOutputLanguage ());
+    final String fileName = Options.getOutputDirectory () + File.separator + tokMgrClassName + getFileExtension ();
     saveOutput (fileName);
   }
 
@@ -1170,7 +1167,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
         }
 
         printTokenSetup (act.getActionTokens ().get (0));
-        ccol = 1;
+        m_ccol = 1;
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
@@ -1241,7 +1238,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
         genCodeLine ("         jjimageLen = 0;");
         printTokenSetup (act.getActionTokens ().get (0));
-        ccol = 1;
+        m_ccol = 1;
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
@@ -1325,7 +1322,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
         }
 
         printTokenSetup (act.getActionTokens ().get (0));
-        ccol = 1;
+        m_ccol = 1;
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));

@@ -1408,14 +1408,14 @@ void complex_regular_expression_choices(Container c1) :
   ( "|" complex_regular_expression(c2)
 	{
 	  if (morethanone) {
-	    ch.getChoices().add((Expansion)c2.member);
+	    ch.getChoices().add((RegularExpression)c2.member);
 	  } else {
 	    morethanone = true;
 	    ch = new RChoice();
 	    ch.setLine(((RegularExpression)c1.member).getLine());
 	    ch.setColumn(((RegularExpression)c1.member).getColumn());
-	    ch.getChoices().add((Expansion)c1.member);
-	    ch.getChoices().add((Expansion)c2.member);
+	    ch.getChoices().add((RegularExpression)c1.member);
+	    ch.getChoices().add((RegularExpression)c2.member);
 	  }
 	}
   )*

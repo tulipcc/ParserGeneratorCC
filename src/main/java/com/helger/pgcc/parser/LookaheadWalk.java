@@ -78,7 +78,7 @@ public final class LookaheadWalk
       if (exp instanceof NonTerminal)
       {
         final NormalProduction prod = ((NonTerminal) exp).getProd ();
-        if (prod instanceof CodeProduction)
+        if (prod instanceof AbstractCodeProduction)
         {
           return new ArrayList <> ();
         }
@@ -91,7 +91,7 @@ public final class LookaheadWalk
           final Choice ch = (Choice) exp;
           for (int i = 0; i < ch.getChoices ().size (); i++)
           {
-            final List <MatchInfo> v = genFirstSet (partialMatches, (Expansion) ch.getChoices ().get (i));
+            final List <MatchInfo> v = genFirstSet (partialMatches, ch.getChoices ().get (i));
             listAppend (retval, v);
           }
           return retval;
@@ -103,7 +103,7 @@ public final class LookaheadWalk
             final Sequence seq = (Sequence) exp;
             for (int i = 0; i < seq.m_units.size (); i++)
             {
-              v = genFirstSet (v, (Expansion) seq.m_units.get (i));
+              v = genFirstSet (v, seq.m_units.get (i));
               if (v.size () == 0)
                 break;
             }
@@ -168,7 +168,10 @@ public final class LookaheadWalk
                     }
   }
 
-  private static void listSplit (final List <MatchInfo> toSplit, final List <MatchInfo> mask, final List <MatchInfo> partInMask, final List <MatchInfo> rest)
+  private static void listSplit (final List <MatchInfo> toSplit,
+                                 final List <MatchInfo> mask,
+                                 final List <MatchInfo> partInMask,
+                                 final List <MatchInfo> rest)
   {
     OuterLoop: for (int i = 0; i < toSplit.size (); i++)
     {
@@ -204,12 +207,12 @@ public final class LookaheadWalk
 
       if (exp.m_parent instanceof NormalProduction)
       {
-        final List parents = ((NormalProduction) exp.m_parent).getParents ();
+        final List <Expansion> parents = ((NormalProduction) exp.m_parent).getParents ();
         final List <MatchInfo> retval = new ArrayList <> ();
         // System.out.println("1; gen: " + generation + "; exp: " + exp);
         for (int i = 0; i < parents.size (); i++)
         {
-          final List <MatchInfo> v = genFollowSet (partialMatches, (Expansion) parents.get (i), generation);
+          final List <MatchInfo> v = genFollowSet (partialMatches, parents.get (i), generation);
           listAppend (retval, v);
         }
         return retval;
@@ -222,7 +225,7 @@ public final class LookaheadWalk
           List <MatchInfo> v = partialMatches;
           for (int i = exp.m_ordinal + 1; i < seq.m_units.size (); i++)
           {
-            v = genFirstSet (v, (Expansion) seq.m_units.get (i));
+            v = genFirstSet (v, seq.m_units.get (i));
             if (v.size () == 0)
               return v;
           }

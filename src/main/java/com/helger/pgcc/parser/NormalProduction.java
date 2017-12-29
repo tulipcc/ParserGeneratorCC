@@ -51,7 +51,7 @@ public class NormalProduction
   /**
    * The NonTerminal nodes which refer to this production.
    */
-  private List <? super Expansion> m_parents = new ArrayList <> ();
+  private List <Expansion> m_parents = new ArrayList <> ();
 
   /**
    * The access modifier of this production.
@@ -188,7 +188,7 @@ public class NormalProduction
    * @param parents
    *        the parents to set
    */
-  void setParents (final List <? super Expansion> parents)
+  void setParents (final List <Expansion> parents)
   {
     this.m_parents = parents;
   }
@@ -196,7 +196,7 @@ public class NormalProduction
   /**
    * @return the parents
    */
-  List <? super Expansion> getParents ()
+  List <Expansion> getParents ()
   {
     return m_parents;
   }
