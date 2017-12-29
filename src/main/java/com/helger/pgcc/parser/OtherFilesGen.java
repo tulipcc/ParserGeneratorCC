@@ -30,6 +30,11 @@
  */
 package com.helger.pgcc.parser;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,12 +45,11 @@ import com.helger.pgcc.parser.JavaFiles.JavaResourceTemplateLocations;
  */
 public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstants
 {
-
   private static final String CONSTANTS_FILENAME_SUFFIX = "Constants.java";
+  private static PrintWriter ostr;
 
-  static public void start (final boolean isJavaModern) throws MetaParseException
+  public static void start (final boolean isJavaModern) throws MetaParseException
   {
-
     final JavaResourceTemplateLocations templateLoc = isJavaModern ? JavaFiles.RESOURCES_JAVA_MODERN
                                                                    : JavaFiles.RESOURCES_JAVA_CLASSIC;
 
@@ -102,12 +106,11 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
 
     try
     {
-      ostr = new java.io.PrintWriter (new java.io.BufferedWriter (new java.io.FileWriter (new java.io.File (Options.getOutputDirectory (),
-                                                                                                            cu_name +
-                                                                                                                                           CONSTANTS_FILENAME_SUFFIX)),
-                                                                  8192));
+      ostr = new PrintWriter (new BufferedWriter (new FileWriter (new File (Options.getOutputDirectory (),
+                                                                            cu_name + CONSTANTS_FILENAME_SUFFIX)),
+                                                  8192));
     }
-    catch (final java.io.IOException e)
+    catch (final IOException e)
     {
       JavaCCErrors.semantic_error ("Could not open file " + cu_name + "Constants.java for writing.");
       throw new Error ();
@@ -161,10 +164,10 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
     ostr.println ("");
     if (!Options.getUserTokenManager () && Options.getBuildTokenManager ())
     {
-      for (int i = 0; i < LexGen.lexStateName.length; i++)
+      for (int i = 0; i < LexGenJava.lexStateName.length; i++)
       {
         ostr.println ("  /** Lexical state. */");
-        ostr.println ("  int " + LexGen.lexStateName[i] + " = " + i + ";");
+        ostr.println ("  int " + LexGenJava.lexStateName[i] + " = " + i + ";");
       }
       ostr.println ("");
     }
@@ -183,7 +186,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
         ostr.print ("    ");
         if (re instanceof RStringLiteral)
         {
-          ostr.println ("\"\\\"" + add_escapes (add_escapes (((RStringLiteral) re).image)) + "\\\"\",");
+          ostr.println ("\"\\\"" + add_escapes (add_escapes (((RStringLiteral) re).m_image)) + "\\\"\",");
         }
         else
           if (!re.label.equals (""))
@@ -206,14 +209,10 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
     ostr.println ("}");
 
     ostr.close ();
-
   }
-
-  static private java.io.PrintWriter ostr;
 
   public static void reInit ()
   {
     ostr = null;
   }
-
 }

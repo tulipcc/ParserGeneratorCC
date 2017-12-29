@@ -31,17 +31,15 @@
 package com.helger.pgcc.jjtree;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ASTNodeDescriptor extends JJTreeNode
 {
-  ASTNodeDescriptor (final int id)
-  {
-    super (id);
-  }
-
-  private boolean faked = false;
+  static List <String> nodeIds = new ArrayList <> ();
+  static List <String> nodeNames = new ArrayList <> ();
+  static Map <String, String> nodeSeen = new HashMap <> ();
 
   static ASTNodeDescriptor indefinite (final String s)
   {
@@ -52,10 +50,6 @@ public class ASTNodeDescriptor extends JJTreeNode
     return nd;
   }
 
-  static List <String> nodeIds = new ArrayList <> ();
-  static List <String> nodeNames = new ArrayList <> ();
-  static Hashtable <String, String> nodeSeen = new Hashtable <> ();
-
   static List <String> getNodeIds ()
   {
     return nodeIds;
@@ -64,6 +58,16 @@ public class ASTNodeDescriptor extends JJTreeNode
   static List <String> getNodeNames ()
   {
     return nodeNames;
+  }
+
+  private boolean faked = false;
+  String name;
+  boolean m_isGT;
+  ASTNodeDescriptorExpression expression;
+
+  ASTNodeDescriptor (final int id)
+  {
+    super (id);
   }
 
   void setNodeIdValue ()
@@ -82,10 +86,6 @@ public class ASTNodeDescriptor extends JJTreeNode
     return "JJT" + name.toUpperCase ().replace ('.', '_');
   }
 
-  String name;
-  boolean isGT;
-  ASTNodeDescriptorExpression expression;
-
   boolean isVoid ()
   {
     return name.equals ("void");
@@ -95,13 +95,8 @@ public class ASTNodeDescriptor extends JJTreeNode
   public String toString ()
   {
     if (faked)
-    {
       return "(faked) " + name;
-    }
-    else
-    {
-      return super.toString () + ": " + name;
-    }
+    return super.toString () + ": " + name;
   }
 
   String getDescriptor ()
@@ -110,10 +105,7 @@ public class ASTNodeDescriptor extends JJTreeNode
     {
       return name;
     }
-    else
-    {
-      return "#" + name + "(" + (isGT ? ">" : "") + expression_text () + ")";
-    }
+    return "#" + name + "(" + (m_isGT ? ">" : "") + expression_text () + ")";
   }
 
   String getNodeType ()
@@ -166,7 +158,7 @@ public class ASTNodeDescriptor extends JJTreeNode
       return "jjtree.closeNodeScope(" + nodeVar + ", true);";
     }
     else
-      if (isGT)
+      if (m_isGT)
       {
         return "jjtree.closeNodeScope(" + nodeVar + ", jjtree.nodeArity() >" + expression_text () + ");";
       }

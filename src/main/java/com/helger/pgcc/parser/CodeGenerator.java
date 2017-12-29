@@ -7,23 +7,25 @@ import static com.helger.pgcc.parser.JavaCCGlobals.addUnicodeEscapes;
 import static com.helger.pgcc.parser.JavaCCGlobals.cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.jjtreeGenerated;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
+import com.helger.commons.io.stream.NonBlockingBufferedWriter;
+import com.helger.pgcc.parser.Options.ELanguage;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 public class CodeGenerator
 {
-  protected StringBuilder mainBuffer = new StringBuilder ();
-  protected StringBuilder includeBuffer = new StringBuilder ();
-  protected StringBuilder staticsBuffer = new StringBuilder ();
-  protected StringBuilder outputBuffer = mainBuffer;
+  protected StringBuilder m_mainBuffer = new StringBuilder ();
+  protected StringBuilder m_includeBuffer = new StringBuilder ();
+  protected StringBuilder m_staticsBuffer = new StringBuilder ();
+  protected StringBuilder m_outputBuffer = m_mainBuffer;
 
   public void genStringLiteralArrayCPP (final String varName, final String [] arr)
   {
@@ -46,12 +48,12 @@ public class CodeGenerator
   public void genStringLiteralInCPP (final String s)
   {
     // String literals in CPP become char arrays
-    outputBuffer.append ("{");
-    for (int i = 0; i < s.length (); i++)
+    m_outputBuffer.append ("{");
+    for (final char c : s.toCharArray ())
     {
-      outputBuffer.append ("0x" + Integer.toHexString (s.charAt (i)) + ", ");
+      m_outputBuffer.append ("0x" + Integer.toHexString (c) + ", ");
     }
-    outputBuffer.append ("0}");
+    m_outputBuffer.append ("0}");
   }
 
   public void genCodeLine (final Object... code)
@@ -63,9 +65,7 @@ public class CodeGenerator
   public void genCode (final Object... code)
   {
     for (final Object s : code)
-    {
-      outputBuffer.append (s);
-    }
+      m_outputBuffer.append (s);
   }
 
   public void saveOutput (final String fileName)
@@ -74,34 +74,34 @@ public class CodeGenerator
     {
       final String incfilePath = fileName.replace (".cc", ".h");
       final String incfileName = new File (incfilePath).getName ();
-      includeBuffer.insert (0, "#define " + incfileName.replace ('.', '_').toUpperCase () + "\n");
-      includeBuffer.insert (0, "#ifndef " + incfileName.replace ('.', '_').toUpperCase () + "\n");
+      m_includeBuffer.insert (0, "#define " + incfileName.replace ('.', '_').toUpperCase () + "\n");
+      m_includeBuffer.insert (0, "#ifndef " + incfileName.replace ('.', '_').toUpperCase () + "\n");
 
       // dump the statics into the main file with the code.
-      mainBuffer.insert (0, staticsBuffer);
+      m_mainBuffer.insert (0, m_staticsBuffer);
 
       // Finally enclose the whole thing in the namespace, if specified.
       if (Options.stringValue (Options.USEROPTION__CPP_NAMESPACE).length () > 0)
       {
-        mainBuffer.insert (0, "namespace " + Options.stringValue ("NAMESPACE_OPEN") + "\n");
-        mainBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
-        includeBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
+        m_mainBuffer.insert (0, "namespace " + Options.stringValue ("NAMESPACE_OPEN") + "\n");
+        m_mainBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
+        m_includeBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
       }
 
       if (jjtreeGenerated)
       {
-        mainBuffer.insert (0, "#include \"SimpleNode.h\"\n");
+        m_mainBuffer.insert (0, "#include \"SimpleNode.h\"\n");
       }
       if (Options.getTokenManagerUsesParser ())
-        mainBuffer.insert (0, "#include \"" + cu_name + ".h\"\n");
-      mainBuffer.insert (0, "#include \"TokenMgrError.h\"\n");
-      mainBuffer.insert (0, "#include \"" + incfileName + "\"\n");
-      includeBuffer.append ("#endif\n");
-      saveOutput (incfilePath, includeBuffer);
+        m_mainBuffer.insert (0, "#include \"" + cu_name + ".h\"\n");
+      m_mainBuffer.insert (0, "#include \"TokenMgrError.h\"\n");
+      m_mainBuffer.insert (0, "#include \"" + incfileName + "\"\n");
+      m_includeBuffer.append ("#endif\n");
+      saveOutput (incfilePath, m_includeBuffer);
     }
 
-    mainBuffer.insert (0, "/* " + new File (fileName).getName () + " */\n");
-    saveOutput (fileName, mainBuffer);
+    m_mainBuffer.insert (0, "/* " + new File (fileName).getName () + " */\n");
+    saveOutput (fileName, m_mainBuffer);
   }
 
   private static boolean isHexDigit (final char c)
@@ -133,28 +133,18 @@ public class CodeGenerator
 
   public void saveOutput (final String fileName, final StringBuilder sb)
   {
-    PrintWriter fw = null;
     if (!isJavaLanguage ())
     {
       fixupLongLiterals (sb);
     }
-    try
+    final File tmp = new File (fileName);
+    try (final Writer fw = new NonBlockingBufferedWriter (new FileWriter (tmp)))
     {
-      final File tmp = new File (fileName);
-      fw = new PrintWriter (new BufferedWriter (new FileWriter (tmp), 8092));
-
-      fw.print (sb.toString ());
+      fw.write (sb.toString ());
     }
     catch (final IOException ioe)
     {
       JavaCCErrors.fatal ("Could not create output file: " + fileName);
-    }
-    finally
-    {
-      if (fw != null)
-      {
-        fw.close ();
-      }
     }
   }
 
@@ -275,7 +265,7 @@ public class CodeGenerator
 
   protected void printTrailingComments (final Token t)
   {
-    outputBuffer.append (getTrailingComments (t));
+    m_outputBuffer.append (getTrailingComments (t));
   }
 
   protected String getTrailingComments (final Token t)
@@ -290,7 +280,7 @@ public class CodeGenerator
    */
   public String getGeneratedCode ()
   {
-    return outputBuffer.toString () + "\n";
+    return m_outputBuffer.toString () + "\n";
   }
 
   /**
@@ -389,23 +379,28 @@ public class CodeGenerator
     }
   }
 
-  protected boolean isJavaLanguage ()
+  protected final boolean isJavaLanguage ()
   {
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
     return Options.isOutputLanguageJava ();
   }
 
+  protected static final ELanguage getLanguage ()
+  {
+    return Options.getOutputLanguageType ();
+  }
+
   public void switchToMainFile ()
   {
-    outputBuffer = mainBuffer;
+    m_outputBuffer = m_mainBuffer;
   }
 
   public void switchToStaticsFile ()
   {
     if (!isJavaLanguage ())
     {
-      outputBuffer = staticsBuffer;
+      m_outputBuffer = m_staticsBuffer;
     }
   }
 
@@ -413,7 +408,7 @@ public class CodeGenerator
   {
     if (!isJavaLanguage ())
     {
-      outputBuffer = includeBuffer;
+      m_outputBuffer = m_includeBuffer;
     }
   }
 
@@ -440,10 +435,10 @@ public class CodeGenerator
     }
     else
     {
-      includeBuffer.append (qualifiedModsAndRetType + " " + nameAndParams);
+      m_includeBuffer.append (qualifiedModsAndRetType + " " + nameAndParams);
       // if (exceptions != null)
       // includeBuffer.append(" throw(" + exceptions + ")");
-      includeBuffer.append (";\n");
+      m_includeBuffer.append (";\n");
 
       String modsAndRetType = null;
       int i = qualifiedModsAndRetType.lastIndexOf (':');
@@ -462,7 +457,7 @@ public class CodeGenerator
         if (i >= 0)
           qualifiedModsAndRetType = qualifiedModsAndRetType.substring (i + "virtual".length ());
       }
-      mainBuffer.append ("\n" + qualifiedModsAndRetType + " " + getClassQualifier (className) + nameAndParams);
+      m_mainBuffer.append ("\n" + qualifiedModsAndRetType + " " + getClassQualifier (className) + nameAndParams);
       // if (exceptions != null)
       // mainBuffer.append(" throw( " + exceptions + ")");
       switchToMainFile ();

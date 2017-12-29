@@ -54,7 +54,7 @@ import java.util.List;
 /**
  * Generate the parser.
  */
-public class ParseGen extends CodeGenerator implements JavaCCParserConstants
+public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
 {
 
   public void start (final boolean isJavaModernMode) throws MetaParseException
@@ -191,9 +191,9 @@ public class ParseGen extends CodeGenerator implements JavaCCParserConstants
         {
           genCodeLine ("	private static void jj_la1_init_" + i + "() {");
           genCode ("	   jj_la1_" + i + " = new int[] {");
-          for (final Iterator it = maskVals.iterator (); it.hasNext ();)
+          for (final Object aElement : maskVals)
           {
-            final int [] tokenMask = (int []) (it.next ());
+            final int [] tokenMask = (int []) (aElement);
             genCode ("0x" + Integer.toHexString (tokenMask[i]) + ",");
           }
           genCodeLine ("};");
@@ -859,15 +859,15 @@ public class ParseGen extends CodeGenerator implements JavaCCParserConstants
       }
       if (Options.getErrorReporting ())
       {
-        if (!Options.getGenerateGenerics ())
-        {
-          genCodeLine ("  " + staticOpt () + "private java.util.List jj_expentries = new java.util.ArrayList();");
-        }
-        else
+        if (Options.getGenerateGenerics ())
         {
           genCodeLine ("  " +
                        staticOpt () +
                        "private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();");
+        }
+        else
+        {
+          genCodeLine ("  " + staticOpt () + "private java.util.List jj_expentries = new java.util.ArrayList();");
         }
         genCodeLine ("  " + staticOpt () + "private int[] jj_expentry;");
         genCodeLine ("  " + staticOpt () + "private int jj_kind = -1;");
@@ -890,14 +890,14 @@ public class ParseGen extends CodeGenerator implements JavaCCParserConstants
           genCodeLine ("		 jj_expentry[i] = jj_lasttokens[i];");
           genCodeLine ("	   }");
           genCodeLine ("");
-          if (!Options.getGenerateGenerics ())
+          if (Options.getGenerateGenerics ())
           {
-            genCodeLine ("	   for (java.util.Iterator it = jj_expentries.iterator(); it.hasNext();) {");
-            genCodeLine ("		 int[] oldentry = (int[])(it.next());");
+            genCodeLine ("     for (final int[] oldentry : jj_expentries) {");
           }
           else
           {
-            genCodeLine ("	   for (int[] oldentry : jj_expentries) {");
+            genCodeLine ("	   for (final java.util.Iterator it = jj_expentries.iterator(); it.hasNext();) {");
+            genCodeLine ("		 int[] oldentry = (int[])(it.next());");
           }
 
           genCodeLine ("		 if (oldentry.length == jj_expentry.length) {");
@@ -911,14 +911,15 @@ public class ParseGen extends CodeGenerator implements JavaCCParserConstants
           genCodeLine ("");
           genCodeLine ("		   }");
           genCodeLine ("		   if (isMatched) {");
-          genCodeLine ("			 jj_expentries.add(jj_expentry);");
-          genCodeLine ("			 break;");
+          genCodeLine ("			   jj_expentries.add(jj_expentry);");
+          genCodeLine ("			   break;");
           genCodeLine ("		   }");
           genCodeLine ("		 }");
           genCodeLine ("	   }");
           genCodeLine ("");
           genCodeLine ("	   if (pos != 0) {");
-          genCodeLine ("		 jj_lasttokens[(jj_endpos = pos) - 1] = kind;");
+          genCodeLine ("       jj_endpos = pos;");
+          genCodeLine ("		   jj_lasttokens[jj_endpos - 1] = kind;");
           genCodeLine ("	   }");
           genCodeLine ("	 }");
           genCodeLine ("  }");
@@ -970,13 +971,13 @@ public class ParseGen extends CodeGenerator implements JavaCCParserConstants
         }
         genCodeLine ("	 int[][] exptokseq = new int[jj_expentries.size()][];");
         genCodeLine ("	 for (int i = 0; i < jj_expentries.size(); i++) {");
-        if (!Options.getGenerateGenerics ())
+        if (Options.getGenerateGenerics ())
         {
-          genCodeLine ("	   exptokseq[i] = (int[])jj_expentries.get(i);");
+          genCodeLine ("     exptokseq[i] = jj_expentries.get(i);");
         }
         else
         {
-          genCodeLine ("	   exptokseq[i] = jj_expentries.get(i);");
+          genCodeLine ("     exptokseq[i] = (int[])jj_expentries.get(i);");
         }
         genCodeLine ("	 }");
 

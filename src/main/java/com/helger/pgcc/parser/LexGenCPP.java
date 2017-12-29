@@ -52,7 +52,7 @@ import java.util.List;
 /**
  * Generate lexer.
  */
-public class LexGenCPP extends LexGen // CodeGenerator implements
+public class LexGenCPP extends LexGenJava // CodeGenerator implements
                                       // JavaCCParserConstants
 {
   @Override
@@ -334,7 +334,7 @@ public class LexGenCPP extends LexGen // CodeGenerator implements
             continue;
           }
 
-          if (curRE instanceof RStringLiteral && !((RStringLiteral) curRE).image.equals (""))
+          if (curRE instanceof RStringLiteral && !((RStringLiteral) curRE).m_image.equals (""))
           {
             ((RStringLiteral) curRE).GenerateDfa (this, curRE.ordinal);
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)

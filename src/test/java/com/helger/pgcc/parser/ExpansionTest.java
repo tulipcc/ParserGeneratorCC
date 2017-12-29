@@ -89,7 +89,7 @@ public final class ExpansionTest extends TestCase {
         RStringLiteral r = new RStringLiteral(t, "hey");
         assertEquals(t.beginColumn, r.getColumn());
         assertEquals(t.beginLine, r.getLine());
-        assertEquals("hey", r.image);
+        assertEquals("hey", r.m_image);
     }
 
     public void testChoiceConstructor() {

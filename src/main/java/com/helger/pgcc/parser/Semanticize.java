@@ -241,7 +241,7 @@ public class Semanticize extends JavaCCGlobals
           for (int i = 0; i < table.length; i++)
           {
             // Get table of all case variants of "sl.image" into table2.
-            Map <String, RegularExpression> table2 = table[i].get (sl.image.toUpperCase ());
+            Map <String, RegularExpression> table2 = table[i].get (sl.m_image.toUpperCase ());
             if (table2 == null)
             {
               // There are no case variants of "sl.image" earlier than the
@@ -252,11 +252,11 @@ public class Semanticize extends JavaCCGlobals
                 sl.ordinal = tokenCount++;
               }
               table2 = new HashMap <> ();
-              table2.put (sl.image, sl);
-              table[i].put (sl.image.toUpperCase (), table2);
+              table2.put (sl.m_image, sl);
+              table[i].put (sl.m_image.toUpperCase (), table2);
             }
             else
-              if (hasIgnoreCase (table2, sl.image))
+              if (hasIgnoreCase (table2, sl.m_image))
               { // hasIgnoreCase sets "other" if it is found.
                 // Since IGNORE_CASE version exists, current one is useless and
                 // bad.
@@ -265,7 +265,7 @@ public class Semanticize extends JavaCCGlobals
                   // inline BNF string is used earlier with an IGNORE_CASE.
                   JavaCCErrors.semantic_error (sl,
                                                "String \"" +
-                                                   sl.image +
+                                                   sl.m_image +
                                                    "\" can never be matched " +
                                                    "due to presence of more general (IGNORE_CASE) regular expression " +
                                                    "at line " +
@@ -279,7 +279,7 @@ public class Semanticize extends JavaCCGlobals
                   // give the standard error message.
                   JavaCCErrors.semantic_error (sl,
                                                "Duplicate definition of string token \"" +
-                                                   sl.image +
+                                                   sl.m_image +
                                                    "\" " +
                                                    "can never be matched.");
                 }
@@ -314,7 +314,7 @@ public class Semanticize extends JavaCCGlobals
                   {
                     sl.ordinal = tokenCount++;
                   }
-                  table2.put (sl.image, sl);
+                  table2.put (sl.m_image, sl);
                   // The above "put" may override an existing entry (that is not
                   // IGNORE_CASE) and that's
                   // the desired behavior.
@@ -322,14 +322,14 @@ public class Semanticize extends JavaCCGlobals
                 else
                 {
                   // The rest of the cases do not involve IGNORE_CASE.
-                  final RegularExpression re = table2.get (sl.image);
+                  final RegularExpression re = table2.get (sl.m_image);
                   if (re == null)
                   {
                     if (sl.ordinal == 0)
                     {
                       sl.ordinal = tokenCount++;
                     }
-                    table2.put (sl.image, sl);
+                    table2.put (sl.m_image, sl);
                   }
                   else
                     if (tp.isExplicit)
@@ -338,13 +338,13 @@ public class Semanticize extends JavaCCGlobals
                       // implicit.
                       if (tp.lexStates[i].equals ("DEFAULT"))
                       {
-                        JavaCCErrors.semantic_error (sl, "Duplicate definition of string token \"" + sl.image + "\".");
+                        JavaCCErrors.semantic_error (sl, "Duplicate definition of string token \"" + sl.m_image + "\".");
                       }
                       else
                       {
                         JavaCCErrors.semantic_error (sl,
                                                      "Duplicate definition of string token \"" +
-                                                         sl.image +
+                                                         sl.m_image +
                                                          "\" in lexical state \"" +
                                                          tp.lexStates[i] +
                                                          "\".");
@@ -355,7 +355,7 @@ public class Semanticize extends JavaCCGlobals
                       {
                         JavaCCErrors.semantic_error (sl,
                                                      "String token \"" +
-                                                         sl.image +
+                                                         sl.m_image +
                                                          "\" has been defined as a \"" +
                                                          TokenProduction.kindImage[re.tpContext.kind] +
                                                          "\" token.");
@@ -365,7 +365,7 @@ public class Semanticize extends JavaCCGlobals
                         {
                           JavaCCErrors.semantic_error (sl,
                                                        "String token \"" +
-                                                           sl.image +
+                                                           sl.m_image +
                                                            "\" has been defined as a private regular expression.");
                         }
                         else

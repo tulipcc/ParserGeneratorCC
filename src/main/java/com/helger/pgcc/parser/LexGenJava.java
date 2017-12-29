@@ -60,7 +60,7 @@ import com.helger.pgcc.utils.OutputFileGenerator;
 /**
  * Generate lexer.
  */
-public class LexGen extends CodeGenerator implements JavaCCParserConstants
+public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 {
   private static final String DUMP_STATIC_VAR_DECLARATIONS_TEMPLATE_RESOURCE_URL = "/templates/DumpStaticVarDeclarations.template";
   private static final String DUMP_DEBUG_METHODS_TEMPLATE_RESOURCE_URL = "/templates/DumpDebugMethods.template";
@@ -435,7 +435,7 @@ public class LexGen extends CodeGenerator implements JavaCCParserConstants
             continue;
           }
 
-          if (!Options.getNoDfa () && curRE instanceof RStringLiteral && !((RStringLiteral) curRE).image.equals (""))
+          if (!Options.getNoDfa () && curRE instanceof RStringLiteral && !((RStringLiteral) curRE).m_image.equals (""))
           {
             ((RStringLiteral) curRE).GenerateDfa (this, curRE.ordinal);
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)

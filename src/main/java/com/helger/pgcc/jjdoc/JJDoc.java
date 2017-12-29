@@ -491,7 +491,7 @@ public class JJDoc extends JJDocGlobals
                 if (re instanceof RStringLiteral)
                 {
                   final RStringLiteral sl = (RStringLiteral) re;
-                  returnString += ("\"" + JavaCCGlobals.add_escapes (sl.image) + "\"");
+                  returnString += ("\"" + JavaCCGlobals.add_escapes (sl.m_image) + "\"");
                 }
                 else
                   if (re instanceof RZeroOrMore)

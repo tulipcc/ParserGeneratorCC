@@ -8,7 +8,7 @@ import com.helger.pgcc.JavaCCTestCase;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.JavaCCParser;
-import com.helger.pgcc.parser.LexGen;
+import com.helger.pgcc.parser.LexGenJava;
 import com.helger.pgcc.parser.Main;
 import com.helger.pgcc.parser.NfaState;
 import com.helger.pgcc.parser.Options;
@@ -71,7 +71,7 @@ public class NfaStateTest extends JavaCCTestCase
       JavaCCGlobals.jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", parserInput);
       JavaCCGlobals.toolNames = JavaCCGlobals.getToolNames (parserInput);
       Semanticize.start ();
-      new LexGen ().start ();
+      new LexGenJava ().start ();
     }
     catch (final Exception ex)
     {

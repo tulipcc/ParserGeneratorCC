@@ -129,17 +129,15 @@ public class Options
 
   public static final String USEROPTION__CPP_TOKEN_INCLUDE = "TOKEN_INCLUDE";
   public static final String USEROPTION__CPP_PARSER_INCLUDE = "PARSER_INCLUDE";
+
   /**
    * Various constants relating to possible values for certain options
    */
 
-  public static final String OUTPUT_LANGUAGE__JAVA = "java";
-  public static final String OUTPUT_LANGUAGE__CPP = "c++";
-
   public static enum ELanguage implements IHasID <String>
   {
-    JAVA (OUTPUT_LANGUAGE__JAVA),
-    CPP (OUTPUT_LANGUAGE__CPP);
+    JAVA ("java"),
+    CPP ("c++");
 
     private final String m_sID;
 
@@ -155,12 +153,25 @@ public class Options
       return m_sID;
     }
 
+    public boolean isJava ()
+    {
+      return this == JAVA;
+    }
+
+    public boolean isCpp ()
+    {
+      return this == CPP;
+    }
+
     @Nullable
     public static ELanguage getFromIDCaseInsensitiveOrNull (@Nullable final String sID)
     {
       return EnumHelper.getFromIDCaseInsensitiveOrNull (ELanguage.class, sID);
     }
   }
+
+  @Deprecated
+  public static final String OUTPUT_LANGUAGE__CPP = ELanguage.CPP.getID ();
 
   public static ELanguage s_language = ELanguage.JAVA;
 
@@ -396,7 +407,7 @@ public class Options
   public static void setInputFileOption (final Object nameloc,
                                          final Object valueloc,
                                          @Nonnull final String name,
-                                         @Nonnull Object value)
+                                         @Nonnull final Object aSrcValue)
   {
     final String nameUpperCase = name.toUpperCase (Locale.US);
     if (!s_optionValues.containsKey (nameUpperCase))
@@ -406,7 +417,7 @@ public class Options
     }
     final Object existingValue = s_optionValues.get (nameUpperCase);
 
-    value = upgradeValue (name, value);
+    final Object value = upgradeValue (name, aSrcValue);
 
     if (existingValue != null)
     {
@@ -921,8 +932,7 @@ public class Options
    */
   public static boolean isLegacyExceptionHandling ()
   {
-    final boolean booleanValue = booleanValue (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING);
-    return booleanValue;
+    return booleanValue (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING);
   }
 
   /**
@@ -1034,15 +1044,15 @@ public class Options
   {
     // TODO :: CBA -- Require Unification of output language specific
     // processing into a single Enum class
-    if (isOutputLanguageJava () && getGenerateStringBuilder ())
+    switch (s_language)
     {
-      return getGenerateStringBuilder () ? "StringBuilder" : "StringBuffer";
+      case JAVA:
+        return getGenerateStringBuilder () ? "StringBuilder" : "StringBuffer";
+      case CPP:
+        return "StringBuffer";
+      default:
+        throw new IllegalStateException ("Output language type not fully implemented : " + s_language);
     }
-    if (getOutputLanguage ().equals (OUTPUT_LANGUAGE__CPP))
-    {
-      return "StringBuffer";
-    }
-    throw new RuntimeException ("Output language type not fully implemented : " + getOutputLanguage ());
   }
 
   private static final Set <String> s_supportedJavaTemplateTypes = new HashSet <> ();
@@ -1145,13 +1155,13 @@ public class Options
   @Deprecated
   public static boolean isOutputLanguageJava ()
   {
-    return getOutputLanguage ().equalsIgnoreCase (OUTPUT_LANGUAGE__JAVA);
+    return getOutputLanguageType ().isJava ();
   }
 
   @Deprecated
   public static boolean isOutputLanguageCpp ()
   {
-    return getOutputLanguage ().equalsIgnoreCase (OUTPUT_LANGUAGE__CPP);
+    return getOutputLanguageType ().isCpp ();
   }
 
   public static boolean isTokenManagerRequiresParserAccess ()

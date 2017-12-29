@@ -100,9 +100,9 @@ public class RChoice extends RegularExpression
       while (curRE instanceof RJustName)
         curRE = ((RJustName) curRE).regexpr;
 
-      if (curRE instanceof RStringLiteral && ((RStringLiteral) curRE).image.length () == 1)
+      if (curRE instanceof RStringLiteral && ((RStringLiteral) curRE).m_image.length () == 1)
       {
-        curRE = new RCharacterList (((RStringLiteral) curRE).image.charAt (0));
+        curRE = new RCharacterList (((RStringLiteral) curRE).m_image.charAt (0));
         getChoices ().set (i, curRE);
       }
 
@@ -159,7 +159,7 @@ public class RChoice extends RegularExpression
           // curRE instanceof RJustName &&
           curRE.ordinal > 0 &&
           curRE.ordinal < ordinal &&
-          LexGen.lexStates[curRE.ordinal] == LexGen.lexStates[ordinal])
+          LexGenJava.lexStates[curRE.ordinal] == LexGenJava.lexStates[ordinal])
       {
         if (label != null)
           JavaCCErrors.warning (this,

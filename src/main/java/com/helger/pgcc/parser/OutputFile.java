@@ -38,6 +38,8 @@ import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.annotation.WillCloseWhenClosed;
+
 import com.helger.pgcc.Version;
 
 /**
@@ -257,6 +259,7 @@ public class OutputFile
    * @return
    * @throws IOException
    */
+  @WillCloseWhenClosed
   public PrintWriter getPrintWriter () throws IOException
   {
     if (pw == null)

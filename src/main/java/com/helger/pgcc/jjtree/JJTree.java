@@ -32,7 +32,7 @@
 package com.helger.pgcc.jjtree;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
@@ -113,9 +113,9 @@ public class JJTree
   {
 
     // initialize static state for allowing repeat runs without exiting
-    ASTNodeDescriptor.nodeIds = new ArrayList ();
-    ASTNodeDescriptor.nodeNames = new ArrayList ();
-    ASTNodeDescriptor.nodeSeen = new Hashtable ();
+    ASTNodeDescriptor.nodeIds = new ArrayList <> ();
+    ASTNodeDescriptor.nodeNames = new ArrayList <> ();
+    ASTNodeDescriptor.nodeSeen = new HashMap <> ();
     com.helger.pgcc.parser.Main.reInitAll ();
 
     JavaCCGlobals.bannerLine ("Tree Builder", "");

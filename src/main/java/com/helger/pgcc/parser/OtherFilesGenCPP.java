@@ -120,10 +120,10 @@ public class OtherFilesGenCPP extends JavaCCGlobals implements JavaCCParserConst
 
     if (!Options.getUserTokenManager () && Options.getBuildTokenManager ())
     {
-      for (int i = 0; i < LexGen.lexStateName.length; i++)
+      for (int i = 0; i < LexGenJava.lexStateName.length; i++)
       {
         ostr.println ("  /** Lexical state. */");
-        ostr.println (constPrefix + "  int " + LexGen.lexStateName[i] + " = " + i + ";");
+        ostr.println (constPrefix + "  int " + LexGenJava.lexStateName[i] + " = " + i + ";");
       }
       ostr.println ("");
     }
@@ -142,7 +142,7 @@ public class OtherFilesGenCPP extends JavaCCGlobals implements JavaCCParserConst
         ostr.println ("  static const JJChar tokenImage_arr_" + ++cnt + "[] = ");
         if (re instanceof RStringLiteral)
         {
-          printCharArray (ostr, "\"" + ((RStringLiteral) re).image + "\"");
+          printCharArray (ostr, "\"" + ((RStringLiteral) re).m_image + "\"");
         }
         else
           if (!re.label.equals (""))

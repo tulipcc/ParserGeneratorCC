@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Generate the parser.
  */
-public class ParseGenCPP extends ParseGen
+public class ParseGenCPP extends ParseGenJava
 {
 
   @SuppressWarnings ("unchecked")

@@ -11,7 +11,7 @@ import java.util.Set;
 
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCParser;
-import com.helger.pgcc.parser.LexGen;
+import com.helger.pgcc.parser.LexGenJava;
 import com.helger.pgcc.parser.Main;
 import com.helger.pgcc.parser.MetaParseException;
 import com.helger.pgcc.parser.Options;
@@ -74,10 +74,10 @@ public class JavaCCInterpreter
       final JavaCCParser parser = new JavaCCParser (new StringReader (grammar));
       parser.javacc_input ();
       Semanticize.start ();
-      final LexGen lg = new LexGen ();
-      LexGen.generateDataOnly = true;
+      final LexGenJava lg = new LexGenJava ();
+      LexGenJava.generateDataOnly = true;
       lg.start ();
-      final TokenizerData td = LexGen.tokenizerData;
+      final TokenizerData td = LexGenJava.tokenizerData;
       if (JavaCCErrors.getErrorCount () == 0)
       {
         tokenize (td, input);

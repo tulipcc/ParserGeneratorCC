@@ -32,8 +32,9 @@ package com.helger.pgcc.parser;
 
 import java.util.Set;
 
-import com.helger.pgcc.utils.OptionInfo;
+import com.helger.pgcc.parser.Options.ELanguage;
 import com.helger.pgcc.utils.EOptionType;
+import com.helger.pgcc.utils.OptionInfo;
 
 /**
  * Entry point.
@@ -43,7 +44,7 @@ public class Main
   protected Main ()
   {}
 
-  public static LexGen lg;
+  public static LexGenJava lg;
 
   static void help_message ()
   {
@@ -262,29 +263,23 @@ public class Main
       // variable
       // to a lexer before the configuration override in the cc file had been
       // read.
-      final String outputLanguage = Options.getOutputLanguage ();
-      // TODO :: CBA -- Require Unification of output language specific
-      // processing into a single Enum class
-      final boolean isJavaOutput = Options.isOutputLanguageJava ();
-      final boolean isCPPOutput = outputLanguage.equals (Options.OUTPUT_LANGUAGE__CPP);
+      final ELanguage outputLanguage = Options.getOutputLanguageType ();
 
       // 2013/07/22 Java Modern is a
-      final boolean isJavaModern = isJavaOutput &&
+      final boolean isJavaModern = outputLanguage.isJava () &&
                                    Options.getJavaTemplateType ().equals (Options.JAVA_TEMPLATE_TYPE_MODERN);
 
-      if (isJavaOutput)
+      switch (outputLanguage)
       {
-        lg = new LexGen ();
-      }
-      else
-        if (isCPPOutput)
-        {
+        case JAVA:
+          lg = new LexGenJava ();
+          break;
+        case CPP:
           lg = new LexGenCPP ();
-        }
-        else
-        {
+          break;
+        default:
           return unhandledLanguageExit (outputLanguage);
-        }
+      }
 
       JavaCCGlobals.createOutputDir (Options.getOutputDirectory ());
 
@@ -303,22 +298,22 @@ public class Main
       // and have the enumerations describe the deltas between the outputs. The
       // current approach means that per-langauge configuration is distributed
       // and small changes between targets does not benefit from inheritance.
-      if (isJavaOutput)
+      switch (outputLanguage)
       {
-        if (isBuildParser)
-        {
-          new ParseGen ().start (isJavaModern);
-        }
+        case JAVA:
+          if (isBuildParser)
+          {
+            new ParseGenJava ().start (isJavaModern);
+          }
 
-        // Must always create the lexer object even if not building a parser.
-        new LexGen ().start ();
+          // Must always create the lexer object even if not building a parser.
+          new LexGenJava ().start ();
 
-        Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.cu_name);
-        OtherFilesGen.start (isJavaModern);
-      }
-      else
-        if (isCPPOutput)
-        { // C++ for now
+          Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.cu_name);
+          OtherFilesGen.start (isJavaModern);
+          break;
+        case CPP:
+          // C++ for now
           if (isBuildParser)
           {
             new ParseGenCPP ().start ();
@@ -329,20 +324,18 @@ public class Main
           }
           Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.cu_name);
           OtherFilesGenCPP.start ();
-        }
-        else
-        {
+          break;
+        default:
           unhandledLanguageExit (outputLanguage);
-        }
+          break;
+      }
 
       if ((JavaCCErrors.getErrorCount () == 0) && (isBuildParser || Options.getBuildTokenManager ()))
       {
         if (JavaCCErrors.getWarningCount () == 0)
         {
           if (isBuildParser)
-          {
             System.out.println ("Parser generated successfully.");
-          }
         }
         else
         {
@@ -350,15 +343,12 @@ public class Main
         }
         return 0;
       }
-      else
-      {
-        System.out.println ("Detected " +
-                            JavaCCErrors.getErrorCount () +
-                            " errors and " +
-                            JavaCCErrors.getWarningCount () +
-                            " warnings.");
-        return (JavaCCErrors.getErrorCount () == 0) ? 0 : 1;
-      }
+      System.out.println ("Detected " +
+                          JavaCCErrors.getErrorCount () +
+                          " errors and " +
+                          JavaCCErrors.getWarningCount () +
+                          " warnings.");
+      return (JavaCCErrors.getErrorCount () == 0) ? 0 : 1;
     }
     catch (final MetaParseException e)
     {
@@ -381,7 +371,7 @@ public class Main
     }
   }
 
-  private static int unhandledLanguageExit (final String outputLanguage)
+  private static int unhandledLanguageExit (final ELanguage outputLanguage)
   {
     System.out.println ("Invalid '" + Options.USEROPTION__OUTPUT_LANGUAGE + "' specified : " + outputLanguage);
     return 1;
@@ -392,7 +382,7 @@ public class Main
     com.helger.pgcc.parser.Expansion.reInit ();
     com.helger.pgcc.parser.JavaCCErrors.reInit ();
     com.helger.pgcc.parser.JavaCCGlobals.reInit ();
-    Options.init ();
+    com.helger.pgcc.parser.Options.init ();
     com.helger.pgcc.parser.JavaCCParserInternals.reInit ();
     com.helger.pgcc.parser.RStringLiteral.reInit ();
     com.helger.pgcc.parser.JavaFiles.reInit ();
@@ -401,7 +391,7 @@ public class Main
     com.helger.pgcc.parser.LookaheadWalk.reInit ();
     com.helger.pgcc.parser.Semanticize.reInit ();
     com.helger.pgcc.parser.OtherFilesGen.reInit ();
-    com.helger.pgcc.parser.LexGen.reInit ();
+    com.helger.pgcc.parser.LexGenJava.reInit ();
   }
 
 }

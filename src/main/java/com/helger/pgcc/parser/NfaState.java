@@ -120,8 +120,8 @@ public class NfaState
   {
     id = idCnt++;
     allStates.add (this);
-    lexState = LexGen.lexStateIndex;
-    lookingFor = LexGen.curKind;
+    lexState = LexGenJava.lexStateIndex;
+    lookingFor = LexGenJava.curKind;
   }
 
   NfaState CreateClone ()
@@ -204,7 +204,7 @@ public class NfaState
     if (!unicodeWarningGiven && c > 0xff && !Options.getJavaUnicodeEscape () && !Options.getUserCharStream ())
     {
       unicodeWarningGiven = true;
-      JavaCCErrors.warning (LexGen.curRE,
+      JavaCCErrors.warning (LexGenJava.curRE,
                             "Non-ASCII characters used in regular expression.\n" +
                                           "Please make sure you use the correct Reader when you create the parser, " +
                                           "one that can handle your character set.");
@@ -250,7 +250,7 @@ public class NfaState
         !Options.getUserCharStream ())
     {
       unicodeWarningGiven = true;
-      JavaCCErrors.warning (LexGen.curRE,
+      JavaCCErrors.warning (LexGenJava.curRE,
                             "Non-ASCII characters used in regular expression.\n" +
                                           "Please make sure you use the correct Reader when you create the parser, " +
                                           "one that can handle your character set.");
@@ -710,7 +710,7 @@ public class NfaState
     if (c >= 128)
       throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu");
 
-    final String s = LexGen.initialState.GetEpsilonMovesString ();
+    final String s = LexGenJava.initialState.GetEpsilonMovesString ();
 
     if (s == null || s.equals ("null;"))
       return false;
@@ -1269,9 +1269,9 @@ public class NfaState
 
   static int InitStateName ()
   {
-    final String s = LexGen.initialState.GetEpsilonMovesString ();
+    final String s = LexGenJava.initialState.GetEpsilonMovesString ();
 
-    if (LexGen.initialState.usefulEpsilonMoves != 0)
+    if (LexGenJava.initialState.usefulEpsilonMoves != 0)
       return StateNameForComposite (s);
     return -1;
   }
@@ -2232,7 +2232,7 @@ public class NfaState
       final NfaState temp = allStates.get (i);
 
       if (dumped[temp.stateName] ||
-          temp.lexState != LexGen.lexStateIndex ||
+          temp.lexState != LexGenJava.lexStateIndex ||
           !temp.hasTransitions () ||
           temp.dummy ||
           temp.stateName == -1)
@@ -2625,7 +2625,7 @@ public class NfaState
     {
       if (temp.stateName == -1 ||
           dumped[temp.stateName] ||
-          temp.lexState != LexGen.lexStateIndex ||
+          temp.lexState != LexGenJava.lexStateIndex ||
           !temp.hasTransitions () ||
           temp.dummy)
         continue;
@@ -2708,7 +2708,7 @@ public class NfaState
     else
     {
       codeGenerator.generateMethodDefHeader ("" + Options.getBooleanType () + "",
-                                             LexGen.tokMgrClassName,
+                                             LexGenJava.tokMgrClassName,
                                              "jjCanMove_" +
                                                                      nonAsciiMethod +
                                                                      "(int hiByte, int i1, int i2, " +
@@ -2995,8 +2995,8 @@ public class NfaState
 
     if (kinds == null)
     {
-      kinds = new int [LexGen.maxLexStates] [];
-      statesForState = new int [LexGen.maxLexStates] [] [];
+      kinds = new int [LexGenJava.maxLexStates] [];
+      statesForState = new int [LexGenJava.maxLexStates] [] [];
     }
 
     ReArrange ();
@@ -3005,17 +3005,17 @@ public class NfaState
     {
       final NfaState temp = allStates.get (i);
 
-      if (temp.lexState != LexGen.lexStateIndex || !temp.hasTransitions () || temp.dummy || temp.stateName == -1)
+      if (temp.lexState != LexGenJava.lexStateIndex || !temp.hasTransitions () || temp.dummy || temp.stateName == -1)
         continue;
 
       if (kindsForStates == null)
       {
         kindsForStates = new int [generatedStates];
-        statesForState[LexGen.lexStateIndex] = new int [Math.max (generatedStates, dummyStateIndex + 1)] [];
+        statesForState[LexGenJava.lexStateIndex] = new int [Math.max (generatedStates, dummyStateIndex + 1)] [];
       }
 
       kindsForStates[temp.stateName] = temp.lookingFor;
-      statesForState[LexGen.lexStateIndex][temp.stateName] = temp.compositeStates;
+      statesForState[LexGenJava.lexStateIndex][temp.stateName] = temp.compositeStates;
 
       temp.GenerateNonAsciiMoves (codeGenerator);
     }
@@ -3026,27 +3026,27 @@ public class NfaState
       final int state = aEntry.getValue ().intValue ();
 
       if (state >= generatedStates)
-        statesForState[LexGen.lexStateIndex][state] = allNextStates.get (s);
+        statesForState[LexGenJava.lexStateIndex][state] = allNextStates.get (s);
     }
 
     if (stateSetsToFix.size () != 0)
       FixStateSets ();
 
-    kinds[LexGen.lexStateIndex] = kindsForStates;
+    kinds[LexGenJava.lexStateIndex] = kindsForStates;
 
     if (codeGenerator.isJavaLanguage ())
     {
       codeGenerator.genCodeLine ((Options.getStatic () ? "static " : "") +
                                  "private int " +
                                  "jjMoveNfa" +
-                                 LexGen.lexStateSuffix +
+                                 LexGenJava.lexStateSuffix +
                                  "(int startState, int curPos)");
     }
     else
     {
       codeGenerator.generateMethodDefHeader ("int",
-                                             LexGen.tokMgrClassName,
-                                             "jjMoveNfa" + LexGen.lexStateSuffix + "(int startState, int curPos)");
+                                             LexGenJava.tokMgrClassName,
+                                             "jjMoveNfa" + LexGenJava.lexStateSuffix + "(int startState, int curPos)");
     }
     codeGenerator.genCodeLine ("{");
     if (generatedStates == 0)
@@ -3056,7 +3056,7 @@ public class NfaState
       return;
     }
 
-    if (LexGen.mixed[LexGen.lexStateIndex])
+    if (LexGenJava.mixed[LexGenJava.lexStateIndex])
     {
       codeGenerator.genCodeLine ("   int strKind = jjmatchedKind;");
       codeGenerator.genCodeLine ("   int strPos = jjmatchedPos;");
@@ -3099,7 +3099,7 @@ public class NfaState
       if (codeGenerator.isJavaLanguage ())
       {
         codeGenerator.genCodeLine ("      debugStream.println(" +
-                                   (LexGen.maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
+                                   (LexGenJava.maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                                    "\"Current character : \" + " +
                                    Options.getTokenMgrErrorClass () +
                                    ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
@@ -3181,7 +3181,7 @@ public class NfaState
                                  generatedStates +
                                  " - startsAt)))");
     }
-    if (LexGen.mixed[LexGen.lexStateIndex])
+    if (LexGenJava.mixed[LexGenJava.lexStateIndex])
       codeGenerator.genCodeLine ("         break;");
     else
       codeGenerator.genCodeLine ("         return curPos;");
@@ -3205,7 +3205,7 @@ public class NfaState
     }
     else
     {
-      if (LexGen.mixed[LexGen.lexStateIndex])
+      if (LexGenJava.mixed[LexGenJava.lexStateIndex])
       {
         codeGenerator.genCodeLine ("      if (input_stream->endOfInput()) { break; }");
       }
@@ -3216,7 +3216,7 @@ public class NfaState
       codeGenerator.genCodeLine ("      curChar = input_stream->readChar();");
     }
 
-    if (LexGen.mixed[LexGen.lexStateIndex])
+    if (LexGenJava.mixed[LexGenJava.lexStateIndex])
     {
       if (codeGenerator.isJavaLanguage ())
       {
@@ -3236,7 +3236,7 @@ public class NfaState
       if (codeGenerator.isJavaLanguage ())
       {
         codeGenerator.genCodeLine ("      debugStream.println(" +
-                                   (LexGen.maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
+                                   (LexGenJava.maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                                    "\"Current character : \" + " +
                                    Options.getTokenMgrErrorClass () +
                                    ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
@@ -3253,7 +3253,7 @@ public class NfaState
 
     codeGenerator.genCodeLine ("   }");
 
-    if (LexGen.mixed[LexGen.lexStateIndex])
+    if (LexGenJava.mixed[LexGenJava.lexStateIndex])
     {
       codeGenerator.genCodeLine ("   if (jjmatchedPos > strPos)");
       codeGenerator.genCodeLine ("      return curPos;");
@@ -3307,7 +3307,7 @@ public class NfaState
     }
 
     codeGenerator.switchToStaticsFile ();
-    for (int i = 0; i < LexGen.maxLexStates; i++)
+    for (int i = 0; i < LexGenJava.maxLexStates; i++)
     {
       if (statesForState[i] == null)
       {
@@ -3318,7 +3318,7 @@ public class NfaState
       {
         final int [] stateSet = statesForState[i][j];
 
-        codeGenerator.genCode ("const int stateSet_" + i + "_" + j + "[" + LexGen.stateSetSize + "] = ");
+        codeGenerator.genCode ("const int stateSet_" + i + "_" + j + "[" + LexGenJava.stateSetSize + "] = ");
         if (stateSet == null)
         {
           codeGenerator.genCodeLine ("   { " + j + " };");
@@ -3335,7 +3335,7 @@ public class NfaState
 
     }
 
-    for (int i = 0; i < LexGen.maxLexStates; i++)
+    for (int i = 0; i < LexGenJava.maxLexStates; i++)
     {
       codeGenerator.genCodeLine ("const int *stateSet_" + i + "[] = {");
       if (statesForState[i] == null)
@@ -3353,7 +3353,7 @@ public class NfaState
     }
 
     codeGenerator.genCode ("const int** statesForState[] = { ");
-    for (int i = 0; i < LexGen.maxLexStates; i++)
+    for (int i = 0; i < LexGenJava.maxLexStates; i++)
     {
       codeGenerator.genCodeLine ("stateSet_" + i + ", ");
     }
@@ -3376,7 +3376,7 @@ public class NfaState
 
     codeGenerator.genCodeLine ("{");
 
-    for (int i = 0; i < LexGen.maxLexStates; i++)
+    for (int i = 0; i < LexGenJava.maxLexStates; i++)
     {
       if (statesForState[i] == null)
       {
@@ -3431,9 +3431,9 @@ public class NfaState
     {
       codeGenerator.switchToStaticsFile ();
       codeGenerator.genCode ("static const int kindForState[" +
-                             LexGen.stateSetSize +
+                             LexGenJava.stateSetSize +
                              "][" +
-                             LexGen.stateSetSize +
+                             LexGenJava.stateSetSize +
                              "] = ");
     }
 

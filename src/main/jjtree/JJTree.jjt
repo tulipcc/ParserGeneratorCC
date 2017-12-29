@@ -911,7 +911,7 @@ ASTNodeDescriptor node_descriptor() #NodeDescriptor :
    "("
       [ ">"
                    {
-		     jjtThis.isGT = true;
+		     jjtThis.m_isGT = true;
 		   }
       ]
       node_descriptor_expression()

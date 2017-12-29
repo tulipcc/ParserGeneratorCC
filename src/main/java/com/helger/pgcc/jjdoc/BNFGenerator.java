@@ -53,18 +53,11 @@ public class BNFGenerator implements IDocGenerator
 
   protected String get_id (final String nt)
   {
-    String i = id_map.get (nt);
-    if (i == null)
-    {
-      i = "prod" + id++;
-      id_map.put (nt, i);
-    }
-    return i;
+    return id_map.computeIfAbsent (nt, k -> "prod" + id++);
   }
 
   protected PrintWriter create_output_stream ()
   {
-
     if (JJDocOptions.getOutputFile ().equals (""))
     {
       if (JJDocGlobals.input_file.equals ("standard input"))

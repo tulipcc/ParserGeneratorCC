@@ -450,35 +450,33 @@ public class JavaCCGlobals
 
   public static String addUnicodeEscapes (final String str)
   {
-
-    if (Options.getOutputLanguage ().equals (Options.OUTPUT_LANGUAGE__CPP))
+    switch (Options.getOutputLanguageType ())
     {
-      return str;
-    }
-    if (Options.isOutputLanguageJava ())
-    {
-      String retval = "";
-      char ch;
-      for (int i = 0; i < str.length (); i++)
+      case JAVA:
       {
-        ch = str.charAt (i);
-        if (ch < 0x20 ||
-            ch > 0x7e /* || ch == '\\' -- cba commented out 20140305 */ )
+        final StringBuilder retval = new StringBuilder (str.length () * 2);
+        for (final char ch : str.toCharArray ())
         {
-          final String s = "0000" + Integer.toString (ch, 16);
-          retval += "\\u" + s.substring (s.length () - 4, s.length ());
+          if (ch < 0x20 ||
+              ch > 0x7e /* || ch == '\\' -- cba commented out 20140305 */ )
+          {
+            final String s = "0000" + Integer.toString (ch, 16);
+            retval.append ("\\u").append (s.substring (s.length () - 4, s.length ()));
+          }
+          else
+          {
+            retval.append (ch);
+          }
         }
-        else
-        {
-          retval += ch;
-        }
+        return retval.toString ();
       }
-      return retval;
+      case CPP:
+        return str;
+      default:
+        // TODO :: CBA -- Require Unification of output language specific
+        // processing into a single Enum class
+        throw new IllegalStateException ("Unhandled Output Language : " + Options.getOutputLanguageType ());
     }
-
-    // TODO :: CBA -- Require Unification of output language specific
-    // processing into a single Enum class
-    throw new RuntimeException ("Unhandled Output Language : " + Options.getOutputLanguage ());
   }
 
   protected static int cline, ccol;
@@ -680,20 +678,14 @@ public class JavaCCGlobals
 
   static String getFileExtension (final String language)
   {
-    final String lang = Options.getOutputLanguage ();
-    // TODO :: CBA -- Require Unification of output language specific processing
-    // into a single Enum class
-    if (Options.isOutputLanguageJava ())
+    switch (Options.getOutputLanguageType ())
     {
-      return ".java";
+      case JAVA:
+        return ".java";
+      case CPP:
+        return ".cc";
+      default:
+        throw new IllegalStateException ("Unsupported type: " + Options.getOutputLanguageType ());
     }
-
-    if (lang.toLowerCase ().equals (Options.OUTPUT_LANGUAGE__CPP))
-    {
-      return ".cc";
-    }
-
-    assert (false);
-    return null;
   }
 }
