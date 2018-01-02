@@ -44,7 +44,7 @@ import java.util.Set;
 
 public class NormalProduction
 {
-  protected static String eol = System.getProperty ("line.separator", "\n");
+  protected static final String eol = System.getProperty ("line.separator", "\n");
 
   /**
    * The line and column number of the construct that corresponds most closely

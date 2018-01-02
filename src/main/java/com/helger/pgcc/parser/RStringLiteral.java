@@ -173,7 +173,7 @@ public class RStringLiteral extends RegularExpression
         int i;
         s_charCnt = 0; // Set to zero in reInit() but just to be sure
 
-        codeGenerator.genCodeLine ("");
+        codeGenerator.genCodeLine ();
         codeGenerator.genCodeLine ("/** Token literal values. */");
         int literalCount = 0;
         codeGenerator.switchToStaticsFile ();
@@ -200,7 +200,7 @@ public class RStringLiteral extends RegularExpression
             s_allImages[i] = null;
             if ((s_charCnt += 6) > 80)
             {
-              codeGenerator.genCodeLine ("");
+              codeGenerator.genCodeLine ();
               s_charCnt = 0;
             }
 
@@ -220,7 +220,7 @@ public class RStringLiteral extends RegularExpression
 
           if ((s_charCnt += toPrint.length ()) >= 80)
           {
-            codeGenerator.genCodeLine ("");
+            codeGenerator.genCodeLine ();
             s_charCnt = 0;
           }
 
@@ -231,7 +231,7 @@ public class RStringLiteral extends RegularExpression
         {
           if ((s_charCnt += 6) > 80)
           {
-            codeGenerator.genCodeLine ("");
+            codeGenerator.genCodeLine ();
             s_charCnt = 0;
           }
 
@@ -258,7 +258,7 @@ public class RStringLiteral extends RegularExpression
     int i;
     s_charCnt = 0; // Set to zero in reInit() but just to be sure
 
-    codeGenerator.genCodeLine ("");
+    codeGenerator.genCodeLine ();
     codeGenerator.genCodeLine ("/** Token literal values. */");
     codeGenerator.genCodeLine ("public static final String[] jjstrLiteralImages = {");
 
@@ -284,7 +284,7 @@ public class RStringLiteral extends RegularExpression
         s_allImages[i] = null;
         if ((s_charCnt += 6) > 80)
         {
-          codeGenerator.genCodeLine ("");
+          codeGenerator.genCodeLine ();
           s_charCnt = 0;
         }
 
@@ -292,41 +292,58 @@ public class RStringLiteral extends RegularExpression
         continue;
       }
 
-      String toPrint = "\"";
+      final StringBuilder toPrint = new StringBuilder ("\"");
       for (int j = 0; j < image.length (); j++)
       {
-        if (codeGenerator.isJavaLanguage () && image.charAt (j) <= 0xff)
-          toPrint += ("\\" + Integer.toOctalString (image.charAt (j)));
-        else
+        final char c = image.charAt (j);
+        switch (codeGenerator.getOutputLanguage ())
         {
-          String hexVal = Integer.toHexString (image.charAt (j));
-          if (hexVal.length () == 3)
-            hexVal = "0" + hexVal;
-          toPrint += ("\\u" + hexVal);
+          case JAVA:
+            if (c <= 0xff)
+              toPrint.append ('\\').append (Integer.toOctalString (c));
+            else
+            {
+              String hexVal = Integer.toHexString (c);
+              if (hexVal.length () == 3)
+                hexVal = "0" + hexVal;
+              toPrint.append ("\\u").append (hexVal);
+            }
+            break;
+          case CPP:
+            String hexVal = Integer.toHexString (c);
+            if (hexVal.length () == 3)
+              hexVal = "0" + hexVal;
+            toPrint.append ("\\u").append (hexVal);
+            break;
+          default:
+            throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
         }
       }
 
-      toPrint += ("\", ");
+      toPrint.append ("\", ");
 
-      if ((s_charCnt += toPrint.length ()) >= 80)
+      s_charCnt += toPrint.length ();
+      if (s_charCnt > 80)
       {
-        codeGenerator.genCodeLine ("");
+        // Break after 80 chars
+        codeGenerator.genCodeLine ();
         s_charCnt = 0;
       }
 
-      codeGenerator.genCode (toPrint);
+      codeGenerator.genCode (toPrint.toString ());
     }
 
     while (++i < LexGenJava.maxOrdinal)
     {
-      if ((s_charCnt += 6) > 80)
+      s_charCnt += 6;
+      if (s_charCnt > 80)
       {
-        codeGenerator.genCodeLine ("");
+        // Break after 80 chars
+        codeGenerator.genCodeLine ();
         s_charCnt = 0;
       }
 
       codeGenerator.genCode ("null, ");
-      continue;
     }
 
     codeGenerator.genCodeLine ("};");
@@ -1633,8 +1650,8 @@ public class RStringLiteral extends RegularExpression
 
     final StringBuilder params = new StringBuilder ();
     for (i = 0; i < maxKindsReqd - 1; i++)
-      params.append ("" + Options.getLongType () + " active" + i + ", ");
-    params.append ("" + Options.getLongType () + " active" + i + ")");
+      params.append (Options.getLongType () + " active" + i + ", ");
+    params.append (Options.getLongType () + " active" + i + ")");
 
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
@@ -1786,22 +1803,25 @@ public class RStringLiteral extends RegularExpression
     params.setLength (0);
     params.append ("(int pos, ");
     for (i = 0; i < maxKindsReqd - 1; i++)
-      params.append ("" + Options.getLongType () + " active" + i + ", ");
-    params.append ("" + Options.getLongType () + " active" + i + ")");
+      params.append (Options.getLongType () + " active" + i + ", ");
+    params.append (Options.getLongType () + " active" + i + ")");
 
-    if (codeGenerator.isJavaLanguage ())
+    switch (codeGenerator.getOutputLanguage ())
     {
-      codeGenerator.genCode ("private" +
-                             (Options.isStatic () ? " static" : "") +
-                             " final int jjStartNfa" +
-                             LexGenJava.lexStateSuffix +
-                             params);
-    }
-    else
-    {
-      codeGenerator.generateMethodDefHeader ("int ",
-                                             LexGenJava.tokMgrClassName,
-                                             "jjStartNfa" + LexGenJava.lexStateSuffix + params);
+      case JAVA:
+        codeGenerator.genCode ("private" +
+                               (Options.isStatic () ? " static" : "") +
+                               " final int jjStartNfa" +
+                               LexGenJava.lexStateSuffix +
+                               params);
+        break;
+      case CPP:
+        codeGenerator.generateMethodDefHeader ("int ",
+                                               LexGenJava.tokMgrClassName,
+                                               "jjStartNfa" + LexGenJava.lexStateSuffix + params);
+        break;
+      default:
+        throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
     }
     codeGenerator.genCodeLine ("{");
 

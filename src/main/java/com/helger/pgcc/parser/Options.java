@@ -526,15 +526,10 @@ public class Options
   public static void setCmdLineOption (final String arg)
   {
     final String s;
-
     if (arg.charAt (0) == '-')
-    {
       s = arg.substring (1);
-    }
     else
-    {
       s = arg;
-    }
 
     String name;
     Object val;
@@ -558,7 +553,7 @@ public class Options
 
     if (index < 0)
     {
-      name = s.toUpperCase ();
+      name = s.toUpperCase (Locale.US);
       if (s_optionValues.containsKey (name))
       {
         val = Boolean.TRUE;
@@ -577,7 +572,7 @@ public class Options
     }
     else
     {
-      name = s.substring (0, index).toUpperCase ();
+      name = s.substring (0, index).toUpperCase (Locale.US);
       if (s.substring (index + 1).equalsIgnoreCase ("TRUE"))
       {
         val = Boolean.TRUE;
