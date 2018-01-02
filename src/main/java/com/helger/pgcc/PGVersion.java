@@ -64,14 +64,16 @@
 
 package com.helger.pgcc;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import com.helger.commons.collection.impl.ICommonsMap;
+import com.helger.commons.exception.InitializationException;
+import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.lang.PropertiesHelper;
+import com.helger.commons.string.StringHelper;
 
 /**
  * Supply the version number.
  */
-public class Version
+public class PGVersion
 {
   public static final String majorVersion;
   public static final String minorVersion;
@@ -82,34 +84,25 @@ public class Version
 
   static
   {
-    String major = "??";
-    String minor = "??";
-    String patch = "??";
-
-    final Properties props = new Properties ();
-    final InputStream is = Version.class.getResourceAsStream ("/version.properties");
-    if (is != null)
+    String sProjectVersion = null;
+    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("/pgcc-version.properties"));
+    if (p != null)
+      sProjectVersion = p.get ("version");
+    if (sProjectVersion == null)
     {
-      try
-      {
-        props.load (is);
-      }
-      catch (final IOException e)
-      {
-        System.err.println ("Could not read version.properties: " + e);
-      }
-      major = props.getProperty ("version.major", major);
-      minor = props.getProperty ("version.minor", minor);
-      patch = props.getProperty ("version.patch", patch);
+      sProjectVersion = "undefined";
+      throw new InitializationException ("Failed to load PGCC version number");
     }
 
-    majorVersion = major;
-    minorVersion = minor;
-    patchVersion = patch;
+    final String [] aParts = StringHelper.getExplodedArray ('.', sProjectVersion, 3);
+
+    majorVersion = aParts[0];
+    minorVersion = aParts.length > 1 ? aParts[1] : "";
+    patchVersion = aParts.length > 2 ? aParts[2] : "";
     majorDotMinor = majorVersion + "." + minorVersion;
-    versionNumber = majorVersion + "." + minorVersion + (patch.equals ("") ? "" : "." + patch);
+    versionNumber = majorVersion + "." + minorVersion + "." + patchVersion;
   }
 
-  private Version ()
+  private PGVersion ()
   {}
 }

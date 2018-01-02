@@ -76,7 +76,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import com.helger.pgcc.Version;
+import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.OtherFilesGenCPP;
 import com.helger.pgcc.parser.OutputFile;
@@ -92,7 +92,7 @@ final class NodeFilesCpp
    * ID of the latest version (of JJTree) in which one of the Node classes was
    * modified.
    */
-  static final String nodeVersion = Version.majorDotMinor;
+  static final String nodeVersion = PGVersion.majorDotMinor;
 
   static Set <String> nodesToGenerate = new HashSet <> ();
 

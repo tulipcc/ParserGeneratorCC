@@ -44,7 +44,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.helger.pgcc.Version;
+import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 /**
@@ -56,30 +56,30 @@ public class FilesJava extends JavaCCGlobals
    * ID of the latest version (of JavaCC) in which one of the CharStream classes
    * or the CharStream interface is modified.
    */
-  static final String charStreamVersion = Version.majorDotMinor;
+  static final String charStreamVersion = PGVersion.majorDotMinor;
 
   /**
    * ID of the latest version (of JavaCC) in which the TokenManager interface is
    * modified.
    */
-  static final String tokenManagerVersion = Version.majorDotMinor;
+  static final String tokenManagerVersion = PGVersion.majorDotMinor;
 
   /**
    * ID of the latest version (of JavaCC) in which the Token class is modified.
    */
-  static final String tokenVersion = Version.majorDotMinor;
+  static final String tokenVersion = PGVersion.majorDotMinor;
 
   /**
    * ID of the latest version (of JavaCC) in which the ParseException class is
    * modified.
    */
-  static final String parseExceptionVersion = Version.majorDotMinor;
+  static final String parseExceptionVersion = PGVersion.majorDotMinor;
 
   /**
    * ID of the latest version (of JavaCC) in which the TokenMgrError class is
    * modified.
    */
-  static final String tokenMgrErrorVersion = Version.majorDotMinor;
+  static final String tokenMgrErrorVersion = PGVersion.majorDotMinor;
 
   public interface IJavaResourceTemplateLocations
   {
@@ -202,7 +202,7 @@ public class FilesJava extends JavaCCGlobals
       // Has not yet been created, so it must be up to date.
       try
       {
-        final String majorVersion = Version.versionNumber.replaceAll ("[^0-9.]+.*", "");
+        final String majorVersion = PGVersion.versionNumber.replaceAll ("[^0-9.]+.*", "");
         return Double.parseDouble (majorVersion);
       }
       catch (final NumberFormatException e)

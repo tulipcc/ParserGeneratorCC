@@ -50,7 +50,7 @@ import javax.annotation.WillCloseWhenClosed;
 import com.helger.commons.io.stream.NonBlockingBufferedOutputStream;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.commons.io.stream.NullOutputStream;
-import com.helger.pgcc.Version;
+import com.helger.pgcc.PGVersion;
 import com.helger.security.messagedigest.EMessageDigestAlgorithm;
 
 /**
@@ -285,7 +285,7 @@ public class OutputFile implements AutoCloseable
       m_pw = new TrapClosePrintWriter (dos);
 
       // Write the headers....
-      final String version = m_compatibleVersion == null ? Version.versionNumber : m_compatibleVersion;
+      final String version = m_compatibleVersion == null ? PGVersion.versionNumber : m_compatibleVersion;
       m_pw.println ("/* " + JavaCCGlobals.getIdString (m_toolName, m_file.getName ()) + " Version " + version + " */");
       if (m_options != null)
       {

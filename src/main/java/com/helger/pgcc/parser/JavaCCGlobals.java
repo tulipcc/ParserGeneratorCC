@@ -47,7 +47,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.string.StringHelper;
-import com.helger.pgcc.Version;
+import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
 /**
@@ -90,7 +90,7 @@ public abstract class JavaCCGlobals
    */
   public static void bannerLine (final String fullName, final String ver)
   {
-    System.out.print ("ParserGenerator Version " + Version.versionNumber + " (" + fullName);
+    System.out.print ("ParserGenerator Version " + PGVersion.versionNumber + " (" + fullName);
     if (StringHelper.hasText (ver))
       System.out.print (" Version " + ver);
     System.out.println (")");

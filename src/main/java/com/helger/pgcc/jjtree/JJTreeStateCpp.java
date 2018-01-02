@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.helger.pgcc.Version;
+import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.OutputFile;
 
@@ -50,7 +50,7 @@ import com.helger.pgcc.parser.OutputFile;
  */
 final class JJTreeStateCpp
 {
-  static final String JJTStateVersion = Version.majorDotMinor;
+  static final String JJTStateVersion = PGVersion.majorDotMinor;
 
   private JJTreeStateCpp ()
   {}
