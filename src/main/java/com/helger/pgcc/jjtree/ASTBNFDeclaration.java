@@ -35,12 +35,12 @@ package com.helger.pgcc.jjtree;
 
 public class ASTBNFDeclaration extends JJTreeNode
 {
+  NodeScope m_node_scope;
+
   ASTBNFDeclaration (final int id)
   {
     super (id);
   }
-
-  NodeScope node_scope;
 
   /** Accept the visitor. **/
   @Override
@@ -49,5 +49,3 @@ public class ASTBNFDeclaration extends JJTreeNode
     return visitor.visit (this, data);
   }
 }
-
-/* end */

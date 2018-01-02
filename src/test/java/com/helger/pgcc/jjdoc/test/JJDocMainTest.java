@@ -36,57 +36,73 @@ package com.helger.pgcc.jjdoc.test;
 import com.helger.pgcc.JavaCCTestCase;
 import com.helger.pgcc.jjdoc.JJDocMain;
 
-
 /**
  * @author timp
  * @since 7 Mar 2007
- *
  */
-public class JJDocMainTest extends JavaCCTestCase {
+public class JJDocMainTest extends JavaCCTestCase
+{
 
   /**
    * @param name
    */
-  public JJDocMainTest(String name) {
-    super(name);
+  public JJDocMainTest (final String name)
+  {
+    super (name);
   }
 
   /**
    * {@inheritDoc}
+   * 
    * @see junit.framework.TestCase#setUp()
    */
-  protected void setUp() throws Exception {
-    super.setUp();
+  @Override
+  protected void setUp () throws Exception
+  {
+    super.setUp ();
   }
 
   /**
    * {@inheritDoc}
+   * 
    * @see junit.framework.TestCase#tearDown()
    */
-  protected void tearDown() throws Exception {
-    super.tearDown();
+  @Override
+  protected void tearDown () throws Exception
+  {
+    super.tearDown ();
   }
 
   /**
-   * Test method for {@link org.javacc.jjdoc.JJDocMain#main(java.lang.String[])}.
+   * Test method for
+   * {@link org.javacc.jjdoc.JJDocMain#main(java.lang.String[])}.
    */
-  public void testMain() {
+  public void testMain ()
+  {}
+
+  /**
+   * Test method for
+   * {@link org.javacc.jjdoc.JJDocMain#mainProgram(java.lang.String[])}.
+   */
+  public void testMainProgramHTML () throws Exception
+  {
+    final int result = JJDocMain.mainProgram (new String [] { "-OUTPUT_FILE:" +
+                                                              getJJDocOutputDirectory () +
+                                                              "JavaCC.html",
+                                                              getJJInputDirectory () + "JavaCC.jj" });
+    assertEquals (0, result);
   }
 
   /**
-   * Test method for {@link org.javacc.jjdoc.JJDocMain#mainProgram(java.lang.String[])}.
+   * Test method for
+   * {@link org.javacc.jjdoc.JJDocMain#mainProgram(java.lang.String[])}.
    */
-  public void testMainProgramHTML() throws Exception {
-	  int result = JJDocMain.mainProgram(new String[] {"-OUTPUT_FILE:" + getJJDocOutputDirectory() + "JavaCC.html", getJJInputDirectory() + "JavaCC.jj"});
-    assertEquals(0, result);
-  }
-
-  /**
-   * Test method for {@link org.javacc.jjdoc.JJDocMain#mainProgram(java.lang.String[])}.
-   */
-  public void testMainProgramText() throws Exception {
-    assertEquals(0, JJDocMain.mainProgram(new String[] {"-OUTPUT_FILE:" + getJJDocOutputDirectory() + "JavaCC.txt",
-            "-TEXT:true",getJJInputDirectory() + "JavaCC.jj"}));
+  public void testMainProgramText () throws Exception
+  {
+    assertEquals (0,
+                  JJDocMain.mainProgram (new String [] { "-OUTPUT_FILE:" + getJJDocOutputDirectory () + "JavaCC.txt",
+                                                         "-TEXT:true",
+                                                         getJJInputDirectory () + "JavaCC.jj" }));
   }
 
 }

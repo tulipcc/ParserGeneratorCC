@@ -153,7 +153,7 @@ public class RChoice extends RegularExpression
     }
   }
 
-  public void CheckUnmatchability ()
+  public int checkUnmatchability ()
   {
     RegularExpression curRE;
     int numStrings = 0;
@@ -183,6 +183,6 @@ public class RChoice extends RegularExpression
       if (!curRE.private_rexp && curRE instanceof RStringLiteral)
         numStrings++;
     }
+    return numStrings;
   }
-
 }

@@ -40,7 +40,6 @@ public class ASTLHS extends JJTreeNode
     super (id);
   }
 
-  /** Accept the visitor. **/
   @Override
   public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
   {

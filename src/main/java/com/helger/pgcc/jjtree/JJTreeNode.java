@@ -44,9 +44,10 @@ public class JJTreeNode extends SimpleNode
     super (id);
   }
 
-  public JJTreeNode (final JJTreeParser p, final int i)
+  public JJTreeNode (final JJTreeParser p, final int id)
   {
-    this (i);
+    // Ignore parser - whysoever
+    this (id);
   }
 
   public static Node jjtCreate (final int id)

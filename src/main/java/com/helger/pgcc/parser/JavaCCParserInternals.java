@@ -393,9 +393,9 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     tblk.exp.m_parent = tblk;
     tblk.exp.m_ordinal = 0;
     tblk.types = types;
-    tblk.ids = ids;
-    tblk.catchblks = catchblks;
-    tblk.finallyblk = finallyblk;
+    tblk.m_ids = ids;
+    tblk.m_catchblks = catchblks;
+    tblk.m_finallyblk = finallyblk;
     result.member = tblk;
   }
 

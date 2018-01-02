@@ -35,12 +35,12 @@ package com.helger.pgcc.jjtree;
 
 public class ASTJavacodeBody extends JJTreeNode
 {
+  NodeScope m_node_scope;
+
   ASTJavacodeBody (final int id)
   {
     super (id);
   }
-
-  NodeScope node_scope;
 
   /** Accept the visitor. **/
   @Override
@@ -49,5 +49,3 @@ public class ASTJavacodeBody extends JJTreeNode
     return visitor.visit (this, data);
   }
 }
-
-/* end */

@@ -42,11 +42,6 @@ public class ASTOptions extends JJTreeNode
     super (id);
   }
 
-  public ASTOptions (final JJTreeParser p, final int id)
-  {
-    super (p, id);
-  }
-
   /** Accept the visitor. **/
   @Override
   public Object jjtAccept (final JJTreeParserVisitor visitor, final Object data)
@@ -54,7 +49,3 @@ public class ASTOptions extends JJTreeNode
     return visitor.visit (this, data);
   }
 }
-/*
- * JavaCC - OriginalChecksum=30aa49e720b353fc345932a3b397455a (do not edit this
- * line)
- */

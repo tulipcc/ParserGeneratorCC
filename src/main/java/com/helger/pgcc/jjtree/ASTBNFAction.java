@@ -35,7 +35,6 @@ package com.helger.pgcc.jjtree;
 
 public class ASTBNFAction extends JJTreeNode
 {
-
   ASTBNFAction (final int id)
   {
     super (id);
@@ -47,7 +46,7 @@ public class ASTBNFAction extends JJTreeNode
     {
       if (n instanceof ASTBNFNodeScope)
       {
-        if (((ASTBNFNodeScope) n).node_scope == ns)
+        if (((ASTBNFNodeScope) n).m_node_scope == ns)
         {
           return n;
         }
@@ -55,7 +54,7 @@ public class ASTBNFAction extends JJTreeNode
       else
         if (n instanceof ASTExpansionNodeScope)
         {
-          if (((ASTExpansionNodeScope) n).node_scope == ns)
+          if (((ASTExpansionNodeScope) n).m_node_scope == ns)
           {
             return n;
           }
@@ -70,7 +69,4 @@ public class ASTBNFAction extends JJTreeNode
   {
     return visitor.visit (this, data);
   }
-
 }
-
-/* end */

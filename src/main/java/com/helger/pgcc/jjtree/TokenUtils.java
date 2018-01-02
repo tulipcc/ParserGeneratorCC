@@ -33,6 +33,8 @@
  */
 package com.helger.pgcc.jjtree;
 
+import javax.annotation.Nonnull;
+
 import com.helger.pgcc.parser.JavaCCErrors;
 
 /**
@@ -71,25 +73,23 @@ public final class TokenUtils
 
   static String addUnicodeEscapes (final String str)
   {
-    final StringBuilder buff = new StringBuilder (str.length ());
-    char ch;
-    for (int i = 0; i < str.length (); i++)
+    final StringBuilder ret = new StringBuilder (str.length ());
+    for (final char ch : str.toCharArray ())
     {
-      ch = str.charAt (i);
       if ((ch < 0x20 || ch > 0x7e) && ch != '\t' && ch != '\n' && ch != '\r' && ch != '\f')
       {
         final String s = "0000" + Integer.toString (ch, 16);
-        buff.append ("\\u" + s.substring (s.length () - 4, s.length ()));
+        ret.append ("\\u").append (s.substring (s.length () - 4, s.length ()));
       }
       else
       {
-        buff.append (ch);
+        ret.append (ch);
       }
     }
-    return buff.toString ();
+    return ret.toString ();
   }
 
-  static boolean hasTokens (final JJTreeNode n)
+  static boolean hasTokens (@Nonnull final JJTreeNode n)
   {
     if (n.getLastToken ().next == n.getFirstToken ())
       return false;
@@ -100,8 +100,6 @@ public final class TokenUtils
   {
     String retval = "";
     int index = 1;
-    char ch, ch1;
-    int ordinal;
     while (index < str.length () - 1)
     {
       if (str.charAt (index) != '\\')
@@ -111,7 +109,7 @@ public final class TokenUtils
         continue;
       }
       index++;
-      ch = str.charAt (index);
+      char ch = str.charAt (index);
       if (ch == 'b')
       {
         retval += '\b';
@@ -162,9 +160,9 @@ public final class TokenUtils
       }
       if (ch >= '0' && ch <= '7')
       {
-        ordinal = (ch) - ('0');
+        int ordinal = (ch) - ('0');
         index++;
-        ch1 = str.charAt (index);
+        char ch1 = str.charAt (index);
         if (ch1 >= '0' && ch1 <= '7')
         {
           ordinal = ordinal * 8 + (ch1) - ('0');
@@ -183,24 +181,24 @@ public final class TokenUtils
       {
         index++;
         ch = str.charAt (index);
-        if (hexchar (ch))
+        if (_isHexchar (ch))
         {
-          ordinal = hexval (ch);
+          int ordinal = _getHexVal (ch);
           index++;
           ch = str.charAt (index);
-          if (hexchar (ch))
+          if (_isHexchar (ch))
           {
-            ordinal = ordinal * 16 + hexval (ch);
+            ordinal = ordinal * 16 + _getHexVal (ch);
             index++;
             ch = str.charAt (index);
-            if (hexchar (ch))
+            if (_isHexchar (ch))
             {
-              ordinal = ordinal * 16 + hexval (ch);
+              ordinal = ordinal * 16 + _getHexVal (ch);
               index++;
               ch = str.charAt (index);
-              if (hexchar (ch))
+              if (_isHexchar (ch))
               {
-                ordinal = ordinal * 16 + hexval (ch);
+                ordinal = ordinal * 16 + _getHexVal (ch);
                 index++;
                 continue;
               }
@@ -221,7 +219,7 @@ public final class TokenUtils
     return retval;
   }
 
-  private static boolean hexchar (final char ch)
+  private static boolean _isHexchar (final char ch)
   {
     if (ch >= '0' && ch <= '9')
       return true;
@@ -232,15 +230,12 @@ public final class TokenUtils
     return false;
   }
 
-  private static int hexval (final char ch)
+  private static int _getHexVal (final char ch)
   {
     if (ch >= '0' && ch <= '9')
-      return (ch) - ('0');
+      return ch - '0';
     if (ch >= 'A' && ch <= 'F')
-      return (ch) - ('A') + 10;
-    return (ch) - ('a') + 10;
+      return ch - 'A' + 10;
+    return ch - 'a' + 10;
   }
-
 }
-
-/* end */

@@ -200,7 +200,7 @@ public final class OptionsTest extends TestCase
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
-  public void testOptionsString () throws ParseException
+  public void testOptionsString ()
   {
     Options.init ();
     JavaCCErrors.reInit ();

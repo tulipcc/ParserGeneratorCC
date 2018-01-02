@@ -42,7 +42,7 @@ package com.helger.pgcc.parser;
 /**
  * Describes the input token stream.
  */
-
+@SuppressWarnings ("hiding")
 public class Token
 {
   /**
@@ -189,11 +189,11 @@ public class Token
    */
   public static class GTToken extends Token
   {
+    int m_realKind = JavaCCParserConstants.GT;
+
     public GTToken (final int kind, final String image)
     {
       super (kind, image);
     }
-
-    int realKind = JavaCCParserConstants.GT;
   }
 }

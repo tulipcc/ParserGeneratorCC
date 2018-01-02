@@ -35,13 +35,13 @@ package com.helger.pgcc.jjtree;
 
 public class ASTBNFNodeScope extends JJTreeNode
 {
+  NodeScope m_node_scope;
+  JJTreeNode m_expansion_unit;
+
   ASTBNFNodeScope (final int id)
   {
     super (id);
   }
-
-  NodeScope node_scope;
-  JJTreeNode expansion_unit;
 
   /** Accept the visitor. **/
   @Override
@@ -50,5 +50,3 @@ public class ASTBNFNodeScope extends JJTreeNode
     return visitor.visit (this, data);
   }
 }
-
-/* end */

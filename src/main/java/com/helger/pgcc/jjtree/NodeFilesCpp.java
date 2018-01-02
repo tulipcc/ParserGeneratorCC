@@ -76,6 +76,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.OtherFilesGenCPP;
@@ -121,7 +122,8 @@ final class NodeFilesCpp
 
   public static String jjtreeIncludeFile ()
   {
-    return new File (JJTreeOptions.getJJTreeOutputDirectory (), JJTreeGlobals.s_parserName + "Tree.h").getAbsolutePath ();
+    return new File (JJTreeOptions.getJJTreeOutputDirectory (),
+                     JJTreeGlobals.s_parserName + "Tree.h").getAbsolutePath ();
   }
 
   public static String jjtreeImplFile ()
@@ -609,10 +611,9 @@ final class NodeFilesCpp
 
     String argumentType = _getVisitorArgumentType ();
     final String returnType = _getVisitorReturnType ();
-    if (!JJTreeOptions.getVisitorDataType ().equals (""))
-    {
+    if (StringHelper.hasText (JJTreeOptions.getVisitorDataType ()))
       argumentType = JJTreeOptions.getVisitorDataType ();
-    }
+
     ostr.println ("  public:");
 
     ostr.println ("  virtual " + returnType + " visit(const SimpleNode *node, " + argumentType + " data) = 0;");

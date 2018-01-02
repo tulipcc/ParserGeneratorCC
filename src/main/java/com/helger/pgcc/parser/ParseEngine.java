@@ -1257,7 +1257,7 @@ public class ParseEngine
                       retval += "try {\u0001";
                       retval += phase1ExpansionGen (nested_e);
                       retval += "\u0002\n" + "}";
-                      for (int i = 0; i < e_nrw.catchblks.size (); i++)
+                      for (int i = 0; i < e_nrw.m_catchblks.size (); i++)
                       {
                         retval += " catch (";
                         list = (e_nrw.types.get (i));
@@ -1272,12 +1272,12 @@ public class ParseEngine
                           retval += m_codeGenerator.getTrailingComments (t);
                         }
                         retval += " ";
-                        t = (e_nrw.ids.get (i));
+                        t = (e_nrw.m_ids.get (i));
                         m_codeGenerator.printTokenSetup (t);
                         retval += m_codeGenerator.getStringToPrint (t);
                         retval += m_codeGenerator.getTrailingComments (t);
                         retval += ") {\u0003\n";
-                        list = (e_nrw.catchblks.get (i));
+                        list = (e_nrw.m_catchblks.get (i));
                         if (list.size () != 0)
                         {
                           m_codeGenerator.printTokenSetup ((list.get (0)));
@@ -1291,7 +1291,7 @@ public class ParseEngine
                         }
                         retval += "\u0004\n" + "}";
                       }
-                      if (e_nrw.finallyblk != null)
+                      if (e_nrw.m_finallyblk != null)
                       {
                         if (m_isJavaDialect)
                         {
@@ -1302,11 +1302,11 @@ public class ParseEngine
                           retval += " finally {\u0003\n";
                         }
 
-                        if (e_nrw.finallyblk.size () != 0)
+                        if (e_nrw.m_finallyblk.size () != 0)
                         {
-                          m_codeGenerator.printTokenSetup ((e_nrw.finallyblk.get (0)));
+                          m_codeGenerator.printTokenSetup ((e_nrw.m_finallyblk.get (0)));
                           s_ccol = 1;
-                          for (final Object aElement : e_nrw.finallyblk)
+                          for (final Object aElement : e_nrw.m_finallyblk)
                           {
                             t = (Token) aElement;
                             retval += m_codeGenerator.getStringToPrint (t);

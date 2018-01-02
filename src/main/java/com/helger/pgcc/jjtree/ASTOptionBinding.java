@@ -35,13 +35,13 @@ package com.helger.pgcc.jjtree;
 
 public class ASTOptionBinding extends JJTreeNode
 {
+  private boolean m_suppressed = false;
+  private String m_name;
+
   ASTOptionBinding (final int id)
   {
     super (id);
   }
-
-  private boolean m_suppressed = false;
-  private String m_name;
 
   void initialize (final String n, final String v)
   {

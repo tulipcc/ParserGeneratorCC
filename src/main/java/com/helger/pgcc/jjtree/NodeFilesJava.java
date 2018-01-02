@@ -255,11 +255,11 @@ final class NodeFilesJava
 
       final String ve = _mergeVisitorException ();
 
-      String argumentType = "Object";
-      if (!JJTreeOptions.getVisitorDataType ().equals (""))
-      {
+      String argumentType;
+      if (StringHelper.hasText (JJTreeOptions.getVisitorDataType ()))
         argumentType = JJTreeOptions.getVisitorDataType ();
-      }
+      else
+        argumentType = "Object";
 
       ostr.println ("  public " +
                     JJTreeOptions.getVisitorReturnType () +
@@ -340,11 +340,11 @@ final class NodeFilesJava
 
       final String ve = _mergeVisitorException ();
 
-      String argumentType = "Object";
-      if (!JJTreeOptions.getVisitorDataType ().equals (""))
-      {
+      String argumentType;
+      if (StringHelper.hasText (JJTreeOptions.getVisitorDataType ()))
         argumentType = JJTreeOptions.getVisitorDataType ();
-      }
+      else
+        argumentType = "Object";
 
       final String ret = JJTreeOptions.getVisitorReturnType ();
       ostr.println ("  public " + ret + " defaultVisit(SimpleNode node, " + argumentType + " data)" + ve + "{");

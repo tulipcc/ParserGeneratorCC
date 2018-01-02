@@ -2475,7 +2475,7 @@ void TokenLexicalActions(Token matchedToken)
         image.append(jjstrLiteralImages[140]);
         lengthOfMatch = jjstrLiteralImages[140].length();
      matchedToken.kind = GT;
-     ((Token.GTToken)matchedToken).realKind = RUNSIGNEDSHIFT;
+     ((Token.GTToken)matchedToken).m_realKind = RUNSIGNEDSHIFT;
      input_stream.backup(2);
      matchedToken.image = ">";
          break;
@@ -2483,7 +2483,7 @@ void TokenLexicalActions(Token matchedToken)
         image.append(jjstrLiteralImages[141]);
         lengthOfMatch = jjstrLiteralImages[141].length();
      matchedToken.kind = GT;
-     ((Token.GTToken)matchedToken).realKind = RSIGNEDSHIFT;
+     ((Token.GTToken)matchedToken).m_realKind = RSIGNEDSHIFT;
      input_stream.backup(1);
      matchedToken.image = ">";
          break;

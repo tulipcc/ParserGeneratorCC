@@ -33,63 +33,65 @@
  */
 package com.helger.pgcc.jjtree;
 
+import javax.annotation.Nullable;
+
 public class NodeScope
 {
-  ASTProduction production;
-  ASTNodeDescriptor node_descriptor;
+  ASTProduction m_production;
+  ASTNodeDescriptor m_node_descriptor;
 
-  String closedVar;
-  String exceptionVar;
-  String nodeVar;
-  int scopeNumber;
+  String m_closedVar;
+  String m_exceptionVar;
+  String m_nodeVar;
+  int m_scopeNumber;
 
-  NodeScope (final ASTProduction p, final ASTNodeDescriptor n)
+  NodeScope (final ASTProduction p, @Nullable final ASTNodeDescriptor n)
   {
-    production = p;
+    m_production = p;
 
     if (n == null)
     {
-      String nm = production.m_name;
+      String nm = m_production.m_name;
       if (JJTreeOptions.getNodeDefaultVoid ())
       {
         nm = "void";
       }
-      node_descriptor = ASTNodeDescriptor.indefinite (nm);
+      m_node_descriptor = ASTNodeDescriptor.indefinite (nm);
     }
     else
     {
-      node_descriptor = n;
+      m_node_descriptor = n;
     }
 
-    scopeNumber = production.getNodeScopeNumber (this);
-    nodeVar = constructVariable ("n");
-    closedVar = constructVariable ("c");
-    exceptionVar = constructVariable ("e");
+    m_scopeNumber = m_production.getNodeScopeNumber (this);
+    m_nodeVar = constructVariable ("n");
+    m_closedVar = constructVariable ("c");
+    m_exceptionVar = constructVariable ("e");
   }
 
   boolean isVoid ()
   {
-    return node_descriptor.isVoid ();
+    return m_node_descriptor.isVoid ();
   }
 
   ASTNodeDescriptor getNodeDescriptor ()
   {
-    return node_descriptor;
+    return m_node_descriptor;
   }
 
   String getNodeDescriptorText ()
   {
-    return node_descriptor.getDescriptor ();
+    return m_node_descriptor.getDescriptor ();
   }
 
   String getNodeVariable ()
   {
-    return nodeVar;
+    return m_nodeVar;
   }
 
   private String constructVariable (final String id)
   {
-    final String s = "000" + scopeNumber;
+    final String s = "000" + m_scopeNumber;
     return "jjt" + id + s.substring (s.length () - 3, s.length ());
   }
 
@@ -98,32 +100,31 @@ public class NodeScope
     return true;
   }
 
+  @Nullable
   static NodeScope getEnclosingNodeScope (final Node node)
   {
     if (node instanceof ASTBNFDeclaration)
     {
-      return ((ASTBNFDeclaration) node).node_scope;
+      return ((ASTBNFDeclaration) node).m_node_scope;
     }
     for (Node n = node.jjtGetParent (); n != null; n = n.jjtGetParent ())
     {
       if (n instanceof ASTBNFDeclaration)
       {
-        return ((ASTBNFDeclaration) n).node_scope;
+        return ((ASTBNFDeclaration) n).m_node_scope;
       }
       else
         if (n instanceof ASTBNFNodeScope)
         {
-          return ((ASTBNFNodeScope) n).node_scope;
+          return ((ASTBNFNodeScope) n).m_node_scope;
         }
         else
           if (n instanceof ASTExpansionNodeScope)
           {
-            return ((ASTExpansionNodeScope) n).node_scope;
+            return ((ASTExpansionNodeScope) n).m_node_scope;
           }
     }
     return null;
   }
 
 }
-
-/* end */

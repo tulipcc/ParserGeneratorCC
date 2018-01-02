@@ -87,6 +87,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 /**
@@ -468,7 +469,9 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
             continue;
           }
 
-          if (!Options.getNoDfa () && curRE instanceof RStringLiteral && !((RStringLiteral) curRE).m_image.equals (""))
+          if (!Options.getNoDfa () &&
+              curRE instanceof RStringLiteral &&
+              StringHelper.hasText (((RStringLiteral) curRE).m_image))
           {
             ((RStringLiteral) curRE).generateDfa ();
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
@@ -602,7 +605,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     }
 
     for (final RChoice aItem : choices)
-      aItem.CheckUnmatchability ();
+      aItem.checkUnmatchability ();
 
     checkEmptyStringMatch ();
 
@@ -785,23 +788,22 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         canLoop[k] |= seen[k];
 
       hasLoop = true;
+      final String sLabel = rexprs[initMatch[i]].m_label;
       if (len == 0)
+      {
         JavaCCErrors.warning (rexprs[initMatch[i]],
                               "Regular expression" +
-                                                    ((rexprs[initMatch[i]].m_label.equals ("")) ? ""
-                                                                                                : (" for " +
-                                                                                                   rexprs[initMatch[i]].m_label)) +
+                                                    (StringHelper.hasNoText (sLabel) ? "" : " for " + sLabel) +
                                                     " can be matched by the empty string (\"\") in lexical state " +
                                                     lexStateName[i] +
                                                     ". This can result in an endless loop of " +
                                                     "empty string matches.");
+      }
       else
       {
         JavaCCErrors.warning (rexprs[initMatch[i]],
                               "Regular expression" +
-                                                    ((rexprs[initMatch[i]].m_label.equals ("")) ? ""
-                                                                                                : (" for " +
-                                                                                                   rexprs[initMatch[i]].m_label)) +
+                                                    (StringHelper.hasNoText (sLabel) ? "" : " for " + sLabel) +
                                                     " can be matched by the empty string (\"\") in lexical state " +
                                                     lexStateName[i] +
                                                     ". This regular expression along with the " +
@@ -1645,7 +1647,6 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
   {
     actions = null;
     s_allTpsForState.clear ();
-    ;
     canLoop = null;
     canMatchAnyChar = null;
     canReachOnMore = null;

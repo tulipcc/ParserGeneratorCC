@@ -165,11 +165,11 @@ public class Token
    */
   public static class GTToken extends Token
   {
+    int m_realKind = JJTreeParserConstants.GT;
+
     public GTToken (final int kind, final String image)
     {
       super (kind, image);
     }
-
-    int realKind = JJTreeParserConstants.GT;
   }
 }

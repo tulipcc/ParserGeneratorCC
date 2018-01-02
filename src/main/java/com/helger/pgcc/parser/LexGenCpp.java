@@ -81,6 +81,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.helger.commons.string.StringHelper;
+
 /**
  * Generate lexer.
  */
@@ -365,7 +367,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
             continue;
           }
 
-          if (curRE instanceof RStringLiteral && !((RStringLiteral) curRE).m_image.equals (""))
+          if (curRE instanceof RStringLiteral && StringHelper.hasText (((RStringLiteral) curRE).m_image))
           {
             ((RStringLiteral) curRE).generateDfa ();
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
@@ -488,7 +490,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     }
 
     for (final RChoice aItem : choices)
-      aItem.CheckUnmatchability ();
+      aItem.checkUnmatchability ();
 
     NfaState.dumpStateSets (this);
     checkEmptyStringMatch ();

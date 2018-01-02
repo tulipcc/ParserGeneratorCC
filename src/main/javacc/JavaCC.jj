@@ -569,14 +569,14 @@ TOKEN :
   < RUNSIGNEDSHIFT: ">>>" >
   {
      matchedToken.kind = GT;
-     ((Token.GTToken)matchedToken).realKind = RUNSIGNEDSHIFT;
+     ((Token.GTToken)matchedToken).m_realKind = RUNSIGNEDSHIFT;
      input_stream.backup(2);
      matchedToken.image = ">";
   }
 | < RSIGNEDSHIFT: ">>" >
   {
      matchedToken.kind = GT;
-     ((Token.GTToken)matchedToken).realKind = RSIGNEDSHIFT;
+     ((Token.GTToken)matchedToken).m_realKind = RSIGNEDSHIFT;
      input_stream.backup(1);
      matchedToken.image = ">";
   }
@@ -2843,7 +2843,7 @@ void RUNSIGNEDSHIFT():
 {}
 {
   ( LOOKAHEAD({ getToken(1).kind == GT &&
-                ((Token.GTToken)getToken(1)).realKind == RUNSIGNEDSHIFT} )
+                ((Token.GTToken)getToken(1)).m_realKind == RUNSIGNEDSHIFT} )
    ">" ">" ">"
   )
 }
@@ -2852,7 +2852,7 @@ void RSIGNEDSHIFT():
 {}
 {
   ( LOOKAHEAD({ getToken(1).kind == GT &&
-                ((Token.GTToken)getToken(1)).realKind == RSIGNEDSHIFT} )
+                ((Token.GTToken)getToken(1)).m_realKind == RSIGNEDSHIFT} )
   ">" ">"
   )
 }

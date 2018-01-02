@@ -57,28 +57,28 @@ public class TryBlock extends Expansion
   /**
    * The exception identifiers of each catch block. Each list entry is a token.
    */
-  public List <Token> ids;
+  public List <Token> m_ids;
 
   /**
    * The block part of each catch block. Each list entry is itself a list which
    * in turn contains tokens as entries.
    */
-  public List <List <Token>> catchblks;
+  public List <List <Token>> m_catchblks;
 
   /**
    * The block part of the finally block. Each list entry is a token. If there
    * is no finally block, this is null.
    */
-  public List <Token> finallyblk;
+  public List <Token> m_finallyblk;
 
   @Override
-  public StringBuilder dump (final int indent, final Set alreadyDumped)
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
     final StringBuilder sb = super.dump (indent, alreadyDumped);
-    if (alreadyDumped.contains (this))
-      return sb;
-    alreadyDumped.add (this);
-    sb.append (eol).append (exp.dump (indent + 1, alreadyDumped));
+    if (alreadyDumped.add (this))
+    {
+      sb.append (eol).append (exp.dump (indent + 1, alreadyDumped));
+    }
     return sb;
   }
 

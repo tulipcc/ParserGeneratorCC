@@ -57,12 +57,12 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     options.put ("maxOrdinal", tokenizerData.allMatches.size ());
     options.put ("maxLexStates", tokenizerData.lexStateNames.length);
     options.put ("stateSetSize", tokenizerData.nfa.size ());
-    options.put ("parserName", tokenizerData.parserName);
+    options.put ("parserName", tokenizerData.m_parserName);
     options.put ("maxLongs", tokenizerData.allMatches.size () / 64 + 1);
-    options.put ("parserName", tokenizerData.parserName);
+    options.put ("parserName", tokenizerData.m_parserName);
     options.put ("charStreamName", CodeGenerator.getCharStreamName ());
     options.put ("defaultLexState", tokenizerData.defaultLexState);
-    options.put ("decls", tokenizerData.decls);
+    options.put ("decls", tokenizerData.m_decls);
     options.put ("superClass", (superClass == null || superClass.equals ("")) ? "" : "extends " + superClass);
     options.put ("noDfa", Options.getNoDfa ());
     options.put ("generatedStates", tokenizerData.nfa.size ());
@@ -87,7 +87,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
       return;
     final String fileName = Options.getOutputDirectory () +
                             File.separator +
-                            tokenizerData.parserName +
+                            tokenizerData.m_parserName +
                             "TokenManager.java";
     m_codeGenerator.saveOutput (fileName);
   }

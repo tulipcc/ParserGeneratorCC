@@ -53,5 +53,3 @@ public class ASTNodeDescriptorExpression extends JJTreeNode
     return visitor.visit (this, data);
   }
 }
-
-/* end */

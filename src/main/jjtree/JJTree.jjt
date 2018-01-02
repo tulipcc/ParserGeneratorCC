@@ -343,14 +343,14 @@ TOKEN :
   < RUNSIGNEDSHIFT: ">>>" >
   {
      matchedToken.kind = GT;
-     ((Token.GTToken)matchedToken).realKind = RUNSIGNEDSHIFT;
+     ((Token.GTToken)matchedToken).m_realKind = RUNSIGNEDSHIFT;
      input_stream.backup(2);
      matchedToken.image = ">";
   }
 | < RSIGNEDSHIFT: ">>" >
   {
      matchedToken.kind = GT;
-     ((Token.GTToken)matchedToken).realKind = RSIGNEDSHIFT;
+     ((Token.GTToken)matchedToken).m_realKind = RSIGNEDSHIFT;
      input_stream.backup(1);
      matchedToken.image = ">";
   }
@@ -513,7 +513,7 @@ void javacode_production() #Javacode :
     (
       ( BlockStatement() )*
         {
-	  jjtThis.node_scope = new NodeScope(prod, nd);
+	  jjtThis.m_node_scope = new NodeScope(prod, nd);
 	}
     ) #JavacodeBody
     "}"
@@ -570,7 +570,7 @@ void bnf_production() #BNF :
   (
     ( BlockStatement() )*
         {
-	  jjtThis.node_scope = ns;
+	  jjtThis.m_node_scope = ns;
 	}
   ) #BNFDeclaration
   "}"
@@ -579,8 +579,8 @@ void bnf_production() #BNF :
   (
     eu=expansion_choices(prod)
         {
-	  jjtThis.node_scope = ns;
-	  jjtThis.expansion_unit = eu;
+	  jjtThis.m_node_scope = ns;
+	  jjtThis.m_expansion_unit = eu;
 	}
   ) #BNFNodeScope
  "}"
@@ -671,8 +671,8 @@ void expansion(ASTProduction p) #BNFSequence(>1) :
      [ nd=node_descriptor() ]
         {
 	  if (jjtree.nodeCreated()) {
-	    jjtThis.node_scope = new NodeScope(p, nd);
-	    jjtThis.expansion_unit = eu;
+	    jjtThis.m_node_scope = new NodeScope(p, nd);
+	    jjtThis.m_expansion_unit = eu;
 	  }
 	}
    ) #ExpansionNodeScope(>1)
@@ -899,11 +899,11 @@ ASTNodeDescriptor node_descriptor() #NodeDescriptor :
   (
     s=Name()
                    {
-                     jjtThis.name = s;
+                     jjtThis.m_name = s;
 		   }
   | t=<VOID>
                    {
-                     jjtThis.name = t.image;
+                     jjtThis.m_name = t.image;
 		   }
   )
   [
@@ -916,7 +916,7 @@ ASTNodeDescriptor node_descriptor() #NodeDescriptor :
       ]
       node_descriptor_expression()
 	           {
-		     jjtThis.expression =
+		     jjtThis.m_expression =
 		       (ASTNodeDescriptorExpression)jjtree.peekNode();
 		   }
    ")"
@@ -1974,7 +1974,7 @@ void RUNSIGNEDSHIFT():
 {}
 {
   ( LOOKAHEAD({ getToken(1).kind == GT &&
-                ((Token.GTToken)getToken(1)).realKind == RUNSIGNEDSHIFT} )
+                ((Token.GTToken)getToken(1)).m_realKind == RUNSIGNEDSHIFT} )
    ">" ">" ">"
   )
 }
@@ -1983,7 +1983,7 @@ void RSIGNEDSHIFT():
 {}
 {
   ( LOOKAHEAD({ getToken(1).kind == GT &&
-                ((Token.GTToken)getToken(1)).realKind == RSIGNEDSHIFT} )
+                ((Token.GTToken)getToken(1)).m_realKind == RSIGNEDSHIFT} )
   ">" ">"
   )
 }

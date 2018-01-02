@@ -35,13 +35,13 @@ package com.helger.pgcc.jjtree;
 
 public class ASTExpansionNodeScope extends JJTreeNode
 {
+  NodeScope m_node_scope;
+  JJTreeNode m_expansion_unit;
+
   ASTExpansionNodeScope (final int id)
   {
     super (id);
   }
-
-  NodeScope node_scope;
-  JJTreeNode expansion_unit;
 
   /** Accept the visitor. **/
   @Override
@@ -51,5 +51,3 @@ public class ASTExpansionNodeScope extends JJTreeNode
   }
 
 }
-
-/* end */

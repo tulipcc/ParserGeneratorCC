@@ -64,9 +64,6 @@
 
 package com.helger.pgcc.jjtree;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
 
@@ -144,9 +141,7 @@ public class JJTree
   public int main (final String args[])
   {
     // initialize static state for allowing repeat runs without exiting
-    ASTNodeDescriptor.nodeIds = new ArrayList <> ();
-    ASTNodeDescriptor.nodeNames = new ArrayList <> ();
-    ASTNodeDescriptor.nodeSeen = new HashMap <> ();
+    ASTNodeDescriptor.reInit ();
     com.helger.pgcc.parser.Main.reInitAll ();
 
     JavaCCGlobals.bannerLine ("Tree Builder", "");

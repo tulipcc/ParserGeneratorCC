@@ -42,12 +42,11 @@ import java.util.Set;
 // the code generators to produce code.
 public class TokenizerData
 {
-
   // Name of the parser as specified in the PARSER_BEGIN/PARSER_END block.
-  public String parserName;
+  public String m_parserName;
 
   // Decls coming from TOKEN_MGR_DECLS
-  public String decls;
+  public String m_decls;
 
   // A map of <LexState, first char> to a sequence of literals indexed by:
   // ((int0LexicalState << 16 | (int)c)
@@ -152,12 +151,12 @@ public class TokenizerData
 
   public void setParserName (final String parserName)
   {
-    this.parserName = parserName;
+    this.m_parserName = parserName;
   }
 
   public void setDecls (final String decls)
   {
-    this.decls = decls;
+    this.m_decls = decls;
   }
 
   public void setLiteralSequence (final Map <Integer, List <String>> literalSequence)
