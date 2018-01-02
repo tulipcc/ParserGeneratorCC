@@ -556,13 +556,13 @@ final class NodeFilesCpp
   private static String _getVisitorArgumentType ()
   {
     final String ret = Options.stringValue ("VISITOR_DATA_TYPE");
-    return ret == null || ret.equals ("") || ret.equals ("Object") ? "void *" : ret;
+    return ret == null || ret.length () == 0 || ret.equals ("Object") ? "void *" : ret;
   }
 
   private static String _getVisitorReturnType ()
   {
     final String ret = Options.stringValue ("VISITOR_RETURN_TYPE");
-    return ret == null || ret.equals ("") || ret.equals ("Object") ? "void " : ret;
+    return ret == null || ret.length () == 0 || ret.equals ("Object") ? "void " : ret;
   }
 
   static void generateVisitors ()

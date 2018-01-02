@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.helger.commons.string.StringHelper;
+
 /**
  * Class that implements a table driven code generator for the token manager in
  * java.
@@ -63,7 +65,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     options.put ("charStreamName", CodeGenerator.getCharStreamName ());
     options.put ("defaultLexState", tokenizerData.defaultLexState);
     options.put ("decls", tokenizerData.m_decls);
-    options.put ("superClass", (superClass == null || superClass.equals ("")) ? "" : "extends " + superClass);
+    options.put ("superClass", StringHelper.hasNoText (superClass) ? "" : "extends " + superClass);
     options.put ("noDfa", Options.getNoDfa ());
     options.put ("generatedStates", tokenizerData.nfa.size ());
     try

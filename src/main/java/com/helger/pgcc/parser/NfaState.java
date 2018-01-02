@@ -73,6 +73,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
 /**
@@ -1929,7 +1930,7 @@ public class NfaState
 
     if (neededStates == 0)
     {
-      if (stateForCase != null && toPrint.equals (""))
+      if (stateForCase != null && toPrint.length () == 0)
         codeGenerator.genCodeLine ("                  break;");
       return;
     }
@@ -1940,7 +1941,7 @@ public class NfaState
       // System.out.println(toBePrinted.stateName + " is the only state for "
       // + key + " ; and key is : " + StateNameForComposite(key));
 
-      if (!toPrint.equals (""))
+      if (StringHelper.hasText (toPrint))
         codeGenerator.genCode (toPrint);
 
       codeGenerator.genCodeLine ("               case " + _stateNameForComposite (key) + ":");
@@ -1955,7 +1956,7 @@ public class NfaState
 
     final List <List <NfaState>> partition = _partitionStatesSetForAscii (nameSet, byteNum);
 
-    if (!toPrint.equals (""))
+    if (StringHelper.hasText (toPrint))
       codeGenerator.genCode (toPrint);
 
     final int keyState = _stateNameForComposite (key);
@@ -2307,7 +2308,7 @@ public class NfaState
 
         if (temp.asciiMoves[byteNum] == 0L)
         {
-          if (toPrint.equals (""))
+          if (StringHelper.hasNoText (toPrint))
             codeGenerator.genCodeLine ("                  break;");
 
           continue;
@@ -2317,7 +2318,7 @@ public class NfaState
       if (temp.asciiMoves[byteNum] == 0L)
         continue;
 
-      if (!toPrint.equals (""))
+      if (StringHelper.hasText (toPrint))
         codeGenerator.genCode (toPrint);
 
       dumped[temp.stateName] = true;
@@ -2381,15 +2382,16 @@ public class NfaState
 
     if (neededStates == 0)
     {
-      if (stateForCase != null && toPrint.equals (""))
-        codeGenerator.genCodeLine ("                  break;");
+      if (stateForCase != null)
+        if (StringHelper.hasNoText (toPrint))
+          codeGenerator.genCodeLine ("                  break;");
 
       return;
     }
 
     if (neededStates == 1)
     {
-      if (!toPrint.equals (""))
+      if (StringHelper.hasText (toPrint))
         codeGenerator.genCode (toPrint);
 
       codeGenerator.genCodeLine ("               case " + _stateNameForComposite (key) + ":");
@@ -2402,7 +2404,7 @@ public class NfaState
       return;
     }
 
-    if (!toPrint.equals (""))
+    if (StringHelper.hasText (toPrint))
       codeGenerator.genCode (toPrint);
 
     final int keyState = _stateNameForComposite (key);
@@ -2697,11 +2699,11 @@ public class NfaState
         if (dumped[temp.m_stateForCase.stateName])
           continue;
 
-        toPrint = (temp.m_stateForCase._printNoBreak (codeGenerator, -1, dumped));
+        toPrint = temp.m_stateForCase._printNoBreak (codeGenerator, -1, dumped);
 
         if (temp.m_nonAsciiMethod == -1)
         {
-          if (toPrint.equals (""))
+          if (StringHelper.hasNoText (toPrint))
             codeGenerator.genCodeLine ("                  break;");
 
           continue;
@@ -2711,7 +2713,7 @@ public class NfaState
       if (temp.m_nonAsciiMethod == -1)
         continue;
 
-      if (!toPrint.equals (""))
+      if (StringHelper.hasText (toPrint))
         codeGenerator.genCode (toPrint);
 
       dumped[temp.stateName] = true;

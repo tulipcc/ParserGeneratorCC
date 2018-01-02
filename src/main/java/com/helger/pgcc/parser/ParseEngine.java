@@ -1003,7 +1003,7 @@ public class ParseEngine
       }
       final String tail = e_nrw.m_rhsToken == null ? ");"
                                                    : (m_isJavaDialect ? ")." : ")->") + e_nrw.m_rhsToken.image + ";";
-      if (e_nrw.m_label.equals (""))
+      if (e_nrw.m_label.length () == 0)
       {
         final Object label = s_names_of_tokens.get (Integer.valueOf (e_nrw.m_ordinal));
         if (label != null)
@@ -1395,7 +1395,7 @@ public class ParseEngine
   private void generate3R (final Expansion e, final Phase3Data inf)
   {
     Expansion seq = e;
-    if (e.m_internal_name.equals (""))
+    if (e.m_internal_name.length () == 0)
     {
       while (true)
       {
@@ -1587,7 +1587,7 @@ public class ParseEngine
     if (e instanceof RegularExpression)
     {
       final RegularExpression e_nrw = (RegularExpression) e;
-      if (e_nrw.m_label.equals (""))
+      if (e_nrw.m_label.length () == 0)
       {
         final Object label = s_names_of_tokens.get (Integer.valueOf (e_nrw.m_ordinal));
         if (label != null)

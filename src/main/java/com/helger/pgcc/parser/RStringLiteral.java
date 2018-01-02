@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
 /**
@@ -519,11 +520,9 @@ public class RStringLiteral extends RegularExpression
 
     if (re instanceof RStringLiteral)
       return " \"" + JavaCCGlobals.addEscapes (((RStringLiteral) re).m_image) + "\"";
-    else
-      if (!re.m_label.equals (""))
-        return " <" + re.m_label + ">";
-      else
-        return " <token of kind " + kind + ">";
+    if (re.m_label.length () > 0)
+      return " <" + re.m_label + ">";
+    return " <token of kind " + kind + ">";
   }
 
   static int getLine (final int kind)
@@ -539,14 +538,15 @@ public class RStringLiteral extends RegularExpression
   /**
    * Returns true if s1 starts with s2 (ignoring case for each character).
    */
-  static private boolean _startsWithIgnoreCase (final String s1, final String s2)
+  private static boolean _startsWithIgnoreCase (final String s1, final String s2)
   {
     if (s1.length () < s2.length ())
       return false;
 
     for (int i = 0; i < s2.length (); i++)
     {
-      final char c1 = s1.charAt (i), c2 = s2.charAt (i);
+      final char c1 = s1.charAt (i);
+      final char c2 = s2.charAt (i);
 
       if (c1 != c2 && Character.toLowerCase (c2) != c1 && Character.toUpperCase (c2) != c1)
         return false;
@@ -557,7 +557,6 @@ public class RStringLiteral extends RegularExpression
 
   static void fillSubString ()
   {
-    String image;
     s_subString = new boolean [s_maxStrKind + 1];
     s_subStringAtPos = new boolean [s_maxLen];
 
@@ -565,7 +564,8 @@ public class RStringLiteral extends RegularExpression
     {
       s_subString[i] = false;
 
-      if ((image = s_allImages[i]) == null || LexGenJava.lexStates[i] != LexGenJava.lexStateIndex)
+      final String image = s_allImages[i];
+      if (image == null || LexGenJava.lexStates[i] != LexGenJava.lexStateIndex)
         continue;
 
       if (LexGenJava.mixed[LexGenJava.lexStateIndex])
@@ -1896,7 +1896,7 @@ public class RStringLiteral extends RegularExpression
   {
     for (int kind = 0; kind < s_allImages.length; kind++)
     {
-      if (s_allImages[kind] == null || s_allImages[kind].equals ("") || LexGenJava.lexStates[kind] != lexStateIndex)
+      if (StringHelper.hasNoText (s_allImages[kind]) || LexGenJava.lexStates[kind] != lexStateIndex)
       {
         continue;
       }

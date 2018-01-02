@@ -71,6 +71,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.FilesJava.IJavaResourceTemplateLocations;
 
 /**
@@ -222,7 +223,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
           ostr.println ("\"\\\"" + addEscapes (addEscapes (((RStringLiteral) re).m_image)) + "\\\"\",");
         }
         else
-          if (!re.m_label.equals (""))
+          if (StringHelper.hasText (re.m_label))
           {
             ostr.println ("\"<" + re.m_label + ">\",");
           }

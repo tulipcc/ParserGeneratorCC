@@ -36,6 +36,8 @@ package com.helger.pgcc.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.helger.commons.string.StringHelper;
+
 public class LookaheadCalc extends JavaCCGlobals
 {
 
@@ -105,7 +107,7 @@ public class LookaheadCalc extends JavaCCGlobals
           ret += " \"" + addEscapes (((RStringLiteral) re).m_image) + "\"";
         }
         else
-          if (re.m_label != null && !re.m_label.equals (""))
+          if (StringHelper.hasText (re.m_label))
           {
             ret += " <" + re.m_label + ">";
           }

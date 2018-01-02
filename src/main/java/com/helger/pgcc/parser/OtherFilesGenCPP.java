@@ -67,6 +67,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.helger.commons.string.StringHelper;
+
 /**
  * Generates the Constants file.
  */
@@ -178,7 +180,7 @@ public class OtherFilesGenCPP extends JavaCCGlobals implements JavaCCParserConst
           printCharArray (s_ostr, "\"" + ((RStringLiteral) re).m_image + "\"");
         }
         else
-          if (!re.m_label.equals (""))
+          if (StringHelper.hasText (re.m_label))
           {
             printCharArray (s_ostr, "\"<" + re.m_label + ">\"");
           }

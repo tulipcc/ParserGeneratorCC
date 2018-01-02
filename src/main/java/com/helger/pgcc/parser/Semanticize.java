@@ -185,7 +185,7 @@ public class Semanticize extends JavaCCGlobals
       for (final RegExprSpec aRegExprSpec : respecs)
       {
         final RegExprSpec res = (aRegExprSpec);
-        if (!(res.rexp instanceof RJustName) && !res.rexp.m_label.equals (""))
+        if (!(res.rexp instanceof RJustName) && res.rexp.m_label.length () > 0)
         {
           final String s = res.rexp.m_label;
           final RegularExpression obj = s_named_tokens_table.put (s, res.rexp);
@@ -400,7 +400,7 @@ public class Semanticize extends JavaCCGlobals
           {
             res.rexp.m_ordinal = s_tokenCount++;
           }
-        if (!(res.rexp instanceof RJustName) && !res.rexp.m_label.equals (""))
+        if (!(res.rexp instanceof RJustName) && res.rexp.m_label.length () > 0)
         {
           s_names_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp.m_label);
         }

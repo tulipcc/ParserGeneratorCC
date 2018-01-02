@@ -79,6 +79,7 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.system.SystemHelper;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.utils.EOptionType;
@@ -296,6 +297,7 @@ public class Options
   /**
    * Convenience method to retrieve string options.
    */
+  @Nullable
   public static String stringValue (final String option)
   {
     return (String) s_optionValues.get (option);
@@ -700,16 +702,18 @@ public class Options
     return booleanValue (USEROPTION__STATIC);
   }
 
+  @Nullable
   public static String getParserCodeGenerator ()
   {
     final String retVal = stringValue (USEROPTION__PARSER_CODE_GENERATOR);
-    return retVal.equals ("") ? null : retVal;
+    return StringHelper.hasNoText (retVal) ? null : retVal;
   }
 
+  @Nullable
   public static String getTokenManagerCodeGenerator ()
   {
     final String retVal = stringValue (USEROPTION__TOKEN_MANAGER_CODE_GENERATOR);
-    return retVal.equals ("") ? null : retVal;
+    return StringHelper.hasNoText (retVal) ? null : retVal;
   }
 
   public static boolean getNoDfa ()
@@ -1018,9 +1022,9 @@ public class Options
    */
   public static String getGrammarEncoding ()
   {
-    if (stringValue (USEROPTION__GRAMMAR_ENCODING).equals (""))
+    if (StringHelper.hasNoText (stringValue (USEROPTION__GRAMMAR_ENCODING)))
     {
-      return System.getProperties ().getProperty ("file.encoding");
+      return SystemHelper.getSystemCharset ().name ();
     }
     return stringValue (USEROPTION__GRAMMAR_ENCODING);
   }
@@ -1033,21 +1037,6 @@ public class Options
   public static File getOutputDirectory ()
   {
     return new File (stringValue (USEROPTION__OUTPUT_DIRECTORY));
-  }
-
-  public static String stringBufOrBuild ()
-  {
-    // TODO :: CBA -- Require Unification of output language specific
-    // processing into a single Enum class
-    switch (s_language)
-    {
-      case JAVA:
-        return getGenerateStringBuilder () ? "StringBuilder" : "StringBuffer";
-      case CPP:
-        return "StringBuffer";
-      default:
-        throw new UnsupportedOutputLanguageException (s_language);
-    }
   }
 
   private static final Set <String> s_supportedJavaTemplateTypes = new HashSet <> ();
@@ -1146,7 +1135,7 @@ public class Options
    *
    * @return The requested stack usage limit.
    */
-  public static String getStackLimit ()
+  public static String getCPPStackLimit ()
   {
     final String limit = stringValue (USEROPTION__CPP_STACK_LIMIT);
     if (limit.equals ("0"))
@@ -1154,6 +1143,11 @@ public class Options
       return "";
     }
     return limit;
+  }
+
+  public static boolean hasCPPStackLimit ()
+  {
+    return StringHelper.hasText (getCPPStackLimit ());
   }
 
   /**
