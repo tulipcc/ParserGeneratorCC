@@ -15,25 +15,25 @@ import com.helger.pgcc.parser.OutputFile;
 /**
  * Generate the State of a tree.
  */
-final class CPPJJTreeState
+final class JJTreeStateCpp
 {
   static final String JJTStateVersion = Version.majorDotMinor;
 
-  private CPPJJTreeState ()
+  private JJTreeStateCpp ()
   {}
 
   static void generateTreeState () throws IOException
   {
     final Map <String, Object> options = new HashMap <> (Options.getOptions ());
-    options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+    options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
 
     final String filePrefix = new File (JJTreeOptions.getJJTreeOutputDirectory (),
-                                        "JJT" + JJTreeGlobals.parserName + "State").getAbsolutePath ();
+                                        "JJT" + JJTreeGlobals.s_parserName + "State").getAbsolutePath ();
 
     OutputFile outputFile = new OutputFile (new File (filePrefix + ".h"), JJTStateVersion, new String [0]);
-    CPPNodeFiles.generateFile (outputFile, "/templates/cpp/JJTTreeState.h.template", options, true);
+    NodeFilesCpp.generateFile (outputFile, "/templates/cpp/JJTTreeState.h.template", options, true);
 
     outputFile = new OutputFile (new File (filePrefix + ".cc"), JJTStateVersion, new String [0]);
-    CPPNodeFiles.generateFile (outputFile, "/templates/cpp/JJTTreeState.cc.template", options, true);
+    NodeFilesCpp.generateFile (outputFile, "/templates/cpp/JJTTreeState.cc.template", options, true);
   }
 }

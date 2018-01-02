@@ -24,7 +24,7 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
   {
     final JJTreeIO io = (JJTreeIO) data;
     io.println ("/*@bgen(jjtree) " +
-                JavaCCGlobals.getIdString (JJTreeGlobals.toolList, new File (io.getOutputFileName ()).getName ()) +
+                JavaCCGlobals.getIdString (JJTreeGlobals.toolList, new File (io.getOutputFilename ()).getName ()) +
                 (Options.booleanValue (Options.USEROPTION__CPP_IGNORE_ACTIONS) ? "" : " */"));
     io.print ((Options.booleanValue (Options.USEROPTION__CPP_IGNORE_ACTIONS) ? "" : "/*") + "@egen*/");
 
@@ -310,7 +310,7 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
       nodeClass = type;
     }
 
-    CPPNodeFiles.addType (type);
+    NodeFilesCpp.addType (type);
 
     io.print (indent + nodeClass + " *" + ns.nodeVar + " = ");
     final String p = Options.getStatic () ? "null" : "this";
@@ -447,10 +447,10 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
        * Should really make the nonterminal explicitly maintain its name.
        */
       final String nt = expansion_unit.getFirstToken ().image;
-      final ASTProduction prod = JJTreeGlobals.productions.get (nt);
+      final ASTProduction prod = JJTreeGlobals.s_productions.get (nt);
       if (prod != null)
       {
-        for (final String t : prod.throws_list)
+        for (final String t : prod.m_throws_list)
           thrown_set.put (t, t);
       }
     }

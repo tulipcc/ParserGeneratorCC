@@ -9,7 +9,7 @@ package com.helger.pgcc.jjtree;
 /**
  * Describes the input token stream.
  */
-
+@SuppressWarnings ("hiding")
 public class Token
 {
   /**

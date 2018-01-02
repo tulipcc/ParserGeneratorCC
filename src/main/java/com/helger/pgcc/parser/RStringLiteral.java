@@ -486,7 +486,7 @@ public class RStringLiteral extends RegularExpression
     final RegularExpression re = LexGenJava.rexprs[kind];
 
     if (re instanceof RStringLiteral)
-      return " \"" + JavaCCGlobals.add_escapes (((RStringLiteral) re).m_image) + "\"";
+      return " \"" + JavaCCGlobals.addEscapes (((RStringLiteral) re).m_image) + "\"";
     else
       if (!re.m_label.equals (""))
         return " <" + re.m_label + ">";
@@ -1183,7 +1183,7 @@ public class RStringLiteral extends RegularExpression
                   s_intermediateMatchedPos[(j * 64 + k)][i] == i)
               {
                 JavaCCErrors.warning (" \"" +
-                                      JavaCCGlobals.add_escapes (s_allImages[j * 64 + k]) +
+                                      JavaCCGlobals.addEscapes (s_allImages[j * 64 + k]) +
                                       "\" cannot be matched as a string literal token " +
                                       "at line " +
                                       getLine (j * 64 + k) +
@@ -1200,7 +1200,7 @@ public class RStringLiteral extends RegularExpression
                     LexGenJava.canMatchAnyChar[LexGenJava.lexStateIndex] < (j * 64 + k))
                 {
                   JavaCCErrors.warning (" \"" +
-                                        JavaCCGlobals.add_escapes (s_allImages[j * 64 + k]) +
+                                        JavaCCGlobals.addEscapes (s_allImages[j * 64 + k]) +
                                         "\" cannot be matched as a string literal token " +
                                         "at line " +
                                         getLine (j * 64 + k) +

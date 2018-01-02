@@ -38,6 +38,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.Version;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
@@ -375,64 +377,63 @@ public abstract class JavaCCGlobals
     return "";
   }
 
-  public static String add_escapes (final String str)
+  @Nonnull
+  public static String addEscapes (@Nonnull final String str)
   {
-    String retval = "";
-    char ch;
-    for (int i = 0; i < str.length (); i++)
+    final StringBuilder retval = new StringBuilder (str.length () * 2);
+    for (final char ch : str.toCharArray ())
     {
-      ch = str.charAt (i);
       if (ch == '\b')
       {
-        retval += "\\b";
+        retval.append ("\\b");
       }
       else
         if (ch == '\t')
         {
-          retval += "\\t";
+          retval.append ("\\t");
         }
         else
           if (ch == '\n')
           {
-            retval += "\\n";
+            retval.append ("\\n");
           }
           else
             if (ch == '\f')
             {
-              retval += "\\f";
+              retval.append ("\\f");
             }
             else
               if (ch == '\r')
               {
-                retval += "\\r";
+                retval.append ("\\r");
               }
               else
                 if (ch == '\"')
                 {
-                  retval += "\\\"";
+                  retval.append ("\\\"");
                 }
                 else
                   if (ch == '\'')
                   {
-                    retval += "\\\'";
+                    retval.append ("\\\'");
                   }
                   else
                     if (ch == '\\')
                     {
-                      retval += "\\\\";
+                      retval.append ("\\\\");
                     }
                     else
                       if (ch < 0x20 || ch > 0x7e)
                       {
                         final String s = "0000" + Integer.toString (ch, 16);
-                        retval += "\\u" + s.substring (s.length () - 4, s.length ());
+                        retval.append ("\\u").append (s.substring (s.length () - 4, s.length ()));
                       }
                       else
                       {
-                        retval += ch;
+                        retval.append (ch);
                       }
     }
-    return retval;
+    return retval.toString ();
   }
 
   public static String addUnicodeEscapes (final String str)

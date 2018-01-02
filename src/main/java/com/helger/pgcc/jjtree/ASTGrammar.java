@@ -52,7 +52,7 @@ public class ASTGrammar extends JJTreeNode
         break;
       case CPP:
         new CodeGeneratorCpp ().visit (this, io);
-        CPPNodeFiles.generateTreeClasses ();
+        NodeFilesCpp.generateTreeClasses ();
       default:
         // Catch all to ensure we don't accidently do nothing
         throw new IllegalStateException ("Language type not supported for JJTree : " +

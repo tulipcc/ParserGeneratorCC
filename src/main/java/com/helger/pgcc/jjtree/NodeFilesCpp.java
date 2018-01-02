@@ -49,9 +49,9 @@ import com.helger.pgcc.parser.OtherFilesGenCPP;
 import com.helger.pgcc.parser.OutputFile;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
-final class CPPNodeFiles
+final class NodeFilesCpp
 {
-  private CPPNodeFiles ()
+  private NodeFilesCpp ()
   {}
 
   private static List <String> headersForJJTreeH = new ArrayList <> ();
@@ -88,13 +88,13 @@ final class CPPNodeFiles
 
   public static String jjtreeIncludeFile ()
   {
-    return new File (JJTreeOptions.getJJTreeOutputDirectory (), JJTreeGlobals.parserName + "Tree.h").getAbsolutePath ();
+    return new File (JJTreeOptions.getJJTreeOutputDirectory (), JJTreeGlobals.s_parserName + "Tree.h").getAbsolutePath ();
   }
 
   public static String jjtreeImplFile ()
   {
     return new File (JJTreeOptions.getJJTreeOutputDirectory (),
-                     JJTreeGlobals.parserName + "Tree.cc").getAbsolutePath ();
+                     JJTreeGlobals.s_parserName + "Tree.cc").getAbsolutePath ();
   }
 
   public static String jjtreeIncludeFile (final String s)
@@ -158,7 +158,7 @@ final class CPPNodeFiles
       }
 
       final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
-      optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
       optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
       optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
@@ -192,7 +192,7 @@ final class CPPNodeFiles
         return;
 
       final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
-      optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
       optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
       optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
@@ -226,7 +226,7 @@ final class CPPNodeFiles
         return;
 
       final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
-      optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
       optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
       optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
@@ -265,7 +265,7 @@ final class CPPNodeFiles
           }
 
           final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
-          optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+          optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
           optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
           optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
           optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
@@ -308,7 +308,7 @@ final class CPPNodeFiles
           }
 
           final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
-          optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+          optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
           optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
           optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
           optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
@@ -348,7 +348,7 @@ final class CPPNodeFiles
         }
 
         final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
-        optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+        optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
         optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
         optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
         optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
@@ -397,7 +397,7 @@ final class CPPNodeFiles
       }
 
       final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
-      optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
       optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
       optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
@@ -427,14 +427,14 @@ final class CPPNodeFiles
     }
   }
 
-  static void generatePrologue (final PrintWriter ostr)
+  static void generatePrologue ()
   {
     // Output the node's namespace name?
   }
 
   static String nodeConstants ()
   {
-    return JJTreeGlobals.parserName + "TreeConstants";
+    return JJTreeGlobals.s_parserName + "TreeConstants";
   }
 
   static void generateTreeConstants ()
@@ -450,7 +450,7 @@ final class CPPNodeFiles
       final List <String> nodeIds = ASTNodeDescriptor.getNodeIds ();
       final List <String> nodeNames = ASTNodeDescriptor.getNodeNames ();
 
-      generatePrologue (ostr);
+      generatePrologue ();
       ostr.println ("#ifndef " + file.getName ().replace ('.', '_').toUpperCase ());
       ostr.println ("#define " + file.getName ().replace ('.', '_').toUpperCase ());
 
@@ -500,7 +500,7 @@ final class CPPNodeFiles
 
   static String getVisitorClass ()
   {
-    return JJTreeGlobals.parserName + "Visitor";
+    return JJTreeGlobals.s_parserName + "Visitor";
   }
 
   private static String getVisitMethodName (final String className)
@@ -533,21 +533,16 @@ final class CPPNodeFiles
   static void generateVisitors ()
   {
     if (!JJTreeOptions.getVisitor ())
-    {
       return;
-    }
 
-    try
+    final File file = new File (getVisitorIncludeFile ());
+    try (final OutputFile outputFile = new OutputFile (file); final PrintWriter ostr = outputFile.getPrintWriter ())
     {
-      final File file = new File (getVisitorIncludeFile ());
-      final OutputFile outputFile = new OutputFile (file);
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-
-      generatePrologue (ostr);
+      generatePrologue ();
       ostr.println ("#ifndef " + file.getName ().replace ('.', '_').toUpperCase ());
       ostr.println ("#define " + file.getName ().replace ('.', '_').toUpperCase ());
       ostr.println ("\n#include \"JavaCC.h\"");
-      ostr.println ("#include \"" + JJTreeGlobals.parserName + "Tree.h" + "\"");
+      ostr.println ("#include \"" + JJTreeGlobals.s_parserName + "Tree.h" + "\"");
 
       final boolean hasNamespace = Options.stringValue (Options.USEROPTION__CPP_NAMESPACE).length () > 0;
       if (hasNamespace)
@@ -564,7 +559,6 @@ final class CPPNodeFiles
       }
 
       ostr.println ("#endif");
-      ostr.close ();
     }
     catch (final IOException ioe)
     {
@@ -617,7 +611,7 @@ final class CPPNodeFiles
 
   static String defaultVisitorClass ()
   {
-    return JJTreeGlobals.parserName + "DefaultVisitor";
+    return JJTreeGlobals.s_parserName + "DefaultVisitor";
   }
 
   private static void generateDefaultVisitor (final PrintWriter ostr)
@@ -675,7 +669,7 @@ final class CPPNodeFiles
   {
     @SuppressWarnings ("resource")
     final PrintWriter ostr = outputFile.getPrintWriter ();
-    generatePrologue (ostr);
+    generatePrologue ();
 
     final OutputFileGenerator generator = new OutputFileGenerator (template, options);
     generator.generate (ostr);

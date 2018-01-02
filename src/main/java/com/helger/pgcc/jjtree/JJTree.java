@@ -159,7 +159,7 @@ public class JJTree
         _println ("Error setting input: " + ioe.getMessage ());
         return 1;
       }
-      _println ("Reading from file " + io.getInputFileName () + " . . .");
+      _println ("Reading from file " + io.getInputFilename () + " . . .");
 
       JJTreeGlobals.toolList = JavaCCGlobals.getToolNames (fn);
       JJTreeGlobals.toolList.add ("JJTree");
@@ -191,16 +191,16 @@ public class JJTree
         switch (Options.getOutputLanguage ())
         {
           case JAVA:
-            JavaNodeFiles.generateTreeConstants_java ();
-            JavaNodeFiles.generateVisitor_java ();
-            JavaNodeFiles.generateDefaultVisitor_java ();
-            JJTreeState.generateTreeState_java ();
+            NodeFilesJava.generateTreeConstants_java ();
+            NodeFilesJava.generateVisitor_java ();
+            NodeFilesJava.generateDefaultVisitor_java ();
+            JJTreeStateJava.generateTreeState_java ();
             break;
           case CPP:
-            CPPNodeFiles.generateTreeConstants ();
-            CPPNodeFiles.generateVisitors ();
+            NodeFilesCpp.generateTreeConstants ();
+            NodeFilesCpp.generateVisitors ();
             // CPPNodeFiles.generateDefaultVisitor();
-            CPPJJTreeState.generateTreeState ();
+            JJTreeStateCpp.generateTreeState ();
             // CPPNodeFiles.generateJJTreeH();
             break;
           default:
@@ -208,7 +208,7 @@ public class JJTree
             return 1;
         }
 
-        _println ("Annotated grammar generated successfully in " + io.getOutputFileName ());
+        _println ("Annotated grammar generated successfully in " + io.getOutputFilename ());
       }
       catch (final ParseException pe)
       {

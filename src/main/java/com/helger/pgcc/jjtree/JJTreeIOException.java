@@ -34,8 +34,18 @@ import java.io.IOException;
  */
 public class JJTreeIOException extends IOException
 {
-  JJTreeIOException (final String detail)
+  public JJTreeIOException (final String sMsg)
   {
-    super (detail);
+    super (sMsg);
+  }
+
+  public JJTreeIOException (final String sMsg, final Throwable aCause)
+  {
+    super (sMsg, aCause);
+  }
+
+  public JJTreeIOException (final Throwable aCause)
+  {
+    super (aCause);
   }
 }

@@ -186,7 +186,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
         ostr.print ("    ");
         if (re instanceof RStringLiteral)
         {
-          ostr.println ("\"\\\"" + add_escapes (add_escapes (((RStringLiteral) re).m_image)) + "\\\"\",");
+          ostr.println ("\"\\\"" + addEscapes (addEscapes (((RStringLiteral) re).m_image)) + "\\\"\",");
         }
         else
           if (!re.m_label.equals (""))

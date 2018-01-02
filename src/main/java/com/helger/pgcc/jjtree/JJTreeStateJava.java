@@ -31,6 +31,7 @@ package com.helger.pgcc.jjtree;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.OutputFile;
@@ -38,10 +39,10 @@ import com.helger.pgcc.parser.OutputFile;
 /**
  * Generate the State of a tree.
  */
-final class JJTreeState
+final class JJTreeStateJava
 {
 
-  private JJTreeState ()
+  private JJTreeStateJava ()
   {}
 
   static void insertParserMembers (final JJTreeIO io)
@@ -64,24 +65,22 @@ final class JJTreeState
 
   private static String nameState ()
   {
-    return "JJT" + JJTreeGlobals.parserName + "State";
+    return "JJT" + JJTreeGlobals.s_parserName + "State";
   }
 
   static void generateTreeState_java ()
   {
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), nameState () + ".java");
 
-    try
+    try (final OutputFile outputFile = new OutputFile (file))
     {
-      final OutputFile outputFile = new OutputFile (file);
       final PrintWriter ostr = outputFile.getPrintWriter ();
-      JavaNodeFiles.generatePrologue (ostr);
+      NodeFilesJava.generatePrologue (ostr);
       insertState (ostr);
-      outputFile.close ();
     }
     catch (final IOException e)
     {
-      throw new Error (e.toString ());
+      throw new UncheckedIOException (e);
     }
   }
 

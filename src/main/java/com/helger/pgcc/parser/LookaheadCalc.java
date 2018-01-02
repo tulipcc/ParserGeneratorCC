@@ -96,7 +96,7 @@ public class LookaheadCalc extends JavaCCGlobals
         final RegularExpression re = rexps_of_tokens.get (Integer.valueOf (m.m_match[i]));
         if (re instanceof RStringLiteral)
         {
-          ret += " \"" + add_escapes (((RStringLiteral) re).m_image) + "\"";
+          ret += " \"" + addEscapes (((RStringLiteral) re).m_image) + "\"";
         }
         else
           if (re.m_label != null && !re.m_label.equals (""))

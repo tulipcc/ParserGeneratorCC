@@ -402,7 +402,7 @@ public class JJDoc extends JJDocGlobals
         {
           returnString += "\"";
           final char s[] = { ((SingleCharacter) o).getChar () };
-          returnString += add_escapes (new String (s));
+          returnString += addEscapes (new String (s));
           returnString += "\"";
         }
         else
@@ -410,10 +410,10 @@ public class JJDoc extends JJDocGlobals
           {
             returnString += "\"";
             final char s[] = { ((CharacterRange) o).getLeft () };
-            returnString += add_escapes (new String (s));
+            returnString += addEscapes (new String (s));
             returnString += "\"-\"";
             s[0] = ((CharacterRange) o).getRight ();
-            returnString += add_escapes (new String (s));
+            returnString += addEscapes (new String (s));
             returnString += "\"";
           }
           else
@@ -491,7 +491,7 @@ public class JJDoc extends JJDocGlobals
                 if (re instanceof RStringLiteral)
                 {
                   final RStringLiteral sl = (RStringLiteral) re;
-                  returnString += ("\"" + JavaCCGlobals.add_escapes (sl.m_image) + "\"");
+                  returnString += ("\"" + JavaCCGlobals.addEscapes (sl.m_image) + "\"");
                 }
                 else
                   if (re instanceof RZeroOrMore)

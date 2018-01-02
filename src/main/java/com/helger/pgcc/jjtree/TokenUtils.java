@@ -86,13 +86,8 @@ public final class TokenUtils
   static boolean hasTokens (final JJTreeNode n)
   {
     if (n.getLastToken ().next == n.getFirstToken ())
-    {
       return false;
-    }
-    else
-    {
-      return true;
-    }
+    return true;
   }
 
   static String remove_escapes_and_quotes (final Token t, final String str)

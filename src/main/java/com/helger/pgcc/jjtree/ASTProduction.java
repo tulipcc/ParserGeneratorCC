@@ -39,19 +39,19 @@ public class ASTProduction extends JJTreeNode
     super (id);
   }
 
-  String name;
-  List <String> throws_list = new ArrayList <> ();
+  String m_name;
+  List <String> m_throws_list = new ArrayList <> ();
 
-  private final Map <NodeScope, Integer> scopes = new HashMap <> ();
-  private int nextNodeScopeNumber = 0;
+  private final Map <NodeScope, Integer> m_scopes = new HashMap <> ();
+  private int m_nextNodeScopeNumber = 0;
 
   int getNodeScopeNumber (final NodeScope s)
   {
-    Integer i = scopes.get (s);
+    Integer i = m_scopes.get (s);
     if (i == null)
     {
-      i = Integer.valueOf (nextNodeScopeNumber++);
-      scopes.put (s, i);
+      i = Integer.valueOf (m_nextNodeScopeNumber++);
+      m_scopes.put (s, i);
     }
     return i.intValue ();
   }

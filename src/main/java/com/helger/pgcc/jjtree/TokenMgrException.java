@@ -87,14 +87,14 @@ public class TokenMgrException extends RuntimeException
 
   /**
    * Returns a detailed message for the Error when it is thrown by the token
-   * manager to indicate a lexical error. Parameters : EOFSeen : indicates if
+   * manager to indicate a lexical error. Parameters : bEOFSeen : indicates if
    * EOF caused the lexical error curLexState : lexical state in which this
    * error occurred errorLine : line number when the error occurred errorColumn
    * : column number when the error occurred errorAfter : prefix that was seen
    * before this error occurred curchar : the offending character Note: You can
    * customize the lexical error message by modifying this method.
    *
-   * @param EOFSeen
+   * @param bEOFSeen
    * @param lexState
    * @param errorLine
    * @param errorColumn
@@ -102,23 +102,23 @@ public class TokenMgrException extends RuntimeException
    * @param curChar
    * @return
    */
-  protected static String buildLexicalErrorString (final boolean EOFSeen,
+  protected static String buildLexicalErrorString (final boolean bEOFSeen,
                                                    final int lexState,
                                                    final int errorLine,
                                                    final int errorColumn,
                                                    final String errorAfter,
                                                    final char curChar)
   {
-    return ("Lexical error at line " +
-            errorLine +
-            ", column " +
-            errorColumn +
-            ".  Encountered: " +
-            (EOFSeen ? "<EOF> "
+    return "Lexical error at line " +
+           errorLine +
+           ", column " +
+           errorColumn +
+           ".  Encountered: " +
+           (bEOFSeen ? "<EOF> "
                      : ("\"" + addEscapes (Character.toString (curChar)) + "\"") + " (" + (int) curChar + "), ") +
-            "after : \"" +
-            addEscapes (errorAfter) +
-            "\"");
+           "after : \"" +
+           addEscapes (errorAfter) +
+           "\"";
   }
 
   /** Constructor with message and reason. */
@@ -129,7 +129,7 @@ public class TokenMgrException extends RuntimeException
   }
 
   /** Full Constructor. */
-  public TokenMgrException (final boolean EOFSeen,
+  public TokenMgrException (final boolean bEOFSeen,
                             final int lexState,
                             final int errorLine,
                             final int errorColumn,
@@ -137,7 +137,7 @@ public class TokenMgrException extends RuntimeException
                             final char curChar,
                             final int reason)
   {
-    this (buildLexicalErrorString (EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
+    this (buildLexicalErrorString (bEOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
   }
 
   /**

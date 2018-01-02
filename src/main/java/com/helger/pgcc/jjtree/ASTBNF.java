@@ -33,8 +33,8 @@ public class ASTBNF extends ASTProduction
   ASTBNF (final int id)
   {
     super (id);
-    throws_list.add ("ParseException");
-    throws_list.add ("RuntimeException");
+    m_throws_list.add ("ParseException");
+    m_throws_list.add ("RuntimeException");
   }
 
   Token declBeginLoc;
@@ -42,7 +42,7 @@ public class ASTBNF extends ASTProduction
   @Override
   public String toString ()
   {
-    return super.toString () + ": " + name;
+    return super.toString () + ": " + m_name;
   }
 
   /** Accept the visitor. **/

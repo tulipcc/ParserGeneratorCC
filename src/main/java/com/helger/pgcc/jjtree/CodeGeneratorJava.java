@@ -25,7 +25,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
   {
     final JJTreeIO io = (JJTreeIO) data;
     io.println ("/*@bgen(jjtree) " +
-                JavaCCGlobals.getIdString (JJTreeGlobals.toolList, new File (io.getOutputFileName ()).getName ()) +
+                JavaCCGlobals.getIdString (JJTreeGlobals.toolList, new File (io.getOutputFilename ()).getName ()) +
                 " */");
     io.print ("/*@egen*/");
 
@@ -141,34 +141,34 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
 
     while (true)
     {
-      if (t == JJTreeGlobals.parserImports)
+      if (t == JJTreeGlobals.s_parserImports)
       {
 
         // If the parser and nodes are in separate packages (NODE_PACKAGE
         // specified in
         // OPTIONS), then generate an import for the node package.
-        if (!JJTreeGlobals.nodePackageName.equals ("") &&
-            !JJTreeGlobals.nodePackageName.equals (JJTreeGlobals.packageName))
+        if (!JJTreeGlobals.s_nodePackageName.equals ("") &&
+            !JJTreeGlobals.s_nodePackageName.equals (JJTreeGlobals.s_packageName))
         {
           io.getOut ().println ("");
-          io.getOut ().println ("import " + JJTreeGlobals.nodePackageName + ".*;");
+          io.getOut ().println ("import " + JJTreeGlobals.s_nodePackageName + ".*;");
         }
       }
 
-      if (t == JJTreeGlobals.parserImplements)
+      if (t == JJTreeGlobals.s_parserImplements)
       {
         if (t.image.equals ("implements"))
         {
           node.print (t, io);
           openJJTreeComment (io, null);
-          io.getOut ().print (" " + JavaNodeFiles.nodeConstants () + ", ");
+          io.getOut ().print (" " + NodeFilesJava.nodeConstants () + ", ");
           closeJJTreeComment (io);
         }
         else
         {
           // t is pointing at the opening brace of the class body.
           openJJTreeComment (io, null);
-          io.getOut ().print ("implements " + JavaNodeFiles.nodeConstants ());
+          io.getOut ().print ("implements " + NodeFilesJava.nodeConstants ());
           closeJJTreeComment (io);
           node.print (t, io);
         }
@@ -178,10 +178,10 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
         node.print (t, io);
       }
 
-      if (t == JJTreeGlobals.parserClassBodyStart)
+      if (t == JJTreeGlobals.s_parserClassBodyStart)
       {
         openJJTreeComment (io, null);
-        JJTreeState.insertParserMembers (io);
+        JJTreeStateJava.insertParserMembers (io);
         closeJJTreeComment (io);
       }
 
@@ -349,7 +349,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
     /*
      * Ensure that there is a template definition file for the node type.
      */
-    JavaNodeFiles.ensure (io, type);
+    NodeFilesJava.ensure (io, type);
 
     io.print (indent + nodeClass + " " + ns.nodeVar + " = ");
     final String p = Options.getStatic () ? "null" : "this";
@@ -487,7 +487,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
     openJJTreeComment (io, null);
     io.println ();
 
-    insertCatchBlocks (ns, io, ns.production.throws_list, indent);
+    insertCatchBlocks (ns, io, ns.production.m_throws_list, indent);
 
     io.println (indent + "} finally {");
     if (ns.usesCloseNodeVar ())
@@ -510,10 +510,10 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
        * Should really make the nonterminal explicitly maintain its name.
        */
       final String nt = expansion_unit.getFirstToken ().image;
-      final ASTProduction prod = JJTreeGlobals.productions.get (nt);
+      final ASTProduction prod = JJTreeGlobals.s_productions.get (nt);
       if (prod != null)
       {
-        for (final String t : prod.throws_list)
+        for (final String t : prod.m_throws_list)
           thrown_set.put (t, t);
       }
     }

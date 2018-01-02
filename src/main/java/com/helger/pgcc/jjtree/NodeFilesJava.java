@@ -45,9 +45,9 @@ import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.OutputFile;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
-final class JavaNodeFiles
+final class NodeFilesJava
 {
-  private JavaNodeFiles ()
+  private NodeFilesJava ()
   {}
 
   /**
@@ -88,17 +88,16 @@ final class JavaNodeFiles
       return;
     }
 
-    try
+    final String [] options = new String [] { "MULTI",
+                                              "NODE_USES_PARSER",
+                                              "VISITOR",
+                                              "TRACK_TOKENS",
+                                              "NODE_PREFIX",
+                                              "NODE_EXTENDS",
+                                              "NODE_FACTORY",
+                                              Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
+    try (final OutputFile outputFile = new OutputFile (file, nodeVersion, options))
     {
-      final String [] options = new String [] { "MULTI",
-                                                "NODE_USES_PARSER",
-                                                "VISITOR",
-                                                "TRACK_TOKENS",
-                                                "NODE_PREFIX",
-                                                "NODE_EXTENDS",
-                                                "NODE_FACTORY",
-                                                Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
-      final OutputFile outputFile = new OutputFile (file, nodeVersion, options);
       outputFile.setToolName ("JJTree");
 
       nodesGenerated.add (file.getName ());
@@ -138,13 +137,13 @@ final class JavaNodeFiles
     // will default to the parser's package name.
     // If the package names are different we will need to import classes
     // from the parser's package.
-    if (!JJTreeGlobals.nodePackageName.equals (""))
+    if (!JJTreeGlobals.s_nodePackageName.equals (""))
     {
-      ostr.println ("package " + JJTreeGlobals.nodePackageName + ";");
+      ostr.println ("package " + JJTreeGlobals.s_nodePackageName + ";");
       ostr.println ();
-      if (!JJTreeGlobals.nodePackageName.equals (JJTreeGlobals.packageName))
+      if (!JJTreeGlobals.s_nodePackageName.equals (JJTreeGlobals.s_packageName))
       {
-        ostr.println ("import " + JJTreeGlobals.packageName + ".*;");
+        ostr.println ("import " + JJTreeGlobals.s_packageName + ".*;");
         ostr.println ();
       }
 
@@ -153,7 +152,7 @@ final class JavaNodeFiles
 
   static String nodeConstants ()
   {
-    return JJTreeGlobals.parserName + "TreeConstants";
+    return JJTreeGlobals.s_parserName + "TreeConstants";
   }
 
   static void generateTreeConstants_java ()
@@ -161,13 +160,10 @@ final class JavaNodeFiles
     final String name = nodeConstants ();
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), name + ".java");
 
-    try
+    try (final OutputFile outputFile = new OutputFile (file); final PrintWriter ostr = outputFile.getPrintWriter ())
     {
-      final OutputFile outputFile = new OutputFile (file);
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-
-      final List nodeIds = ASTNodeDescriptor.getNodeIds ();
-      final List nodeNames = ASTNodeDescriptor.getNodeNames ();
+      final List <String> nodeIds = ASTNodeDescriptor.getNodeIds ();
+      final List <String> nodeNames = ASTNodeDescriptor.getNodeNames ();
 
       generatePrologue (ostr);
       ostr.println ("public interface " + name);
@@ -175,7 +171,7 @@ final class JavaNodeFiles
 
       for (int i = 0; i < nodeIds.size (); ++i)
       {
-        final String n = (String) nodeIds.get (i);
+        final String n = nodeIds.get (i);
         ostr.println ("  public int " + n + " = " + i + ";");
       }
 
@@ -185,7 +181,7 @@ final class JavaNodeFiles
       ostr.println ("  public String[] jjtNodeName = {");
       for (int i = 0; i < nodeNames.size (); ++i)
       {
-        final String n = (String) nodeNames.get (i);
+        final String n = nodeNames.get (i);
         ostr.println ("    \"" + n + "\",");
       }
       ostr.println ("  };");
@@ -202,7 +198,7 @@ final class JavaNodeFiles
 
   static String visitorClass ()
   {
-    return JJTreeGlobals.parserName + "Visitor";
+    return JJTreeGlobals.s_parserName + "Visitor";
   }
 
   static void generateVisitor_java ()
@@ -215,12 +211,9 @@ final class JavaNodeFiles
     final String name = visitorClass ();
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), name + ".java");
 
-    try
+    try (final OutputFile outputFile = new OutputFile (file); final PrintWriter ostr = outputFile.getPrintWriter ())
     {
-      final OutputFile outputFile = new OutputFile (file);
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-
-      final List nodeNames = ASTNodeDescriptor.getNodeNames ();
+      final List <String> nodeNames = ASTNodeDescriptor.getNodeNames ();
 
       generatePrologue (ostr);
       ostr.println ("public interface " + name);
@@ -245,7 +238,7 @@ final class JavaNodeFiles
       {
         for (int i = 0; i < nodeNames.size (); ++i)
         {
-          final String n = (String) nodeNames.get (i);
+          final String n = nodeNames.get (i);
           if (n.equals ("void"))
           {
             continue;
@@ -276,7 +269,7 @@ final class JavaNodeFiles
 
   static String defaultVisitorClass ()
   {
-    return JJTreeGlobals.parserName + "DefaultVisitor";
+    return JJTreeGlobals.s_parserName + "DefaultVisitor";
   }
 
   private static String getVisitMethodName (final String className)
@@ -304,11 +297,8 @@ final class JavaNodeFiles
     final String className = defaultVisitorClass ();
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), className + ".java");
 
-    try
+    try (final OutputFile outputFile = new OutputFile (file); final PrintWriter ostr = outputFile.getPrintWriter ())
     {
-      final OutputFile outputFile = new OutputFile (file);
-      final PrintWriter ostr = outputFile.getPrintWriter ();
-
       final List <String> nodeNames = ASTNodeDescriptor.getNodeNames ();
 
       generatePrologue (ostr);
@@ -384,7 +374,7 @@ final class JavaNodeFiles
       generatePrologue (ostr);
 
       final Map <String, Object> options = new HashMap <> (Options.getOptions ());
-      options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
 
       final OutputFileGenerator generator = new OutputFileGenerator ("/templates/Node.template", options);
 
@@ -399,7 +389,7 @@ final class JavaNodeFiles
       generatePrologue (ostr);
 
       final Map <String, Object> options = new HashMap <> (Options.getOptions ());
-      options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
 
       final OutputFileGenerator generator = new OutputFileGenerator ("/templates/SimpleNode.template", options);
@@ -415,7 +405,7 @@ final class JavaNodeFiles
       generatePrologue (ostr);
 
       final Map <String, Object> options = new HashMap <> (Options.getOptions ());
-      options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.parserName);
+      options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       options.put ("NODE_TYPE", nodeType);
       options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
 

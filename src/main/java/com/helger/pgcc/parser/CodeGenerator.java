@@ -152,11 +152,6 @@ public class CodeGenerator
     saveOutput (fileName, m_mainBuffer);
   }
 
-  private static boolean _isHexDigit (final char c)
-  {
-    return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
-  }
-
   public void saveOutput (final String fileName, final StringBuilder sb)
   {
     final File tmp = new File (fileName);
