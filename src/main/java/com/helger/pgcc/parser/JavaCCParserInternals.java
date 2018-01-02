@@ -128,7 +128,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
   protected static void addregexpr (final TokenProduction p)
   {
     s_rexprlist.add (p);
-    if (Options.getUserTokenManager ())
+    if (Options.isUserTokenManager ())
     {
       if (p.m_lexStates == null || p.m_lexStates.length != 1 || !p.m_lexStates[0].equals ("DEFAULT"))
       {
@@ -169,7 +169,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     else
     {
       s_token_mgr_decls = decls;
-      if (Options.getUserTokenManager ())
+      if (Options.isUserTokenManager ())
       {
         JavaCCErrors.warning (t,
                               "Ignoring declarations in \"TOKEN_MGR_DECLS\" since option " +

@@ -256,7 +256,7 @@ public class LexGenJava extends CodeGenerator
     genCodeLine ("  /** Set debug output. */");
     genCodeLine ("  public " + staticString + " void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }");
 
-    if (Options.getTokenManagerUsesParser ())
+    if (Options.isTokenManagerUsesParser ())
     {
       genCodeLine ("");
       genCodeLine ("  public " + s_cu_name + " parser = null;");
@@ -405,7 +405,7 @@ public class LexGenJava extends CodeGenerator
 
   public void start () throws IOException
   {
-    if (!Options.getBuildTokenManager () || Options.getUserTokenManager () || JavaCCErrors.getErrorCount () > 0)
+    if (!Options.isBuildTokenManager () || Options.isUserTokenManager () || JavaCCErrors.getErrorCount () > 0)
       return;
 
     final String codeGeneratorClass = Options.getTokenManagerCodeGenerator ();
@@ -678,7 +678,7 @@ public class LexGenJava extends CodeGenerator
     NfaState.dumpNonAsciiMoveMethods (this);
     dumpGetNextToken ();
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       NfaState.dumpStatesForKind (this);
       dumpDebugMethods ();
@@ -705,11 +705,11 @@ public class LexGenJava extends CodeGenerator
     NfaState.printBoilerPlateJava (this);
 
     String charStreamName;
-    if (Options.getUserCharStream ())
+    if (Options.isUserCharStream ())
       charStreamName = "CharStream";
     else
     {
-      if (Options.getJavaUnicodeEscape ())
+      if (Options.isJavaUnicodeEscape ())
         charStreamName = "JavaCharStream";
       else
         charStreamName = "SimpleCharStream";
@@ -734,7 +734,7 @@ public class LexGenJava extends CodeGenerator
     // into a single Enum class
     final String fileName = Options.getOutputDirectory () + File.separator + tokMgrClassName + getFileExtension ();
 
-    if (Options.getBuildParser ())
+    if (Options.isBuildParser ())
     {
       saveOutput (fileName);
     }
@@ -1039,7 +1039,7 @@ public class LexGenJava extends CodeGenerator
     genCodeLine ("   catch(Exception e)");
     genCodeLine ("   {");
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
       genCodeLine ("      debugStream.println(\"Returning the <EOF> token.\\n\");");
 
     genCodeLine ("      jjmatchedKind = 0;");
@@ -1131,7 +1131,7 @@ public class LexGenJava extends CodeGenerator
                            "L & (1L << (curChar & 077))) != 0L)");
             }
 
-        if (Options.getDebugTokenManager ())
+        if (Options.isDebugTokenManager ())
         {
           genCodeLine (prefix + "{");
           genCodeLine ("      debugStream.println(" +
@@ -1142,7 +1142,7 @@ public class LexGenJava extends CodeGenerator
         }
         genCodeLine (prefix + "      curChar = input_stream.BeginToken();");
 
-        if (Options.getDebugTokenManager ())
+        if (Options.isDebugTokenManager ())
           genCodeLine (prefix + "}");
 
         genCodeLine (prefix + "}");
@@ -1151,7 +1151,7 @@ public class LexGenJava extends CodeGenerator
 
       if (initMatch[i] != Integer.MAX_VALUE && initMatch[i] != 0)
       {
-        if (Options.getDebugTokenManager ())
+        if (Options.isDebugTokenManager ())
           genCodeLine ("      debugStream.println(\"   Matched the empty string as \" + tokenImage[" +
                        initMatch[i] +
                        "] + \" token.\");");
@@ -1166,7 +1166,7 @@ public class LexGenJava extends CodeGenerator
         genCodeLine (prefix + "jjmatchedPos = 0;");
       }
 
-      if (Options.getDebugTokenManager ())
+      if (Options.isDebugTokenManager ())
         genCodeLine ("      debugStream.println(" +
                      (maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                      "\"Current character : \" + " +
@@ -1186,7 +1186,7 @@ public class LexGenJava extends CodeGenerator
           genCodeLine (prefix + "if (jjmatchedPos == 0 && jjmatchedKind > " + canMatchAnyChar[i] + ")");
         genCodeLine (prefix + "{");
 
-        if (Options.getDebugTokenManager ())
+        if (Options.isDebugTokenManager ())
           genCodeLine ("           debugStream.println(\"   Current character matched as a \" + tokenImage[" +
                        canMatchAnyChar[i] +
                        "] + \" token.\");");
@@ -1219,7 +1219,7 @@ public class LexGenJava extends CodeGenerator
       genCodeLine (prefix + "   {");
       genCodeLine (prefix + "      if (jjmatchedPos + 1 < curPos)");
 
-      if (Options.getDebugTokenManager ())
+      if (Options.isDebugTokenManager ())
       {
         genCodeLine (prefix + "      {");
         genCodeLine (prefix +
@@ -1229,12 +1229,12 @@ public class LexGenJava extends CodeGenerator
 
       genCodeLine (prefix + "         input_stream.backup(curPos - jjmatchedPos - 1);");
 
-      if (Options.getDebugTokenManager ())
+      if (Options.isDebugTokenManager ())
         genCodeLine (prefix + "      }");
 
-      if (Options.getDebugTokenManager ())
+      if (Options.isDebugTokenManager ())
       {
-        if (Options.getJavaUnicodeEscape () || Options.getUserCharStream ())
+        if (Options.isJavaUnicodeEscape () || Options.isUserCharStream ())
           genCodeLine ("    debugStream.println(" +
                        "\"****** FOUND A \" + tokenImage[jjmatchedKind] + \" MATCH " +
                        "(\" + " +
@@ -1353,7 +1353,7 @@ public class LexGenJava extends CodeGenerator
           genCodeLine (prefix + "      try {");
           genCodeLine (prefix + "         curChar = input_stream.readChar();");
 
-          if (Options.getDebugTokenManager ())
+          if (Options.isDebugTokenManager ())
             genCodeLine ("   debugStream.println(" +
                          (maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                          "\"Current character : \" + " +

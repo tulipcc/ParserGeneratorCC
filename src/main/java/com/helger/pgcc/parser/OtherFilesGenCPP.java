@@ -165,7 +165,7 @@ public class OtherFilesGenCPP extends JavaCCGlobals
       }
       s_ostr.println ("");
 
-      if (!Options.getUserTokenManager () && Options.getBuildTokenManager ())
+      if (!Options.isUserTokenManager () && Options.isBuildTokenManager ())
       {
         for (int i = 0; i < LexGenJava.lexStateName.length; i++)
         {

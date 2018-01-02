@@ -236,7 +236,7 @@ public class NfaState
       if (charMoves[i] == 0 || charMoves[i] > c)
         break;
 
-    if (!s_unicodeWarningGiven && c > 0xff && !Options.getJavaUnicodeEscape () && !Options.getUserCharStream ())
+    if (!s_unicodeWarningGiven && c > 0xff && !Options.isJavaUnicodeEscape () && !Options.isUserCharStream ())
     {
       s_unicodeWarningGiven = true;
       JavaCCErrors.warning (LexGenJava.curRE,
@@ -281,8 +281,8 @@ public class NfaState
 
     if (!s_unicodeWarningGiven &&
         (left > 0xff || right > 0xff) &&
-        !Options.getJavaUnicodeEscape () &&
-        !Options.getUserCharStream ())
+        !Options.isJavaUnicodeEscape () &&
+        !Options.isUserCharStream ())
     {
       s_unicodeWarningGiven = true;
       JavaCCErrors.warning (LexGenJava.curRE,
@@ -1770,7 +1770,7 @@ public class NfaState
       }
       else
       {
-        if (Options.getJavaUnicodeEscape () || s_unicodeWarningGiven)
+        if (Options.isJavaUnicodeEscape () || s_unicodeWarningGiven)
         {
           codeGenerator.genCodeLine ("         int hiByte = (curChar >> 8);");
           codeGenerator.genCodeLine ("         int i1 = hiByte >> 6;");
@@ -2447,7 +2447,7 @@ public class NfaState
       }
     }
 
-    if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
+    if (!Options.isJavaUnicodeEscape () && !s_unicodeWarningGiven)
     {
       if (m_loByteVec != null && m_loByteVec.size () > 1)
         codeGenerator.genCodeLine ("                  if ((jjbitVec" +
@@ -2551,7 +2551,7 @@ public class NfaState
     {
       final String kindCheck = " && kind > " + m_kindToPrint;
 
-      if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
+      if (!Options.isJavaUnicodeEscape () && !s_unicodeWarningGiven)
       {
         if (m_loByteVec != null && m_loByteVec.size () > 1)
           codeGenerator.genCodeLine ("                  if ((jjbitVec" +
@@ -2577,7 +2577,7 @@ public class NfaState
     String prefix = "   ";
     if (m_kindToPrint != Integer.MAX_VALUE)
     {
-      if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
+      if (!Options.isJavaUnicodeEscape () && !s_unicodeWarningGiven)
       {
         if (m_loByteVec != null && m_loByteVec.size () > 1)
         {
@@ -2601,7 +2601,7 @@ public class NfaState
       prefix = "";
     }
     else
-      if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
+      if (!Options.isJavaUnicodeEscape () && !s_unicodeWarningGiven)
       {
         if (m_loByteVec != null && m_loByteVec.size () > 1)
           codeGenerator.genCodeLine ("                  if ((jjbitVec" +
@@ -2718,7 +2718,7 @@ public class NfaState
       temp._dumpNonAsciiMove (codeGenerator, dumped);
     }
 
-    if (Options.getJavaUnicodeEscape () || s_unicodeWarningGiven)
+    if (Options.isJavaUnicodeEscape () || s_unicodeWarningGiven)
     {
       codeGenerator.genCodeLine ("               default : if (i1 == 0 || l1 == 0 || i2 == 0 ||  l2 == 0) break; else break;");
     }
@@ -2732,7 +2732,7 @@ public class NfaState
 
   public static void dumpNonAsciiMoveMethods (final CodeGenerator codeGenerator)
   {
-    if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
+    if (!Options.isJavaUnicodeEscape () && !s_unicodeWarningGiven)
       return;
 
     if (s_nonAsciiTableForMethod.size () <= 0)
@@ -3148,7 +3148,7 @@ public class NfaState
     codeGenerator.genCodeLine ("   int i = 1;");
     codeGenerator.genCodeLine ("   jjstateSet[0] = startState;");
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       switch (codeGenerator.getOutputLanguage ())
       {
@@ -3164,7 +3164,7 @@ public class NfaState
       }
     }
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       switch (codeGenerator.getOutputLanguage ())
       {
@@ -3223,7 +3223,7 @@ public class NfaState
     codeGenerator.genCodeLine ("      }");
     codeGenerator.genCodeLine ("      ++curPos;");
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       switch (codeGenerator.getOutputLanguage ())
       {
@@ -3266,7 +3266,7 @@ public class NfaState
     else
       codeGenerator.genCodeLine ("         return curPos;");
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       switch (codeGenerator.getOutputLanguage ())
       {
@@ -3302,7 +3302,7 @@ public class NfaState
         throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
     }
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       switch (codeGenerator.getOutputLanguage ())
       {

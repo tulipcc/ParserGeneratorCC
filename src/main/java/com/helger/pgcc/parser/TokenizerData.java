@@ -235,7 +235,7 @@ public class TokenizerData
             assert (toToken.length > vectorIndex && (toToken[vectorIndex] & bits) != 0L);
             matchType = EMatchType.TOKEN;
           }
-      final MatchInfo matchInfo = new MatchInfo (Options.getIgnoreCase () ? null : RStringLiteral.s_allImages[i],
+      final MatchInfo matchInfo = new MatchInfo (Options.isIgnoreCase () ? null : RStringLiteral.s_allImages[i],
                                                  i,
                                                  matchType,
                                                  newLexStateIndices[i],

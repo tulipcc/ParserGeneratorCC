@@ -45,6 +45,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -69,14 +70,6 @@ public class CodeGenerator
   protected final EOutputLanguage getOutputLanguage ()
   {
     return Options.getOutputLanguage ();
-  }
-
-  @Deprecated
-  protected final boolean isJavaLanguage ()
-  {
-    // TODO :: CBA -- Require Unification of output language specific processing
-    // into a single Enum class
-    return getOutputLanguage ().isJava ();
   }
 
   public void switchToMainFile ()
@@ -169,7 +162,7 @@ public class CodeGenerator
       {
         m_mainBuffer.insert (0, "#include \"SimpleNode.h\"\n");
       }
-      if (Options.getTokenManagerUsesParser ())
+      if (Options.isTokenManagerUsesParser ())
         m_mainBuffer.insert (0, "#include \"" + s_cu_name + ".h\"\n");
       m_mainBuffer.insert (0, "#include \"TokenMgrError.h\"\n");
       m_mainBuffer.insert (0, "#include \"" + incfileName + "\"\n");
@@ -351,18 +344,19 @@ public class CodeGenerator
    */
   public void genModifier (final String mod)
   {
-    final String origMod = mod.toLowerCase ();
-    if (isJavaLanguage ())
+    final String origMod = mod.toLowerCase (Locale.US);
+    switch (getOutputLanguage ())
     {
-      genCode (mod);
-    }
-    else
-    { // For now, it's only C++ for now
-      if (origMod.equals ("public") || origMod.equals ("private"))
-      {
-        genCode (origMod + ": ");
-      }
-      // we don't care about other mods for now.
+      case JAVA:
+        genCode (mod);
+        break;
+      case CPP:
+        // For now, it's only C++ for now
+        if (origMod.equals ("public") || origMod.equals ("protected") || origMod.equals ("private"))
+          genCode (origMod + ": ");
+        break;
+      default:
+        throw new UnsupportedOutputLanguageException (getOutputLanguage ());
     }
   }
 
@@ -474,11 +468,11 @@ public class CodeGenerator
 
   public static String getCharStreamName ()
   {
-    if (Options.getUserCharStream ())
+    if (Options.isUserCharStream ())
     {
       return "CharStream";
     }
-    return Options.getJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream";
+    return Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream";
   }
 
   protected void writeTemplate (final String name, final Map <String, Object> options) throws IOException

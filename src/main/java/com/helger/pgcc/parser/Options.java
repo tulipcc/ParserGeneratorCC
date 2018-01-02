@@ -743,7 +743,7 @@ public class Options
    *
    * @return The requested debug tokenmanager value.
    */
-  public static boolean getDebugTokenManager ()
+  public static boolean isDebugTokenManager ()
   {
     return booleanValue (USEROPTION__DEBUG_TOKEN_MANAGER);
   }
@@ -753,7 +753,7 @@ public class Options
    *
    * @return The requested error reporting value.
    */
-  public static boolean getErrorReporting ()
+  public static boolean isErrorReporting ()
   {
     return booleanValue (USEROPTION__ERROR_REPORTING);
   }
@@ -763,7 +763,7 @@ public class Options
    *
    * @return The requested Java unicode escape value.
    */
-  public static boolean getJavaUnicodeEscape ()
+  public static boolean isJavaUnicodeEscape ()
   {
     return booleanValue (USEROPTION__JAVA_UNICODE_ESCAPE);
   }
@@ -773,7 +773,7 @@ public class Options
    *
    * @return The requested unicode input value.
    */
-  public static boolean getUnicodeInput ()
+  public static boolean isUnicodeInput ()
   {
     return booleanValue (USEROPTION__UNICODE_INPUT);
   }
@@ -783,7 +783,7 @@ public class Options
    *
    * @return The requested ignore case value.
    */
-  public static boolean getIgnoreCase ()
+  public static boolean isIgnoreCase ()
   {
     return booleanValue (USEROPTION__IGNORE_CASE);
   }
@@ -793,7 +793,7 @@ public class Options
    *
    * @return The requested user tokenmanager value.
    */
-  public static boolean getUserTokenManager ()
+  public static boolean isUserTokenManager ()
   {
     return booleanValue (USEROPTION__USER_TOKEN_MANAGER);
   }
@@ -803,7 +803,7 @@ public class Options
    *
    * @return The requested user charstream value.
    */
-  public static boolean getUserCharStream ()
+  public static boolean isUserCharStream ()
   {
     return booleanValue (USEROPTION__USER_CHAR_STREAM);
   }
@@ -813,7 +813,7 @@ public class Options
    *
    * @return The requested build parser value.
    */
-  public static boolean getBuildParser ()
+  public static boolean isBuildParser ()
   {
     return booleanValue (USEROPTION__BUILD_PARSER);
   }
@@ -823,7 +823,7 @@ public class Options
    *
    * @return The requested build token manager value.
    */
-  public static boolean getBuildTokenManager ()
+  public static boolean isBuildTokenManager ()
   {
     return booleanValue (USEROPTION__BUILD_TOKEN_MANAGER);
   }
@@ -833,7 +833,7 @@ public class Options
    *
    * @return The requested token manager uses parser value;
    */
-  public static boolean getTokenManagerUsesParser ()
+  public static boolean isTokenManagerUsesParser ()
   {
     return booleanValue (USEROPTION__TOKEN_MANAGER_USES_PARSER) && !Options.isStatic ();
   }
@@ -843,7 +843,7 @@ public class Options
    *
    * @return The requested sanity check value.
    */
-  public static boolean getSanityCheck ()
+  public static boolean isSanityCheck ()
   {
     return booleanValue (USEROPTION__SANITY_CHECK);
   }
@@ -1120,7 +1120,7 @@ public class Options
 
   public static boolean isTokenManagerRequiresParserAccess ()
   {
-    return getTokenManagerUsesParser () && !isStatic ();
+    return isTokenManagerUsesParser () && !isStatic ();
   }
 
   /**
@@ -1131,6 +1131,11 @@ public class Options
   public static int getDepthLimit ()
   {
     return intValue (USEROPTION__DEPTH_LIMIT);
+  }
+
+  public static boolean hasDepthLimit ()
+  {
+    return getDepthLimit () > 0;
   }
 
   /**

@@ -318,7 +318,7 @@ public class Main
 
       JavaCCGlobals.createOutputDir (Options.getOutputDirectory ());
 
-      if (Options.getUnicodeInput ())
+      if (Options.isUnicodeInput ())
       {
         NfaState.s_unicodeWarningGiven = true;
         System.out.println ("Note: UNICODE_INPUT option is specified. " +
@@ -326,7 +326,7 @@ public class Main
       }
 
       Semanticize.start ();
-      final boolean isBuildParser = Options.getBuildParser ();
+      final boolean isBuildParser = Options.isBuildParser ();
 
       // 2012/05/02 -- This is not the best way to add-in GWT support, really
       // the code needs to turn supported languages into enumerations
@@ -365,7 +365,7 @@ public class Main
           break;
       }
 
-      if ((JavaCCErrors.getErrorCount () == 0) && (isBuildParser || Options.getBuildTokenManager ()))
+      if ((JavaCCErrors.getErrorCount () == 0) && (isBuildParser || Options.isBuildTokenManager ()))
       {
         if (JavaCCErrors.getWarningCount () == 0)
         {

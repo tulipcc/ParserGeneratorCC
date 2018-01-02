@@ -1721,7 +1721,7 @@ public class RCharacterList extends RegularExpression
   {
     if (!transformed)
     {
-      if (Options.getIgnoreCase () || ignoreCase)
+      if (Options.isIgnoreCase () || ignoreCase)
       {
         /*
          * int i; System.out.println("Before:"); for (i = 0; i <
@@ -1955,7 +1955,7 @@ public class RCharacterList extends RegularExpression
     }
 
     // System.out.println("lastRem : " + (int)lastRemoved);
-    if (NfaState.s_unicodeWarningGiven || Options.getJavaUnicodeEscape ())
+    if (NfaState.s_unicodeWarningGiven || Options.isJavaUnicodeEscape ())
     {
       if (lastRemoved < (char) 0xffff)
         newDescriptors.add (new CharacterRange ((char) (lastRemoved + 1), (char) 0xffff));

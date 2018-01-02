@@ -67,7 +67,7 @@ public class Semanticize extends JavaCCGlobals
     if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ();
 
-    if (Options.getLookahead () > 1 && !Options.getForceLaCheck () && Options.getSanityCheck ())
+    if (Options.getLookahead () > 1 && !Options.getForceLaCheck () && Options.isSanityCheck ())
     {
       JavaCCErrors.warning ("Lookahead adequacy checking not being performed since option LOOKAHEAD " +
                             "is more than 1.  Set option FORCE_LA_CHECK to true to force checking.");
@@ -145,14 +145,14 @@ public class Semanticize extends JavaCCGlobals
           prepareToRemove (respecs, res);
         }
         else
-          if (tp.m_isExplicit && Options.getUserTokenManager ())
+          if (tp.m_isExplicit && Options.isUserTokenManager ())
           {
             JavaCCErrors.warning (res.rexp,
                                   "Ignoring regular expression specification since " +
                                             "option USER_TOKEN_MANAGER has been set to true.");
           }
           else
-            if (tp.m_isExplicit && !Options.getUserTokenManager () && res.rexp instanceof RJustName)
+            if (tp.m_isExplicit && !Options.isUserTokenManager () && res.rexp instanceof RJustName)
             {
               JavaCCErrors.warning (res.rexp,
                                     "Ignoring free-standing regular expression reference.  " +
@@ -423,7 +423,7 @@ public class Semanticize extends JavaCCGlobals
      * following block of code is executed.
      */
 
-    if (!Options.getUserTokenManager ())
+    if (!Options.isUserTokenManager ())
     {
       final FixRJustNames frjn = new FixRJustNames ();
       for (final TokenProduction aTokenProduction : s_rexprlist)
@@ -456,7 +456,7 @@ public class Semanticize extends JavaCCGlobals
      * of execution of this code.
      */
 
-    if (Options.getUserTokenManager ())
+    if (Options.isUserTokenManager ())
     {
       for (final TokenProduction aTokenProduction : s_rexprlist)
       {
@@ -495,7 +495,7 @@ public class Semanticize extends JavaCCGlobals
      * "ordered_named_tokens" so that they may be generated into the
      * ...Constants file.
      */
-    if (Options.getUserTokenManager ())
+    if (Options.isUserTokenManager ())
     {
       for (final TokenProduction aTokenProduction : s_rexprlist)
       {
@@ -540,7 +540,7 @@ public class Semanticize extends JavaCCGlobals
       }
     }
 
-    if (Options.getSanityCheck () && JavaCCErrors.getErrorCount () == 0)
+    if (Options.isSanityCheck () && JavaCCErrors.getErrorCount () == 0)
     {
 
       // The following code checks that all ZeroOrMore, ZeroOrOne, and OneOrMore
@@ -580,7 +580,7 @@ public class Semanticize extends JavaCCGlobals
       // recursions,
       // so we only need to do the equivalent of the above walk.
       // This is not done if option USER_TOKEN_MANAGER is set to true.
-      if (!Options.getUserTokenManager ())
+      if (!Options.isUserTokenManager ())
       {
         for (final TokenProduction aTokenProduction : s_rexprlist)
         {

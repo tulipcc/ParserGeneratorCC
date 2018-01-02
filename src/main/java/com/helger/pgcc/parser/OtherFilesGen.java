@@ -104,14 +104,14 @@ public class OtherFilesGen extends JavaCCGlobals
       FilesJava.gen_Token (templateLoc);
     }
 
-    if (Options.getUserTokenManager ())
+    if (Options.isUserTokenManager ())
     {
       // CBA -- I think that Token managers are unique so will always be
       // generated
       FilesJava.gen_TokenManager (templateLoc);
     }
     else
-      if (Options.getUserCharStream ())
+      if (Options.isUserCharStream ())
       {
         // Added this if condition -- 2012/10/17 -- cba
         if (Options.isGenerateBoilerplateCode ())
@@ -125,7 +125,7 @@ public class OtherFilesGen extends JavaCCGlobals
 
         if (Options.isGenerateBoilerplateCode ())
         {
-          if (Options.getJavaUnicodeEscape ())
+          if (Options.isJavaUnicodeEscape ())
           {
             FilesJava.gen_JavaCharStream (templateLoc);
           }
@@ -195,7 +195,7 @@ public class OtherFilesGen extends JavaCCGlobals
         ostr.println ("  int " + re.m_label + " = " + re.m_ordinal + ";");
       }
       ostr.println ("");
-      if (!Options.getUserTokenManager () && Options.getBuildTokenManager ())
+      if (!Options.isUserTokenManager () && Options.isBuildTokenManager ())
       {
         for (int i = 0; i < LexGenJava.lexStateName.length; i++)
         {

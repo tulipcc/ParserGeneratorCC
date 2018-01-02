@@ -200,7 +200,7 @@ public class ParseGenCPP extends ParseGenJava
     genCodeLine ("");
     final int tokenMaskSize = (s_tokenCount - 1) / 32 + 1;
 
-    if (Options.getErrorReporting () && tokenMaskSize > 0)
+    if (Options.isErrorReporting () && tokenMaskSize > 0)
     {
       switchToStaticsFile ();
       for (int i = 0; i < tokenMaskSize; i++)
@@ -218,7 +218,7 @@ public class ParseGenCPP extends ParseGenJava
       }
     }
 
-    if (Options.getDepthLimit () > 0)
+    if (Options.hasDepthLimit ())
     {
       genCodeLine ("  private: int jj_depth;");
       genCodeLine ("  private: bool jj_depth_error;");
@@ -251,7 +251,7 @@ public class ParseGenCPP extends ParseGenJava
     genCodeLine ("{");
     genCodeLine ("    head = nullptr;");
     genCodeLine ("    ReInit(tokenManager);");
-    if (Options.getTokenManagerUsesParser ())
+    if (Options.isTokenManagerUsesParser ())
       genCodeLine ("    tokenManager->setParser(this);");
     genCodeLine ("}");
 
@@ -297,12 +297,12 @@ public class ParseGenCPP extends ParseGenJava
     {
       genCodeLine ("    jjtree.reset();");
     }
-    if (Options.getDepthLimit () > 0)
+    if (Options.hasDepthLimit ())
     {
       genCodeLine ("    jj_depth = 0;");
       genCodeLine ("    jj_depth_error = false;");
     }
-    if (Options.getErrorReporting ())
+    if (Options.isErrorReporting ())
     {
       genCodeLine ("    jj_gen = 0;");
       if (s_maskindex > 0)
@@ -329,7 +329,7 @@ public class ParseGenCPP extends ParseGenJava
     genCodeLine ("  if (errorHandler) {");
     genCodeLine ("    delete errorHandler, errorHandler = nullptr;");
     genCodeLine ("  }");
-    if (Options.getDepthLimit () > 0)
+    if (Options.hasDepthLimit ())
     {
       genCodeLine ("  assert(jj_depth==0);");
     }
@@ -387,7 +387,7 @@ public class ParseGenCPP extends ParseGenJava
       genCodeLine ("    jj_ntk = -1;");
     }
     genCodeLine ("    if (token->kind == kind) {");
-    if (Options.getErrorReporting ())
+    if (Options.isErrorReporting ())
     {
       genCodeLine ("      jj_gen++;");
       if (s_jj2index != 0)
@@ -415,7 +415,7 @@ public class ParseGenCPP extends ParseGenJava
       genCodeLine ("    jj_nt = token;");
     }
     genCodeLine ("    token = oldToken;");
-    if (Options.getErrorReporting ())
+    if (Options.isErrorReporting ())
     {
       genCodeLine ("    jj_kind = kind;");
     }
@@ -460,7 +460,7 @@ public class ParseGenCPP extends ParseGenJava
       genCodeLine ("    } else {");
       genCodeLine ("      jj_scanpos = jj_scanpos->next;");
       genCodeLine ("    }");
-      if (Options.getErrorReporting ())
+      if (Options.isErrorReporting ())
       {
         genCodeLine ("    if (jj_rescan) {");
         genCodeLine ("      int i = 0; Token *tok = token;");
@@ -501,7 +501,7 @@ public class ParseGenCPP extends ParseGenJava
       genCodeLine ("    else token = token->next = token_source->getNextToken();");
       genCodeLine ("    jj_ntk = -1;");
     }
-    if (Options.getErrorReporting ())
+    if (Options.isErrorReporting ())
     {
       genCodeLine ("    jj_gen++;");
     }
@@ -546,7 +546,7 @@ public class ParseGenCPP extends ParseGenJava
     switchToIncludeFile ();
     genCodeLine ("private:");
     genCodeLine ("  int jj_kind;");
-    if (Options.getErrorReporting ())
+    if (Options.isErrorReporting ())
     {
       genCodeLine ("  int **jj_expentries;");
       genCodeLine ("  int *jj_expentry;");
@@ -595,7 +595,7 @@ public class ParseGenCPP extends ParseGenJava
       genCodeLine ("  /** Generate ParseException. */");
       generateMethodDefHeader ("  virtual void ", s_cu_name, "parseError()");
       genCodeLine ("   {");
-      if (Options.getErrorReporting ())
+      if (Options.isErrorReporting ())
       {
         genCodeLine ("      fprintf(stderr, \"Parse error at: %d:%d, after token: %s encountered: %s\\n\", token->beginLine, token->beginColumn, addUnicodeEscapes(token->image).c_str(), addUnicodeEscapes(getToken(1)->image).c_str());");
       }
@@ -641,7 +641,7 @@ public class ParseGenCPP extends ParseGenJava
       genCodeLine ("  /** Generate ParseException. */");
       generateMethodDefHeader ("virtual void ", s_cu_name, "parseError()");
       genCodeLine ("   {");
-      if (Options.getErrorReporting ())
+      if (Options.isErrorReporting ())
       {
         genCodeLine ("      fprintf(stderr, \"Parse error at: %d:%d, after token: %s encountered: %s\\n\", token->beginLine, token->beginColumn, addUnicodeEscapes(token->image).c_str(), addUnicodeEscapes(getToken(1)->image).c_str());");
       }
@@ -757,7 +757,7 @@ public class ParseGenCPP extends ParseGenJava
       genCodeLine ("");
     }
 
-    if (s_jj2index != 0 && Options.getErrorReporting ())
+    if (s_jj2index != 0 && Options.isErrorReporting ())
     {
       generateMethodDefHeader ("  void", s_cu_name, "jj_rescan_token()");
       genCodeLine ("{");

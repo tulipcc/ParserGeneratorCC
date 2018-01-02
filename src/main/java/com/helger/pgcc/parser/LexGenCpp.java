@@ -168,7 +168,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       switchToIncludeFile ();
       genCodeLine ("  void CommonTokenAction(Token* token);");
 
-      if (Options.getTokenManagerUsesParser ())
+      if (Options.isTokenManagerUsesParser ())
       {
         genCodeLine ("  void setParser(void* parser) {");
         genCodeLine ("      this->parser = (" + s_cu_name + "*) parser;");
@@ -203,7 +203,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     genCodeLine ("{ debugStream = ds; }");
 
     switchToIncludeFile ();
-    if (Options.getTokenManagerUsesParser ())
+    if (Options.isTokenManagerUsesParser ())
     {
       genCodeLine ("");
       genCodeLine ("private:");
@@ -307,7 +307,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
   @Override
   public void start () throws IOException
   {
-    if (!Options.getBuildTokenManager () || Options.getUserTokenManager () || JavaCCErrors.getErrorCount () > 0)
+    if (!Options.isBuildTokenManager () || Options.isUserTokenManager () || JavaCCErrors.getErrorCount () > 0)
       return;
 
     keepLineCol = Options.getKeepLineColumn ();
@@ -499,7 +499,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     dumpFillToken ();
     dumpGetNextToken ();
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       NfaState.dumpStatesForKind (this);
       dumpDebugMethods ();
@@ -788,7 +788,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     genCodeLine ("   {");
     // genCodeLine(" input_stream->backup(1);");
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
       genCodeLine ("      fprintf(debugStream, \"Returning the <EOF> token.\\n\");");
 
     genCodeLine ("      jjmatchedKind = 0;");
@@ -882,7 +882,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
             }
 
         genCodeLine (prefix + "{");
-        if (Options.getDebugTokenManager ())
+        if (Options.isDebugTokenManager ())
         {
           if (maxLexStates > 1)
           {
@@ -900,7 +900,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
 
       if (initMatch[i] != Integer.MAX_VALUE && initMatch[i] != 0)
       {
-        if (Options.getDebugTokenManager ())
+        if (Options.isDebugTokenManager ())
           genCodeLine ("      fprintf(debugStream, \"   Matched the empty string as %s token.\\n\", addUnicodeEscapes(tokenImage[" +
                        initMatch[i] +
                        "]).c_str());");
@@ -915,7 +915,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
         genCodeLine (prefix + "jjmatchedPos = 0;");
       }
 
-      if (Options.getDebugTokenManager ())
+      if (Options.isDebugTokenManager ())
       {
         genCodeLine ("   fprintf(debugStream, " +
                      "\"<%s>Current character : %c(%d) at line %d column %d\\n\"," +
@@ -936,7 +936,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
           genCodeLine (prefix + "if (jjmatchedPos == 0 && jjmatchedKind > " + canMatchAnyChar[i] + ")");
         genCodeLine (prefix + "{");
 
-        if (Options.getDebugTokenManager ())
+        if (Options.isDebugTokenManager ())
         {
           genCodeLine ("           fprintf(debugStream, \"   Current character matched as a %s token.\\n\", addUnicodeEscapes(tokenImage[" +
                        canMatchAnyChar[i] +
@@ -971,7 +971,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       genCodeLine (prefix + "   {");
       genCodeLine (prefix + "      if (jjmatchedPos + 1 < curPos)");
 
-      if (Options.getDebugTokenManager ())
+      if (Options.isDebugTokenManager ())
       {
         genCodeLine (prefix + "      {");
         genCodeLine (prefix +
@@ -981,12 +981,12 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
 
       genCodeLine (prefix + "         input_stream->backup(curPos - jjmatchedPos - 1);");
 
-      if (Options.getDebugTokenManager ())
+      if (Options.isDebugTokenManager ())
       {
         genCodeLine (prefix + "      }");
       }
 
-      if (Options.getDebugTokenManager ())
+      if (Options.isDebugTokenManager ())
       {
         genCodeLine ("    fprintf(debugStream, " +
                      "\"****** FOUND A %d(%s) MATCH (%s) ******\\n\", jjmatchedKind, addUnicodeEscapes(tokenImage[jjmatchedKind]).c_str(), addUnicodeEscapes(input_stream->GetSuffix(jjmatchedPos + 1)).c_str());");
@@ -1095,7 +1095,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
           genCodeLine (prefix + "   if (!input_stream->endOfInput()) {");
           genCodeLine (prefix + "         curChar = input_stream->readChar();");
 
-          if (Options.getDebugTokenManager ())
+          if (Options.isDebugTokenManager ())
           {
             genCodeLine ("   fprintf(debugStream, " +
                          "\"<%s>Current character : %c(%d) at line %d column %d\\n\"," +

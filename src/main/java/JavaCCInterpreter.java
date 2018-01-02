@@ -153,7 +153,7 @@ public class JavaCCInterpreter
       int nfaStartState = td.m_initialStates.get (curLexState);
 
       char c = input.charAt (curPos);
-      if (Options.getIgnoreCase ())
+      if (Options.isIgnoreCase ())
         c = Character.toLowerCase (c);
       final int key = curLexState << 16 | c;
       final List <String> literals = td.m_literalSequence.get (key);
@@ -168,7 +168,7 @@ public class JavaCCInterpreter
           while (index < s.length () && curPos + index < input_size)
           {
             c = input.charAt (curPos + index);
-            if (Options.getIgnoreCase ())
+            if (Options.isIgnoreCase ())
               c = Character.toLowerCase (c);
             if (c != s.charAt (index))
               break;
@@ -196,7 +196,7 @@ public class JavaCCInterpreter
         do
         {
           c = input.charAt (curPos);
-          if (Options.getIgnoreCase ())
+          if (Options.isIgnoreCase ())
             c = Character.toLowerCase (c);
           for (final int state : curStates)
           {

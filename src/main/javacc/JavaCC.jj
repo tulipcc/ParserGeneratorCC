@@ -874,20 +874,20 @@ void regular_expr_production() :
 	{
 	  TokenProduction p = new TokenProduction();
 	  List states;
-	  Token t = p.firstToken = getToken(1);
+	  Token t = p.m_firstToken = getToken(1);
 	  p.setLine(t.beginLine);
 	  p.setColumn(t.beginColumn);
 	}
 {
 	{
-	  // set p.lexStates assuming there is no state spec.
+	  // set p.m_lexStates assuming there is no state spec.
 	  // and then override if necessary.
-	  p.lexStates = new String[] {"DEFAULT"};
+	  p.m_lexStates = new String[] {"DEFAULT"};
 	}
   [
     LOOKAHEAD(2) "<" "*" ">"
 	{
-	  p.lexStates = null;
+	  p.m_lexStates = null;
 	}
   |
     "<"
@@ -905,23 +905,23 @@ void regular_expr_production() :
       )*
     ">"
 	{
-	  p.lexStates = new String[states.size()];
+	  p.m_lexStates = new String[states.size()];
 	  for (int i = 0; i < states.size(); i++) {
-	    p.lexStates[i] = (String)states.get(i);
+	    p.m_lexStates[i] = (String)states.get(i);
 	  }
 	}
   ]
   regexpr_kind(p)
 	{
-	  if (p.kind != TokenProduction.TOKEN && Options.getUserTokenManager()) {
+	  if (p.m_kind != TokenProduction.TOKEN && Options.isUserTokenManager()) {
 	    JavaCCErrors.warning(getToken(0), "Regular expression is being treated as if it were a TOKEN since option USER_TOKEN_MANAGER has been set to true.");
 	  }
 	}
   [
     "[" t="IGNORE_CASE" "]"
 	{
-	  p.ignoreCase = true;
-	  if (Options.getUserTokenManager()) {
+	  p.m_ignoreCase = true;
+	  if (Options.isUserTokenManager()) {
 	    JavaCCErrors.warning(t, "Ignoring \"IGNORE_CASE\" specification since option USER_TOKEN_MANAGER has been set to true.");
 	  }
 	}
@@ -929,7 +929,7 @@ void regular_expr_production() :
   ":"
   "{" regexpr_spec(p) ( "|" regexpr_spec(p) )* t="}"
 	{
-	  p.lastToken = t;
+	  p.m_lastToken = t;
 	  addregexpr(p);
 	}
 }
@@ -960,22 +960,22 @@ void regexpr_kind(TokenProduction p) :
 {
   "TOKEN"
 	{
-	  p.kind = TokenProduction.TOKEN;
+	  p.m_kind = TokenProduction.TOKEN;
 	}
 |
   "SPECIAL_TOKEN"
 	{
-	  p.kind = TokenProduction.SPECIAL;
+	  p.m_kind = TokenProduction.SPECIAL;
 	}
 |
   "SKIP"
 	{
-	  p.kind = TokenProduction.SKIP;
+	  p.m_kind = TokenProduction.SKIP;
 	}
 |
   "MORE"
 	{
-	  p.kind = TokenProduction.MORE;
+	  p.m_kind = TokenProduction.MORE;
 	}
 }
 
@@ -998,7 +998,7 @@ void regexpr_spec(TokenProduction p) :
 	}
     Block(act.getActionTokens())
 	{
-	  if (Options.getUserTokenManager()) {
+	  if (Options.isUserTokenManager()) {
 	    JavaCCErrors.warning(t, "Ignoring action in regular expression specification since option USER_TOKEN_MANAGER has been set to true.");
 	  }
 	  if (res.rexp.private_rexp) {
@@ -1017,7 +1017,7 @@ void regexpr_spec(TokenProduction p) :
 	{
 	  res.act = act;
 	  res.nsTok = t;
-	  p.respecs.add(res);
+	  p.m_respecs.add(res);
 	}
 }
 

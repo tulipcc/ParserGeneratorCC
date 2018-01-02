@@ -194,7 +194,7 @@ public class RStringLiteral extends RegularExpression
               (LexGenJava.toSkip[i / 64] & (1L << (i % 64))) != 0L ||
               (LexGenJava.toMore[i / 64] & (1L << (i % 64))) != 0L ||
               LexGenJava.canReachOnMore[LexGenJava.lexStates[i]] ||
-              ((Options.getIgnoreCase () || LexGenJava.ignoreCase[i]) &&
+              ((Options.isIgnoreCase () || LexGenJava.ignoreCase[i]) &&
                (!image.equals (image.toLowerCase ()) || !image.equals (image.toUpperCase ()))))
           {
             s_allImages[i] = null;
@@ -278,7 +278,7 @@ public class RStringLiteral extends RegularExpression
           (LexGenJava.toSkip[i / 64] & (1L << (i % 64))) != 0L ||
           (LexGenJava.toMore[i / 64] & (1L << (i % 64))) != 0L ||
           LexGenJava.canReachOnMore[LexGenJava.lexStates[i]] ||
-          ((Options.getIgnoreCase () || LexGenJava.ignoreCase[i]) &&
+          ((Options.isIgnoreCase () || LexGenJava.ignoreCase[i]) &&
            (!image.equals (image.toLowerCase ()) || !image.equals (image.toUpperCase ()))))
       {
         s_allImages[i] = null;
@@ -370,15 +370,15 @@ public class RStringLiteral extends RegularExpression
     for (int i = 0; i < len; i++)
     {
       final char c = m_image.charAt (i);
-      if (Options.getIgnoreCase ())
+      if (Options.isIgnoreCase ())
         s = Character.toString (Character.toLowerCase (c));
       else
         s = Character.toString (c);
 
       if (!NfaState.s_unicodeWarningGiven &&
           c > 0xff &&
-          !Options.getJavaUnicodeEscape () &&
-          !Options.getUserCharStream ())
+          !Options.isJavaUnicodeEscape () &&
+          !Options.isUserCharStream ())
       {
         NfaState.s_unicodeWarningGiven = true;
         JavaCCErrors.warning (LexGenJava.curRE,
@@ -402,7 +402,7 @@ public class RStringLiteral extends RegularExpression
       else
         info.insertValidKind (m_ordinal);
 
-      if (!Options.getIgnoreCase () && LexGenJava.ignoreCase[m_ordinal] && c != Character.toLowerCase (c))
+      if (!Options.isIgnoreCase () && LexGenJava.ignoreCase[m_ordinal] && c != Character.toLowerCase (c))
       {
         s = Character.toString (Character.toLowerCase (c));
 
@@ -422,7 +422,7 @@ public class RStringLiteral extends RegularExpression
           info.insertValidKind (m_ordinal);
       }
 
-      if (!Options.getIgnoreCase () && LexGenJava.ignoreCase[m_ordinal] && c != Character.toUpperCase (c))
+      if (!Options.isIgnoreCase () && LexGenJava.ignoreCase[m_ordinal] && c != Character.toUpperCase (c))
       {
         s = Character.toString (Character.toUpperCase (c));
 
@@ -472,7 +472,7 @@ public class RStringLiteral extends RegularExpression
       startState.charMoves = new char [1];
       startState.addChar (m_image.charAt (i));
 
-      if (Options.getIgnoreCase () || ignoreCase)
+      if (Options.isIgnoreCase () || ignoreCase)
       {
         startState.addChar (Character.toLowerCase (m_image.charAt (i)));
         startState.addChar (Character.toUpperCase (m_image.charAt (i)));
@@ -604,7 +604,7 @@ public class RStringLiteral extends RegularExpression
             break;
           }
           else
-            if (Options.getIgnoreCase () && _startsWithIgnoreCase (s_allImages[j], image))
+            if (Options.isIgnoreCase () && _startsWithIgnoreCase (s_allImages[j], image))
             {
               s_subString[i] = true;
               s_subStringAtPos[image.length () - 1] = true;
@@ -640,7 +640,7 @@ public class RStringLiteral extends RegularExpression
     codeGenerator.genCodeLine ("   jjmatchedKind = kind;");
     codeGenerator.genCodeLine ("   jjmatchedPos = pos;");
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       switch (codeGenerator.getOutputLanguage ())
       {
@@ -673,7 +673,7 @@ public class RStringLiteral extends RegularExpression
       default:
         throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
     }
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       switch (codeGenerator.getOutputLanguage ())
       {
@@ -724,7 +724,7 @@ public class RStringLiteral extends RegularExpression
     codeGenerator.genCodeLine ("   jjmatchedKind = kind;");
     codeGenerator.genCodeLine ("   jjmatchedPos = pos;");
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       // TODO :: CBA -- Require Unification of output language specific
       // processing into a single Enum class
@@ -942,7 +942,7 @@ public class RStringLiteral extends RegularExpression
               codeGenerator.genCodeLine ("      return " + i + ";");
         }
 
-        if (i != 0 && Options.getDebugTokenManager ())
+        if (i != 0 && Options.isDebugTokenManager ())
         {
           switch (codeGenerator.getOutputLanguage ())
           {
@@ -1047,7 +1047,7 @@ public class RStringLiteral extends RegularExpression
             codeGenerator.genCodeLine ("0L);");
           }
 
-          if (i != 0 && Options.getDebugTokenManager ())
+          if (i != 0 && Options.isDebugTokenManager ())
           {
             switch (codeGenerator.getOutputLanguage ())
             {
@@ -1101,7 +1101,7 @@ public class RStringLiteral extends RegularExpression
             break;
         }
 
-        if (Options.getDebugTokenManager ())
+        if (Options.isDebugTokenManager ())
         {
           // TODO :: CBA -- Require Unification of output language specific
           // processing into a single Enum class
@@ -1168,7 +1168,7 @@ public class RStringLiteral extends RegularExpression
                 {
                   LexGenJava.addCharToSkip (c, kind);
 
-                  if (Options.getIgnoreCase ())
+                  if (Options.isIgnoreCase ())
                   {
                     if (c != Character.toUpperCase (c))
                       LexGenJava.addCharToSkip (Character.toUpperCase (c), kind);
@@ -1182,7 +1182,7 @@ public class RStringLiteral extends RegularExpression
         }
 
         // Since we know key is a single character ...
-        if (Options.getIgnoreCase ())
+        if (Options.isIgnoreCase ())
         {
           if (c != Character.toUpperCase (c))
             codeGenerator.genCodeLine ("      case " + (int) Character.toUpperCase (c) + ":");
@@ -1403,7 +1403,7 @@ public class RStringLiteral extends RegularExpression
        */
       codeGenerator.genCodeLine ("      default :");
 
-      if (Options.getDebugTokenManager ())
+      if (Options.isDebugTokenManager ())
       {
         switch (codeGenerator.getOutputLanguage ())
         {
@@ -1679,7 +1679,7 @@ public class RStringLiteral extends RegularExpression
 
     codeGenerator.genCodeLine ("{");
 
-    if (Options.getDebugTokenManager ())
+    if (Options.isDebugTokenManager ())
     {
       // TODO :: CBA -- Require Unification of output language specific
       // processing into a single Enum class
@@ -1939,7 +1939,7 @@ public class RStringLiteral extends RegularExpression
         actualKind = kind;
       }
       kindToLexicalState.put (actualKind, lexStateIndex);
-      if (Options.getIgnoreCase ())
+      if (Options.isIgnoreCase ())
       {
         s = s.toLowerCase ();
       }

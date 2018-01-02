@@ -82,6 +82,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import com.helger.pgcc.output.UnsupportedOutputLanguageException;
+
 public class ParseEngine
 {
   private int m_gensymindex = 0;
@@ -397,7 +399,7 @@ public class ParseEngine
             break;
           case OPENSWITCH:
             retval += "\u0002\n" + "default:" + "\u0001";
-            if (Options.getErrorReporting ())
+            if (Options.isErrorReporting ())
             {
               retval += "\njj_la1[" + s_maskindex + "] = jj_gen;";
               s_maskindex++;
@@ -527,7 +529,7 @@ public class ParseEngine
             break;
           case OPENSWITCH:
             retval += "\u0002\n" + "default:" + "\u0001";
-            if (Options.getErrorReporting ())
+            if (Options.isErrorReporting ())
             {
               retval += "\njj_la1[" + s_maskindex + "] = jj_gen;";
               s_maskindex++;
@@ -577,7 +579,7 @@ public class ParseEngine
         break;
       case OPENSWITCH:
         retval += "\u0002\n" + "default:" + "\u0001";
-        if (Options.getErrorReporting ())
+        if (Options.isErrorReporting ())
         {
           retval += "\njj_la1[" + s_maskindex + "] = jj_gen;";
           s_maskVals.add (tokenMask);
@@ -770,48 +772,51 @@ public class ParseEngine
 
   void genStackCheck (final boolean voidReturn)
   {
-    if (Options.getDepthLimit () > 0)
+    if (Options.hasDepthLimit ())
     {
-      if (m_isJavaDialect)
+      switch (Options.getOutputLanguage ())
       {
-        m_codeGenerator.genCodeLine ("if(++jj_depth > " + Options.getDepthLimit () + ") {");
-        m_codeGenerator.genCodeLine ("  jj_consume_token(-1);");
-        m_codeGenerator.genCodeLine ("  throw new ParseException();");
-        m_codeGenerator.genCodeLine ("}");
-        m_codeGenerator.genCodeLine ("try {");
-      }
-      else
-      {
-        if (!voidReturn)
-        {
-          m_codeGenerator.genCodeLine ("if(jj_depth_error){ return __ERROR_RET__; }");
-        }
-        else
-        {
-          m_codeGenerator.genCodeLine ("if(jj_depth_error){ return; }");
-        }
-        m_codeGenerator.genCodeLine ("__jj_depth_inc __jj_depth_counter(this);");
-        m_codeGenerator.genCodeLine ("if(jj_depth > " + Options.getDepthLimit () + ") {");
-        m_codeGenerator.genCodeLine ("  jj_depth_error = true;");
-        m_codeGenerator.genCodeLine ("  jj_consume_token(-1);");
-        m_codeGenerator.genCodeLine ("  errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;");
-        if (!voidReturn)
-        {
-          m_codeGenerator.genCodeLine ("  return __ERROR_RET__;"); // Non-recoverable
-          // error
-        }
-        else
-        {
-          m_codeGenerator.genCodeLine ("  return;"); // Non-recoverable error
-        }
-        m_codeGenerator.genCodeLine ("}");
+        case JAVA:
+          m_codeGenerator.genCodeLine ("if(++jj_depth > " + Options.getDepthLimit () + ") {");
+          m_codeGenerator.genCodeLine ("  jj_consume_token(-1);");
+          m_codeGenerator.genCodeLine ("  throw new ParseException();");
+          m_codeGenerator.genCodeLine ("}");
+          m_codeGenerator.genCodeLine ("try {");
+          break;
+        case CPP:
+          if (!voidReturn)
+          {
+            m_codeGenerator.genCodeLine ("if(jj_depth_error){ return __ERROR_RET__; }");
+          }
+          else
+          {
+            m_codeGenerator.genCodeLine ("if(jj_depth_error){ return; }");
+          }
+          m_codeGenerator.genCodeLine ("__jj_depth_inc __jj_depth_counter(this);");
+          m_codeGenerator.genCodeLine ("if(jj_depth > " + Options.getDepthLimit () + ") {");
+          m_codeGenerator.genCodeLine ("  jj_depth_error = true;");
+          m_codeGenerator.genCodeLine ("  jj_consume_token(-1);");
+          m_codeGenerator.genCodeLine ("  errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;");
+          if (!voidReturn)
+          {
+            m_codeGenerator.genCodeLine ("  return __ERROR_RET__;"); // Non-recoverable
+            // error
+          }
+          else
+          {
+            m_codeGenerator.genCodeLine ("  return;"); // Non-recoverable error
+          }
+          m_codeGenerator.genCodeLine ("}");
+          break;
+        default:
+          throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());
       }
     }
   }
 
   void genStackCheckEnd ()
   {
-    if (Options.getDepthLimit () > 0)
+    if (Options.hasDepthLimit ())
     {
       if (m_isJavaDialect)
       {
@@ -879,7 +884,7 @@ public class ParseEngine
     m_codeGenerator.genCode (" {");
 
     if ((Options.booleanValue (Options.USEROPTION__CPP_STOP_ON_FIRST_ERROR) && error_ret != null) ||
-        (Options.getDepthLimit () > 0 && !voidReturn && !m_isJavaDialect))
+        (Options.hasDepthLimit () && !voidReturn && !m_isJavaDialect))
     {
       m_codeGenerator.genCode (error_ret);
     }
@@ -1340,7 +1345,7 @@ public class ParseEngine
     m_codeGenerator.genCodeLine ("    jj_la = xla; jj_lastpos = jj_scanpos = token;");
 
     String ret_suffix = "";
-    if (Options.getDepthLimit () > 0)
+    if (Options.hasDepthLimit ())
     {
       ret_suffix = " && !jj_depth_error";
     }
@@ -1355,7 +1360,7 @@ public class ParseEngine
       m_codeGenerator.genCodeLine ("    jj_done = false;");
       m_codeGenerator.genCodeLine ("    return (!jj_3" + e.m_internal_name + "() || jj_done)" + ret_suffix + ";");
     }
-    if (Options.getErrorReporting ())
+    if (Options.isErrorReporting ())
     {
       m_codeGenerator.genCodeLine ((m_isJavaDialect ? "    finally " : " ") +
                                    "{ jj_save(" +
@@ -1383,7 +1388,7 @@ public class ParseEngine
                          "(LOOKAHEAD " +
                          (value ? "FAILED" : "SUCCEEDED") +
                          ")\");";
-      if (Options.getErrorReporting ())
+      if (Options.isErrorReporting ())
       {
         tracecode = "if (!jj_rescan) " + tracecode;
       }
@@ -1560,7 +1565,7 @@ public class ParseEngine
       if (!m_isJavaDialect)
       {
         m_codeGenerator.genCodeLine ("    if (jj_done) return true;");
-        if (Options.getDepthLimit () > 0)
+        if (Options.hasDepthLimit ())
         {
           m_codeGenerator.genCodeLine ("#define __ERROR_RET__ true");
         }
@@ -1570,7 +1575,7 @@ public class ParseEngine
       if (Options.getDebugLookahead () && e.m_parent instanceof NormalProduction)
       {
         m_codeGenerator.genCode ("    ");
-        if (Options.getErrorReporting ())
+        if (Options.isErrorReporting ())
         {
           m_codeGenerator.genCode ("if (!jj_rescan) ");
         }
@@ -1788,7 +1793,7 @@ public class ParseEngine
     {
       m_codeGenerator.genCodeLine ("    " + genReturn (false));
       genStackCheckEnd ();
-      if (!m_isJavaDialect && Options.getDepthLimit () > 0)
+      if (!m_isJavaDialect && Options.hasDepthLimit ())
       {
         m_codeGenerator.genCodeLine ("#undef __ERROR_RET__");
       }

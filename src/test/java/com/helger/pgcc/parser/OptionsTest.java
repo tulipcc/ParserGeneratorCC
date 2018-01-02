@@ -51,24 +51,24 @@ public final class OptionsTest extends TestCase
 
     assertEquals (49, Options.s_optionValues.size ());
 
-    assertEquals (true, Options.getBuildParser ());
-    assertEquals (true, Options.getBuildTokenManager ());
+    assertEquals (true, Options.isBuildParser ());
+    assertEquals (true, Options.isBuildTokenManager ());
     assertEquals (false, Options.getCacheTokens ());
     assertEquals (false, Options.getCommonTokenAction ());
     assertEquals (false, Options.getDebugLookahead ());
     assertEquals (false, Options.getDebugParser ());
-    assertEquals (false, Options.getDebugTokenManager ());
-    assertEquals (true, Options.getErrorReporting ());
+    assertEquals (false, Options.isDebugTokenManager ());
+    assertEquals (true, Options.isErrorReporting ());
     assertEquals (false, Options.getForceLaCheck ());
-    assertEquals (false, Options.getIgnoreCase ());
-    assertEquals (false, Options.getJavaUnicodeEscape ());
+    assertEquals (false, Options.isIgnoreCase ());
+    assertEquals (false, Options.isJavaUnicodeEscape ());
     assertEquals (true, Options.getKeepLineColumn ());
-    assertEquals (true, Options.getSanityCheck ());
+    assertEquals (true, Options.isSanityCheck ());
     assertEquals (true, Options.isStatic ());
-    assertEquals (false, Options.getUnicodeInput ());
-    assertEquals (false, Options.getUserCharStream ());
-    assertEquals (false, Options.getUserTokenManager ());
-    assertEquals (false, Options.getTokenManagerUsesParser ());
+    assertEquals (false, Options.isUnicodeInput ());
+    assertEquals (false, Options.isUserCharStream ());
+    assertEquals (false, Options.isUserTokenManager ());
+    assertEquals (false, Options.isTokenManagerUsesParser ());
 
     assertEquals (2, Options.getChoiceAmbiguityCheck ());
     assertEquals (1, Options.getLookahead ());
@@ -95,13 +95,13 @@ public final class OptionsTest extends TestCase
     Options.setCmdLineOption ("-NOSTATIC");
     assertEquals (false, Options.isStatic ());
 
-    assertEquals (false, Options.getJavaUnicodeEscape ());
+    assertEquals (false, Options.isJavaUnicodeEscape ());
     Options.setCmdLineOption ("-JAVA_UNICODE_ESCAPE:true");
-    assertEquals (true, Options.getJavaUnicodeEscape ());
+    assertEquals (true, Options.isJavaUnicodeEscape ());
 
-    assertEquals (true, Options.getSanityCheck ());
+    assertEquals (true, Options.isSanityCheck ());
     Options.setCmdLineOption ("-SANITY_CHECK=false");
-    assertEquals (false, Options.getSanityCheck ());
+    assertEquals (false, Options.isSanityCheck ());
 
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());

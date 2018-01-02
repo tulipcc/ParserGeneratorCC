@@ -85,7 +85,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
   {
     // TODO(sreeni) : Fix this mess.
     m_codeGenerator.genCodeLine ("\n}");
-    if (!Options.getBuildParser ())
+    if (!Options.isBuildParser ())
       return;
     final String fileName = Options.getOutputDirectory () +
                             File.separator +
