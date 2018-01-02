@@ -1,4 +1,5 @@
-/* Copyright (c) 2006, Sun Microsystems, Inc.
+/**
+ * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +25,12 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
-
 /* JJT: 0.2.2 */
 
 public class ASTStatementExpression extends SimpleNode {
