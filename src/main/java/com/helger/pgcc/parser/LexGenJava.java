@@ -886,7 +886,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
   void DumpFillToken ()
   {
-    final double tokenVersion = JavaFiles.getVersion ("Token.java");
+    final double tokenVersion = FilesJava.getVersion ("Token.java");
     final boolean hasBinaryNewToken = tokenVersion > 4.09;
 
     genCodeLine (staticString + "protected Token jjFillToken()");

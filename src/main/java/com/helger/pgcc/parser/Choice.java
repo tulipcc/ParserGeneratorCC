@@ -80,12 +80,11 @@ public class Choice extends Expansion
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
     final StringBuilder sb = super.dump (indent, alreadyDumped);
-    if (alreadyDumped.contains (this))
-      return sb;
-    alreadyDumped.add (this);
-    for (final Expansion next : getChoices ())
+    if (!alreadyDumped.contains (this))
     {
-      sb.append (eol).append (next.dump (indent + 1, alreadyDumped));
+      alreadyDumped.add (this);
+      for (final Expansion next : getChoices ())
+        sb.append (eol).append (next.dump (indent + 1, alreadyDumped));
     }
     return sb;
   }

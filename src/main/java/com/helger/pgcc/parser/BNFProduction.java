@@ -36,11 +36,10 @@ import java.util.List;
 
 public class BNFProduction extends NormalProduction
 {
-
   /**
    * The declarations of this production.
    */
-  private final List <Token> declaration_tokens = new ArrayList <> ();
+  private final List <Token> m_declaration_tokens = new ArrayList <> ();
 
   /**
    * This flag keeps track of whether or not return and throw statements have
@@ -54,7 +53,7 @@ public class BNFProduction extends NormalProduction
    */
   public List <Token> getDeclarationTokens ()
   {
-    return declaration_tokens;
+    return m_declaration_tokens;
   }
 
   /**
@@ -73,5 +72,4 @@ public class BNFProduction extends NormalProduction
   {
     return m_jumpPatched;
   }
-
 }

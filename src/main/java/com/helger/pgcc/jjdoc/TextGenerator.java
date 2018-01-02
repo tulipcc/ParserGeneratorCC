@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
-import com.helger.pgcc.parser.CppCodeProduction;
+import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.JavaCodeProduction;
 import com.helger.pgcc.parser.NonTerminal;
@@ -108,7 +108,7 @@ public class TextGenerator implements IDocGenerator
     productionEnd (jp);
   }
 
-  public void cppcode (final CppCodeProduction cp)
+  public void cppcode (final CodeProductionCpp cp)
   {
     productionStart (cp);
     text ("c++ code");

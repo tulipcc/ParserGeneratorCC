@@ -52,7 +52,7 @@ import java.util.List;
 /**
  * Generate lexer.
  */
-public class LexGenCPP extends LexGenJava // CodeGenerator implements
+public class LexGenCpp extends LexGenJava // CodeGenerator implements
 // JavaCCParserConstants
 {
   @Override
@@ -620,7 +620,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
   @Override
   void DumpFillToken ()
   {
-    final double tokenVersion = JavaFiles.getVersion ("Token.java");
+    final double tokenVersion = FilesJava.getVersion ("Token.java");
     final boolean hasBinaryNewToken = tokenVersion > 4.09;
 
     generateMethodDefHeader ("Token *", tokMgrClassName, "jjFillToken()");

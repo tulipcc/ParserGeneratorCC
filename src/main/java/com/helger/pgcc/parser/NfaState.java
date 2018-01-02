@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Vector;
 
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
@@ -1763,11 +1762,13 @@ public class NfaState
   private static List <List <NfaState>> _partitionStatesSetForAscii (final int [] states, final int byteNum)
   {
     final int [] cardinalities = new int [states.length];
-    final Vector <NfaState> original = new Vector <> ();
+    List <NfaState> original = new ArrayList <> ();
     final List <List <NfaState>> partition = new ArrayList <> ();
     NfaState tmp;
 
-    original.setSize (states.length);
+    for (final int aState : states)
+      original.add (null);
+
     int cnt = 0;
     for (int i = 0; i < states.length; i++)
     {
@@ -1787,17 +1788,20 @@ public class NfaState
 
         cardinalities[j] = p;
 
-        original.insertElementAt (tmp, j);
+        original.add (j, tmp);
         cnt++;
       }
     }
 
-    original.setSize (cnt);
+    // original.setSize (cnt);
+    while (original.size () < cnt)
+      original.add (null);
+    if (original.size () > cnt)
+      original = original.subList (0, cnt);
 
-    while (original.size () > 0)
+    while (!original.isEmpty ())
     {
-      tmp = original.get (0);
-      original.removeElement (tmp);
+      tmp = original.remove (0);
 
       long bitVec = tmp.asciiMoves[byteNum];
       final List <NfaState> subSet = new ArrayList <> ();

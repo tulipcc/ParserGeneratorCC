@@ -617,7 +617,7 @@ public class ParseEngine
   }
 
   // Print CPPCODE method header.
-  private String generateCPPMethodheader (final CppCodeProduction p)
+  private String generateCPPMethodheader (final CodeProductionCpp p)
   {
     final StringBuilder sig = new StringBuilder ();
     String ret, params;
@@ -1897,16 +1897,16 @@ public class ParseEngine
   {
     NormalProduction p;
     JavaCodeProduction jp;
-    CppCodeProduction cp;
+    CodeProductionCpp cp;
     Token t = null;
 
     this.codeGenerator = codeGenerator;
     for (final Object aElement : bnfproductions)
     {
       p = (NormalProduction) aElement;
-      if (p instanceof CppCodeProduction)
+      if (p instanceof CodeProductionCpp)
       {
-        cp = (CppCodeProduction) p;
+        cp = (CodeProductionCpp) p;
 
         generateCPPMethodheader (cp);
         // t = (Token)(cp.getReturnTypeTokens().get(0));

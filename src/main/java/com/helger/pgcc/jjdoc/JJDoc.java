@@ -189,9 +189,9 @@ public class JJDoc extends JJDocGlobals
         gen.productionEnd (np);
       }
       else
-        if (np instanceof CppCodeProduction)
+        if (np instanceof CodeProductionCpp)
         {
-          gen.cppcode ((CppCodeProduction) np);
+          gen.cppcode ((CodeProductionCpp) np);
         }
         else
           if (np instanceof JavaCodeProduction)

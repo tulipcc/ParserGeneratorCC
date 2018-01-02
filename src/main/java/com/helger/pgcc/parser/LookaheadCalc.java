@@ -44,11 +44,11 @@ public class LookaheadCalc extends JavaCCGlobals
       for (int j = 0; j < v2.size (); j++)
       {
         m2 = v2.get (j);
-        size = m1.firstFreeLoc;
+        size = m1.m_firstFreeLoc;
         m3 = m1;
-        if (size > m2.firstFreeLoc)
+        if (size > m2.m_firstFreeLoc)
         {
-          size = m2.firstFreeLoc;
+          size = m2.m_firstFreeLoc;
           m3 = m2;
         }
         if (size == 0)
@@ -57,7 +57,7 @@ public class LookaheadCalc extends JavaCCGlobals
         diff = false;
         for (int k = 0; k < size; k++)
         {
-          if (m1.match[k] != m2.match[k])
+          if (m1.m_match[k] != m2.m_match[k])
           {
             diff = true;
             break;
@@ -74,7 +74,7 @@ public class LookaheadCalc extends JavaCCGlobals
   {
     for (int i = 0; i < v.size (); i++)
     {
-      if (v.get (i).firstFreeLoc == 0)
+      if (v.get (i).m_firstFreeLoc == 0)
       {
         return true;
       }
@@ -85,15 +85,15 @@ public class LookaheadCalc extends JavaCCGlobals
   static String image (final MatchInfo m)
   {
     String ret = "";
-    for (int i = 0; i < m.firstFreeLoc; i++)
+    for (int i = 0; i < m.m_firstFreeLoc; i++)
     {
-      if (m.match[i] == 0)
+      if (m.m_match[i] == 0)
       {
         ret += " <EOF>";
       }
       else
       {
-        final RegularExpression re = rexps_of_tokens.get (Integer.valueOf (m.match[i]));
+        final RegularExpression re = rexps_of_tokens.get (Integer.valueOf (m.m_match[i]));
         if (re instanceof RStringLiteral)
         {
           ret += " \"" + add_escapes (((RStringLiteral) re).m_image) + "\"";
@@ -109,7 +109,7 @@ public class LookaheadCalc extends JavaCCGlobals
           }
       }
     }
-    if (m.firstFreeLoc == 0)
+    if (m.m_firstFreeLoc == 0)
       return "";
     return ret.substring (1);
   }
@@ -130,13 +130,13 @@ public class LookaheadCalc extends JavaCCGlobals
     boolean overlapDetected;
     for (int la = 1; la <= Options.getChoiceAmbiguityCheck (); la++)
     {
-      MatchInfo.laLimit = la;
+      MatchInfo.s_laLimit = la;
       LookaheadWalk.considerSemanticLA = !Options.getForceLaCheck ();
       for (int i = first; i < ch.getChoices ().size () - 1; i++)
       {
         LookaheadWalk.sizeLimitedMatches = new ArrayList <> ();
         m = new MatchInfo ();
-        m.firstFreeLoc = 0;
+        m.m_firstFreeLoc = 0;
         v = new ArrayList <> ();
         v.add (m);
         LookaheadWalk.genFirstSet (v, ch.getChoices ().get (i));
@@ -147,7 +147,7 @@ public class LookaheadCalc extends JavaCCGlobals
       {
         LookaheadWalk.sizeLimitedMatches = new ArrayList <> ();
         m = new MatchInfo ();
-        m.firstFreeLoc = 0;
+        m.m_firstFreeLoc = 0;
         v = new ArrayList <> ();
         v.add (m);
         LookaheadWalk.genFirstSet (v, ch.getChoices ().get (i));
@@ -285,10 +285,10 @@ public class LookaheadCalc extends JavaCCGlobals
     int la;
     for (la = 1; la <= Options.getOtherAmbiguityCheck (); la++)
     {
-      MatchInfo.laLimit = la;
+      MatchInfo.s_laLimit = la;
       LookaheadWalk.sizeLimitedMatches = new ArrayList <> ();
       m = new MatchInfo ();
-      m.firstFreeLoc = 0;
+      m.m_firstFreeLoc = 0;
       v = new ArrayList <> ();
       v.add (m);
       LookaheadWalk.considerSemanticLA = !Options.getForceLaCheck ();

@@ -31,7 +31,7 @@ package com.helger.pgcc.jjdoc;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.helger.pgcc.parser.CppCodeProduction;
+import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.JavaCodeProduction;
 import com.helger.pgcc.parser.NonTerminal;
@@ -188,7 +188,7 @@ public class XTextGenerator extends TextGenerator
   }
 
   @Override
-  public void cppcode (final CppCodeProduction cp)
+  public void cppcode (final CodeProductionCpp cp)
   {
     // productionStart(cp);
     // println("<I>c++ code</I></TD></TR>");

@@ -15,7 +15,7 @@ import com.helger.pgcc.utils.OutputFileGenerator;
 /**
  * Generate CharStream, TokenManager and Exceptions.
  */
-public class CPPFiles extends JavaCCGlobals implements JavaCCParserConstants
+public class FilesCpp extends JavaCCGlobals
 {
   /**
    * ID of the latest version (of JavaCC) in which one of the CharStream classes
@@ -117,14 +117,10 @@ public class CPPFiles extends JavaCCGlobals implements JavaCCParserConstants
   private static void genFile (final String name, final String version, final String [] parameters)
   {
     final File file = new File (Options.getOutputDirectory (), name);
-    try
+    try (final OutputFile outputFile = new OutputFile (file, version, parameters))
     {
-      final OutputFile outputFile = new OutputFile (file, version, parameters);
-
       if (!outputFile.needToWrite)
-      {
         return;
-      }
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {

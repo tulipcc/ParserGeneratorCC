@@ -46,13 +46,13 @@ public class OtherFilesGenCPP extends JavaCCGlobals implements JavaCCParserConst
     if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ();
 
-    CPPFiles.gen_JavaCCDefs ();
-    CPPFiles.gen_CharStream ();
-    CPPFiles.gen_Token (); // TODO(theov): issued twice??
-    CPPFiles.gen_TokenManager ();
-    CPPFiles.gen_TokenMgrError ();
-    CPPFiles.gen_ParseException ();
-    CPPFiles.gen_ErrorHandler ();
+    FilesCpp.gen_JavaCCDefs ();
+    FilesCpp.gen_CharStream ();
+    FilesCpp.gen_Token (); // TODO(theov): issued twice??
+    FilesCpp.gen_TokenManager ();
+    FilesCpp.gen_TokenMgrError ();
+    FilesCpp.gen_ParseException ();
+    FilesCpp.gen_ErrorHandler ();
 
     try
     {

@@ -275,7 +275,7 @@ public class Main
           lg = new LexGenJava ();
           break;
         case CPP:
-          lg = new LexGenCPP ();
+          lg = new LexGenCpp ();
           break;
         default:
           return unhandledLanguageExit (outputLanguage);
@@ -320,7 +320,7 @@ public class Main
           }
           if (isBuildParser)
           {
-            new LexGenCPP ().start ();
+            new LexGenCpp ().start ();
           }
           Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.cu_name);
           OtherFilesGenCPP.start ();
@@ -385,9 +385,9 @@ public class Main
     com.helger.pgcc.parser.Options.init ();
     com.helger.pgcc.parser.JavaCCParserInternals.reInit ();
     com.helger.pgcc.parser.RStringLiteral.reInit ();
-    com.helger.pgcc.parser.JavaFiles.reInit ();
+    com.helger.pgcc.parser.FilesJava.reInit ();
     com.helger.pgcc.parser.NfaState.reInit ();
-    com.helger.pgcc.parser.MatchInfo.reInit ();
+    com.helger.pgcc.parser.MatchInfo.reInitStatic ();
     com.helger.pgcc.parser.LookaheadWalk.reInit ();
     com.helger.pgcc.parser.Semanticize.reInit ();
     com.helger.pgcc.parser.OtherFilesGen.reInit ();

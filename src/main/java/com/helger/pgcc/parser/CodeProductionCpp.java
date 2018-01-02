@@ -30,5 +30,5 @@ package com.helger.pgcc.parser;
 /**
  * Describes CPPCODE productions.
  */
-public class CppCodeProduction extends AbstractCodeProduction
+public class CodeProductionCpp extends AbstractCodeProduction
 {}

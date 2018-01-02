@@ -28,6 +28,9 @@
 
 package com.helger.pgcc.parser;
 
+import static com.helger.pgcc.parser.JavaCCParserConstants.PACKAGE;
+import static com.helger.pgcc.parser.JavaCCParserConstants.SEMICOLON;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -42,7 +45,7 @@ import com.helger.pgcc.utils.OutputFileGenerator;
 /**
  * Generate CharStream, TokenManager and Exceptions.
  */
-public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
+public class FilesJava extends JavaCCGlobals
 {
   /**
    * ID of the latest version (of JavaCC) in which one of the CharStream classes
@@ -244,14 +247,12 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
   public static void gen_JavaCharStream (final IJavaResourceTemplateLocations locations)
   {
-    try
+    final File file = new File (Options.getOutputDirectory (), "JavaCharStream.java");
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       charStreamVersion,
+                                                       new String [] { Options.USEROPTION__STATIC,
+                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
-      final File file = new File (Options.getOutputDirectory (), "JavaCharStream.java");
-      final OutputFile outputFile = new OutputFile (file,
-                                                    charStreamVersion,
-                                                    new String [] { Options.USEROPTION__STATIC,
-                                                                    Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC });
-
       if (!outputFile.needToWrite)
       {
         return;
@@ -297,14 +298,12 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
   public static void gen_SimpleCharStream (final IJavaResourceTemplateLocations locations)
   {
-    try
+    final File file = new File (Options.getOutputDirectory (), "SimpleCharStream.java");
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       charStreamVersion,
+                                                       new String [] { Options.USEROPTION__STATIC,
+                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
-      final File file = new File (Options.getOutputDirectory (), "SimpleCharStream.java");
-      final OutputFile outputFile = new OutputFile (file,
-                                                    charStreamVersion,
-                                                    new String [] { Options.USEROPTION__STATIC,
-                                                                    Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC });
-
       if (!outputFile.needToWrite)
       {
         return;
@@ -350,14 +349,12 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
   public static void gen_CharStream (final IJavaResourceTemplateLocations locations)
   {
-    try
+    final File file = new File (Options.getOutputDirectory (), "CharStream.java");
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       charStreamVersion,
+                                                       new String [] { Options.USEROPTION__STATIC,
+                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
-      final File file = new File (Options.getOutputDirectory (), "CharStream.java");
-      final OutputFile outputFile = new OutputFile (file,
-                                                    charStreamVersion,
-                                                    new String [] { Options.USEROPTION__STATIC,
-                                                                    Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC });
-
       if (!outputFile.needToWrite)
       {
         return;
@@ -409,24 +406,11 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
   private static void genMiscFile (final String fileName, final String templatePath) throws Error
   {
-    try
+    final File file = new File (Options.getOutputDirectory (), fileName);
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       parseExceptionVersion,
+                                                       new String [] { Options.USEROPTION__KEEP_LINE_COLUMN }))
     {
-      final File file = new File (Options.getOutputDirectory (), fileName);
-      final OutputFile outputFile = new OutputFile (file,
-                                                    parseExceptionVersion,
-                                                    new String [] { /*
-                                                                     * cba --
-                                                                     * 2013/07/
-                                                                     * 22 --
-                                                                     * previously
-                                                                     * wired to
-                                                                     * a typo
-                                                                     * version
-                                                                     * of this
-                                                                     * option --
-                                                                     * KEEP_LINE_COL
-                                                                     */ Options.USEROPTION__KEEP_LINE_COLUMN });
-
       if (!outputFile.needToWrite)
       {
         return;
@@ -468,24 +452,11 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
   public static void gen_ParseException (final IJavaResourceTemplateLocations locations)
   {
-    try
+    final File file = new File (Options.getOutputDirectory (), "ParseException.java");
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       parseExceptionVersion,
+                                                       new String [] { Options.USEROPTION__KEEP_LINE_COLUMN }))
     {
-      final File file = new File (Options.getOutputDirectory (), "ParseException.java");
-      final OutputFile outputFile = new OutputFile (file,
-                                                    parseExceptionVersion,
-                                                    new String [] { /*
-                                                                     * cba --
-                                                                     * 2013/07/
-                                                                     * 22 --
-                                                                     * previously
-                                                                     * wired to
-                                                                     * a typo
-                                                                     * version
-                                                                     * of this
-                                                                     * option --
-                                                                     * KEEP_LINE_COL
-                                                                     */ Options.USEROPTION__KEEP_LINE_COLUMN });
-
       if (!outputFile.needToWrite)
       {
         return;
@@ -531,12 +502,10 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
     final boolean isLegacyExceptionHandling = Options.isLegacyExceptionHandling ();
     final String filename = isLegacyExceptionHandling ? "TokenMgrError.java" : "TokenMgrException.java";
-    try
+    final File file = new File (Options.getOutputDirectory (), filename);
+
+    try (final OutputFile outputFile = new OutputFile (file, tokenMgrErrorVersion, new String [0]))
     {
-
-      final File file = new File (Options.getOutputDirectory (), filename);
-      final OutputFile outputFile = new OutputFile (file, tokenMgrErrorVersion, new String [0]);
-
       if (!outputFile.needToWrite)
       {
         return;
@@ -579,26 +548,13 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
   public static void gen_Token (final IJavaResourceTemplateLocations locations)
   {
-    try
+    final File file = new File (Options.getOutputDirectory (), "Token.java");
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       tokenVersion,
+                                                       new String [] { Options.USEROPTION__TOKEN_EXTENDS,
+                                                                       Options.USEROPTION__KEEP_LINE_COLUMN,
+                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
-      final File file = new File (Options.getOutputDirectory (), "Token.java");
-      final OutputFile outputFile = new OutputFile (file,
-                                                    tokenVersion,
-                                                    new String [] { Options.USEROPTION__TOKEN_EXTENDS,
-                                                                    /*
-                                                                     * cba --
-                                                                     * 2013/07/
-                                                                     * 22 --
-                                                                     * previously
-                                                                     * wired to
-                                                                     * a typo
-                                                                     * version
-                                                                     * of this
-                                                                     * option --
-                                                                     * KEEP_LINE_COL
-                                                                     */ Options.USEROPTION__KEEP_LINE_COLUMN,
-                                                                    Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC });
-
       if (!outputFile.needToWrite)
       {
         return;
@@ -641,13 +597,11 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
   public static void gen_TokenManager (final IJavaResourceTemplateLocations locations)
   {
-    try
+    final File file = new File (Options.getOutputDirectory (), "TokenManager.java");
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       tokenManagerVersion,
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
-      final File file = new File (Options.getOutputDirectory (), "TokenManager.java");
-      final OutputFile outputFile = new OutputFile (file,
-                                                    tokenManagerVersion,
-                                                    new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC });
-
       if (!outputFile.needToWrite)
       {
         return;
@@ -689,5 +643,4 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
   public static void reInit ()
   {}
-
 }

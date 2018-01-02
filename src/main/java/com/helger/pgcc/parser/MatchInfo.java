@@ -32,12 +32,13 @@ package com.helger.pgcc.parser;
  */
 public class MatchInfo
 {
-  public static int laLimit;
-  int [] match = new int [laLimit];
-  int firstFreeLoc;
+  public static int s_laLimit;
 
-  public static void reInit ()
+  int [] m_match = new int [s_laLimit];
+  int m_firstFreeLoc;
+
+  public static void reInitStatic ()
   {
-    laLimit = 0;
+    s_laLimit = 0;
   }
 }

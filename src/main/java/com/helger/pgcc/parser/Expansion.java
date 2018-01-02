@@ -106,7 +106,7 @@ public class Expansion
     return name.substring (name.lastIndexOf (".") + 1);
   }
 
-  protected StringBuilder dumpPrefix (final int indent)
+  protected static StringBuilder dumpPrefix (final int indent)
   {
     final StringBuilder sb = new StringBuilder (indent * 2);
     for (int i = 0; i < indent; i++)
@@ -136,7 +136,7 @@ public class Expansion
    * @param column
    *        the column to set
    */
-  void setColumn (final int column)
+  final void setColumn (final int column)
   {
     this.m_column = column;
   }
@@ -153,7 +153,7 @@ public class Expansion
    * @param line
    *        the line to set
    */
-  void setLine (final int line)
+  final void setLine (final int line)
   {
     this.m_line = line;
   }

@@ -38,7 +38,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.helger.pgcc.parser.JavaFiles.IJavaResourceTemplateLocations;
+import com.helger.pgcc.parser.FilesJava.IJavaResourceTemplateLocations;
 
 /**
  * Generates the Constants file.
@@ -50,8 +50,8 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
 
   public static void start (final boolean isJavaModern) throws MetaParseException
   {
-    final IJavaResourceTemplateLocations templateLoc = isJavaModern ? JavaFiles.RESOURCES_JAVA_MODERN
-                                                                   : JavaFiles.RESOURCES_JAVA_CLASSIC;
+    final IJavaResourceTemplateLocations templateLoc = isJavaModern ? FilesJava.RESOURCES_JAVA_MODERN
+                                                                   : FilesJava.RESOURCES_JAVA_CLASSIC;
 
     Token t = null;
 
@@ -64,19 +64,19 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
 
       if (isJavaModern)
       {
-        JavaFiles.gen_JavaModernFiles ();
+        FilesJava.gen_JavaModernFiles ();
       }
 
-      JavaFiles.gen_TokenMgrError (templateLoc);
-      JavaFiles.gen_ParseException (templateLoc);
-      JavaFiles.gen_Token (templateLoc);
+      FilesJava.gen_TokenMgrError (templateLoc);
+      FilesJava.gen_ParseException (templateLoc);
+      FilesJava.gen_Token (templateLoc);
     }
 
     if (Options.getUserTokenManager ())
     {
       // CBA -- I think that Token managers are unique so will always be
       // generated
-      JavaFiles.gen_TokenManager (templateLoc);
+      FilesJava.gen_TokenManager (templateLoc);
     }
     else
       if (Options.getUserCharStream ())
@@ -84,7 +84,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
         // Added this if condition -- 2012/10/17 -- cba
         if (Options.isGenerateBoilerplateCode ())
         {
-          JavaFiles.gen_CharStream (templateLoc);
+          FilesJava.gen_CharStream (templateLoc);
         }
       }
       else
@@ -95,11 +95,11 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
         {
           if (Options.getJavaUnicodeEscape ())
           {
-            JavaFiles.gen_JavaCharStream (templateLoc);
+            FilesJava.gen_JavaCharStream (templateLoc);
           }
           else
           {
-            JavaFiles.gen_SimpleCharStream (templateLoc);
+            FilesJava.gen_SimpleCharStream (templateLoc);
           }
         }
       }
