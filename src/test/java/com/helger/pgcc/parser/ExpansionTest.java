@@ -65,7 +65,7 @@ public final class ExpansionTest extends TestCase
     final ZeroOrMore zom = new ZeroOrMore (t, e);
     assertEquals (t.beginColumn, zom.getColumn ());
     assertEquals (t.beginLine, zom.getLine ());
-    assertEquals (e, zom.expansion);
+    assertEquals (e, zom.m_expansion);
     assertEquals (e.m_parent, zom);
   }
 

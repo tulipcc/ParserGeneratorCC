@@ -193,7 +193,7 @@ public class ParseEngine
               if (exp instanceof ZeroOrMore)
               {
                 final ZeroOrMore zm = (ZeroOrMore) exp;
-                return javaCodeCheck (zm.expansion);
+                return javaCodeCheck (zm.m_expansion);
               }
               else
                 if (exp instanceof ZeroOrOne)
@@ -292,7 +292,7 @@ public class ParseEngine
               if (exp instanceof ZeroOrMore)
               {
                 final ZeroOrMore zm = (ZeroOrMore) exp;
-                genFirstSet (zm.expansion);
+                genFirstSet (zm.m_expansion);
               }
               else
                 if (exp instanceof ZeroOrOne)
@@ -1185,7 +1185,7 @@ public class ParseEngine
                 if (e instanceof ZeroOrMore)
                 {
                   final ZeroOrMore e_nrw = (ZeroOrMore) e;
-                  final Expansion nested_e = e_nrw.expansion;
+                  final Expansion nested_e = e_nrw.m_expansion;
                   Lookahead la;
                   if (nested_e instanceof Sequence)
                   {
@@ -1510,7 +1510,7 @@ public class ParseEngine
                 if (e instanceof ZeroOrMore)
                 {
                   final ZeroOrMore e_nrw = (ZeroOrMore) e;
-                  generate3R (e_nrw.expansion, inf);
+                  generate3R (e_nrw.m_expansion, inf);
                 }
                 else
                   if (e instanceof ZeroOrOne)
@@ -1754,7 +1754,7 @@ public class ParseEngine
                     m_codeGenerator.genCodeLine ("    " + getTypeForToken () + " xsp;");
                   }
                   final ZeroOrMore e_nrw = (ZeroOrMore) e;
-                  final Expansion nested_e = e_nrw.expansion;
+                  final Expansion nested_e = e_nrw.m_expansion;
                   m_codeGenerator.genCodeLine ("    while (true) {");
                   m_codeGenerator.genCodeLine ("      xsp = jj_scanpos;");
                   // codeGenerator.genCodeLine(" if (jj_3" +
@@ -2216,7 +2216,7 @@ public class ParseEngine
                 if (e instanceof ZeroOrMore)
                 {
                   final ZeroOrMore e_nrw = (ZeroOrMore) e;
-                  System.err.print ("ZEROORMORE, " + e_nrw.expansion.m_internal_index);
+                  System.err.print ("ZEROORMORE, " + e_nrw.m_expansion.m_internal_index);
                 }
                 else
                   if (e instanceof ZeroOrOne)

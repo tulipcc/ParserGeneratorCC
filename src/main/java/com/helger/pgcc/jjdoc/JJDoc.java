@@ -100,7 +100,7 @@ public class JJDoc extends JJDocGlobals
     for (final TokenProduction aTokenProduction : prods)
     {
       final TokenProduction tp = aTokenProduction;
-      _emitTopLevelSpecialTokens (tp.firstToken, gen);
+      _emitTopLevelSpecialTokens (tp.m_firstToken, gen);
 
       gen.handleTokenProduction (tp);
 
@@ -117,32 +117,32 @@ public class JJDoc extends JJDocGlobals
   public static String getStandardTokenProductionText (final TokenProduction tp)
   {
     String token = "";
-    if (tp.isExplicit)
+    if (tp.m_isExplicit)
     {
-      if (tp.lexStates == null)
+      if (tp.m_lexStates == null)
       {
         token += "<*> ";
       }
       else
       {
         token += "<";
-        for (int i = 0; i < tp.lexStates.length; ++i)
+        for (int i = 0; i < tp.m_lexStates.length; ++i)
         {
-          token += tp.lexStates[i];
-          if (i < tp.lexStates.length - 1)
+          token += tp.m_lexStates[i];
+          if (i < tp.m_lexStates.length - 1)
           {
             token += ",";
           }
         }
         token += "> ";
       }
-      token += TokenProduction.kindImage[tp.kind];
-      if (tp.ignoreCase)
+      token += TokenProduction.kindImage[tp.m_kind];
+      if (tp.m_ignoreCase)
       {
         token += " [IGNORE_CASE]";
       }
       token += " : {\n";
-      for (final Iterator <RegExprSpec> it2 = tp.respecs.iterator (); it2.hasNext ();)
+      for (final Iterator <RegExprSpec> it2 = tp.m_respecs.iterator (); it2.hasNext ();)
       {
         final RegExprSpec res = it2.next ();
 
@@ -357,7 +357,7 @@ public class JJDoc extends JJDocGlobals
   private static void _emitExpansionZeroOrMore (final ZeroOrMore z, final IDocGenerator gen)
   {
     gen.text ("( ");
-    _emitExpansionTree (z.expansion, gen);
+    _emitExpansionTree (z.m_expansion, gen);
     gen.text (" )*");
   }
 

@@ -57,9 +57,9 @@ public class TokenProduction
   /**
    * The starting line and column of this token production.
    */
-  private int column;
+  private int m_column;
 
-  private int line;
+  private int m_line;
 
   /**
    * The states in which this regular expression production exists. If this
@@ -68,37 +68,38 @@ public class TokenProduction
    * array that includes all lexical state names during the semanticization
    * phase.
    */
-  public String [] lexStates;
+  public String [] m_lexStates;
 
   /**
    * The kind of this token production - TOKEN, SKIP, MORE, or SPECIAL.
    */
-  public int kind;
+  public int m_kind;
 
   /**
    * The list of regular expression specifications that comprise this
    * production. Each entry is a "RegExprSpec".
    */
-  public List <RegExprSpec> respecs = new ArrayList <> ();
+  public List <RegExprSpec> m_respecs = new ArrayList <> ();
 
   /**
    * This is true if this corresponds to a production that actually appears in
    * the input grammar. Otherwise (if this is created to describe a regular
    * expression that is part of the BNF) this is set to false.
    */
-  public boolean isExplicit = true;
+  public boolean m_isExplicit = true;
 
   /**
    * This is true if case is to be ignored within the regular expressions of
    * this token production.
    */
-  public boolean ignoreCase = false;
+  public boolean m_ignoreCase = false;
 
   /**
    * The first and last tokens from the input stream that represent this
    * production.
    */
-  public Token firstToken, lastToken;
+  public Token m_firstToken;
+  public Token m_lastToken;
 
   /**
    * @param line
@@ -106,7 +107,7 @@ public class TokenProduction
    */
   public void setLine (final int line)
   {
-    this.line = line;
+    this.m_line = line;
   }
 
   /**
@@ -114,7 +115,7 @@ public class TokenProduction
    */
   public int getLine ()
   {
-    return line;
+    return m_line;
   }
 
   /**
@@ -123,7 +124,7 @@ public class TokenProduction
    */
   public void setColumn (final int column)
   {
-    this.column = column;
+    this.m_column = column;
   }
 
   /**
@@ -131,7 +132,7 @@ public class TokenProduction
    */
   public int getColumn ()
   {
-    return column;
+    return m_column;
   }
 
 }

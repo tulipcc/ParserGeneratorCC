@@ -54,6 +54,7 @@ public abstract class RegularExpression extends Expansion
    * internal processing and passing information between the parser and the
    * lexical analyzer.
    */
+  // TODO hides the same field from parent class
   int m_ordinal;
 
   /**

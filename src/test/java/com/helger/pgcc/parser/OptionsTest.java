@@ -78,7 +78,7 @@ public final class OptionsTest extends TestCase
     assertEquals (new File ("."), Options.getOutputDirectory ());
     assertEquals ("", Options.getTokenExtends ());
     assertEquals ("", Options.getTokenFactory ());
-    assertEquals (System.getProperties ().get ("file.encoding"), Options.getGrammarEncoding ());
+    assertEquals (System.getProperties ().get ("file.encoding"), Options.getGrammarEncoding ().name ());
 
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());

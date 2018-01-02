@@ -59,27 +59,27 @@ public class TokenizerData
 
   // A map of list of kind values indexed by ((int0LexicalState << 16 | (int)c)
   // same key as before.
-  public Map <Integer, List <Integer>> literalKinds;
+  public Map <Integer, List <Integer>> m_literalKinds;
 
   // The NFA start state for a given string literal match. We use this to start
   // the NFA if needed after a literal match is completed.
-  public Map <Integer, Integer> kindToNfaStartState;
+  public Map <Integer, Integer> m_kindToNfaStartState;
 
   // Class representing NFA state.
   public static class NfaState
   {
     // Index of the state.
-    public int index;
+    public final int m_index;
     // Set of allowed characters.
-    public Set <Character> characters;
+    public final Set <Character> m_characters;
     // Next state indices.
-    public Set <Integer> nextStates;
+    public final Set <Integer> m_nextStates;
     // Initial state needs to transition to multiple states so the NFA will try
     // all possibilities.
     // TODO(sreeni) : Try and get rid of it at some point.
-    public Set <Integer> compositeStates;
+    public final Set <Integer> m_compositeStates;
     // match kind if any. Integer.MAX_VALUE if this is not a final state.
-    public int kind;
+    public final int m_kind;
 
     NfaState (final int index,
               final Set <Character> characters,
@@ -87,18 +87,18 @@ public class TokenizerData
               final Set <Integer> compositeStates,
               final int kind)
     {
-      this.index = index;
-      this.characters = characters;
-      this.nextStates = nextStates;
-      this.kind = kind;
-      this.compositeStates = compositeStates;
+      this.m_index = index;
+      this.m_characters = characters;
+      this.m_nextStates = nextStates;
+      this.m_kind = kind;
+      this.m_compositeStates = compositeStates;
     }
   }
 
   // The main nfa.
-  public final Map <Integer, NfaState> nfa = new HashMap <> ();
+  public final Map <Integer, NfaState> m_nfa = new HashMap <> ();
 
-  public static enum MatchType
+  public static enum EMatchType
   {
     SKIP,
     SPECIAL_TOKEN,
@@ -110,44 +110,44 @@ public class TokenizerData
   public static class MatchInfo
   {
     // String literal image in case this string literal token, null otherwise.
-    public String image;
+    public final String m_image;
     // Kind index.
-    public int kind;
+    public final int m_kind;
     // Type of match.
-    public MatchType matchType;
+    public final EMatchType m_matchType;
     // Any lexical state transition specified.
-    public int newLexState;
+    public final int m_newLexState;
     // Any lexical state transition specified.
-    public String action;
+    public final String m_action;
 
     public MatchInfo (final String image,
                       final int kind,
-                      final MatchType matchType,
+                      final EMatchType matchType,
                       final int newLexState,
                       final String action)
     {
-      this.image = image;
-      this.kind = kind;
-      this.matchType = matchType;
-      this.newLexState = newLexState;
-      this.action = action;
+      this.m_image = image;
+      this.m_kind = kind;
+      this.m_matchType = matchType;
+      this.m_newLexState = newLexState;
+      this.m_action = action;
     }
   }
 
   // On match info indexed by the match kind.
-  public final Map <Integer, MatchInfo> allMatches = new HashMap <> ();
+  public final Map <Integer, MatchInfo> m_allMatches = new HashMap <> ();
 
   // Initial nfa states indexed by lexical state.
-  public Map <Integer, Integer> initialStates;
+  public Map <Integer, Integer> m_initialStates;
 
   // Kind of the wildcard match (~[]) indexed by lexical state.
-  public Map <Integer, Integer> wildcardKind;
+  public Map <Integer, Integer> m_wildcardKind;
 
   // Name of lexical state - for debugging.
-  public String [] lexStateNames;
+  public String [] m_lexStateNames;
 
-  // DEFULAT lexical state index.
-  public int defaultLexState;
+  // DEFAULT lexical state index.
+  public int m_defaultLexState;
 
   public void setParserName (final String parserName)
   {
@@ -166,12 +166,12 @@ public class TokenizerData
 
   public void setLiteralKinds (final Map <Integer, List <Integer>> literalKinds)
   {
-    this.literalKinds = literalKinds;
+    this.m_literalKinds = literalKinds;
   }
 
   public void setKindToNfaStartState (final Map <Integer, Integer> kindToNfaStartState)
   {
-    this.kindToNfaStartState = kindToNfaStartState;
+    this.m_kindToNfaStartState = kindToNfaStartState;
   }
 
   public void addNfaState (final int index,
@@ -181,27 +181,27 @@ public class TokenizerData
                            final int kind)
   {
     final NfaState nfaState = new NfaState (index, characters, nextStates, compositeStates, kind);
-    nfa.put (index, nfaState);
+    m_nfa.put (index, nfaState);
   }
 
   public void setInitialStates (final Map <Integer, Integer> initialStates)
   {
-    this.initialStates = initialStates;
+    this.m_initialStates = initialStates;
   }
 
   public void setWildcardKind (final Map <Integer, Integer> wildcardKind)
   {
-    this.wildcardKind = wildcardKind;
+    this.m_wildcardKind = wildcardKind;
   }
 
   public void setLexStateNames (final String [] lexStateNames)
   {
-    this.lexStateNames = lexStateNames;
+    this.m_lexStateNames = lexStateNames;
   }
 
   public void setDefaultLexState (final int defaultLexState)
   {
-    this.defaultLexState = defaultLexState;
+    this.m_defaultLexState = defaultLexState;
   }
 
   public void updateMatchInfo (final Map <Integer, String> actions,
@@ -215,32 +215,32 @@ public class TokenizerData
     {
       final int vectorIndex = i >> 6;
       final long bits = (1L << (i & 077));
-      MatchType matchType = MatchType.TOKEN;
+      EMatchType matchType = EMatchType.TOKEN;
       if (toSkip.length > vectorIndex && (toSkip[vectorIndex] & bits) != 0L)
       {
-        matchType = MatchType.SKIP;
+        matchType = EMatchType.SKIP;
       }
       else
         if (toSpecial.length > vectorIndex && (toSpecial[vectorIndex] & bits) != 0L)
         {
-          matchType = MatchType.SPECIAL_TOKEN;
+          matchType = EMatchType.SPECIAL_TOKEN;
         }
         else
           if (toMore.length > vectorIndex && (toMore[vectorIndex] & bits) != 0L)
           {
-            matchType = MatchType.MORE;
+            matchType = EMatchType.MORE;
           }
           else
           {
             assert (toToken.length > vectorIndex && (toToken[vectorIndex] & bits) != 0L);
-            matchType = MatchType.TOKEN;
+            matchType = EMatchType.TOKEN;
           }
       final MatchInfo matchInfo = new MatchInfo (Options.getIgnoreCase () ? null : RStringLiteral.s_allImages[i],
                                                  i,
                                                  matchType,
                                                  newLexStateIndices[i],
                                                  actions.get (i));
-      allMatches.put (i, matchInfo);
+      m_allMatches.put (i, matchInfo);
     }
   }
 }

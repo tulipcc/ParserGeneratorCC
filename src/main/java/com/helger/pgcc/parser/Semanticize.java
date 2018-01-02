@@ -116,7 +116,7 @@ public class Semanticize extends JavaCCGlobals
     for (final TokenProduction aTokenProduction : s_rexprlist)
     {
       final TokenProduction tp = (aTokenProduction);
-      final List <RegExprSpec> respecs = tp.respecs;
+      final List <RegExprSpec> respecs = tp.m_respecs;
       for (final RegExprSpec aRegExprSpec : respecs)
       {
         final RegExprSpec res = (aRegExprSpec);
@@ -130,11 +130,11 @@ public class Semanticize extends JavaCCGlobals
         if (res.rexp instanceof REndOfFile)
         {
           // JavaCCErrors.semantic_error(res.rexp, "Badly placed <EOF>.");
-          if (tp.lexStates != null)
+          if (tp.m_lexStates != null)
             JavaCCErrors.semantic_error (res.rexp,
                                          "EOF action/state change must be specified for all states, " +
                                                    "i.e., <*>TOKEN:.");
-          if (tp.kind != TokenProduction.TOKEN)
+          if (tp.m_kind != TokenProduction.TOKEN)
             JavaCCErrors.semantic_error (res.rexp,
                                          "EOF action/state change can be specified only in a " +
                                                    "TOKEN specification.");
@@ -145,14 +145,14 @@ public class Semanticize extends JavaCCGlobals
           prepareToRemove (respecs, res);
         }
         else
-          if (tp.isExplicit && Options.getUserTokenManager ())
+          if (tp.m_isExplicit && Options.getUserTokenManager ())
           {
             JavaCCErrors.warning (res.rexp,
                                   "Ignoring regular expression specification since " +
                                             "option USER_TOKEN_MANAGER has been set to true.");
           }
           else
-            if (tp.isExplicit && !Options.getUserTokenManager () && res.rexp instanceof RJustName)
+            if (tp.m_isExplicit && !Options.getUserTokenManager () && res.rexp instanceof RJustName)
             {
               JavaCCErrors.warning (res.rexp,
                                     "Ignoring free-standing regular expression reference.  " +
@@ -162,7 +162,7 @@ public class Semanticize extends JavaCCGlobals
               prepareToRemove (respecs, res);
             }
             else
-              if (!tp.isExplicit && res.rexp.private_rexp)
+              if (!tp.m_isExplicit && res.rexp.private_rexp)
               {
                 JavaCCErrors.semantic_error (res.rexp,
                                              "Private (#) regular expression cannot be defined within " +
@@ -181,7 +181,7 @@ public class Semanticize extends JavaCCGlobals
     for (final TokenProduction aTokenProduction : s_rexprlist)
     {
       final TokenProduction tp = (aTokenProduction);
-      final List <RegExprSpec> respecs = tp.respecs;
+      final List <RegExprSpec> respecs = tp.m_respecs;
       for (final RegExprSpec aRegExprSpec : respecs)
       {
         final RegExprSpec res = (aRegExprSpec);
@@ -223,17 +223,17 @@ public class Semanticize extends JavaCCGlobals
     s_tokenCount = 1;
     for (final TokenProduction tp : s_rexprlist)
     {
-      final List <RegExprSpec> respecs = tp.respecs;
-      if (tp.lexStates == null)
+      final List <RegExprSpec> respecs = tp.m_respecs;
+      if (tp.m_lexStates == null)
       {
-        tp.lexStates = new String [s_lexstate_I2S.size ()];
-        s_lexstate_I2S.values ().toArray (tp.lexStates);
+        tp.m_lexStates = new String [s_lexstate_I2S.size ()];
+        s_lexstate_I2S.values ().toArray (tp.m_lexStates);
       }
 
-      final Map <String, Map <String, RegularExpression>> table[] = new Map [tp.lexStates.length];
-      for (int i = 0; i < tp.lexStates.length; i++)
+      final Map <String, Map <String, RegularExpression>> table[] = new Map [tp.m_lexStates.length];
+      for (int i = 0; i < tp.m_lexStates.length; i++)
       {
-        table[i] = s_simple_tokens_table.get (tp.lexStates[i]);
+        table[i] = s_simple_tokens_table.get (tp.m_lexStates[i]);
       }
 
       for (final RegExprSpec aRegExprSpec : respecs)
@@ -266,7 +266,7 @@ public class Semanticize extends JavaCCGlobals
               { // hasIgnoreCase sets "other" if it is found.
                 // Since IGNORE_CASE version exists, current one is useless and
                 // bad.
-                if (!sl.tpContext.isExplicit)
+                if (!sl.tpContext.m_isExplicit)
                 {
                   // inline BNF string is used earlier with an IGNORE_CASE.
                   JavaCCErrors.semantic_error (sl,
@@ -291,7 +291,7 @@ public class Semanticize extends JavaCCGlobals
                 }
               }
               else
-                if (sl.tpContext.ignoreCase)
+                if (sl.tpContext.m_ignoreCase)
                 {
                   // This has to be explicit. A warning needs to be given with
                   // respect
@@ -338,11 +338,11 @@ public class Semanticize extends JavaCCGlobals
                     table2.put (sl.m_image, sl);
                   }
                   else
-                    if (tp.isExplicit)
+                    if (tp.m_isExplicit)
                     {
                       // This is an error even if the first occurrence was
                       // implicit.
-                      if (tp.lexStates[i].equals ("DEFAULT"))
+                      if (tp.m_lexStates[i].equals ("DEFAULT"))
                       {
                         JavaCCErrors.semantic_error (sl,
                                                      "Duplicate definition of string token \"" + sl.m_image + "\".");
@@ -353,18 +353,18 @@ public class Semanticize extends JavaCCGlobals
                                                      "Duplicate definition of string token \"" +
                                                          sl.m_image +
                                                          "\" in lexical state \"" +
-                                                         tp.lexStates[i] +
+                                                         tp.m_lexStates[i] +
                                                          "\".");
                       }
                     }
                     else
-                      if (re.tpContext.kind != TokenProduction.TOKEN)
+                      if (re.tpContext.m_kind != TokenProduction.TOKEN)
                       {
                         JavaCCErrors.semantic_error (sl,
                                                      "String token \"" +
                                                          sl.m_image +
                                                          "\" has been defined as a \"" +
-                                                         TokenProduction.kindImage[re.tpContext.kind] +
+                                                         TokenProduction.kindImage[re.tpContext.m_kind] +
                                                          "\" token.");
                       }
                       else
@@ -429,7 +429,7 @@ public class Semanticize extends JavaCCGlobals
       for (final TokenProduction aTokenProduction : s_rexprlist)
       {
         final TokenProduction tp = (aTokenProduction);
-        final List <RegExprSpec> respecs = tp.respecs;
+        final List <RegExprSpec> respecs = tp.m_respecs;
         for (final RegExprSpec aRegExprSpec : respecs)
         {
           final RegExprSpec res = (aRegExprSpec);
@@ -461,7 +461,7 @@ public class Semanticize extends JavaCCGlobals
       for (final TokenProduction aTokenProduction : s_rexprlist)
       {
         final TokenProduction tp = (aTokenProduction);
-        final List <RegExprSpec> respecs = tp.respecs;
+        final List <RegExprSpec> respecs = tp.m_respecs;
         for (final RegExprSpec aRegExprSpec : respecs)
         {
           final RegExprSpec res = (aRegExprSpec);
@@ -500,7 +500,7 @@ public class Semanticize extends JavaCCGlobals
       for (final TokenProduction aTokenProduction : s_rexprlist)
       {
         final TokenProduction tp = (aTokenProduction);
-        final List <RegExprSpec> respecs = tp.respecs;
+        final List <RegExprSpec> respecs = tp.m_respecs;
         for (final RegExprSpec aRegExprSpec : respecs)
         {
           final RegExprSpec res = (aRegExprSpec);
@@ -585,7 +585,7 @@ public class Semanticize extends JavaCCGlobals
         for (final TokenProduction aTokenProduction : s_rexprlist)
         {
           final TokenProduction tp = (aTokenProduction);
-          final List <RegExprSpec> respecs = tp.respecs;
+          final List <RegExprSpec> respecs = tp.m_respecs;
           for (final RegExprSpec aRegExprSpec : respecs)
           {
             final RegExprSpec res = (aRegExprSpec);
@@ -630,14 +630,14 @@ public class Semanticize extends JavaCCGlobals
   public static boolean hasIgnoreCase (final Map <String, RegularExpression> table, final String str)
   {
     final RegularExpression rexp = table.get (str);
-    if (rexp != null && !rexp.tpContext.ignoreCase)
+    if (rexp != null && !rexp.tpContext.m_ignoreCase)
     {
       return false;
     }
 
     for (final RegularExpression aRegEx : table.values ())
     {
-      if (aRegEx.tpContext.ignoreCase)
+      if (aRegEx.tpContext.m_ignoreCase)
       {
         other = aRegEx;
         return true;
@@ -742,7 +742,7 @@ public class Semanticize extends JavaCCGlobals
       else
         if (exp instanceof ZeroOrMore)
         {
-          addLeftMost (prod, ((ZeroOrMore) exp).expansion);
+          addLeftMost (prod, ((ZeroOrMore) exp).m_expansion);
         }
         else
           if (exp instanceof ZeroOrOne)
@@ -928,7 +928,7 @@ public class Semanticize extends JavaCCGlobals
           JavaCCErrors.semantic_error (e, "Undefined lexical token name \"" + jn.m_label + "\".");
         }
         else
-          if (jn == root && !jn.tpContext.isExplicit && rexp.private_rexp)
+          if (jn == root && !jn.tpContext.m_isExplicit && rexp.private_rexp)
           {
             JavaCCErrors.semantic_error (e,
                                          "Token name \"" +
@@ -937,7 +937,7 @@ public class Semanticize extends JavaCCGlobals
                                             "(with a #) regular expression.");
           }
           else
-            if (jn == root && !jn.tpContext.isExplicit && rexp.tpContext.kind != TokenProduction.TOKEN)
+            if (jn == root && !jn.tpContext.m_isExplicit && rexp.tpContext.m_kind != TokenProduction.TOKEN)
             {
               JavaCCErrors.semantic_error (e,
                                            "Token name \"" +
@@ -1081,7 +1081,7 @@ public class Semanticize extends JavaCCGlobals
       else
         if (e instanceof ZeroOrMore)
         {
-          if (Semanticize.emptyExpansionExists (((ZeroOrMore) e).expansion))
+          if (Semanticize.emptyExpansionExists (((ZeroOrMore) e).m_expansion))
           {
             JavaCCErrors.semantic_error (e, "Expansion within \"(...)*\" can be matched by empty string.");
           }
@@ -1132,9 +1132,9 @@ public class Semanticize extends JavaCCGlobals
           if (e instanceof ZeroOrMore)
           {
             final ZeroOrMore exp = (ZeroOrMore) e;
-            if (Options.getForceLaCheck () || (implicitLA (exp.expansion) && Options.getLookahead () == 1))
+            if (Options.getForceLaCheck () || (implicitLA (exp.m_expansion) && Options.getLookahead () == 1))
             {
-              LookaheadCalc.ebnfCalc (exp, exp.expansion);
+              LookaheadCalc.ebnfCalc (exp, exp.m_expansion);
             }
           }
           else

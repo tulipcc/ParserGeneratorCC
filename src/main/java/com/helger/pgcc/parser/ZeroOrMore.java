@@ -41,31 +41,27 @@ import java.util.Set;
 
 public class ZeroOrMore extends Expansion
 {
-
   /**
    * The expansion which is repeated zero or more times.
    */
-  public Expansion expansion;
-
-  public ZeroOrMore ()
-  {}
+  public final Expansion m_expansion;
 
   public ZeroOrMore (final Token token, final Expansion expansion)
   {
     this.setLine (token.beginLine);
     this.setColumn (token.beginColumn);
-    this.expansion = expansion;
-    this.expansion.m_parent = this;
+    this.m_expansion = expansion;
+    this.m_expansion.m_parent = this;
   }
 
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
     final StringBuilder sb = super.dump (indent, alreadyDumped);
-    if (alreadyDumped.contains (this))
-      return sb;
-    alreadyDumped.add (this);
-    sb.append (eol).append (expansion.dump (indent + 1, alreadyDumped));
+    if (alreadyDumped.add (this))
+    {
+      sb.append (eol).append (m_expansion.dump (indent + 1, alreadyDumped));
+    }
     return sb;
   }
 }

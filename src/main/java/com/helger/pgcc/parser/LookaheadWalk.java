@@ -129,7 +129,7 @@ public final class LookaheadWalk
                 final ZeroOrMore zm = (ZeroOrMore) exp;
                 while (true)
                 {
-                  v = genFirstSet (v, zm.expansion);
+                  v = genFirstSet (v, zm.m_expansion);
                   if (v.size () == 0)
                     break;
                   retval.addAll (v);

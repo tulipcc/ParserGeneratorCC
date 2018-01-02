@@ -130,32 +130,32 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     s_rexprlist.add (p);
     if (Options.getUserTokenManager ())
     {
-      if (p.lexStates == null || p.lexStates.length != 1 || !p.lexStates[0].equals ("DEFAULT"))
+      if (p.m_lexStates == null || p.m_lexStates.length != 1 || !p.m_lexStates[0].equals ("DEFAULT"))
       {
         JavaCCErrors.warning (p,
                               "Ignoring lexical state specifications since option " +
                                  "USER_TOKEN_MANAGER has been set to true.");
       }
     }
-    if (p.lexStates == null)
+    if (p.m_lexStates == null)
     {
       return;
     }
-    for (int i = 0; i < p.lexStates.length; i++)
+    for (int i = 0; i < p.m_lexStates.length; i++)
     {
       for (int j = 0; j < i; j++)
       {
-        if (p.lexStates[i].equals (p.lexStates[j]))
+        if (p.m_lexStates[i].equals (p.m_lexStates[j]))
         {
-          JavaCCErrors.parse_error (p, "Multiple occurrence of \"" + p.lexStates[i] + "\" in lexical state list.");
+          JavaCCErrors.parse_error (p, "Multiple occurrence of \"" + p.m_lexStates[i] + "\" in lexical state list.");
         }
       }
-      if (s_lexstate_S2I.get (p.lexStates[i]) == null)
+      if (s_lexstate_S2I.get (p.m_lexStates[i]) == null)
       {
         final Integer ii = Integer.valueOf (nextFreeLexState++);
-        s_lexstate_S2I.put (p.lexStates[i], ii);
-        s_lexstate_I2S.put (ii, p.lexStates[i]);
-        s_simple_tokens_table.put (p.lexStates[i], new HashMap <> ());
+        s_lexstate_S2I.put (p.m_lexStates[i], ii);
+        s_lexstate_I2S.put (ii, p.m_lexStates[i]);
+        s_simple_tokens_table.put (p.m_lexStates[i], new HashMap <> ());
       }
     }
   }
@@ -183,16 +183,16 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     if (!(r instanceof REndOfFile))
     {
       final TokenProduction p = new TokenProduction ();
-      p.isExplicit = false;
-      p.lexStates = new String [] { "DEFAULT" };
-      p.kind = TokenProduction.TOKEN;
+      p.m_isExplicit = false;
+      p.m_lexStates = new String [] { "DEFAULT" };
+      p.m_kind = TokenProduction.TOKEN;
       final RegExprSpec res = new RegExprSpec ();
       res.rexp = r;
       res.rexp.tpContext = p;
       res.act = new Action ();
       res.nextState = null;
       res.nsTok = null;
-      p.respecs.add (res);
+      p.m_respecs.add (res);
       s_rexprlist.add (p);
     }
   }

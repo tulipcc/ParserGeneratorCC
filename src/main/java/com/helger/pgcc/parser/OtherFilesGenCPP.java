@@ -182,7 +182,7 @@ public class OtherFilesGenCPP extends JavaCCGlobals
 
       for (final TokenProduction tp : s_rexprlist)
       {
-        final List <RegExprSpec> respecs = tp.respecs;
+        final List <RegExprSpec> respecs = tp.m_respecs;
         for (final RegExprSpec res : respecs)
         {
           re = res.rexp;
@@ -198,7 +198,7 @@ public class OtherFilesGenCPP extends JavaCCGlobals
             }
             else
             {
-              if (re.tpContext.kind == TokenProduction.TOKEN)
+              if (re.tpContext.m_kind == TokenProduction.TOKEN)
               {
                 JavaCCErrors.warning (re, "Consider giving this non-string token a label for better error reporting.");
               }

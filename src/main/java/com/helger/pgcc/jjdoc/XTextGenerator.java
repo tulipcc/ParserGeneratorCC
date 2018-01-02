@@ -63,7 +63,7 @@ public class XTextGenerator extends TextGenerator
   {
     final StringBuilder sb = new StringBuilder ();
 
-    for (final RegExprSpec res : tp.respecs)
+    for (final RegExprSpec res : tp.m_respecs)
     {
       final String regularExpressionText = JJDoc.emitRE (res.rexp);
       sb.append (regularExpressionText);

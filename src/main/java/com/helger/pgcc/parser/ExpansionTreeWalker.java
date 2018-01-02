@@ -73,7 +73,7 @@ public final class ExpansionTreeWalker
           else
             if (node instanceof ZeroOrMore)
             {
-              preOrderWalk (((ZeroOrMore) node).expansion, opObj);
+              preOrderWalk (((ZeroOrMore) node).m_expansion, opObj);
             }
             else
               if (node instanceof ZeroOrOne)
@@ -164,7 +164,7 @@ public final class ExpansionTreeWalker
           else
             if (node instanceof ZeroOrMore)
             {
-              postOrderWalk (((ZeroOrMore) node).expansion, opObj);
+              postOrderWalk (((ZeroOrMore) node).m_expansion, opObj);
             }
             else
               if (node instanceof ZeroOrOne)

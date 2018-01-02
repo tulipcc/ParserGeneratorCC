@@ -228,17 +228,17 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     while (it.hasNext ())
     {
       tp = it.next ();
-      final List <RegExprSpec> respecs = tp.respecs;
+      final List <RegExprSpec> respecs = tp.m_respecs;
       List <TokenProduction> tps;
 
-      for (i = 0; i < tp.lexStates.length; i++)
+      for (i = 0; i < tp.m_lexStates.length; i++)
       {
-        tps = s_allTpsForState.get (tp.lexStates[i]);
+        tps = s_allTpsForState.get (tp.m_lexStates[i]);
         if (tps == null)
         {
-          tmpLexStateName[maxLexStates++] = tp.lexStates[i];
+          tmpLexStateName[maxLexStates++] = tp.m_lexStates[i];
           tps = new ArrayList <> ();
-          s_allTpsForState.put (tp.lexStates[i], tps);
+          s_allTpsForState.put (tp.m_lexStates[i], tps);
         }
 
         tps.add (tp);
@@ -345,9 +345,9 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       for (int i = 0; i < allTps.size (); i++)
       {
         tp = allTps.get (i);
-        final int kind = tp.kind;
-        final boolean ignore = tp.ignoreCase;
-        final List <RegExprSpec> rexps = tp.respecs;
+        final int kind = tp.m_kind;
+        final boolean ignore = tp.m_ignoreCase;
+        final List <RegExprSpec> rexps = tp.m_respecs;
 
         if (i == 0)
           ignoring = ignore;
