@@ -100,10 +100,10 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     int i = 0;
 
     codeGenerator.genCodeLine ("private static final int[] stringLiterals = {");
-    for (final int key : tokenizerData.literalSequence.keySet ())
+    for (final int key : tokenizerData.m_literalSequence.keySet ())
     {
       final int [] arr = new int [2];
-      final List <String> l = tokenizerData.literalSequence.get (key);
+      final List <String> l = tokenizerData.m_literalSequence.get (key);
       final List <Integer> kinds = tokenizerData.literalKinds.get (key);
       arr[0] = i;
       arr[1] = l.size ();
@@ -136,7 +136,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
 
     // Static block to actually initialize the map from the int array above.
     codeGenerator.genCodeLine ("static {");
-    for (final int key : tokenizerData.literalSequence.keySet ())
+    for (final int key : tokenizerData.m_literalSequence.keySet ())
     {
       final int [] arr = startAndSize.get (key);
       codeGenerator.genCodeLine ("startAndSize.put(" + key + ", new int[]{" + arr[0] + ", " + arr[1] + "});");

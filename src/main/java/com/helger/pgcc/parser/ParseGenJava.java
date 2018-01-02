@@ -87,7 +87,7 @@ import java.util.List;
 /**
  * Generate the parser.
  */
-public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
+public class ParseGenJava extends CodeGenerator
 {
 
   public void start (final boolean isJavaModernMode) throws MetaParseException
@@ -113,18 +113,18 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
 
       if (s_cu_to_insertion_point_1.size () != 0)
       {
-        final Object firstToken = s_cu_to_insertion_point_1.get (0);
-        printTokenSetup ((Token) firstToken);
+        final Token firstToken = s_cu_to_insertion_point_1.get (0);
+        printTokenSetup (firstToken);
         m_ccol = 1;
         for (final Iterator <Token> it = s_cu_to_insertion_point_1.iterator (); it.hasNext ();)
         {
           t = it.next ();
-          if (t.kind == IMPLEMENTS)
+          if (t.kind == JavaCCParserConstants.IMPLEMENTS)
           {
             implementsExists = true;
           }
           else
-            if (t.kind == CLASS)
+            if (t.kind == JavaCCParserConstants.CLASS)
             {
               implementsExists = false;
             }

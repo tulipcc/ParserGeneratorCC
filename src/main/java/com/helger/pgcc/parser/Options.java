@@ -64,6 +64,8 @@
 package com.helger.pgcc.parser;
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1020,13 +1022,19 @@ public class Options
    *
    * @return The file encoding (e.g., UTF-8, ISO_8859-1, MacRoman)
    */
-  public static String getGrammarEncoding ()
+  public static Charset getGrammarEncoding ()
   {
-    if (StringHelper.hasNoText (stringValue (USEROPTION__GRAMMAR_ENCODING)))
+    final String sValue = stringValue (USEROPTION__GRAMMAR_ENCODING);
+    if (StringHelper.hasNoText (sValue))
     {
-      return SystemHelper.getSystemCharset ().name ();
+      return SystemHelper.getSystemCharset ();
     }
-    return stringValue (USEROPTION__GRAMMAR_ENCODING);
+    return Charset.forName (sValue);
+  }
+
+  public static Charset getOutputEncoding ()
+  {
+    return StandardCharsets.UTF_8;
   }
 
   /**

@@ -75,11 +75,14 @@ import com.helger.commons.string.StringHelper;
  */
 public class PGVersion
 {
+
   public static final String majorVersion;
   public static final String minorVersion;
   public static final String patchVersion;
 
+  /** e.g. 1.0 */
   public static final String majorDotMinor;
+  /** e.g. 1.0.0-SNAPSHOT */
   public static final String versionNumber;
 
   static

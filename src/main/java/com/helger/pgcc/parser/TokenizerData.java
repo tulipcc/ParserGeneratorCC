@@ -55,7 +55,7 @@ public class TokenizerData
   // just going through the sequence in the order.
   // Since they are all literals, there is no duplication (JavaCC checks that)
   // and hence if a longer match is matched, no need to check the shorter match.
-  public Map <Integer, List <String>> literalSequence;
+  public Map <Integer, List <String>> m_literalSequence;
 
   // A map of list of kind values indexed by ((int0LexicalState << 16 | (int)c)
   // same key as before.
@@ -135,7 +135,7 @@ public class TokenizerData
   }
 
   // On match info indexed by the match kind.
-  public Map <Integer, MatchInfo> allMatches = new HashMap <> ();
+  public final Map <Integer, MatchInfo> allMatches = new HashMap <> ();
 
   // Initial nfa states indexed by lexical state.
   public Map <Integer, Integer> initialStates;
@@ -161,7 +161,7 @@ public class TokenizerData
 
   public void setLiteralSequence (final Map <Integer, List <String>> literalSequence)
   {
-    this.literalSequence = literalSequence;
+    this.m_literalSequence = literalSequence;
   }
 
   public void setLiteralKinds (final Map <Integer, List <Integer>> literalKinds)

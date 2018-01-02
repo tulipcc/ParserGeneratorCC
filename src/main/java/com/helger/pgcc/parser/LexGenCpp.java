@@ -155,7 +155,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       for (int j = 0; j < s_token_mgr_decls.size (); j++)
       {
         t = s_token_mgr_decls.get (j);
-        if (t.kind == IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
+        if (t.kind == JavaCCParserConstants.IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
         {
           commonTokenActionSeen = t.image.equals ("CommonTokenAction");
           if (commonTokenActionSeen)

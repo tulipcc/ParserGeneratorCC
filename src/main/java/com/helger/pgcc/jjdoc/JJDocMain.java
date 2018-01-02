@@ -33,13 +33,13 @@
  */
 package com.helger.pgcc.jjdoc;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
+import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCParser;
 import com.helger.pgcc.parser.Main;
@@ -167,9 +167,9 @@ public final class JJDocMain extends JJDocGlobals
           return 1;
         }
         JJDocGlobals.s_input_file = fp.getName ();
-        parser = new JavaCCParser (new BufferedReader (new InputStreamReader (new FileInputStream (args[args.length -
-                                                                                                        1]),
-                                                                              Options.getGrammarEncoding ())));
+        parser = new JavaCCParser (new NonBlockingBufferedReader (new InputStreamReader (new FileInputStream (args[args.length -
+                                                                                                                   1]),
+                                                                                         Options.getGrammarEncoding ())));
       }
       catch (final SecurityException se)
       {

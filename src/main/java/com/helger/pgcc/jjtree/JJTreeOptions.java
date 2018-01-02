@@ -66,6 +66,7 @@ package com.helger.pgcc.jjtree;
 
 import java.io.File;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.Options;
 
@@ -152,7 +153,7 @@ class JJTreeOptions extends Options
    *
    * @return The requested multi value.
    */
-  public static boolean getMulti ()
+  public static boolean isMulti ()
   {
     return booleanValue ("MULTI");
   }
@@ -162,7 +163,7 @@ class JJTreeOptions extends Options
    *
    * @return The requested node default void value.
    */
-  public static boolean getNodeDefaultVoid ()
+  public static boolean isNodeDefaultVoid ()
   {
     return booleanValue ("NODE_DEFAULT_VOID");
   }
@@ -317,17 +318,9 @@ class JJTreeOptions extends Options
   public static File getJJTreeOutputDirectory ()
   {
     final String dirName = stringValue ("JJTREE_OUTPUT_DIRECTORY");
-    File dir = null;
 
-    if ("".equals (dirName))
-    {
-      dir = getOutputDirectory ();
-    }
-    else
-    {
-      dir = new File (dirName);
-    }
-
-    return dir;
+    if (StringHelper.hasNoText (dirName))
+      return getOutputDirectory ();
+    return new File (dirName);
   }
 }

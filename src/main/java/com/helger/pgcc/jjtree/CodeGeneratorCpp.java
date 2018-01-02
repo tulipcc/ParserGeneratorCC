@@ -334,7 +334,7 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
   {
     final String type = ns.m_node_descriptor.getNodeType ();
     final String nodeClass;
-    if (JJTreeOptions.getNodeClass ().length () > 0 && !JJTreeOptions.getMulti ())
+    if (JJTreeOptions.getNodeClass ().length () > 0 && !JJTreeOptions.isMulti ())
     {
       nodeClass = JJTreeOptions.getNodeClass ();
     }

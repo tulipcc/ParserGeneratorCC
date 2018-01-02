@@ -33,7 +33,6 @@
  */
 package com.helger.pgcc.parser;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -190,7 +189,7 @@ public class OutputFile implements AutoCloseable
   {
     final String firstLine = "/* " + JavaCCGlobals.getIdString (m_toolName, file.getName ()) + " Version ";
 
-    try (final BufferedReader reader = new BufferedReader (new FileReader (file)))
+    try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
     {
       String line;
       while ((line = reader.readLine ()) != null)
@@ -229,10 +228,8 @@ public class OutputFile implements AutoCloseable
    */
   private void checkOptions (final File file, final String [] options)
   {
-    try
+    try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
     {
-      final BufferedReader reader = new BufferedReader (new FileReader (file));
-
       String line;
       while ((line = reader.readLine ()) != null)
       {

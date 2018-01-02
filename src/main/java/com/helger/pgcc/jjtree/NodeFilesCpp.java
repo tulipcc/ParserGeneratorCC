@@ -88,20 +88,20 @@ final class NodeFilesCpp
   private NodeFilesCpp ()
   {}
 
-  private static List <String> headersForJJTreeH = new ArrayList <> ();
+  private static final List <String> s_headersForJJTreeH = new ArrayList <> ();
   /**
    * ID of the latest version (of JJTree) in which one of the Node classes was
    * modified.
    */
-  static final String nodeVersion = PGVersion.majorDotMinor;
+  static final String s_nodeVersion = PGVersion.majorDotMinor;
 
-  static Set <String> nodesToGenerate = new HashSet <> ();
+  static Set <String> s_nodesToGenerate = new HashSet <> ();
 
   static void addType (final String type)
   {
     if (!type.equals ("Node") && !type.equals ("SimpleNode"))
     {
-      nodesToGenerate.add (type);
+      s_nodesToGenerate.add (type);
     }
   }
 
@@ -183,7 +183,7 @@ final class NodeFilesCpp
                                               "NODE_FACTORY",
                                               Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
 
-    try (final OutputFile outputFile = new OutputFile (file, nodeVersion, options))
+    try (final OutputFile outputFile = new OutputFile (file, s_nodeVersion, options))
     {
       outputFile.setToolName ("JJTree");
 
@@ -219,7 +219,7 @@ final class NodeFilesCpp
                                               "NODE_FACTORY",
                                               Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
 
-    try (final OutputFile outputFile = new OutputFile (file, nodeVersion, options))
+    try (final OutputFile outputFile = new OutputFile (file, s_nodeVersion, options))
     {
       outputFile.setToolName ("JJTree");
 
@@ -253,7 +253,7 @@ final class NodeFilesCpp
                                               "NODE_FACTORY",
                                               Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
 
-    try (final OutputFile outputFile = new OutputFile (file, nodeVersion, options))
+    try (final OutputFile outputFile = new OutputFile (file, s_nodeVersion, options))
     {
       outputFile.setToolName ("JJTree");
 
@@ -286,11 +286,11 @@ final class NodeFilesCpp
                                               Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
     try
     {
-      for (final String aString : nodesToGenerate)
+      for (final String aString : s_nodesToGenerate)
       {
         final String node = aString;
         final File file = new File (jjtreeIncludeFile (node));
-        try (final OutputFile outputFile = new OutputFile (file, nodeVersion, options))
+        try (final OutputFile outputFile = new OutputFile (file, s_nodeVersion, options))
         {
           outputFile.setToolName ("JJTree");
 
@@ -329,11 +329,11 @@ final class NodeFilesCpp
 
     try
     {
-      for (final String aString : nodesToGenerate)
+      for (final String aString : s_nodesToGenerate)
       {
         final String node = aString;
         final File file = new File (jjtreeImplFile (node));
-        try (final OutputFile outputFile = new OutputFile (file, nodeVersion, options))
+        try (final OutputFile outputFile = new OutputFile (file, s_nodeVersion, options))
         {
           outputFile.setToolName ("JJTree");
 
@@ -373,7 +373,7 @@ final class NodeFilesCpp
                                                 "NODE_EXTENDS",
                                                 "NODE_FACTORY",
                                                 Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
-      try (OutputFile outputFile = new OutputFile (file, nodeVersion, options))
+      try (OutputFile outputFile = new OutputFile (file, s_nodeVersion, options))
       {
         outputFile.setToolName ("JJTree");
 
@@ -394,7 +394,7 @@ final class NodeFilesCpp
           ostr.println ("#ifndef " + includeName);
           ostr.println ("#define " + includeName);
           ostr.println ("#include \"SimpleNode.h\"");
-          for (final String aString : nodesToGenerate)
+          for (final String aString : s_nodesToGenerate)
           {
             final String s = aString;
             ostr.println ("#include \"" + s + ".h\"");
@@ -422,7 +422,7 @@ final class NodeFilesCpp
                                               "NODE_FACTORY",
                                               Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
 
-    try (final OutputFile outputFile = new OutputFile (file, nodeVersion, options))
+    try (final OutputFile outputFile = new OutputFile (file, s_nodeVersion, options))
     {
       outputFile.setToolName ("JJTree");
 
@@ -444,7 +444,7 @@ final class NodeFilesCpp
         outputFile.getPrintWriter ().println ("namespace " + Options.stringValue ("NAMESPACE_OPEN"));
       }
 
-      for (final String aString : nodesToGenerate)
+      for (final String aString : s_nodesToGenerate)
       {
         final String s = aString;
         optionMap.put ("NODE_TYPE", s);
@@ -476,7 +476,7 @@ final class NodeFilesCpp
   {
     final String name = nodeConstants ();
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), name + ".h");
-    headersForJJTreeH.add (file.getName ());
+    s_headersForJJTreeH.add (file.getName ());
 
     try (final OutputFile outputFile = new OutputFile (file))
     {
@@ -617,7 +617,7 @@ final class NodeFilesCpp
     ostr.println ("  public:");
 
     ostr.println ("  virtual " + returnType + " visit(const SimpleNode *node, " + argumentType + " data) = 0;");
-    if (JJTreeOptions.getMulti ())
+    if (JJTreeOptions.isMulti ())
     {
       for (int i = 0; i < nodeNames.size (); ++i)
       {
@@ -669,7 +669,7 @@ final class NodeFilesCpp
     ostr.println ("    " + (ret.trim ().equals ("void") ? "" : "return ") + "defaultVisit(node, data);");
     ostr.println ("}");
 
-    if (JJTreeOptions.getMulti ())
+    if (JJTreeOptions.isMulti ())
     {
       for (int i = 0; i < nodeNames.size (); ++i)
       {

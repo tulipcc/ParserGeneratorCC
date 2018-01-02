@@ -33,11 +33,11 @@
  */
 package com.helger.pgcc.parser.test;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
 import com.helger.commons.exception.InitializationException;
+import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.JavaCCTestCase;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.JavaCCGlobals;
@@ -98,8 +98,8 @@ public class NfaStateTest extends JavaCCTestCase
   {
     try
     {
-      final JavaCCParser parser = new JavaCCParser (new BufferedReader (new InputStreamReader (new FileInputStream (parserInput),
-                                                                                               Options.getGrammarEncoding ())));
+      final JavaCCParser parser = new JavaCCParser (new NonBlockingBufferedReader (new InputStreamReader (new FileInputStream (parserInput),
+                                                                                                          Options.getGrammarEncoding ())));
       parser.javacc_input ();
       JavaCCGlobals.s_fileName = JavaCCGlobals.s_origFileName = parserInput;
       JavaCCGlobals.s_jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", parserInput);

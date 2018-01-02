@@ -156,7 +156,7 @@ public class JavaCCInterpreter
       if (Options.getIgnoreCase ())
         c = Character.toLowerCase (c);
       final int key = curLexState << 16 | c;
-      final List <String> literals = td.literalSequence.get (key);
+      final List <String> literals = td.m_literalSequence.get (key);
       if (literals != null)
       {
         // We need to go in order so that the longest match works.

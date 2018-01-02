@@ -93,7 +93,7 @@ import com.helger.pgcc.utils.OutputFileGenerator;
 /**
  * Generate lexer.
  */
-public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
+public class LexGenJava extends CodeGenerator
 {
   private static final String DUMP_STATIC_VAR_DECLARATIONS_TEMPLATE_RESOURCE_URL = "/templates/DumpStaticVarDeclarations.template";
   private static final String DUMP_DEBUG_METHODS_TEMPLATE_RESOURCE_URL = "/templates/DumpDebugMethods.template";
@@ -167,27 +167,27 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         break;
 
       kind = s_cu_to_insertion_point_1.get (l).kind;
-      if (kind == PACKAGE || kind == IMPORT)
+      if (kind == JavaCCParserConstants.PACKAGE || kind == JavaCCParserConstants.IMPORT)
       {
         for (; i < s_cu_to_insertion_point_1.size (); i++)
         {
           kind = s_cu_to_insertion_point_1.get (i).kind;
-          if (kind == SEMICOLON ||
-              kind == ABSTRACT ||
-              kind == FINAL ||
-              kind == PUBLIC ||
-              kind == CLASS ||
-              kind == INTERFACE)
+          if (kind == JavaCCParserConstants.SEMICOLON ||
+              kind == JavaCCParserConstants.ABSTRACT ||
+              kind == JavaCCParserConstants.FINAL ||
+              kind == JavaCCParserConstants.PUBLIC ||
+              kind == JavaCCParserConstants.CLASS ||
+              kind == JavaCCParserConstants.INTERFACE)
           {
-            m_cline = (s_cu_to_insertion_point_1.get (l)).beginLine;
-            m_ccol = (s_cu_to_insertion_point_1.get (l)).beginColumn;
+            m_cline = s_cu_to_insertion_point_1.get (l).beginLine;
+            m_ccol = s_cu_to_insertion_point_1.get (l).beginColumn;
             for (j = l; j < i; j++)
             {
-              printToken ((s_cu_to_insertion_point_1.get (j)));
+              printToken (s_cu_to_insertion_point_1.get (j));
             }
-            if (kind == SEMICOLON)
-              printToken ((s_cu_to_insertion_point_1.get (j)));
-            genCodeLine ("");
+            if (kind == JavaCCParserConstants.SEMICOLON)
+              printToken (s_cu_to_insertion_point_1.get (j));
+            genCodeLine ();
             break;
           }
         }
@@ -223,7 +223,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       for (j = 0; j < s_token_mgr_decls.size (); j++)
       {
         t = s_token_mgr_decls.get (j);
-        if (t.kind == IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
+        if (t.kind == JavaCCParserConstants.IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
           commonTokenActionSeen = t.image.equals ("CommonTokenAction");
 
         printToken (t);

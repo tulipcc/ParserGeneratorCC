@@ -63,8 +63,13 @@
  */
 package com.helger.pgcc.parser;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.Set;
 
+import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
@@ -254,7 +259,7 @@ public class Main
 
     try
     {
-      final java.io.File fp = new java.io.File (args[args.length - 1]);
+      final File fp = new File (args[args.length - 1]);
       if (!fp.exists ())
       {
         System.out.println ("File " + args[args.length - 1] + " not found.");
@@ -265,16 +270,16 @@ public class Main
         System.out.println (args[args.length - 1] + " is a directory. Please use a valid file name.");
         return 1;
       }
-      parser = new JavaCCParser (new java.io.BufferedReader (new java.io.InputStreamReader (new java.io.FileInputStream (args[args.length -
-                                                                                                                              1]),
-                                                                                            Options.getGrammarEncoding ())));
+      parser = new JavaCCParser (new NonBlockingBufferedReader (new InputStreamReader (new FileInputStream (args[args.length -
+                                                                                                                 1]),
+                                                                                       Options.getGrammarEncoding ())));
     }
     catch (final SecurityException se)
     {
       System.out.println ("Security violation while trying to open " + args[args.length - 1]);
       return 1;
     }
-    catch (final java.io.FileNotFoundException e)
+    catch (final FileNotFoundException e)
     {
       System.out.println ("File " + args[args.length - 1] + " not found.");
       return 1;

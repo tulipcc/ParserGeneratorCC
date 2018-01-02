@@ -134,10 +134,15 @@ public class CodeGenerator
     m_outputBuffer.append (s);
   }
 
+  public void genCodeLine ()
+  {
+    genCode ("\n");
+  }
+
   public void genCodeLine (final String s)
   {
     genCode (s);
-    genCode ("\n");
+    genCodeLine ();
   }
 
   public void saveOutput (final String fileName)

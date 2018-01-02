@@ -264,7 +264,7 @@ final class NodeFilesJava
                     " data)" +
                     ve +
                     ";");
-      if (JJTreeOptions.getMulti ())
+      if (JJTreeOptions.isMulti ())
       {
         for (int i = 0; i < nodeNames.size (); ++i)
         {
@@ -350,7 +350,7 @@ final class NodeFilesJava
       ostr.println ("    " + (ret.trim ().equals ("void") ? "" : "return ") + "defaultVisit(node, data);");
       ostr.println ("  }");
 
-      if (JJTreeOptions.getMulti ())
+      if (JJTreeOptions.isMulti ())
       {
         for (int i = 0; i < nodeNames.size (); ++i)
         {
@@ -386,10 +386,8 @@ final class NodeFilesJava
   private static String _mergeVisitorException ()
   {
     String ve = JJTreeOptions.getVisitorException ();
-    if (!"".equals (ve))
-    {
+    if (StringHelper.hasText (ve))
       ve = " throws " + ve;
-    }
     return ve;
   }
 

@@ -52,7 +52,7 @@ public class NodeScope
     if (n == null)
     {
       String nm = m_production.m_name;
-      if (JJTreeOptions.getNodeDefaultVoid ())
+      if (JJTreeOptions.isNodeDefaultVoid ())
       {
         nm = "void";
       }

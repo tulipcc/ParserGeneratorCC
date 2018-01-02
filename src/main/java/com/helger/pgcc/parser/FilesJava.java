@@ -36,7 +36,6 @@ package com.helger.pgcc.parser;
 import static com.helger.pgcc.parser.JavaCCParserConstants.PACKAGE;
 import static com.helger.pgcc.parser.JavaCCParserConstants.SEMICOLON;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -45,6 +44,7 @@ import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
@@ -99,7 +99,7 @@ public class FilesJava extends JavaCCGlobals
     String getParseExceptionTemplateResourceUrl ();
   }
 
-  public static class JavaModernResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
+  private static class JavaModernResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
   {
     public String getTokenMgrErrorTemplateResourceUrl ()
     {
@@ -141,7 +141,7 @@ public class FilesJava extends JavaCCGlobals
     }
   }
 
-  public static class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
+  private static class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
   {
     public String getTokenTemplateResourceUrl ()
     {
@@ -212,7 +212,7 @@ public class FilesJava extends JavaCCGlobals
       }
     }
 
-    try (final BufferedReader reader = new BufferedReader (new FileReader (file)))
+    try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
     {
       String str;
       double version = 0.0;

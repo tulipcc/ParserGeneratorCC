@@ -36,9 +36,10 @@ package com.helger.pgcc.jjdoc;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.CodeProductionCpp;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.CodeProductionJava;
+import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NonTerminal;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.RegularExpression;
@@ -102,11 +103,11 @@ public class HTMLGenerator extends TextGenerator
     println ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">");
     println ("<HTML>");
     println ("<HEAD>");
-    if (!"".equals (JJDocOptions.getCSS ()))
+    if (StringHelper.hasText (JJDocOptions.getCSS ()))
     {
       println ("<LINK REL=\"stylesheet\" type=\"text/css\" href=\"" + JJDocOptions.getCSS () + "\"/>");
     }
-    if (JJDocGlobals.s_input_file != null)
+    if (StringHelper.hasText (JJDocGlobals.s_input_file))
     {
       println ("<TITLE>BNF for " + JJDocGlobals.s_input_file + "</TITLE>");
     }

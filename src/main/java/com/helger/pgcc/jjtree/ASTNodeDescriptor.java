@@ -151,14 +151,9 @@ public class ASTNodeDescriptor extends JJTreeNode
 
   String getNodeType ()
   {
-    if (JJTreeOptions.getMulti ())
-    {
+    if (JJTreeOptions.isMulti ())
       return JJTreeOptions.getNodePrefix () + m_name;
-    }
-    else
-    {
-      return "SimpleNode";
-    }
+    return "SimpleNode";
   }
 
   String getNodeName ()
