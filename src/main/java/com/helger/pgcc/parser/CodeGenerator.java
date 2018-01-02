@@ -29,17 +29,17 @@ public class CodeGenerator
   protected int m_cline;
   protected int m_ccol;
 
-  protected static final EOutputLanguage getLanguage ()
+  protected final EOutputLanguage getOutputLanguage ()
   {
     return Options.getOutputLanguageType ();
   }
 
   @Deprecated
-  protected static final boolean isJavaLanguage ()
+  protected final boolean isJavaLanguage ()
   {
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
-    return getLanguage ().isJava ();
+    return getOutputLanguage ().isJava ();
   }
 
   public void switchToMainFile ()
@@ -49,7 +49,7 @@ public class CodeGenerator
 
   public void switchToStaticsFile ()
   {
-    if (getLanguage ().hasStaticsFile ())
+    if (getOutputLanguage ().hasStaticsFile ())
     {
       m_outputBuffer = m_staticsBuffer;
     }
@@ -57,7 +57,7 @@ public class CodeGenerator
 
   public void switchToIncludeFile ()
   {
-    if (getLanguage ().hasIncludeFile ())
+    if (getOutputLanguage ().hasIncludeFile ())
     {
       m_outputBuffer = m_includeBuffer;
     }
@@ -117,7 +117,7 @@ public class CodeGenerator
 
   public void saveOutput (final String fileName)
   {
-    if (getLanguage ().hasIncludeFile ())
+    if (getOutputLanguage ().hasIncludeFile ())
     {
       final String incfilePath = fileName.replace (".cc", ".h");
       final String incfileName = new File (incfilePath).getName ();
@@ -180,7 +180,7 @@ public class CodeGenerator
 
   public void saveOutput (final String fileName, final StringBuilder sb)
   {
-    switch (getLanguage ())
+    switch (getOutputLanguage ())
     {
       case CPP:
         _fixupCppLongLiterals (sb);
@@ -335,7 +335,7 @@ public class CodeGenerator
    */
   public void genAnnotation (final String ann)
   {
-    switch (getLanguage ())
+    switch (getOutputLanguage ())
     {
       case JAVA:
         genCode ("@" + ann);
@@ -345,7 +345,7 @@ public class CodeGenerator
         genCode ("/*" + ann + "*/");
         break;
       default:
-        throw new UnsupportedLanguageException (getLanguage ());
+        throw new UnsupportedLanguageException (getOutputLanguage ());
     }
   }
 
@@ -378,7 +378,7 @@ public class CodeGenerator
                              final String [] superClasses,
                              final String [] superInterfaces)
   {
-    switch (getLanguage ())
+    switch (getOutputLanguage ())
     {
       case JAVA:
         if (mod != null)
@@ -401,7 +401,7 @@ public class CodeGenerator
         genCodeLine ("public:");
         break;
       default:
-        throw new UnsupportedLanguageException (getLanguage ());
+        throw new UnsupportedLanguageException (getOutputLanguage ());
     }
   }
 
@@ -425,7 +425,7 @@ public class CodeGenerator
                                        final String nameAndParams,
                                        final String exceptions)
   {
-    switch (getLanguage ())
+    switch (getOutputLanguage ())
     {
       case JAVA:
         genCode (qualifiedModsAndRetType + " " + nameAndParams);
@@ -466,7 +466,7 @@ public class CodeGenerator
         switchToMainFile ();
         break;
       default:
-        throw new UnsupportedLanguageException (getLanguage ());
+        throw new UnsupportedLanguageException (getOutputLanguage ());
     }
   }
 
