@@ -44,8 +44,10 @@ import java.util.TreeSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.output.EOutputLanguage;
+import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
 
@@ -126,9 +128,6 @@ public class Options
 
   public static final String USEROPTION__CPP_TOKEN_INCLUDE = "TOKEN_INCLUDE";
   public static final String USEROPTION__CPP_PARSER_INCLUDE = "PARSER_INCLUDE";
-
-  @Deprecated
-  public static final String OUTPUT_LANGUAGE__CPP = EOutputLanguage.CPP.getID ();
 
   public static EOutputLanguage s_language = EOutputLanguage.JAVA;
 
@@ -1079,6 +1078,8 @@ public class Options
     }
   }
 
+  @Nonnull
+  @Nonempty
   public static String getLongType ()
   {
     // TODO :: CBA -- Require Unification of output language specific
@@ -1090,7 +1091,21 @@ public class Options
       case CPP:
         return "unsigned long long";
       default:
-        throw new RuntimeException ("Language type not fully supported: " + s_language);
+        throw new UnsupportedLanguageException (s_language);
+    }
+  }
+
+  @Nonnull
+  public static String getLongSuffix ()
+  {
+    switch (s_language)
+    {
+      case JAVA:
+        return "L";
+      case CPP:
+        return "L";
+      default:
+        throw new UnsupportedOutputLanguageException (s_language);
     }
   }
 

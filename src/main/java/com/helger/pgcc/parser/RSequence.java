@@ -70,10 +70,10 @@ public class RSequence extends RegularExpression
   }
 
   @Override
-  public Nfa GenerateNfa (final boolean ignoreCase)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
     if (m_units.size () == 1)
-      return m_units.get (0).GenerateNfa (ignoreCase);
+      return m_units.get (0).generateNfa (ignoreCase);
 
     final Nfa retVal = new Nfa ();
     final NfaState startState = retVal.start;
@@ -84,14 +84,14 @@ public class RSequence extends RegularExpression
     RegularExpression curRE;
 
     curRE = m_units.get (0);
-    temp1 = curRE.GenerateNfa (ignoreCase);
+    temp1 = curRE.generateNfa (ignoreCase);
     startState.addMove (temp1.start);
 
     for (int i = 1; i < m_units.size (); i++)
     {
       curRE = m_units.get (i);
 
-      temp2 = curRE.GenerateNfa (ignoreCase);
+      temp2 = curRE.generateNfa (ignoreCase);
       temp1.end.addMove (temp2.start);
       temp1 = temp2;
     }

@@ -541,8 +541,8 @@ public class JJDoc extends JJDocGlobals
   }
 
   /*
-   * private static String v2s(Vector v, boolean newLine) { String s = "";
-   * boolean firstToken = true; for (Enumeration enumeration = v.elements();
+   * private static String v2s(List v, boolean newLine) { String s = ""; boolean
+   * firstToken = true; for (Enumeration enumeration = v.elements();
    * enumeration.hasMoreElements();) { Token tok =
    * (Token)enumeration.nextElement(); Token stok =
    * getPrecedingSpecialToken(tok); if (firstToken) { if (stok != null) { cline

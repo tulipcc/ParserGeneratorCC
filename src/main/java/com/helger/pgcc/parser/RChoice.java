@@ -61,12 +61,12 @@ public class RChoice extends RegularExpression
   }
 
   @Override
-  public Nfa GenerateNfa (final boolean ignoreCase)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
     CompressCharLists ();
 
     if (getChoices ().size () == 1)
-      return getChoices ().get (0).GenerateNfa (ignoreCase);
+      return getChoices ().get (0).generateNfa (ignoreCase);
 
     final Nfa retVal = new Nfa ();
     final NfaState startState = retVal.start;
@@ -77,7 +77,7 @@ public class RChoice extends RegularExpression
       Nfa temp;
       final RegularExpression curRE = getChoices ().get (i);
 
-      temp = curRE.GenerateNfa (ignoreCase);
+      temp = curRE.generateNfa (ignoreCase);
 
       startState.addMove (temp.start);
       temp.end.addMove (finalState);

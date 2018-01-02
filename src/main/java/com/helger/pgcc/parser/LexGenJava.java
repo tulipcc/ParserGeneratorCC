@@ -115,7 +115,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
   public static TokenizerData tokenizerData;
   public static boolean generateDataOnly;
 
-  void PrintClassHead ()
+  void printClassHead ()
   {
     int i, j;
 
@@ -347,7 +347,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     lexStates = new int [maxOrdinal];
     ignoreCase = new boolean [maxOrdinal];
     rexprs = new RegularExpression [maxOrdinal];
-    RStringLiteral.allImages = new String [maxOrdinal];
+    RStringLiteral.s_allImages = new String [maxOrdinal];
     canReachOnMore = new boolean [maxLexStates];
   }
 
@@ -382,7 +382,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     tokMgrClassName = cu_name + "TokenManager";
 
     if (!generateDataOnly && codeGeneratorClass == null)
-      PrintClassHead ();
+      printClassHead ();
     BuildLexStatesTable ();
 
     e = allTpsForState.keys ();
@@ -393,7 +393,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     {
       int startState = -1;
       NfaState.reInitStatic ();
-      RStringLiteral.ReInit ();
+      RStringLiteral.reInitStatic ();
 
       final String key = (String) e.nextElement ();
 
@@ -437,7 +437,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
           if (!Options.getNoDfa () && curRE instanceof RStringLiteral && !((RStringLiteral) curRE).m_image.equals (""))
           {
-            ((RStringLiteral) curRE).GenerateDfa (this, curRE.m_ordinal);
+            ((RStringLiteral) curRE).generateDfa (this, curRE.m_ordinal);
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
             {
               mixed[lexStateIndex] = true;
@@ -456,7 +456,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
               if (curRE instanceof RChoice)
                 choices.add ((RChoice) curRE);
 
-              temp = curRE.GenerateNfa (ignore);
+              temp = curRE.generateNfa (ignore);
               temp.end.isFinal = true;
               temp.end.kind = curRE.m_ordinal;
               initialState.addMove (temp.start);
@@ -545,19 +545,19 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         if (initMatch[lexStateIndex] == 0)
           initMatch[lexStateIndex] = Integer.MAX_VALUE;
 
-      RStringLiteral.FillSubString ();
+      RStringLiteral.fillSubString ();
 
       if (hasNfa[lexStateIndex] && !mixed[lexStateIndex])
-        RStringLiteral.GenerateNfaStartStates (this, initialState);
+        RStringLiteral.generateNfaStartStates (this, initialState);
 
       if (generateDataOnly || codeGeneratorClass != null)
       {
-        RStringLiteral.UpdateStringLiteralData (totalNumStates, lexStateIndex);
+        RStringLiteral.updateStringLiteralData (totalNumStates, lexStateIndex);
         NfaState.updateNfaData (totalNumStates, startState, lexStateIndex, canMatchAnyChar[lexStateIndex]);
       }
       else
       {
-        RStringLiteral.DumpDfaCode (this);
+        RStringLiteral.dumpDfaCode (this);
         if (hasNfa[lexStateIndex])
         {
           NfaState.dumpMoveNfa (this);
@@ -638,7 +638,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       return;
     }
 
-    RStringLiteral.DumpStrLiteralImages (this);
+    RStringLiteral.dumpStrLiteralImages (this);
     DumpFillToken ();
     NfaState.dumpStateSets (this);
     NfaState.dumpNonAsciiMoveMethods (this);
@@ -1418,7 +1418,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
           break;
 
         genCode ("         image.append");
-        if (RStringLiteral.allImages[i] != null)
+        if (RStringLiteral.s_allImages[i] != null)
         {
           genCodeLine ("(jjstrLiteralImages[" + i + "]);");
           genCodeLine ("        lengthOfMatch = jjstrLiteralImages[" + i + "].length();");
@@ -1498,7 +1498,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
         genCode ("         image.append");
 
-        if (RStringLiteral.allImages[i] != null)
+        if (RStringLiteral.s_allImages[i] != null)
           genCodeLine ("(jjstrLiteralImages[" + i + "]);");
         else
           genCodeLine ("(input_stream.GetSuffix(jjimageLen));");
@@ -1580,7 +1580,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         {
           genCode ("        image.append");
 
-          if (RStringLiteral.allImages[i] != null)
+          if (RStringLiteral.s_allImages[i] != null)
           {
             genCodeLine ("(jjstrLiteralImages[" + i + "]);");
             genCodeLine ("        lengthOfMatch = jjstrLiteralImages[" + i + "].length();");

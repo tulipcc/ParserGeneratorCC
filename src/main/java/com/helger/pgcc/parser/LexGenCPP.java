@@ -56,7 +56,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 // JavaCCParserConstants
 {
   @Override
-  void PrintClassHead ()
+  void printClassHead ()
   {
     int i, j;
 
@@ -250,7 +250,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
     lexStates = new int [maxOrdinal];
     ignoreCase = new boolean [maxOrdinal];
     rexprs = new RegularExpression [maxOrdinal];
-    RStringLiteral.allImages = new String [maxOrdinal];
+    RStringLiteral.s_allImages = new String [maxOrdinal];
     canReachOnMore = new boolean [maxLexStates];
   }
 
@@ -277,23 +277,22 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
     keepLineCol = Options.getKeepLineColumn ();
     final List <RChoice> choices = new ArrayList <> ();
-    Enumeration e;
     TokenProduction tp;
 
     staticString = (Options.getStatic () ? "static " : "");
     tokMgrClassName = cu_name + "TokenManager";
 
-    PrintClassHead ();
+    printClassHead ();
     BuildLexStatesTable ();
 
-    e = allTpsForState.keys ();
+    final Enumeration e = allTpsForState.keys ();
 
     boolean ignoring = false;
 
     while (e.hasMoreElements ())
     {
       NfaState.reInitStatic ();
-      RStringLiteral.ReInit ();
+      RStringLiteral.reInitStatic ();
 
       final String key = (String) e.nextElement ();
 
@@ -336,7 +335,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
           if (curRE instanceof RStringLiteral && !((RStringLiteral) curRE).m_image.equals (""))
           {
-            ((RStringLiteral) curRE).GenerateDfa (this, curRE.m_ordinal);
+            ((RStringLiteral) curRE).generateDfa (this, curRE.m_ordinal);
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
               mixed[lexStateIndex] = true;
           }
@@ -353,7 +352,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
               if (curRE instanceof RChoice)
                 choices.add ((RChoice) curRE);
 
-              temp = curRE.GenerateNfa (ignore);
+              temp = curRE.generateNfa (ignore);
               temp.end.isFinal = true;
               temp.end.kind = curRE.m_ordinal;
               initialState.addMove (temp.start);
@@ -442,12 +441,12 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
         if (initMatch[lexStateIndex] == 0)
           initMatch[lexStateIndex] = Integer.MAX_VALUE;
 
-      RStringLiteral.FillSubString ();
+      RStringLiteral.fillSubString ();
 
       if (hasNfa[lexStateIndex] && !mixed[lexStateIndex])
-        RStringLiteral.GenerateNfaStartStates (this, initialState);
+        RStringLiteral.generateNfaStartStates (this, initialState);
 
-      RStringLiteral.DumpDfaCode (this);
+      RStringLiteral.dumpDfaCode (this);
 
       if (hasNfa[lexStateIndex])
         NfaState.dumpMoveNfa (this);
@@ -462,7 +461,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
     NfaState.dumpStateSets (this);
     CheckEmptyStringMatch ();
     NfaState.dumpNonAsciiMoveMethods (this);
-    RStringLiteral.DumpStrLiteralImages (this);
+    RStringLiteral.dumpStrLiteralImages (this);
     DumpFillToken ();
     DumpGetNextToken ();
 
@@ -490,17 +489,6 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
     NfaState.printBoilerPlateCPP (this);
 
-    String charStreamName;
-    if (Options.getUserCharStream ())
-      charStreamName = "CharStream";
-    else
-    {
-      if (Options.getJavaUnicodeEscape ())
-        charStreamName = "JavaCharStream";
-      else
-        charStreamName = "SimpleCharStream";
-    }
-
     writeTemplate ("/templates/cpp/TokenManagerBoilerPlateMethods.template",
                    "charStreamName",
                    "CharStream",
@@ -511,10 +499,10 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
                    "lexStateNameLength",
                    lexStateName.length);
 
-    dumpBoilerPlateInHeader ();
+    _dumpBoilerPlateInHeader ();
 
     // in the include file close the class signature
-    DumpStaticVarDeclarations (); // static vars actually inst
+    _dumpStaticVarDeclarations (); // static vars actually inst
 
     switchToIncludeFile (); // remaining variables
     writeTemplate ("/templates/cpp/DumpVarDeclarations.template",
@@ -531,7 +519,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
     saveOutput (fileName);
   }
 
-  private void dumpBoilerPlateInHeader ()
+  private void _dumpBoilerPlateInHeader ()
   {
     switchToIncludeFile ();
     genCodeLine ("#ifndef JAVACC_CHARSTREAM");
@@ -553,7 +541,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
     genCodeLine ("");
   }
 
-  private void DumpStaticVarDeclarations () throws IOException
+  private void _dumpStaticVarDeclarations ()
   {
     int i;
 
@@ -1156,7 +1144,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
           break;
 
         genCode ("         image.append");
-        if (RStringLiteral.allImages[i] != null)
+        if (RStringLiteral.s_allImages[i] != null)
         {
           genCodeLine ("(jjstrLiteralImages[" + i + "]);");
           genCodeLine ("        lengthOfMatch = jjstrLiteralImages[" + i + "].length();");
@@ -1231,7 +1219,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
         genCode ("         image.append");
 
-        if (RStringLiteral.allImages[i] != null)
+        if (RStringLiteral.s_allImages[i] != null)
           genCodeLine ("(jjstrLiteralImages[" + i + "]);");
         else
           genCodeLine ("(input_stream->GetSuffix(jjimageLen));");
@@ -1310,7 +1298,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
         {
           genCode ("        image.append");
 
-          if (RStringLiteral.allImages[i] != null)
+          if (RStringLiteral.s_allImages[i] != null)
           {
             genCodeLine ("(jjstrLiteralImages[" + i + "]);");
             genCodeLine ("        lengthOfMatch = jjstrLiteralImages[" + i + "].length();");

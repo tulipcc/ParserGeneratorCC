@@ -35,7 +35,7 @@ public class REndOfFile extends RegularExpression
 {
 
   @Override
-  public Nfa GenerateNfa (final boolean ignoreCase)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
     return null;
   }

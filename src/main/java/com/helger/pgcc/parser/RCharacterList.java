@@ -1711,7 +1711,7 @@ public class RCharacterList extends RegularExpression
   boolean transformed = false;
 
   @Override
-  public Nfa GenerateNfa (final boolean ignoreCase)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
     if (!transformed)
     {

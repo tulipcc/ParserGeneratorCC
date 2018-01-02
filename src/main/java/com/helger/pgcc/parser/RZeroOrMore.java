@@ -41,13 +41,13 @@ public class RZeroOrMore extends RegularExpression
   public RegularExpression regexpr;
 
   @Override
-  public Nfa GenerateNfa (final boolean ignoreCase)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
     final Nfa retVal = new Nfa ();
     final NfaState startState = retVal.start;
     final NfaState finalState = retVal.end;
 
-    final Nfa temp = regexpr.GenerateNfa (ignoreCase);
+    final Nfa temp = regexpr.generateNfa (ignoreCase);
 
     startState.addMove (temp.start);
     startState.addMove (finalState);

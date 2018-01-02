@@ -27,10 +27,10 @@
  */
 package com.helger.pgcc.jjtree;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 public class ASTProduction extends JJTreeNode
 {
@@ -40,7 +40,7 @@ public class ASTProduction extends JJTreeNode
   }
 
   String name;
-  List <String> throws_list = new Vector <> ();
+  List <String> throws_list = new ArrayList <> ();
 
   private final Map <NodeScope, Integer> scopes = new HashMap <> ();
   private int nextNodeScopeNumber = 0;

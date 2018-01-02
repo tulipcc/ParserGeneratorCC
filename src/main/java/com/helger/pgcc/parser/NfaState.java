@@ -58,7 +58,7 @@ public class NfaState
   private static boolean [] s_mark;
   private static boolean [] s_stateDone;
 
-  private static List <NfaState> s_allStates = new Vector <> ();
+  private static List <NfaState> s_allStates = new ArrayList <> ();
   private static List <NfaState> s_indexedAllStates = new ArrayList <> ();
   private static List <NfaState> s_nonAsciiTableForMethod = new ArrayList <> ();
   private static Map <String, NfaState> s_equivStatesTable = new HashMap <> ();
@@ -1116,7 +1116,7 @@ public class NfaState
         }
 
         if (m_loByteVec == null)
-          m_loByteVec = new Vector <> ();
+          m_loByteVec = new ArrayList <> ();
 
         m_loByteVec.add (Integer.valueOf (i));
         m_loByteVec.add (ind);
@@ -1760,11 +1760,11 @@ public class NfaState
     codeGenerator.genCodeLine ("            {");
   }
 
-  private static Vector <List <NfaState>> _partitionStatesSetForAscii (final int [] states, final int byteNum)
+  private static List <List <NfaState>> _partitionStatesSetForAscii (final int [] states, final int byteNum)
   {
     final int [] cardinalities = new int [states.length];
     final Vector <NfaState> original = new Vector <> ();
-    final Vector <List <NfaState>> partition = new Vector <> ();
+    final List <List <NfaState>> partition = new ArrayList <> ();
     NfaState tmp;
 
     original.setSize (states.length);

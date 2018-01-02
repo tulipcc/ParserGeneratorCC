@@ -37,7 +37,7 @@ public class ProducerConsumer {
   /**
    * The data structure where the tokens are stored.
    */
-  private java.util.Vector queue = new java.util.Vector();
+  private java.util.List queue = new java.util.ArrayList();
 
   /**
    * The producer calls this method to add a new token

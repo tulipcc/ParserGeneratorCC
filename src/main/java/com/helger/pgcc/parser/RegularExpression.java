@@ -74,7 +74,7 @@ public abstract class RegularExpression extends Expansion
    */
   public TokenProduction tpContext = null;
 
-  public abstract Nfa GenerateNfa (boolean ignoreCase);
+  public abstract Nfa generateNfa (boolean ignoreCase);
 
   public boolean CanMatchAnyChar ()
   {
