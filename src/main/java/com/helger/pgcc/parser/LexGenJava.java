@@ -521,7 +521,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       if (hasNfa[lexStateIndex])
       {
         initialState.generateCode ();
-        startState = initialState.generateInitMoves (this);
+        startState = initialState.generateInitMoves ();
       }
 
       if (initialState.kind != Integer.MAX_VALUE && initialState.kind != 0)

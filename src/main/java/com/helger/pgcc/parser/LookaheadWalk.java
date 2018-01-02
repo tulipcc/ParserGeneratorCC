@@ -35,7 +35,7 @@ public final class LookaheadWalk
 
   public static boolean considerSemanticLA;
 
-  public static ArrayList <MatchInfo> sizeLimitedMatches;
+  public static List <MatchInfo> sizeLimitedMatches;
 
   private LookaheadWalk ()
   {}

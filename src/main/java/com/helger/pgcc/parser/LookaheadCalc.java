@@ -33,17 +33,17 @@ import java.util.List;
 public class LookaheadCalc extends JavaCCGlobals
 {
 
-  static MatchInfo overlap (final List v1, final List v2)
+  static MatchInfo overlap (final List <MatchInfo> v1, final List <MatchInfo> v2)
   {
     MatchInfo m1, m2, m3;
     int size;
     boolean diff;
     for (int i = 0; i < v1.size (); i++)
     {
-      m1 = (MatchInfo) v1.get (i);
+      m1 = v1.get (i);
       for (int j = 0; j < v2.size (); j++)
       {
-        m2 = (MatchInfo) v2.get (j);
+        m2 = v2.get (j);
         size = m1.firstFreeLoc;
         m3 = m1;
         if (size > m2.firstFreeLoc)
@@ -70,11 +70,11 @@ public class LookaheadCalc extends JavaCCGlobals
     return null;
   }
 
-  static boolean javaCodeCheck (final List v)
+  static boolean javaCodeCheck (final List <MatchInfo> v)
   {
     for (int i = 0; i < v.size (); i++)
     {
-      if (((MatchInfo) v.get (i)).firstFreeLoc == 0)
+      if (v.get (i).firstFreeLoc == 0)
       {
         return true;
       }
@@ -93,7 +93,7 @@ public class LookaheadCalc extends JavaCCGlobals
       }
       else
       {
-        final RegularExpression re = rexps_of_tokens.get (new Integer (m.match[i]));
+        final RegularExpression re = rexps_of_tokens.get (Integer.valueOf (m.match[i]));
         if (re instanceof RStringLiteral)
         {
           ret += " \"" + add_escapes (((RStringLiteral) re).m_image) + "\"";
@@ -110,13 +110,8 @@ public class LookaheadCalc extends JavaCCGlobals
       }
     }
     if (m.firstFreeLoc == 0)
-    {
       return "";
-    }
-    else
-    {
-      return ret.substring (1);
-    }
+    return ret.substring (1);
   }
 
   public static void choiceCalc (final Choice ch)
@@ -125,8 +120,8 @@ public class LookaheadCalc extends JavaCCGlobals
     // dbl[i] and dbr[i] are lists of size limited matches for choice i
     // of ch. dbl ignores matches with semantic lookaheads (when force_la_check
     // is false), while dbr ignores semantic lookahead.
-    final List [] dbl = new ArrayList [ch.getChoices ().size ()];
-    final List [] dbr = new ArrayList [ch.getChoices ().size ()];
+    final List <MatchInfo> [] dbl = new ArrayList [ch.getChoices ().size ()];
+    final List <MatchInfo> [] dbr = new ArrayList [ch.getChoices ().size ()];
     final int [] minLA = new int [ch.getChoices ().size () - 1];
     final MatchInfo [] overlapInfo = new MatchInfo [ch.getChoices ().size () - 1];
     final int [] other = new int [ch.getChoices ().size () - 1];
@@ -144,7 +139,7 @@ public class LookaheadCalc extends JavaCCGlobals
         m.firstFreeLoc = 0;
         v = new ArrayList <> ();
         v.add (m);
-        LookaheadWalk.genFirstSet (v, (Expansion) ch.getChoices ().get (i));
+        LookaheadWalk.genFirstSet (v, ch.getChoices ().get (i));
         dbl[i] = LookaheadWalk.sizeLimitedMatches;
       }
       LookaheadWalk.considerSemanticLA = false;
@@ -155,14 +150,14 @@ public class LookaheadCalc extends JavaCCGlobals
         m.firstFreeLoc = 0;
         v = new ArrayList <> ();
         v.add (m);
-        LookaheadWalk.genFirstSet (v, (Expansion) ch.getChoices ().get (i));
+        LookaheadWalk.genFirstSet (v, ch.getChoices ().get (i));
         dbr[i] = LookaheadWalk.sizeLimitedMatches;
       }
       if (la == 1)
       {
         for (int i = first; i < ch.getChoices ().size () - 1; i++)
         {
-          final Expansion exp = (Expansion) ch.getChoices ().get (i);
+          final Expansion exp = ch.getChoices ().get (i);
           if (Semanticize.emptyExpansionExists (exp))
           {
             JavaCCErrors.warning (exp,
@@ -202,17 +197,17 @@ public class LookaheadCalc extends JavaCCGlobals
     }
     for (int i = first; i < ch.getChoices ().size () - 1; i++)
     {
-      if (explicitLA ((Expansion) ch.getChoices ().get (i)) && !Options.getForceLaCheck ())
+      if (explicitLA (ch.getChoices ().get (i)) && !Options.getForceLaCheck ())
       {
         continue;
       }
       if (minLA[i] > Options.getChoiceAmbiguityCheck ())
       {
         JavaCCErrors.warning ("Choice conflict involving two expansions at");
-        System.err.print ("         line " + ((Expansion) ch.getChoices ().get (i)).getLine ());
-        System.err.print (", column " + ((Expansion) ch.getChoices ().get (i)).getColumn ());
-        System.err.print (" and line " + ((Expansion) ch.getChoices ().get (other[i])).getLine ());
-        System.err.print (", column " + ((Expansion) ch.getChoices ().get (other[i])).getColumn ());
+        System.err.print ("         line " + ch.getChoices ().get (i).getLine ());
+        System.err.print (", column " + ch.getChoices ().get (i).getColumn ());
+        System.err.print (" and line " + ch.getChoices ().get (other[i]).getLine ());
+        System.err.print (", column " + ch.getChoices ().get (other[i]).getColumn ());
         System.err.println (" respectively.");
         System.err.println ("         A common prefix is: " + image (overlapInfo[i]));
         System.err.println ("         Consider using a lookahead of " + minLA[i] + " or more for earlier expansion.");
@@ -221,10 +216,10 @@ public class LookaheadCalc extends JavaCCGlobals
         if (minLA[i] > 1)
         {
           JavaCCErrors.warning ("Choice conflict involving two expansions at");
-          System.err.print ("         line " + ((Expansion) ch.getChoices ().get (i)).getLine ());
-          System.err.print (", column " + ((Expansion) ch.getChoices ().get (i)).getColumn ());
-          System.err.print (" and line " + ((Expansion) ch.getChoices ().get (other[i])).getLine ());
-          System.err.print (", column " + ((Expansion) ch.getChoices ().get (other[i])).getColumn ());
+          System.err.print ("         line " + ch.getChoices ().get (i).getLine ());
+          System.err.print (", column " + ch.getChoices ().get (i).getColumn ());
+          System.err.print (" and line " + ch.getChoices ().get (other[i]).getLine ());
+          System.err.print (", column " + ch.getChoices ().get (other[i]).getColumn ());
           System.err.println (" respectively.");
           System.err.println ("         A common prefix is: " + image (overlapInfo[i]));
           System.err.println ("         Consider using a lookahead of " + minLA[i] + " for earlier expansion.");
@@ -256,7 +251,7 @@ public class LookaheadCalc extends JavaCCGlobals
     }
     for (int i = 0; i < ch.getChoices ().size (); i++)
     {
-      if (!explicitLA ((Expansion) ch.getChoices ().get (i)))
+      if (!explicitLA (ch.getChoices ().get (i)))
       {
         return i;
       }

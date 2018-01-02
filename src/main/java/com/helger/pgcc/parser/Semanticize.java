@@ -396,11 +396,11 @@ public class Semanticize extends JavaCCGlobals
           }
         if (!(res.rexp instanceof RJustName) && !res.rexp.m_label.equals (""))
         {
-          names_of_tokens.put (new Integer (res.rexp.m_ordinal), res.rexp.m_label);
+          names_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp.m_label);
         }
         if (!(res.rexp instanceof RJustName))
         {
-          rexps_of_tokens.put (new Integer (res.rexp.m_ordinal), res.rexp);
+          rexps_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp);
         }
       }
     }
@@ -469,7 +469,7 @@ public class Semanticize extends JavaCCGlobals
               jn.m_ordinal = tokenCount++;
               named_tokens_table.put (jn.m_label, jn);
               ordered_named_tokens.add (jn);
-              names_of_tokens.put (new Integer (jn.m_ordinal), jn.m_label);
+              names_of_tokens.put (Integer.valueOf (jn.m_ordinal), jn.m_label);
             }
             else
             {
@@ -499,7 +499,7 @@ public class Semanticize extends JavaCCGlobals
         for (final RegExprSpec aRegExprSpec : respecs)
         {
           final RegExprSpec res = (aRegExprSpec);
-          final Integer ii = new Integer (res.rexp.m_ordinal);
+          final Integer ii = Integer.valueOf (res.rexp.m_ordinal);
           if (names_of_tokens.get (ii) == null)
           {
             JavaCCErrors.warning (res.rexp,

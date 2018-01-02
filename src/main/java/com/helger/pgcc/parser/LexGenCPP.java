@@ -418,7 +418,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
       if (hasNfa[lexStateIndex])
       {
         initialState.generateCode ();
-        initialState.generateInitMoves (this);
+        initialState.generateInitMoves ();
       }
 
       if (initialState.kind != Integer.MAX_VALUE && initialState.kind != 0)

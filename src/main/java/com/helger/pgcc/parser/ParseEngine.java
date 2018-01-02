@@ -449,7 +449,7 @@ public class ParseEngine
                   final int j1 = i / 32;
                   final int j2 = i % 32;
                   tokenMask[j1] |= 1 << j2;
-                  final String s = (names_of_tokens.get (new Integer (i)));
+                  final String s = (names_of_tokens.get (Integer.valueOf (i)));
                   if (s == null)
                   {
                     retval += i;
@@ -980,7 +980,7 @@ public class ParseEngine
                                                    : (isJavaDialect ? ")." : ")->") + e_nrw.m_rhsToken.image + ";";
       if (e_nrw.m_label.equals (""))
       {
-        final Object label = names_of_tokens.get (new Integer (e_nrw.m_ordinal));
+        final Object label = names_of_tokens.get (Integer.valueOf (e_nrw.m_ordinal));
         if (label != null)
         {
           retval += "jj_consume_token(" + (String) label + tail;
@@ -1573,7 +1573,7 @@ public class ParseEngine
       final RegularExpression e_nrw = (RegularExpression) e;
       if (e_nrw.m_label.equals (""))
       {
-        final Object label = names_of_tokens.get (new Integer (e_nrw.m_ordinal));
+        final Object label = names_of_tokens.get (Integer.valueOf (e_nrw.m_ordinal));
         if (label != null)
         {
           codeGenerator.genCodeLine ("    if (jj_scan_token(" + (String) label + ")) " + genReturn (true));

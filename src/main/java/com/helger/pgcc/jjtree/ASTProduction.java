@@ -50,7 +50,7 @@ public class ASTProduction extends JJTreeNode
     Integer i = scopes.get (s);
     if (i == null)
     {
-      i = new Integer (nextNodeScopeNumber++);
+      i = Integer.valueOf (nextNodeScopeNumber++);
       scopes.put (s, i);
     }
     return i.intValue ();

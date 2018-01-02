@@ -994,7 +994,7 @@ public class NfaState
                                          tmp);
             }
           }
-          s_lohiByteTab.put (tmp, ind = new Integer (s_lohiByteCnt++));
+          s_lohiByteTab.put (tmp, ind = Integer.valueOf (s_lohiByteCnt++));
         }
 
         tmpIndices[cnt++] = ind.intValue ();
@@ -1036,7 +1036,7 @@ public class NfaState
                                          tmp);
               codeGenerator.switchToMainFile ();
             }
-          s_lohiByteTab.put (tmp, ind = new Integer (s_lohiByteCnt++));
+          s_lohiByteTab.put (tmp, ind = Integer.valueOf (s_lohiByteCnt++));
         }
 
         tmpIndices[cnt++] = ind.intValue ();
@@ -1101,13 +1101,13 @@ public class NfaState
                                          "[] = " +
                                          tmp);
             }
-          s_lohiByteTab.put (tmp, ind = new Integer (s_lohiByteCnt++));
+          s_lohiByteTab.put (tmp, ind = Integer.valueOf (s_lohiByteCnt++));
         }
 
         if (m_loByteVec == null)
           m_loByteVec = new Vector <> ();
 
-        m_loByteVec.add (new Integer (i));
+        m_loByteVec.add (Integer.valueOf (i));
         m_loByteVec.add (ind);
       }
     }
@@ -1205,7 +1205,7 @@ public class NfaState
 
     if (nameSet.length == 1)
     {
-      stateNameToReturn = new Integer (nameSet[0]);
+      stateNameToReturn = Integer.valueOf (nameSet[0]);
       s_stateNameForComposite.put (stateSetString, stateNameToReturn);
       return nameSet[0];
     }
@@ -1257,7 +1257,7 @@ public class NfaState
     else
       tmp = nameSet[toRet];
 
-    stateNameToReturn = new Integer (tmp);
+    stateNameToReturn = Integer.valueOf (tmp);
     s_stateNameForComposite.put (stateSetString, stateNameToReturn);
     s_compositeStateTable.put (stateSetString, nameSet);
 
@@ -1278,7 +1278,7 @@ public class NfaState
     return -1;
   }
 
-  public int generateInitMoves (final CodeGenerator codeGenerator)
+  public int generateInitMoves ()
   {
     getEpsilonMovesString ();
 
@@ -1834,9 +1834,9 @@ public class NfaState
   }
 
   private static void _dumpCompositeStatesAsciiMoves (final CodeGenerator codeGenerator,
-                                                     final String key,
-                                                     final int byteNum,
-                                                     final boolean [] dumped)
+                                                      final String key,
+                                                      final int byteNum,
+                                                      final boolean [] dumped)
   {
     final int [] nameSet = s_allNextStates.get (key);
 
@@ -1939,8 +1939,8 @@ public class NfaState
   }
 
   private void _dumpAsciiMoveForCompositeState (final CodeGenerator codeGenerator,
-                                               final int byteNum,
-                                               final boolean elseNeeded)
+                                                final int byteNum,
+                                                final boolean elseNeeded)
   {
     boolean nextIntersects = _selfLoop ();
 
@@ -2286,8 +2286,8 @@ public class NfaState
   }
 
   private static void _dumpCompositeStatesNonAsciiMoves (final CodeGenerator codeGenerator,
-                                                        final String key,
-                                                        final boolean [] dumped)
+                                                         final String key,
+                                                         final boolean [] dumped)
   {
     final int [] nameSet = s_allNextStates.get (key);
 
