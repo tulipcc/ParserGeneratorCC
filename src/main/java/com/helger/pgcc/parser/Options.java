@@ -145,12 +145,11 @@ public class Options
    */
   public static final String JAVA_TEMPLATE_TYPE_CLASSIC = "classic";
 
-  static final Set <OptionInfo> userOptions;
+  private static final Set <OptionInfo> userOptions;
 
   static
   {
     final TreeSet <OptionInfo> temp = new TreeSet <> ();
-
     temp.add (new OptionInfo (USEROPTION__PARSER_SUPER_CLASS, EOptionType.STRING, null));
     temp.add (new OptionInfo (USEROPTION__TOKEN_MANAGER_SUPER_CLASS, EOptionType.STRING, null));
     temp.add (new OptionInfo (USEROPTION__LOOKAHEAD, EOptionType.INTEGER, Integer.valueOf (1)));
@@ -321,8 +320,15 @@ public class Options
 
   public static String getTokenMgrErrorClass ()
   {
-    return isOutputLanguageJava () ? (isLegacyExceptionHandling () ? "TokenMgrError" : "TokenMgrException")
-                                   : "TokenMgrError";
+    switch (s_language)
+    {
+      case JAVA:
+        return isLegacyExceptionHandling () ? "TokenMgrError" : "TokenMgrException";
+      case CPP:
+        return "TokenMgrError";
+      default:
+        throw new UnsupportedOutputLanguageException (s_language);
+    }
   }
 
   /**
@@ -443,7 +449,7 @@ public class Options
       if (nameUpperCase.equalsIgnoreCase (USEROPTION__OUTPUT_LANGUAGE))
       {
         final String outputLanguage = (String) value;
-        final EOutputLanguage eOutLanguage = getOutputLanguage (outputLanguage);
+        final EOutputLanguage eOutLanguage = EOutputLanguage.getFromIDCaseInsensitiveOrNull (outputLanguage);
         if (eOutLanguage == null)
         {
           JavaCCErrors.warning (valueloc,
@@ -1007,7 +1013,7 @@ public class Options
       case CPP:
         return "StringBuffer";
       default:
-        throw new IllegalStateException ("Output language type not fully implemented : " + s_language);
+        throw new UnsupportedOutputLanguageException (s_language);
     }
   }
 
@@ -1018,30 +1024,21 @@ public class Options
     s_supportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_MODERN);
   }
 
-  @Nullable
-  public static EOutputLanguage getOutputLanguage (@Nullable final String language)
-  {
-    return EOutputLanguage.getFromIDCaseInsensitiveOrNull (language);
-  }
-
   public static boolean isValidJavaTemplateType (@Nullable final String type)
   {
     return type == null ? false : s_supportedJavaTemplateTypes.contains (type.toLowerCase (Locale.US));
   }
 
-  /**
-   * @return the output language. default java
-   */
-  @Deprecated
-  public static String getOutputLanguage ()
-  {
-    return stringValue (USEROPTION__OUTPUT_LANGUAGE);
-  }
-
   @Nonnull
-  public static EOutputLanguage getOutputLanguageType ()
+  public static EOutputLanguage getOutputLanguage ()
   {
     return s_language;
+  }
+
+  @Deprecated
+  public static boolean isOutputLanguageJava ()
+  {
+    return s_language.isJava ();
   }
 
   public static String getJavaTemplateType ()
@@ -1082,58 +1079,18 @@ public class Options
   @Nonempty
   public static String getLongType ()
   {
-    // TODO :: CBA -- Require Unification of output language specific
-    // processing into a single Enum class
-    switch (s_language)
-    {
-      case JAVA:
-        return "long";
-      case CPP:
-        return "unsigned long long";
-      default:
-        throw new UnsupportedLanguageException (s_language);
-    }
+    return s_language.getTypeLong ();
   }
 
   @Nonnull
   public static String getLongSuffix ()
   {
-    switch (s_language)
-    {
-      case JAVA:
-        return "L";
-      case CPP:
-        return "L";
-      default:
-        throw new UnsupportedOutputLanguageException (s_language);
-    }
+    return s_language.getLongValueSuffix ();
   }
 
   public static String getBooleanType ()
   {
-    // TODO :: CBA -- Require Unification of output language specific
-    // processing into a single Enum class
-    switch (s_language)
-    {
-      case JAVA:
-        return "boolean";
-      case CPP:
-        return "bool";
-      default:
-        throw new RuntimeException ("Language type not fully supported: " + s_language);
-    }
-  }
-
-  @Deprecated
-  public static boolean isOutputLanguageJava ()
-  {
-    return getOutputLanguageType ().isJava ();
-  }
-
-  @Deprecated
-  public static boolean isOutputLanguageCpp ()
-  {
-    return getOutputLanguageType ().isCpp ();
+    return s_language.getTypeBoolean ();
   }
 
   public static boolean isTokenManagerRequiresParserAccess ()

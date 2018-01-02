@@ -68,17 +68,17 @@ public class JJDocGlobals extends JavaCCGlobals
   {
     if (s_generator == null)
     {
-      if (JJDocOptions.getText ())
+      if (JJDocOptions.isText ())
       {
         s_generator = new TextGenerator ();
       }
       else
-        if (JJDocOptions.getBNF ())
+        if (JJDocOptions.isBNF ())
         {
           s_generator = new BNFGenerator ();
         }
         else
-          if (JJDocOptions.getXText ())
+          if (JJDocOptions.isXText ())
           {
             s_generator = new XTextGenerator ();
           }
@@ -89,7 +89,7 @@ public class JJDocGlobals extends JavaCCGlobals
     }
     else
     {
-      if (JJDocOptions.getText ())
+      if (JJDocOptions.isText ())
       {
         if (s_generator instanceof HTMLGenerator)
         {
@@ -97,12 +97,12 @@ public class JJDocGlobals extends JavaCCGlobals
         }
       }
       else
-        if (JJDocOptions.getBNF ())
+        if (JJDocOptions.isBNF ())
         {
           s_generator = new BNFGenerator ();
         }
         else
-          if (JJDocOptions.getXText ())
+          if (JJDocOptions.isXText ())
           {
             s_generator = new XTextGenerator ();
           }

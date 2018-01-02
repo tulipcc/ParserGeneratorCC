@@ -27,16 +27,15 @@
  */
 package com.helger.pgcc.jjtree;
 
-/**
- * Thrown when ther is a problem reading or writing to the file system.
- */
-class JJTreeIOException extends java.io.IOException
-{
+import java.io.IOException;
 
+/**
+ * Thrown when there is a problem reading or writing to the file system.
+ */
+public class JJTreeIOException extends IOException
+{
   JJTreeIOException (final String detail)
   {
     super (detail);
   }
 }
-
-/* end */

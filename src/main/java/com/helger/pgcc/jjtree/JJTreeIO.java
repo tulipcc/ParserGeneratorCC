@@ -41,7 +41,7 @@ import java.io.Reader;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
 
-final class IO
+final class JJTreeIO
 {
   private String ifn;
   private String ofn;
@@ -50,7 +50,7 @@ final class IO
   private final PrintStream msg;
   private final PrintStream err;
 
-  IO ()
+  JJTreeIO ()
   {
     ifn = "<uninitialized input>";
     msg = System.out;

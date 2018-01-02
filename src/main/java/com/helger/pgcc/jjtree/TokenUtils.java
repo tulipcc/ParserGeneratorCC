@@ -37,7 +37,7 @@ public final class TokenUtils
   private TokenUtils ()
   {}
 
-  static void print (final Token t, final IO io, final String in, final String out)
+  static void print (final Token t, final JJTreeIO io, final String in, final String out)
   {
     Token tt = t.specialToken;
     if (tt != null)
@@ -58,7 +58,7 @@ public final class TokenUtils
     io.print (addUnicodeEscapes (i));
   }
 
-  static void print (final Token t, final IO io)
+  static void print (final Token t, final JJTreeIO io)
   {
     print (t, io, null, null);
   }

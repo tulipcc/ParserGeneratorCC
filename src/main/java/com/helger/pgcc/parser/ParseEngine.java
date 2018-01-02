@@ -40,8 +40,8 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_maskVals;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_names_of_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_production_table;
-import static com.helger.pgcc.parser.JavaCCGlobals.staticOpt;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
+import static com.helger.pgcc.parser.JavaCCGlobals.staticOpt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,8 +53,8 @@ import java.util.Map;
 
 public class ParseEngine
 {
-  private int gensymindex = 0;
-  private int indentamt;
+  private int m_gensymindex = 0;
+  private int m_indentamt;
   private boolean jj2LA;
   private CodeGenerator codeGenerator;
   @Deprecated
@@ -289,7 +289,7 @@ public class ParseEngine
     for (int i = 0; i < conds.length; i++)
     {
       System.err.println ("Lookahead: " + i);
-      System.err.println (conds[i].dump (0, new HashSet ()));
+      System.err.println (conds[i].dump (0, new HashSet <> ()));
       System.err.println ();
     }
   }
@@ -592,12 +592,12 @@ public class ParseEngine
         else
           if (ch == '\u0001')
           {
-            indentamt += 2;
+            m_indentamt += 2;
           }
           else
             if (ch == '\u0002')
             {
-              indentamt -= 2;
+              m_indentamt -= 2;
             }
             else
               if (ch == '\u0003')
@@ -865,7 +865,7 @@ public class ParseEngine
 
     genStackCheck (voidReturn);
 
-    indentamt = 4;
+    m_indentamt = 4;
     if (Options.getDebugParser ())
     {
       codeGenerator.genCodeLine ("");
@@ -883,7 +883,7 @@ public class ParseEngine
                                    "\"); });");
       }
       codeGenerator.genCodeLine ("    try {");
-      indentamt = 6;
+      m_indentamt = 6;
     }
 
     if (!Options.booleanValue (Options.USEROPTION__CPP_IGNORE_ACTIONS) && p.getDeclarationTokens ().size () != 0)
@@ -949,7 +949,7 @@ public class ParseEngine
   void phase1NewLine ()
   {
     codeGenerator.genCodeLine ("");
-    for (int i = 0; i < indentamt; i++)
+    for (int i = 0; i < m_indentamt; i++)
     {
       codeGenerator.genCode (" ");
     }
@@ -1128,7 +1128,7 @@ public class ParseEngine
                   la.setLaExpansion (nested_e);
                 }
                 retval += "\n";
-                final int labelIndex = ++gensymindex;
+                final int labelIndex = ++m_gensymindex;
                 if (isJavaDialect)
                 {
                   retval += "label_" + labelIndex + ":\n";
@@ -1173,7 +1173,7 @@ public class ParseEngine
                     la.setLaExpansion (nested_e);
                   }
                   retval += "\n";
-                  final int labelIndex = ++gensymindex;
+                  final int labelIndex = ++m_gensymindex;
                   if (isJavaDialect)
                   {
                     retval += "label_" + labelIndex + ":\n";
@@ -1405,15 +1405,15 @@ public class ParseEngine
         return;
       }
 
-      gensymindex++;
+      m_gensymindex++;
       // if (gensymindex == 100)
       // {
       // new Error().codeGenerator.printStackTrace();
       // System.out.println(" ***** seq: " + seq.internal_name + "; size: " +
       // ((Sequence)seq).units.size());
       // }
-      e.m_internal_name = "R_" + gensymindex;
-      e.m_internal_index = gensymindex;
+      e.m_internal_name = "R_" + m_gensymindex;
+      e.m_internal_index = m_gensymindex;
     }
     Phase3Data p3d = (phase3table.get (e));
     if (p3d == null || p3d.count < inf.count)
@@ -2087,8 +2087,8 @@ public class ParseEngine
 
   public void reInit ()
   {
-    gensymindex = 0;
-    indentamt = 0;
+    m_gensymindex = 0;
+    m_indentamt = 0;
     jj2LA = false;
     phase2list = new ArrayList <> ();
     phase3list = new ArrayList <> ();

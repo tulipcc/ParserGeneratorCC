@@ -129,7 +129,7 @@ public class RStringLiteral extends RegularExpression
   {
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
-    switch (Options.getOutputLanguageType ())
+    switch (Options.getOutputLanguage ())
     {
       case JAVA:
         dumpStrLiteralImagesForJava (codeGenerator);
@@ -215,7 +215,7 @@ public class RStringLiteral extends RegularExpression
         codeGenerator.genCodeLine ("};");
         break;
       default:
-        throw new RuntimeException ("Output language type not fully implemented : " + Options.getOutputLanguageType ());
+        throw new RuntimeException ("Output language type not fully implemented : " + Options.getOutputLanguage ());
     }
   }
 
@@ -568,7 +568,7 @@ public class RStringLiteral extends RegularExpression
 
   static void dumpStartWithStates (final CodeGenerator codeGenerator)
   {
-    switch (Options.getOutputLanguageType ())
+    switch (Options.getOutputLanguage ())
     {
       case JAVA:
         codeGenerator.genCodeLine ((Options.getStatic () ? "static " : "") +
@@ -586,7 +586,7 @@ public class RStringLiteral extends RegularExpression
         break;
       default:
         throw new IllegalStateException ("Output language type not fully implemented : " +
-                                         Options.getOutputLanguageType ());
+                                         Options.getOutputLanguage ());
     }
     codeGenerator.genCodeLine ("{");
     codeGenerator.genCodeLine ("   jjmatchedKind = kind;");

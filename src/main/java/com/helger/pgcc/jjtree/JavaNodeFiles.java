@@ -58,7 +58,7 @@ final class JavaNodeFiles
 
   static Set <String> nodesGenerated = new HashSet <> ();
 
-  static void ensure (final IO io, final String nodeType)
+  static void ensure (final JJTreeIO io, final String nodeType)
   {
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), nodeType + ".java");
 

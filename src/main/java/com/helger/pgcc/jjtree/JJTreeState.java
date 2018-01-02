@@ -44,7 +44,7 @@ final class JJTreeState
   private JJTreeState ()
   {}
 
-  static void insertParserMembers (final IO io)
+  static void insertParserMembers (final JJTreeIO io)
   {
     String s;
 

@@ -34,13 +34,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.Version;
+import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
 /**
  * This package contains data created as a result of parsing and semanticizing a
@@ -97,46 +97,46 @@ public abstract class JavaCCGlobals
    * This is a list of tokens that appear after "PARSER_BEGIN(name)" all the way
    * until (but not including) the opening brace "{" of the class "name".
    */
-  public static List <Token> s_cu_to_insertion_point_1 = new ArrayList <> ();
+  public static final List <Token> s_cu_to_insertion_point_1 = new ArrayList <> ();
 
   /**
    * This is the list of all tokens that appear after the tokens in
    * "cu_to_insertion_point_1" and until (but not including) the closing brace
    * "}" of the class "name".
    */
-  public static List <Token> s_cu_to_insertion_point_2 = new ArrayList <> ();
+  public static final List <Token> s_cu_to_insertion_point_2 = new ArrayList <> ();
 
   /**
    * This is the list of all tokens that appear after the tokens in
    * "cu_to_insertion_point_2" and until "PARSER_END(name)".
    */
-  public static List <Token> s_cu_from_insertion_point_2 = new ArrayList <> ();
+  public static final List <Token> s_cu_from_insertion_point_2 = new ArrayList <> ();
 
   /**
    * A list of all grammar productions - normal and JAVACODE - in the order they
    * appear in the input file. Each entry here will be a subclass of
    * "NormalProduction".
    */
-  public static List <NormalProduction> s_bnfproductions = new ArrayList <> ();
+  public static final List <NormalProduction> s_bnfproductions = new ArrayList <> ();
 
   /**
    * A symbol table of all grammar productions - normal and JAVACODE. The symbol
    * table is indexed by the name of the left hand side non-terminal. Its
    * contents are of type "NormalProduction".
    */
-  public static Map <String, NormalProduction> s_production_table = new HashMap <> ();
+  public static final Map <String, NormalProduction> s_production_table = new HashMap <> ();
 
   /**
    * A mapping of lexical state strings to their integer internal
    * representation. Integers are stored as java.lang.Integer's.
    */
-  public static Map <String, Integer> s_lexstate_S2I = new HashMap <> ();
+  public static final Map <String, Integer> s_lexstate_S2I = new HashMap <> ();
 
   /**
    * A mapping of the internal integer representations of lexical states to
    * their strings. Integers are stored as java.lang.Integer's.
    */
-  public static Map <Integer, String> s_lexstate_I2S = new HashMap <> ();
+  public static final Map <Integer, String> s_lexstate_I2S = new HashMap <> ();
 
   /**
    * The declarations to be inserted into the TokenManager class.
@@ -148,7 +148,7 @@ public abstract class JavaCCGlobals
    * implicit TokenProductions that are created for uses of regular expressions
    * within BNF productions.
    */
-  public static List <TokenProduction> s_rexprlist = new ArrayList <> ();
+  public static final List <TokenProduction> s_rexprlist = new ArrayList <> ();
 
   /**
    * The total number of distinct tokens. This is therefore one more than the
@@ -437,7 +437,7 @@ public abstract class JavaCCGlobals
 
   public static String addUnicodeEscapes (final String str)
   {
-    switch (Options.getOutputLanguageType ())
+    switch (Options.getOutputLanguage ())
     {
       case JAVA:
       {
@@ -462,7 +462,7 @@ public abstract class JavaCCGlobals
       default:
         // TODO :: CBA -- Require Unification of output language specific
         // processing into a single Enum class
-        throw new IllegalStateException ("Unhandled Output Language : " + Options.getOutputLanguageType ());
+        throw new IllegalStateException ("Unhandled Output Language : " + Options.getOutputLanguage ());
     }
   }
 
@@ -626,31 +626,31 @@ public abstract class JavaCCGlobals
     return printLeadingComments (t.next);
   }
 
-  public static void reInit ()
+  public static void reInitStatic ()
   {
     s_fileName = null;
     s_origFileName = null;
     s_jjtreeGenerated = false;
     s_toolNames = null;
     s_cu_name = null;
-    s_cu_to_insertion_point_1 = new ArrayList <> ();
-    s_cu_to_insertion_point_2 = new ArrayList <> ();
-    s_cu_from_insertion_point_2 = new ArrayList <> ();
-    s_bnfproductions = new ArrayList <> ();
-    s_production_table = new HashMap <> ();
-    s_lexstate_S2I = new Hashtable <> ();
-    s_lexstate_I2S = new Hashtable <> ();
+    s_cu_to_insertion_point_1.clear ();
+    s_cu_to_insertion_point_2.clear ();
+    s_cu_from_insertion_point_2.clear ();
+    s_bnfproductions.clear ();
+    s_production_table.clear ();
+    s_lexstate_S2I.clear ();
+    s_lexstate_I2S.clear ();
     s_token_mgr_decls = null;
-    s_rexprlist = new ArrayList <> ();
+    s_rexprlist.clear ();
     s_tokenCount = 0;
-    s_named_tokens_table = new HashMap <> ();
-    s_ordered_named_tokens = new ArrayList <> ();
-    s_names_of_tokens = new HashMap <> ();
-    rexps_of_tokens = new HashMap <> ();
-    s_simple_tokens_table = new HashMap <> ();
+    s_named_tokens_table.clear ();
+    s_ordered_named_tokens.clear ();
+    s_names_of_tokens.clear ();
+    rexps_of_tokens.clear ();
+    s_simple_tokens_table.clear ();
     s_maskindex = 0;
     s_jj2index = 0;
-    s_maskVals = new ArrayList <> ();
+    s_maskVals.clear ();
     s_cline = 0;
     s_ccol = 0;
     s_actForEof = null;
@@ -659,14 +659,14 @@ public abstract class JavaCCGlobals
 
   static String getFileExtension ()
   {
-    switch (Options.getOutputLanguageType ())
+    switch (Options.getOutputLanguage ())
     {
       case JAVA:
         return ".java";
       case CPP:
         return ".cc";
       default:
-        throw new UnsupportedLanguageException (Options.getOutputLanguageType ());
+        throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());
     }
   }
 

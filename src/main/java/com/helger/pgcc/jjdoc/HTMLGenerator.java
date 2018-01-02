@@ -158,7 +158,7 @@ public class HTMLGenerator extends TextGenerator
   public void nonterminalsStart ()
   {
     println ("<H2 ALIGN=CENTER>NON-TERMINALS</H2>");
-    if (JJDocOptions.getOneTable ())
+    if (JJDocOptions.isOneTable ())
     {
       println ("<TABLE>");
     }
@@ -167,7 +167,7 @@ public class HTMLGenerator extends TextGenerator
   @Override
   public void nonterminalsEnd ()
   {
-    if (JJDocOptions.getOneTable ())
+    if (JJDocOptions.isOneTable ())
     {
       println ("</TABLE>");
     }
@@ -205,7 +205,7 @@ public class HTMLGenerator extends TextGenerator
   @Override
   public void productionStart (final NormalProduction np)
   {
-    if (!JJDocOptions.getOneTable ())
+    if (!JJDocOptions.isOneTable ())
     {
       println ("");
       println ("<TABLE ALIGN=CENTER>");
@@ -220,7 +220,7 @@ public class HTMLGenerator extends TextGenerator
   @Override
   public void productionEnd (final NormalProduction np)
   {
-    if (!JJDocOptions.getOneTable ())
+    if (!JJDocOptions.isOneTable ())
     {
       println ("</TABLE>");
       println ("<HR>");

@@ -32,7 +32,6 @@ package com.helger.pgcc.jjtree;
  */
 public final class Main
 {
-
   private Main ()
   {}
 
@@ -43,5 +42,3 @@ public final class Main
     System.exit (result);
   }
 }
-
-/* end */

@@ -161,12 +161,12 @@ public class TextGenerator implements IDocGenerator
       }
       String ext = ".html";
 
-      if (JJDocOptions.getText ())
+      if (JJDocOptions.isText ())
       {
         ext = ".txt";
       }
       else
-        if (JJDocOptions.getXText ())
+        if (JJDocOptions.isXText ())
         {
           ext = ".xtext";
         }

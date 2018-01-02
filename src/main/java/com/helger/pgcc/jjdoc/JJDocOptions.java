@@ -37,14 +37,11 @@ import com.helger.pgcc.parser.Options;
  */
 public class JJDocOptions extends Options
 {
-
   /**
    * Limit subclassing to derived classes.
    */
   protected JJDocOptions ()
-  {
-    super ();
-  }
+  {}
 
   /**
    * Initialize the options.
@@ -53,13 +50,13 @@ public class JJDocOptions extends Options
   {
     Options.init ();
 
-    Options.s_optionValues.put ("ONE_TABLE", Boolean.TRUE);
-    Options.s_optionValues.put ("TEXT", Boolean.FALSE);
-    Options.s_optionValues.put ("XTEXT", Boolean.FALSE);
-    Options.s_optionValues.put ("BNF", Boolean.FALSE);
+    s_optionValues.put ("ONE_TABLE", Boolean.TRUE);
+    s_optionValues.put ("TEXT", Boolean.FALSE);
+    s_optionValues.put ("XTEXT", Boolean.FALSE);
+    s_optionValues.put ("BNF", Boolean.FALSE);
 
-    Options.s_optionValues.put ("OUTPUT_FILE", "");
-    Options.s_optionValues.put ("CSS", "");
+    s_optionValues.put ("OUTPUT_FILE", "");
+    s_optionValues.put ("CSS", "");
   }
 
   /**
@@ -67,7 +64,7 @@ public class JJDocOptions extends Options
    *
    * @return The requested one table value.
    */
-  public static boolean getOneTable ()
+  public static boolean isOneTable ()
   {
     return booleanValue ("ONE_TABLE");
   }
@@ -87,12 +84,12 @@ public class JJDocOptions extends Options
    *
    * @return The requested text value.
    */
-  public static boolean getText ()
+  public static boolean isText ()
   {
     return booleanValue ("TEXT");
   }
 
-  public static boolean getXText ()
+  public static boolean isXText ()
   {
     return booleanValue ("XTEXT");
   }
@@ -102,7 +99,7 @@ public class JJDocOptions extends Options
    *
    * @return The requested text value.
    */
-  public static boolean getBNF ()
+  public static boolean isBNF ()
   {
     return booleanValue ("BNF");
   }

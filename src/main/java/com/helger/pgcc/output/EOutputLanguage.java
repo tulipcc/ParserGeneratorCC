@@ -13,8 +13,46 @@ import com.helger.commons.lang.EnumHelper;
 
 public enum EOutputLanguage implements IHasID <String>
 {
-  JAVA ("java"),
-  CPP ("c++");
+  JAVA ("java")
+  {
+    @Override
+    public String getTypeLong ()
+    {
+      return "long";
+    }
+
+    @Override
+    public String getLongValueSuffix ()
+    {
+      return "L";
+    }
+
+    @Override
+    public String getTypeBoolean ()
+    {
+      return "boolean";
+    }
+  },
+  CPP ("c++")
+  {
+    @Override
+    public String getTypeLong ()
+    {
+      return "unsigned long long";
+    }
+
+    @Override
+    public String getLongValueSuffix ()
+    {
+      return "ULL";
+    }
+
+    @Override
+    public String getTypeBoolean ()
+    {
+      return "bool";
+    }
+  };
 
   private final String m_sID;
 
@@ -29,6 +67,29 @@ public enum EOutputLanguage implements IHasID <String>
   {
     return m_sID;
   }
+
+  /**
+   * @return The native data type for "long" values.
+   * @see #getLongValueSuffix()
+   */
+  @Nonnull
+  @Nonempty
+  public abstract String getTypeLong ();
+
+  /**
+   * @return The value suffix to be used for long values.
+   * @see #getTypeLong()
+   */
+  @Nonnull
+  @Nonempty
+  public abstract String getLongValueSuffix ();
+
+  /**
+   * @return The native data type for "boolean" values.
+   */
+  @Nonnull
+  @Nonempty
+  public abstract String getTypeBoolean ();
 
   public boolean isJava ()
   {

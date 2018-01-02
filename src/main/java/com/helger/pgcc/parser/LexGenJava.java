@@ -31,17 +31,17 @@
 
 package com.helger.pgcc.parser;
 
+import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
+import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_actForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
-import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_nextStateForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
 import java.io.IOException;
@@ -582,7 +582,6 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       final StringBuilder tokenMgrDecls = new StringBuilder ();
       if (s_token_mgr_decls != null && s_token_mgr_decls.size () > 0)
       {
-        final Token t = s_token_mgr_decls.get (0);
         for (int j = 0; j < s_token_mgr_decls.size (); j++)
         {
           tokenMgrDecls.append (s_token_mgr_decls.get (j).image + " ");
@@ -618,12 +617,11 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       tokenizerData.updateMatchInfo (actionStrings, newLexStateIndices, toSkip, toSpecial, toMore, toToken);
       if (generateDataOnly)
         return;
-      Class <TokenManagerCodeGenerator> codeGenClazz;
       TokenManagerCodeGenerator gen;
       try
       {
-        codeGenClazz = (Class <TokenManagerCodeGenerator>) Class.forName (codeGeneratorClass);
-        gen = codeGenClazz.newInstance ();
+        final Class <?> codeGenClazz = Class.forName (codeGeneratorClass);
+        gen = (TokenManagerCodeGenerator) codeGenClazz.newInstance ();
       }
       catch (final Exception ee)
       {

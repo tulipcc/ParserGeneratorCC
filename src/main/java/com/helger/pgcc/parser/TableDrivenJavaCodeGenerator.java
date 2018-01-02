@@ -140,7 +140,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
         if (k > 0)
           codeGenerator.genCode (", ");
         codeGenerator.genCode (rep + ", ");
-        codeGenerator.genCode ("0x" + Long.toHexString (longs[k]) + "L");
+        codeGenerator.genCode ("0x" + Long.toHexString (longs[k]) + Options.getLongSuffix ());
         k += rep - 1;
       }
       codeGenerator.genCode ("}");
@@ -358,9 +358,9 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
   }
 
   private void _dumpLexicalActions (final Map <Integer, TokenizerData.MatchInfo> allMatches,
-                                   final TokenizerData.MatchType matchType,
-                                   final String kindString,
-                                   final CodeGenerator codeGenerator)
+                                    final TokenizerData.MatchType matchType,
+                                    final String kindString,
+                                    final CodeGenerator codeGenerator)
   {
     codeGenerator.genCodeLine ("  switch(" + kindString + ") {");
     for (final int i : allMatches.keySet ())
@@ -387,7 +387,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     {
       if (i > 0)
         codeGenerator.genCode (", ");
-      codeGenerator.genCode ("0x" + Long.toHexString (longs[i]) + "L");
+      codeGenerator.genCode ("0x" + Long.toHexString (longs[i]) + Options.getLongSuffix ());
     }
     codeGenerator.genCodeLine ("};");
   }

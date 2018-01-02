@@ -39,7 +39,7 @@ import com.helger.pgcc.parser.Options;
 
 public class JJTree
 {
-  private IO io;
+  private JJTreeIO io;
 
   private void _println (final String s)
   {
@@ -110,7 +110,6 @@ public class JJTree
    */
   public int main (final String args[])
   {
-
     // initialize static state for allowing repeat runs without exiting
     ASTNodeDescriptor.nodeIds = new ArrayList <> ();
     ASTNodeDescriptor.nodeNames = new ArrayList <> ();
@@ -119,7 +118,7 @@ public class JJTree
 
     JavaCCGlobals.bannerLine ("Tree Builder", "");
 
-    io = new IO ();
+    io = new JJTreeIO ();
 
     try
     {
@@ -189,7 +188,7 @@ public class JJTree
 
         // TODO :: Not yet tested this in GWT/Modern mode (disabled by default
         // in 6.1)
-        switch (Options.getOutputLanguageType ())
+        switch (Options.getOutputLanguage ())
         {
           case JAVA:
             JavaNodeFiles.generateTreeConstants_java ();
@@ -205,7 +204,7 @@ public class JJTree
             // CPPNodeFiles.generateJJTreeH();
             break;
           default:
-            _println ("Unsupported JJTree output language : " + Options.getOutputLanguageType ());
+            _println ("Unsupported JJTree output language : " + Options.getOutputLanguage ());
             return 1;
         }
 

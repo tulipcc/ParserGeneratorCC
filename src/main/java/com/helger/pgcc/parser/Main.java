@@ -263,7 +263,7 @@ public class Main
       // variable
       // to a lexer before the configuration override in the cc file had been
       // read.
-      final EOutputLanguage outputLanguage = Options.getOutputLanguageType ();
+      final EOutputLanguage outputLanguage = Options.getOutputLanguage ();
 
       // 2013/07/22 Java Modern is a
       final boolean isJavaModern = outputLanguage.isJava () &&
@@ -381,7 +381,7 @@ public class Main
   {
     com.helger.pgcc.parser.Expansion.reInit ();
     com.helger.pgcc.parser.JavaCCErrors.reInit ();
-    com.helger.pgcc.parser.JavaCCGlobals.reInit ();
+    com.helger.pgcc.parser.JavaCCGlobals.reInitStatic ();
     com.helger.pgcc.parser.Options.init ();
     com.helger.pgcc.parser.JavaCCParserInternals.reInit ();
     com.helger.pgcc.parser.RStringLiteral.reInit ();

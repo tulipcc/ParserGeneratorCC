@@ -121,7 +121,7 @@ public class JJTreeNode extends SimpleNode
    */
   private boolean whitingOut = false;
 
-  protected void print (final Token t, final IO io)
+  protected void print (final Token t, final JJTreeIO io)
   {
     Token tt = t.specialToken;
     if (tt != null)

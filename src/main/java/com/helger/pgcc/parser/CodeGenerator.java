@@ -17,6 +17,7 @@ import java.util.Map;
 import com.helger.commons.io.stream.NonBlockingBufferedWriter;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.pgcc.output.EOutputLanguage;
+import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 public class CodeGenerator
@@ -31,7 +32,7 @@ public class CodeGenerator
 
   protected final EOutputLanguage getOutputLanguage ()
   {
-    return Options.getOutputLanguageType ();
+    return Options.getOutputLanguage ();
   }
 
   @Deprecated
@@ -156,36 +157,8 @@ public class CodeGenerator
     return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
   }
 
-  // HACK
-  private void _fixupCppLongLiterals (final StringBuilder sb)
-  {
-    for (int i = 0; i < sb.length () - 1; i++)
-    {
-      final char c1 = sb.charAt (i);
-      final char c2 = sb.charAt (i + 1);
-      if (Character.isDigit (c1) || (c1 == '0' && c2 == 'x'))
-      {
-        i += c1 == '0' ? 2 : 1;
-        while (_isHexDigit (sb.charAt (i)))
-          i++;
-        if (sb.charAt (i) == 'L')
-        {
-          // "L" -> "ULL"
-          sb.insert (i, "UL");
-        }
-        i++;
-      }
-    }
-  }
-
   public void saveOutput (final String fileName, final StringBuilder sb)
   {
-    switch (getOutputLanguage ())
-    {
-      case CPP:
-        _fixupCppLongLiterals (sb);
-        break;
-    }
     final File tmp = new File (fileName);
     try (final Writer fw = new NonBlockingBufferedWriter (new FileWriter (tmp)))
     {
@@ -345,7 +318,7 @@ public class CodeGenerator
         genCode ("/*" + ann + "*/");
         break;
       default:
-        throw new UnsupportedLanguageException (getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (getOutputLanguage ());
     }
   }
 
@@ -401,7 +374,7 @@ public class CodeGenerator
         genCodeLine ("public:");
         break;
       default:
-        throw new UnsupportedLanguageException (getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (getOutputLanguage ());
     }
   }
 
@@ -466,7 +439,7 @@ public class CodeGenerator
         switchToMainFile ();
         break;
       default:
-        throw new UnsupportedLanguageException (getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (getOutputLanguage ());
     }
   }
 
