@@ -697,7 +697,7 @@ public class Options
    *
    * @return The requested static value.
    */
-  public static boolean getStatic ()
+  public static boolean isStatic ()
   {
     return booleanValue (USEROPTION__STATIC);
   }
@@ -838,7 +838,7 @@ public class Options
    */
   public static boolean getTokenManagerUsesParser ()
   {
-    return booleanValue (USEROPTION__TOKEN_MANAGER_USES_PARSER) && !Options.getStatic ();
+    return booleanValue (USEROPTION__TOKEN_MANAGER_USES_PARSER) && !Options.isStatic ();
   }
 
   /**
@@ -908,7 +908,7 @@ public class Options
    *
    * @return
    */
-  public static boolean getGenerateChainedException ()
+  public static boolean isGenerateChainedException ()
   {
     return booleanValue (USEROPTION__GENERATE_CHAINED_EXCEPTION);
   }
@@ -1117,7 +1117,7 @@ public class Options
 
   public static boolean isTokenManagerRequiresParserAccess ()
   {
-    return getTokenManagerUsesParser () && !getStatic ();
+    return getTokenManagerUsesParser () && !isStatic ();
   }
 
   /**

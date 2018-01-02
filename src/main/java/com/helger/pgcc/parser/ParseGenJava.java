@@ -156,7 +156,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
 
       new ParseEngine ().build (this);
 
-      if (Options.getStatic ())
+      if (Options.isStatic ())
       {
         genCodeLine ("  static private " + Options.getBooleanType () + " jj_initialized_once = false;");
       }
@@ -253,7 +253,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
         {
           genCodeLine ("  /** Constructor with user supplied CharStream. */");
           genCodeLine ("  public " + s_cu_name + "(CharStream stream) {");
-          if (Options.getStatic ())
+          if (Options.isStatic ())
           {
             genCodeLine ("	 if (jj_initialized_once) {");
             genCodeLine ("	   System.out.println(\"ERROR: Second call to constructor of static parser.  \");");
@@ -261,7 +261,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
                          "or set the JavaCC option STATIC to false\");");
             genCodeLine ("	   System.out.println(\"	   during parser generation.\");");
             genCodeLine ("	   throw new " +
-                         (Options.isLegacyExceptionHandling () ? "Error" : "RuntimeException") +
+                         (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
                          "();");
             genCodeLine ("	 }");
             genCodeLine ("	 jj_initialized_once = true;");
@@ -359,7 +359,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
             genCodeLine ("  }");
             genCodeLine ("  /** Constructor with InputStream and supplied encoding */");
             genCodeLine ("  public " + s_cu_name + "(java.io.InputStream stream, String encoding) {");
-            if (Options.getStatic ())
+            if (Options.isStatic ())
             {
               genCodeLine ("	 if (jj_initialized_once) {");
               genCodeLine ("	   System.out.println(\"ERROR: Second call to constructor of static parser.  \");");
@@ -367,7 +367,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
                            "set the JavaCC option STATIC to false\");");
               genCodeLine ("	   System.out.println(\"	   during parser generation.\");");
               genCodeLine ("	   throw new " +
-                           (Options.isLegacyExceptionHandling () ? "Error" : "RuntimeException") +
+                           (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
                            "();");
               genCodeLine ("	 }");
               genCodeLine ("	 jj_initialized_once = true;");
@@ -375,33 +375,33 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
 
             if (Options.getJavaUnicodeEscape ())
             {
-              if (!Options.getGenerateChainedException ())
+              if (!Options.isGenerateChainedException ())
               {
                 genCodeLine ("	 try { jj_input_stream = new JavaCharStream(stream, encoding, 1, 1); } " +
                              "catch(java.io.UnsupportedEncodingException e) {" +
-                             " throw new RuntimeException(e.getMessage()); }");
+                             " throw new IllegalStateException(e.getMessage()); }");
               }
               else
               {
                 genCodeLine ("	 try { jj_input_stream = new JavaCharStream(stream, encoding, 1, 1); } " +
-                             "catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }");
+                             "catch(java.io.UnsupportedEncodingException e) { throw new IllegalStateException(e); }");
               }
             }
             else
             {
-              if (!Options.getGenerateChainedException ())
+              if (!Options.isGenerateChainedException ())
               {
                 genCodeLine ("	 try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } " +
                              "catch(java.io.UnsupportedEncodingException e) { " +
-                             "throw new RuntimeException(e.getMessage()); }");
+                             "throw new IllegalStateException(e.getMessage()); }");
               }
               else
               {
                 genCodeLine ("	 try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } " +
-                             "catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }");
+                             "catch(java.io.UnsupportedEncodingException e) { throw new IllegalStateException(e); }");
               }
             }
-            if (Options.getTokenManagerUsesParser () && !Options.getStatic ())
+            if (Options.getTokenManagerUsesParser () && !Options.isStatic ())
             {
               genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(this, jj_input_stream);");
             }
@@ -444,16 +444,16 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
 
             genCodeLine ("  /** Reinitialise. */");
             genCodeLine ("  " + staticOpt () + "public void ReInit(java.io.InputStream stream, String encoding) {");
-            if (!Options.getGenerateChainedException ())
+            if (!Options.isGenerateChainedException ())
             {
               genCodeLine ("	 try { jj_input_stream.ReInit(stream, encoding, 1, 1); } " +
                            "catch(java.io.UnsupportedEncodingException e) { " +
-                           "throw new RuntimeException(e.getMessage()); }");
+                           "throw new IllegalStateException(e.getMessage()); }");
             }
             else
             {
               genCodeLine ("	 try { jj_input_stream.ReInit(stream, encoding, 1, 1); } " +
-                           "catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }");
+                           "catch(java.io.UnsupportedEncodingException e) { throw new IllegalStateException(e); }");
             }
 
             if (Options.isTokenManagerRequiresParserAccess ())
@@ -501,7 +501,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
 
           genCodeLine ("  /** Constructor. */");
           genCodeLine ("  public " + s_cu_name + "(" + readerInterfaceName + " stream) {");
-          if (Options.getStatic ())
+          if (Options.isStatic ())
           {
             genCodeLine ("	 if (jj_initialized_once) {");
             genCodeLine ("	   System.out.println(\"ERROR: Second call to constructor of static parser. \");");
@@ -509,7 +509,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
                          "set the JavaCC option STATIC to false\");");
             genCodeLine ("	   System.out.println(\"	   during parser generation.\");");
             genCodeLine ("	   throw new " +
-                         (Options.isLegacyExceptionHandling () ? "Error" : "RuntimeException") +
+                         (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
                          "();");
             genCodeLine ("	 }");
             genCodeLine ("	 jj_initialized_once = true;");
@@ -522,7 +522,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
           {
             genCodeLine ("	 jj_input_stream = new SimpleCharStream(stream, 1, 1);");
           }
-          if (Options.getTokenManagerUsesParser () && !Options.getStatic ())
+          if (Options.getTokenManagerUsesParser () && !Options.isStatic ())
           {
             genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(this, jj_input_stream);");
           }
@@ -599,7 +599,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
 
           genCodeLine ("	if (token_source == null) {");
 
-          if (Options.getTokenManagerUsesParser () && !Options.getStatic ())
+          if (Options.getTokenManagerUsesParser () && !Options.isStatic ())
           {
             genCodeLine (" token_source = new " + s_cu_name + "TokenManager(this, jj_input_stream);");
           }
@@ -664,14 +664,16 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
         genCodeLine ("  /** Constructor with generated Token Manager. */");
         genCodeLine ("  public " + s_cu_name + "(" + s_cu_name + "TokenManager tm) {");
       }
-      if (Options.getStatic ())
+      if (Options.isStatic ())
       {
         genCodeLine ("	 if (jj_initialized_once) {");
         genCodeLine ("	   System.out.println(\"ERROR: Second call to constructor of static parser. \");");
         genCodeLine ("	   System.out.println(\"	   You must either use ReInit() or " +
                      "set the JavaCC option STATIC to false\");");
         genCodeLine ("	   System.out.println(\"	   during parser generation.\");");
-        genCodeLine ("	   throw new " + (Options.isLegacyExceptionHandling () ? "Error" : "RuntimeException") + "();");
+        genCodeLine ("	   throw new " +
+                     (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
+                     "();");
         genCodeLine ("	 }");
         genCodeLine ("	 jj_initialized_once = true;");
       }
@@ -799,7 +801,7 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
       {
         genCodeLine ("  @SuppressWarnings(\"serial\")");
         genCodeLine ("  static private final class LookaheadSuccess extends " +
-                     (Options.isLegacyExceptionHandling () ? "java.lang.Error" : "java.lang.RuntimeException") +
+                     (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
                      " { }");
         genCodeLine ("  " + staticOpt () + "final private LookaheadSuccess jj_ls = new LookaheadSuccess();");
         genCodeLine ("  " + staticOpt () + "private " + Options.getBooleanType () + " jj_scan_token(int kind) {");

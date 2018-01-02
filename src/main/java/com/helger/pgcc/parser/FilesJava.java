@@ -283,7 +283,7 @@ public class FilesJava extends JavaCCGlobals
             }
           }
         }
-        final String prefix = (Options.getStatic () ? "static " : "");
+        final String prefix = (Options.isStatic () ? "static " : "");
         final Map <String, Object> options = new HashMap <> (Options.getOptions ());
         options.put ("PREFIX", prefix);
 
@@ -334,7 +334,7 @@ public class FilesJava extends JavaCCGlobals
             }
           }
         }
-        final String prefix = (Options.getStatic () ? "static " : "");
+        final String prefix = (Options.isStatic () ? "static " : "");
         final Map <String, Object> options = new HashMap <> (Options.getOptions ());
         options.put ("PREFIX", prefix);
 

@@ -376,7 +376,7 @@ public abstract class JavaCCGlobals
 
   public static String staticOpt ()
   {
-    if (Options.getStatic ())
+    if (Options.isStatic ())
     {
       return "static ";
     }
@@ -467,9 +467,7 @@ public abstract class JavaCCGlobals
       case CPP:
         return str;
       default:
-        // TODO :: CBA -- Require Unification of output language specific
-        // processing into a single Enum class
-        throw new IllegalStateException ("Unhandled Output Language : " + Options.getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());
     }
   }
 

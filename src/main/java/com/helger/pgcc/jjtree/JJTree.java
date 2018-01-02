@@ -267,7 +267,4 @@ public class JJTree
     JJTreeOptions.init ();
     JJTreeGlobals.initialize ();
   }
-
 }
-
-/* end */

@@ -47,6 +47,8 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.io.stream.NonBlockingBufferedWriter;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.pgcc.output.EOutputLanguage;
@@ -63,6 +65,7 @@ public class CodeGenerator
   protected int m_cline;
   protected int m_ccol;
 
+  @Nonnull
   protected final EOutputLanguage getOutputLanguage ()
   {
     return Options.getOutputLanguage ();

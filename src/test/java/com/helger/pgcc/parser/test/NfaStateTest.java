@@ -37,6 +37,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
+import com.helger.commons.exception.InitializationException;
 import com.helger.pgcc.JavaCCTestCase;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.JavaCCGlobals;
@@ -108,7 +109,7 @@ public class NfaStateTest extends JavaCCTestCase
     }
     catch (final Exception ex)
     {
-      throw new RuntimeException (ex);
+      throw new InitializationException (ex);
     }
   }
 

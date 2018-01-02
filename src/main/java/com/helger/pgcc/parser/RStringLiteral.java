@@ -162,7 +162,7 @@ public class RStringLiteral extends RegularExpression
   {
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
-    switch (Options.getOutputLanguage ())
+    switch (codeGenerator.getOutputLanguage ())
     {
       case JAVA:
         dumpStrLiteralImagesForJava (codeGenerator);
@@ -248,7 +248,7 @@ public class RStringLiteral extends RegularExpression
         codeGenerator.genCodeLine ("};");
         break;
       default:
-        throw new RuntimeException ("Output language type not fully implemented : " + Options.getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
     }
   }
 
@@ -600,10 +600,10 @@ public class RStringLiteral extends RegularExpression
 
   static void dumpStartWithStates (final CodeGenerator codeGenerator)
   {
-    switch (Options.getOutputLanguage ())
+    switch (codeGenerator.getOutputLanguage ())
     {
       case JAVA:
-        codeGenerator.genCodeLine ((Options.getStatic () ? "static " : "") +
+        codeGenerator.genCodeLine ((Options.isStatic () ? "static " : "") +
                                    "private int " +
                                    "jjStartNfaWithStates" +
                                    LexGenJava.lexStateSuffix +
@@ -617,8 +617,7 @@ public class RStringLiteral extends RegularExpression
                                                                            "(int pos, int kind, int state)");
         break;
       default:
-        throw new IllegalStateException ("Output language type not fully implemented : " +
-                                         Options.getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
     }
     codeGenerator.genCodeLine ("{");
     codeGenerator.genCodeLine ("   jjmatchedKind = kind;");
@@ -694,7 +693,7 @@ public class RStringLiteral extends RegularExpression
     switch (codeGenerator.getOutputLanguage ())
     {
       case JAVA:
-        codeGenerator.genCodeLine ((Options.getStatic () ? "static " : "") +
+        codeGenerator.genCodeLine ((Options.isStatic () ? "static " : "") +
                                    "private int " +
                                    "jjStopAtPos(int pos, int kind)");
         break;
@@ -772,7 +771,7 @@ public class RStringLiteral extends RegularExpression
       switch (codeGenerator.getOutputLanguage ())
       {
         case JAVA:
-          codeGenerator.genCodeLine ((Options.getStatic () ? "static " : "") +
+          codeGenerator.genCodeLine ((Options.isStatic () ? "static " : "") +
                                      "private int " +
                                      "jjMoveStringLiteralDfa0" +
                                      LexGenJava.lexStateSuffix +
@@ -856,7 +855,7 @@ public class RStringLiteral extends RegularExpression
       switch (codeGenerator.getOutputLanguage ())
       {
         case JAVA:
-          codeGenerator.genCode ((Options.getStatic () ? "static " : "") +
+          codeGenerator.genCode ((Options.isStatic () ? "static " : "") +
                                  "private int " +
                                  "jjMoveStringLiteralDfa" +
                                  i +
@@ -1643,7 +1642,7 @@ public class RStringLiteral extends RegularExpression
     {
       case JAVA:
         codeGenerator.genCode ("private" +
-                               (Options.getStatic () ? " static" : "") +
+                               (Options.isStatic () ? " static" : "") +
                                " final int jjStopStringLiteralDfa" +
                                LexGenJava.lexStateSuffix +
                                "(int pos, " +
@@ -1793,7 +1792,7 @@ public class RStringLiteral extends RegularExpression
     if (codeGenerator.isJavaLanguage ())
     {
       codeGenerator.genCode ("private" +
-                             (Options.getStatic () ? " static" : "") +
+                             (Options.isStatic () ? " static" : "") +
                              " final int jjStartNfa" +
                              LexGenJava.lexStateSuffix +
                              params);

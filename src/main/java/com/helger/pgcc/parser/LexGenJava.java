@@ -414,7 +414,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     final List <RChoice> choices = new ArrayList <> ();
     TokenProduction tp;
 
-    staticString = (Options.getStatic () ? "static " : "");
+    staticString = (Options.isStatic () ? "static " : "");
     tokMgrClassName = s_cu_name + "TokenManager";
 
     if (!generateDataOnly && codeGeneratorClass == null)

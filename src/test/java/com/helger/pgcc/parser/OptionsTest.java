@@ -64,7 +64,7 @@ public final class OptionsTest extends TestCase
     assertEquals (false, Options.getJavaUnicodeEscape ());
     assertEquals (true, Options.getKeepLineColumn ());
     assertEquals (true, Options.getSanityCheck ());
-    assertEquals (true, Options.getStatic ());
+    assertEquals (true, Options.isStatic ());
     assertEquals (false, Options.getUnicodeInput ());
     assertEquals (false, Options.getUserCharStream ());
     assertEquals (false, Options.getUserTokenManager ());
@@ -91,9 +91,9 @@ public final class OptionsTest extends TestCase
     Options.init ();
     JavaCCErrors.reInit ();
 
-    assertEquals (true, Options.getStatic ());
+    assertEquals (true, Options.isStatic ());
     Options.setCmdLineOption ("-NOSTATIC");
-    assertEquals (false, Options.getStatic ());
+    assertEquals (false, Options.isStatic ());
 
     assertEquals (false, Options.getJavaUnicodeEscape ());
     Options.setCmdLineOption ("-JAVA_UNICODE_ESCAPE:true");

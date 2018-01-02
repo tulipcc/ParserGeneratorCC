@@ -385,7 +385,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
     NodeFilesJava.ensure (io, type);
 
     io.print (indent + nodeClass + " " + ns.m_nodeVar + " = ");
-    final String p = Options.getStatic () ? "null" : "this";
+    final String p = Options.isStatic () ? "null" : "this";
     final String parserArg = JJTreeOptions.getNodeUsesParser () ? (p + ", ") : "";
 
     if (JJTreeOptions.getNodeFactory ().equals ("*"))

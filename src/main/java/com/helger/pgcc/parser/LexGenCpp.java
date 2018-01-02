@@ -314,7 +314,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     final List <RChoice> choices = new ArrayList <> ();
     TokenProduction tp;
 
-    staticString = (Options.getStatic () ? "static " : "");
+    staticString = (Options.isStatic () ? "static " : "");
     tokMgrClassName = s_cu_name + "TokenManager";
 
     printClassHead ();

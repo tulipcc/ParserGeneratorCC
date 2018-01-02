@@ -54,7 +54,7 @@ final class JJTreeStateJava
   {
     String s;
 
-    if (Options.getStatic ())
+    if (Options.isStatic ())
     {
       s = "static ";
     }

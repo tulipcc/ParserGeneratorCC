@@ -362,7 +362,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
 
     // Action functions.
 
-    final String staticString = Options.getStatic () ? "static " : "";
+    final String staticString = Options.isStatic () ? "static " : "";
     // Token actions.
     codeGenerator.genCodeLine (staticString + "void TokenLexicalActions(Token matchedToken) {");
     _dumpLexicalActions (allMatches, TokenizerData.MatchType.TOKEN, "matchedToken.kind", codeGenerator);

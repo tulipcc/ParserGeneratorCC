@@ -64,6 +64,7 @@
 
 package com.helger.pgcc.jjtree;
 
+import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.parser.Options;
 
 public class ASTGrammar extends JJTreeNode
@@ -88,8 +89,7 @@ public class ASTGrammar extends JJTreeNode
         NodeFilesCpp.generateTreeClasses ();
       default:
         // Catch all to ensure we don't accidently do nothing
-        throw new IllegalStateException ("Language type not supported for JJTree : " +
-                                         Options.getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());
     }
   }
 
