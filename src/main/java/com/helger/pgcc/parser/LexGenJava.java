@@ -388,13 +388,13 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     canReachOnMore = new boolean [maxLexStates];
   }
 
-  static int getIndex (final String name)
+  private static int _getIndex (final String name)
   {
     for (int i = 0; i < lexStateName.length; i++)
       if (lexStateName[i] != null && lexStateName[i].equals (name))
         return i;
 
-    throw new Error (); // Should never come here
+    throw new IllegalStateException ("Should never come here");
   }
 
   public static void addCharToSkip (final char c, final int kind)
@@ -431,7 +431,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
       final String key = aEntry.getKey ();
 
-      lexStateIndex = getIndex (key);
+      lexStateIndex = _getIndex (key);
       lexStateSuffix = "_" + lexStateIndex;
       final List <TokenProduction> allTps = aEntry.getValue ();
       initialState = new NfaState ();
@@ -534,7 +534,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
               toMore[curRE.m_ordinal / 64] |= 1L << (curRE.m_ordinal % 64);
 
               if (newLexState[curRE.m_ordinal] != null)
-                canReachOnMore[getIndex (newLexState[curRE.m_ordinal])] = true;
+                canReachOnMore[_getIndex (newLexState[curRE.m_ordinal])] = true;
               else
                 canReachOnMore[lexStateIndex] = true;
 
@@ -633,7 +633,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         }
         else
         {
-          newLexStateIndices[i] = getIndex (newLexState[i]);
+          newLexStateIndices[i] = _getIndex (newLexState[i]);
         }
         // For java, we have this but for other languages, eventually we will
         // simply have a string.
@@ -767,7 +767,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       while (newLexState[initMatch[j]] != null)
       {
         cycle += newLexState[initMatch[j]];
-        if (seen[j = getIndex (newLexState[initMatch[j]])])
+        if (seen[j = _getIndex (newLexState[initMatch[j]])])
           break;
 
         cycle += "-->";
@@ -841,7 +841,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         if (newLexState[i] == null)
           genCode ("-1, ");
         else
-          genCode (getIndex (newLexState[i]) + ", ");
+          genCode (_getIndex (newLexState[i]) + ", ");
       }
       genCodeLine ("\n};");
     }

@@ -295,7 +295,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       if (lexStateName[i] != null && lexStateName[i].equals (name))
         return i;
 
-    throw new Error (); // Should never come here
+    throw new IllegalStateException ("Should never come here");
   }
 
   public static void addCharToSkip (final char c, final int kind)

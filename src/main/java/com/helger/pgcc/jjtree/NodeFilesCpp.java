@@ -597,7 +597,7 @@ final class NodeFilesCpp
     }
     catch (final IOException ioe)
     {
-      throw new Error (ioe.toString ());
+      throw new UncheckedIOException (ioe);
     }
   }
 

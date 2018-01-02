@@ -68,6 +68,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,7 +148,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
     catch (final IOException e)
     {
       JavaCCErrors.semantic_error ("Could not open file " + s_cu_name + "Constants.java for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
 
     final List <String> tn = new ArrayList <> (s_toolNames);

@@ -67,6 +67,7 @@ package com.helger.pgcc.jjtree;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -154,13 +155,10 @@ final class NodeFilesJava
         {
           _generateMULTINode_java (outputFile, nodeType);
         }
-
-      outputFile.close ();
-
     }
     catch (final IOException e)
     {
-      throw new Error (e.toString ());
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -221,12 +219,10 @@ final class NodeFilesJava
       ostr.println ("  };");
 
       ostr.println ("}");
-      ostr.close ();
-
     }
     catch (final IOException e)
     {
-      throw new Error (e.toString ());
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -292,12 +288,10 @@ final class NodeFilesJava
         }
       }
       ostr.println ("}");
-      ostr.close ();
-
     }
     catch (final IOException e)
     {
-      throw new Error (e.toString ());
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -382,12 +376,10 @@ final class NodeFilesJava
         }
       }
       ostr.println ("}");
-      ostr.close ();
-
     }
     catch (final IOException e)
     {
-      throw new Error (e.toString ());
+      throw new UncheckedIOException (e);
     }
   }
 

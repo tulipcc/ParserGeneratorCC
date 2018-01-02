@@ -114,8 +114,7 @@ public final class JavaCCErrors
 
   public static void semantic_error (final String mess)
   {
-    System.err.print ("Error: ");
-    System.err.println (mess);
+    System.err.println ("Error: " + mess);
     s_semantic_error_count++;
   }
 
@@ -134,8 +133,7 @@ public final class JavaCCErrors
 
   public static void warning (final String mess)
   {
-    System.err.print ("Warning: ");
-    System.err.println (mess);
+    System.err.println ("Warning: " + mess);
     s_warning_count++;
   }
 
@@ -149,10 +147,15 @@ public final class JavaCCErrors
     return s_parse_error_count + s_semantic_error_count;
   }
 
-  public static void fatal (final String message)
+  public static void fatal (final String message) throws IllegalStateException
   {
     System.err.println ("Fatal Error: " + message);
     throw new IllegalStateException ("Fatal Error: " + message);
+  }
+
+  public static void internalError () throws IllegalStateException
+  {
+    fatal ("Internal error in JavaCC: Please file an issue at https://github.com/phax/ParserGeneratorCC/issues . Thank you.");
   }
 
   public static void reInit ()

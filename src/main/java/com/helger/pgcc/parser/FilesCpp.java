@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.PGVersion;
@@ -164,9 +165,10 @@ public class FilesCpp extends JavaCCGlobals
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create file: " + file + e);
+      System.err.println ("Failed to create file: " + file);
+      e.printStackTrace ();
       JavaCCErrors.semantic_error ("Could not open file: " + file + " for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
   }
 

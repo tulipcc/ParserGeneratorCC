@@ -64,6 +64,7 @@
 package com.helger.pgcc.parser;
 
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class OtherFilesGenCPP extends JavaCCGlobals implements JavaCCParserConst
     catch (final java.io.IOException e)
     {
       JavaCCErrors.semantic_error ("Could not open file " + s_cu_name + "Constants.h for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
 
     final List <String> tn = new ArrayList <> (s_toolNames);

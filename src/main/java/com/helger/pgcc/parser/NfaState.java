@@ -404,11 +404,7 @@ public class NfaState
   {
     // Warning : This function does not merge epsilon moves
     if (asciiMoves == other.asciiMoves)
-    {
-      JavaCCErrors.semantic_error ("Bug in JavaCC : Please send " +
-                                   "a report along with the input that caused this. Thank you.");
-      throw new Error ();
-    }
+      JavaCCErrors.internalError ();
 
     asciiMoves[0] = asciiMoves[0] | other.asciiMoves[0];
     asciiMoves[1] = asciiMoves[1] | other.asciiMoves[1];
@@ -745,7 +741,7 @@ public class NfaState
   public static boolean canStartNfaUsingAscii (final char c)
   {
     if (c >= 128)
-      throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu");
+      JavaCCErrors.internalError ();
 
     final String s = LexGenJava.initialState.getEpsilonMovesString ();
 
@@ -1245,7 +1241,7 @@ public class NfaState
       s_stateBlockTable.put (stateSetString, stateSetString);
 
     if (nameSet == null)
-      throw new Error ("JavaCC Bug: Please file a bug at: http://javacc.java.net");
+      JavaCCErrors.internalError ();
 
     if (nameSet.length == 1)
     {
@@ -1863,7 +1859,7 @@ public class NfaState
   private String _printNoBreak (final CodeGenerator codeGenerator, final int byteNum, final boolean [] dumped)
   {
     if (inNextOf != 1)
-      throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu");
+      JavaCCErrors.internalError ();
 
     dumped[stateName] = true;
 
@@ -1919,7 +1915,7 @@ public class NfaState
       if (tmp.m_stateForCase != null)
       {
         if (stateForCase != null)
-          throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu : ");
+          JavaCCErrors.internalError ();
 
         stateForCase = tmp.m_stateForCase;
       }
@@ -2371,7 +2367,7 @@ public class NfaState
       if (tmp.m_stateForCase != null)
       {
         if (stateForCase != null)
-          throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu : ");
+          JavaCCErrors.internalError ();
 
         stateForCase = tmp.m_stateForCase;
       }
@@ -2829,7 +2825,7 @@ public class NfaState
     s_allStates = new ArrayList <> (Collections.nCopies (s_generatedStates, null));
 
     if (s_allStates.size () != s_generatedStates)
-      throw new Error ("What??");
+      JavaCCErrors.internalError ();
 
     for (int j = 0; j < v.size (); j++)
     {
@@ -2988,7 +2984,7 @@ public class NfaState
         if (!tmp.m_isComposite && tmp.inNextOf == 1)
         {
           if (put[state])
-            throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu");
+            JavaCCErrors.internalError ();
 
           foundAt = i;
           cnt++;
@@ -3133,6 +3129,7 @@ public class NfaState
         case JAVA:
           codeGenerator.genCodeLine ("   input_stream.backup(seenUpto = curPos + 1);");
           codeGenerator.genCodeLine ("   try { curChar = input_stream.readChar(); }");
+          // TODO do not throw error
           codeGenerator.genCodeLine ("   catch(java.io.IOException e) { throw new Error(\"Internal Error\"); }");
           break;
         case CPP:
@@ -3354,8 +3351,7 @@ public class NfaState
         case JAVA:
           codeGenerator.genCodeLine ("      for (i = toRet - Math.min(curPos, seenUpto); i-- > 0; )");
           codeGenerator.genCodeLine ("         try { curChar = input_stream.readChar(); }");
-          codeGenerator.genCodeLine ("         catch(java.io.IOException e) { " +
-                                     "throw new Error(\"Internal Error : Please send a bug report.\"); }");
+          codeGenerator.genCodeLine ("         catch(java.io.IOException e) { throw new Error(\"Internal Error : Please send a bug report.\"); }");
           break;
         case CPP:
           codeGenerator.genCodeLine ("      for (i = toRet - MIN(curPos, seenUpto); i-- > 0; )");

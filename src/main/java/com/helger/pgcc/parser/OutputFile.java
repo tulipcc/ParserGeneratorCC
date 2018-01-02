@@ -41,6 +41,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -213,7 +214,7 @@ public class OutputFile implements AutoCloseable
     {
       // This should never happen
       JavaCCErrors.semantic_error ("Could not open file " + file.getName () + " for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e1);
     }
     catch (final IOException e2)
     {}
@@ -252,7 +253,7 @@ public class OutputFile implements AutoCloseable
     {
       // This should never happen
       JavaCCErrors.semantic_error ("Could not open file " + file.getName () + " for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e1);
     }
     catch (final IOException e2)
     {}

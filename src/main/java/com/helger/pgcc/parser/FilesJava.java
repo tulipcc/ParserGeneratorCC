@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -297,7 +298,7 @@ public class FilesJava extends JavaCCGlobals
     {
       System.err.println ("Failed to create JavaCharStream " + e);
       JavaCCErrors.semantic_error ("Could not open file JavaCharStream.java for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -348,7 +349,7 @@ public class FilesJava extends JavaCCGlobals
     {
       System.err.println ("Failed to create SimpleCharStream " + e);
       JavaCCErrors.semantic_error ("Could not open file SimpleCharStream.java for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -396,7 +397,7 @@ public class FilesJava extends JavaCCGlobals
     {
       System.err.println ("Failed to create CharStream " + e);
       JavaCCErrors.semantic_error ("Could not open file CharStream.java for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -451,7 +452,7 @@ public class FilesJava extends JavaCCGlobals
     {
       System.err.println ("Failed to create " + fileName + " " + e);
       JavaCCErrors.semantic_error ("Could not open file " + fileName + " for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -498,7 +499,7 @@ public class FilesJava extends JavaCCGlobals
     {
       System.err.println ("Failed to create ParseException " + e);
       JavaCCErrors.semantic_error ("Could not open file ParseException.java for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -547,7 +548,7 @@ public class FilesJava extends JavaCCGlobals
     {
       System.err.println ("Failed to create " + filename + " " + e);
       JavaCCErrors.semantic_error ("Could not open file " + filename + " for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -596,7 +597,7 @@ public class FilesJava extends JavaCCGlobals
     {
       System.err.println ("Failed to create Token " + e);
       JavaCCErrors.semantic_error ("Could not open file Token.java for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
   }
 
@@ -642,7 +643,7 @@ public class FilesJava extends JavaCCGlobals
     {
       System.err.println ("Failed to create TokenManager " + e);
       JavaCCErrors.semantic_error ("Could not open file TokenManager.java for writing.");
-      throw new Error ();
+      throw new UncheckedIOException (e);
     }
   }
 
