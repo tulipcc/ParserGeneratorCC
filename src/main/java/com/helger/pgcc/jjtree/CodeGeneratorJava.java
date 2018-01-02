@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
 
@@ -143,14 +144,13 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
     {
       if (t == JJTreeGlobals.s_parserImports)
       {
-
         // If the parser and nodes are in separate packages (NODE_PACKAGE
         // specified in
         // OPTIONS), then generate an import for the node package.
-        if (!JJTreeGlobals.s_nodePackageName.equals ("") &&
+        if (StringHelper.hasText (JJTreeGlobals.s_nodePackageName) &&
             !JJTreeGlobals.s_nodePackageName.equals (JJTreeGlobals.s_packageName))
         {
-          io.getOut ().println ("");
+          io.getOut ().println ();
           io.getOut ().println ("import " + JJTreeGlobals.s_nodePackageName + ".*;");
         }
       }
@@ -470,7 +470,11 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
 
   }
 
-  void tryTokenSequence (final NodeScope ns, final JJTreeIO io, final String indent, final Token first, final Token last)
+  void tryTokenSequence (final NodeScope ns,
+                         final JJTreeIO io,
+                         final String indent,
+                         final Token first,
+                         final Token last)
   {
     io.println (indent + "try {");
     closeJJTreeComment (io);

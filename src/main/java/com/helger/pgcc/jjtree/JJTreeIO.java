@@ -39,6 +39,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 
 import com.helger.commons.io.stream.StreamHelper;
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
 
@@ -112,7 +113,7 @@ final class JJTreeIO
   {
     String sOutput = JJTreeOptions.getOutputFile ();
 
-    if (sOutput.equals (""))
+    if (StringHelper.hasNoText (sOutput))
     {
       String sRealIn = sInput;
       final int nLastSep = sRealIn.lastIndexOf (File.separatorChar);

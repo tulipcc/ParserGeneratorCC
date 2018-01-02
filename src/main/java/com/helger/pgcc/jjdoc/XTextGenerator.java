@@ -103,7 +103,7 @@ public class XTextGenerator extends TextGenerator
   public void documentStart ()
   {
     ostr = create_output_stream ();
-    println ("grammar " + JJDocGlobals.input_file + " with org.eclipse.xtext.common.Terminals");
+    println ("grammar " + JJDocGlobals.s_input_file + " with org.eclipse.xtext.common.Terminals");
     println ("import \"http://www.eclipse.org/emf/2002/Ecore\" as ecore");
     println ("");
     //

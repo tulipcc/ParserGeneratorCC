@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.Version;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.OutputFile;
@@ -109,16 +110,16 @@ final class NodeFilesJava
 
       if (nodeType.equals ("Node"))
       {
-        generateNode_java (outputFile);
+        _generateNode_java (outputFile);
       }
       else
         if (nodeType.equals ("SimpleNode"))
         {
-          generateSimpleNode_java (outputFile);
+          _generateSimpleNode_java (outputFile);
         }
         else
         {
-          generateMULTINode_java (outputFile, nodeType);
+          _generateMULTINode_java (outputFile, nodeType);
         }
 
       outputFile.close ();
@@ -137,7 +138,7 @@ final class NodeFilesJava
     // will default to the parser's package name.
     // If the package names are different we will need to import classes
     // from the parser's package.
-    if (!JJTreeGlobals.s_nodePackageName.equals (""))
+    if (StringHelper.hasText (JJTreeGlobals.s_nodePackageName))
     {
       ostr.println ("package " + JJTreeGlobals.s_nodePackageName + ";");
       ostr.println ();
@@ -219,7 +220,7 @@ final class NodeFilesJava
       ostr.println ("public interface " + name);
       ostr.println ("{");
 
-      final String ve = mergeVisitorException ();
+      final String ve = _mergeVisitorException ();
 
       String argumentType = "Object";
       if (!JJTreeOptions.getVisitorDataType ().equals (""))
@@ -247,7 +248,7 @@ final class NodeFilesJava
           ostr.println ("  public " +
                         JJTreeOptions.getVisitorReturnType () +
                         " " +
-                        getVisitMethodName (nodeType) +
+                        _getVisitMethodName (nodeType) +
                         "(" +
                         nodeType +
                         " node, " +
@@ -272,7 +273,7 @@ final class NodeFilesJava
     return JJTreeGlobals.s_parserName + "DefaultVisitor";
   }
 
-  private static String getVisitMethodName (final String className)
+  private static String _getVisitMethodName (final String className)
   {
     final StringBuilder sb = new StringBuilder ("visit");
     if (Options.booleanValue ("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME"))
@@ -304,7 +305,7 @@ final class NodeFilesJava
       generatePrologue (ostr);
       ostr.println ("public class " + className + " implements " + visitorClass () + "{");
 
-      final String ve = mergeVisitorException ();
+      final String ve = _mergeVisitorException ();
 
       String argumentType = "Object";
       if (!JJTreeOptions.getVisitorDataType ().equals (""))
@@ -335,7 +336,7 @@ final class NodeFilesJava
           ostr.println ("  public " +
                         ret +
                         " " +
-                        getVisitMethodName (nodeType) +
+                        _getVisitMethodName (nodeType) +
                         "(" +
                         nodeType +
                         " node, " +
@@ -357,7 +358,7 @@ final class NodeFilesJava
     }
   }
 
-  private static String mergeVisitorException ()
+  private static String _mergeVisitorException ()
   {
     String ve = JJTreeOptions.getVisitorException ();
     if (!"".equals (ve))
@@ -367,7 +368,7 @@ final class NodeFilesJava
     return ve;
   }
 
-  private static void generateNode_java (final OutputFile outputFile) throws IOException
+  private static void _generateNode_java (final OutputFile outputFile) throws IOException
   {
     try (final PrintWriter ostr = outputFile.getPrintWriter ())
     {
@@ -382,7 +383,7 @@ final class NodeFilesJava
     }
   }
 
-  private static void generateSimpleNode_java (final OutputFile outputFile) throws IOException
+  private static void _generateSimpleNode_java (final OutputFile outputFile) throws IOException
   {
     try (final PrintWriter ostr = outputFile.getPrintWriter ())
     {
@@ -398,7 +399,7 @@ final class NodeFilesJava
     }
   }
 
-  private static void generateMULTINode_java (final OutputFile outputFile, final String nodeType) throws IOException
+  private static void _generateMULTINode_java (final OutputFile outputFile, final String nodeType) throws IOException
   {
     try (final PrintWriter ostr = outputFile.getPrintWriter ())
     {

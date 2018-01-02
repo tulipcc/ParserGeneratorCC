@@ -33,9 +33,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.CodeProductionCpp;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.CodeProductionJava;
+import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NonTerminal;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.RegularExpression;
@@ -153,14 +154,14 @@ public class TextGenerator implements IDocGenerator
    */
   protected PrintWriter create_output_stream ()
   {
-    if (JJDocOptions.getOutputFile ().equals (""))
+    if (StringHelper.hasNoText (JJDocOptions.getOutputFile ()))
     {
-      if (JJDocGlobals.input_file.equals ("standard input"))
+      if (JJDocGlobals.s_input_file.equals (JJDocGlobals.STANDARD_INPUT))
       {
         return new PrintWriter (new OutputStreamWriter (System.out));
       }
-      String ext = ".html";
 
+      String ext = ".html";
       if (JJDocOptions.isText ())
       {
         ext = ".txt";
@@ -171,36 +172,36 @@ public class TextGenerator implements IDocGenerator
           ext = ".xtext";
         }
 
-      final int i = JJDocGlobals.input_file.lastIndexOf ('.');
+      final int i = JJDocGlobals.s_input_file.lastIndexOf ('.');
       if (i == -1)
       {
-        JJDocGlobals.output_file = JJDocGlobals.input_file + ext;
+        JJDocGlobals.s_output_file = JJDocGlobals.s_input_file + ext;
       }
       else
       {
-        final String suffix = JJDocGlobals.input_file.substring (i);
+        final String suffix = JJDocGlobals.s_input_file.substring (i);
         if (suffix.equals (ext))
         {
-          JJDocGlobals.output_file = JJDocGlobals.input_file + ext;
+          JJDocGlobals.s_output_file = JJDocGlobals.s_input_file + ext;
         }
         else
         {
-          JJDocGlobals.output_file = JJDocGlobals.input_file.substring (0, i) + ext;
+          JJDocGlobals.s_output_file = JJDocGlobals.s_input_file.substring (0, i) + ext;
         }
       }
     }
     else
     {
-      JJDocGlobals.output_file = JJDocOptions.getOutputFile ();
+      JJDocGlobals.s_output_file = JJDocOptions.getOutputFile ();
     }
 
     try
     {
-      ostr = new PrintWriter (new FileWriter (JJDocGlobals.output_file));
+      ostr = new PrintWriter (new FileWriter (JJDocGlobals.s_output_file));
     }
     catch (final IOException e)
     {
-      error ("JJDoc: can't open output stream on file " + JJDocGlobals.output_file + ".  Using standard output.");
+      error ("JJDoc: can't open output stream on file " + JJDocGlobals.s_output_file + ".  Using standard output.");
       ostr = new PrintWriter (new OutputStreamWriter (System.out));
     }
 

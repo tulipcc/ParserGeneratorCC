@@ -35,14 +35,16 @@ import com.helger.pgcc.parser.JavaCCGlobals;
  */
 public class JJDocGlobals extends JavaCCGlobals
 {
+  public static final String STANDARD_INPUT = "standard input";
+
   /**
    * The name of the input file.
    */
-  public static String input_file;
+  public static String s_input_file;
   /**
    * The name of the output file.
    */
-  public static String output_file;
+  public static String s_output_file;
 
   /**
    * The Generator to create output with.
@@ -149,5 +151,4 @@ public class JJDocGlobals extends JavaCCGlobals
   {
     getGenerator ().error (message);
   }
-
 }

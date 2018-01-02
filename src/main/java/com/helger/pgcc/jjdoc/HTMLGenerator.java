@@ -101,9 +101,9 @@ public class HTMLGenerator extends TextGenerator
     {
       println ("<LINK REL=\"stylesheet\" type=\"text/css\" href=\"" + JJDocOptions.getCSS () + "\"/>");
     }
-    if (JJDocGlobals.input_file != null)
+    if (JJDocGlobals.s_input_file != null)
     {
-      println ("<TITLE>BNF for " + JJDocGlobals.input_file + "</TITLE>");
+      println ("<TITLE>BNF for " + JJDocGlobals.s_input_file + "</TITLE>");
     }
     else
     {
@@ -111,7 +111,7 @@ public class HTMLGenerator extends TextGenerator
     }
     println ("</HEAD>");
     println ("<BODY>");
-    println ("<H1 ALIGN=CENTER>BNF for " + JJDocGlobals.input_file + "</H1>");
+    println ("<H1 ALIGN=CENTER>BNF for " + JJDocGlobals.s_input_file + "</H1>");
   }
 
   @Override

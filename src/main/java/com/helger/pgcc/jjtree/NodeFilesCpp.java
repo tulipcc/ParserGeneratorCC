@@ -117,7 +117,7 @@ final class NodeFilesCpp
     return new File (JJTreeOptions.getJJTreeOutputDirectory (), ASTNode + ".cc").getAbsolutePath ();
   }
 
-  private static String getVisitorIncludeFile ()
+  private static String _getVisitorIncludeFile ()
   {
     final String name = getVisitorClass ();
     return new File (JJTreeOptions.getJJTreeOutputDirectory (), name + ".h").getAbsolutePath ();
@@ -125,17 +125,17 @@ final class NodeFilesCpp
 
   static void generateTreeClasses ()
   {
-    generateNodeHeader ();
-    generateSimpleNodeHeader ();
-    generateSimpleNodeCode ();
-    generateMultiTreeInterface ();
-    generateMultiTreeImpl ();
-    generateOneTreeInterface ();
+    _generateNodeHeader ();
+    _generateSimpleNodeHeader ();
+    _generateSimpleNodeCode ();
+    _generateMultiTreeInterface ();
+    _generateMultiTreeImpl ();
+    _generateOneTreeInterface ();
     if (false)
-      generateOneTreeImpl ();
+      _generateOneTreeImpl ();
   }
 
-  private static void generateNodeHeader ()
+  private static void _generateNodeHeader ()
   {
     final File file = new File (nodeIncludeFile ());
 
@@ -159,9 +159,9 @@ final class NodeFilesCpp
 
       final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
       optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
-      optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
-      optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
-      optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
+      optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
+      optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
+      optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (_getVisitorReturnType ().equals ("void")));
 
       generateFile (outputFile, "/templates/cpp/Node.h.template", optionMap, false);
     }
@@ -171,7 +171,7 @@ final class NodeFilesCpp
     }
   }
 
-  private static void generateSimpleNodeHeader ()
+  private static void _generateSimpleNodeHeader ()
   {
     final File file = new File (simpleNodeIncludeFile ());
 
@@ -193,9 +193,9 @@ final class NodeFilesCpp
 
       final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
       optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
-      optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
-      optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
-      optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
+      optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
+      optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
+      optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (_getVisitorReturnType ().equals ("void")));
 
       generateFile (outputFile, "/templates/cpp/SimpleNode.h.template", optionMap, false);
     }
@@ -205,7 +205,7 @@ final class NodeFilesCpp
     }
   }
 
-  private static void generateSimpleNodeCode ()
+  private static void _generateSimpleNodeCode ()
   {
     final File file = new File (simpleNodeCodeFile ());
 
@@ -227,9 +227,9 @@ final class NodeFilesCpp
 
       final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
       optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
-      optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
-      optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
-      optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
+      optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
+      optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
+      optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (_getVisitorReturnType ().equals ("void")));
 
       generateFile (outputFile, "/templates/cpp/SimpleNode.cc.template", optionMap, false);
     }
@@ -239,7 +239,7 @@ final class NodeFilesCpp
     }
   }
 
-  private static void generateMultiTreeInterface ()
+  private static void _generateMultiTreeInterface ()
   {
     final String [] options = new String [] { "MULTI",
                                               "NODE_USES_PARSER",
@@ -266,9 +266,9 @@ final class NodeFilesCpp
 
           final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
           optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
-          optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
-          optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
-          optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
+          optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
+          optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
+          optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (_getVisitorReturnType ().equals ("void")));
           optionMap.put ("NODE_TYPE", node);
 
           generateFile (outputFile, "/templates/cpp/MultiNodeInterface.template", optionMap, false);
@@ -281,7 +281,7 @@ final class NodeFilesCpp
     }
   }
 
-  private static void generateMultiTreeImpl ()
+  private static void _generateMultiTreeImpl ()
   {
     final String [] options = new String [] { "MULTI",
                                               "NODE_USES_PARSER",
@@ -309,9 +309,9 @@ final class NodeFilesCpp
 
           final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
           optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
-          optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
-          optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
-          optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
+          optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
+          optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
+          optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (_getVisitorReturnType ().equals ("void")));
           optionMap.put ("NODE_TYPE", node);
 
           generateFile (outputFile, "/templates/cpp/MultiNodeImpl.template", optionMap, false);
@@ -324,7 +324,7 @@ final class NodeFilesCpp
     }
   }
 
-  private static void generateOneTreeInterface ()
+  private static void _generateOneTreeInterface ()
   {
     final File file = new File (jjtreeIncludeFile ());
 
@@ -349,9 +349,9 @@ final class NodeFilesCpp
 
         final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
         optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
-        optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
-        optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
-        optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
+        optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
+        optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
+        optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (_getVisitorReturnType ().equals ("void")));
 
         try (final PrintWriter ostr = outputFile.getPrintWriter ())
         {
@@ -374,7 +374,7 @@ final class NodeFilesCpp
     }
   }
 
-  private static void generateOneTreeImpl ()
+  private static void _generateOneTreeImpl ()
   {
     final File file = new File (jjtreeImplFile ());
 
@@ -398,9 +398,9 @@ final class NodeFilesCpp
 
       final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
       optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
-      optionMap.put ("VISITOR_RETURN_TYPE", getVisitorReturnType ());
-      optionMap.put ("VISITOR_DATA_TYPE", getVisitorArgumentType ());
-      optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (getVisitorReturnType ().equals ("void")));
+      optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
+      optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
+      optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (_getVisitorReturnType ().equals ("void")));
       generateFile (outputFile, "/templates/cpp/TreeImplHeader.template", optionMap, false);
 
       final boolean hasNamespace = Options.stringValue (Options.USEROPTION__CPP_NAMESPACE).length () > 0;
@@ -503,7 +503,7 @@ final class NodeFilesCpp
     return JJTreeGlobals.s_parserName + "Visitor";
   }
 
-  private static String getVisitMethodName (final String className)
+  private static String _getVisitMethodName (final String className)
   {
     final StringBuilder sb = new StringBuilder ("visit");
     if (Options.booleanValue ("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME"))
@@ -518,13 +518,13 @@ final class NodeFilesCpp
     return sb.toString ();
   }
 
-  private static String getVisitorArgumentType ()
+  private static String _getVisitorArgumentType ()
   {
     final String ret = Options.stringValue ("VISITOR_DATA_TYPE");
     return ret == null || ret.equals ("") || ret.equals ("Object") ? "void *" : ret;
   }
 
-  private static String getVisitorReturnType ()
+  private static String _getVisitorReturnType ()
   {
     final String ret = Options.stringValue ("VISITOR_RETURN_TYPE");
     return ret == null || ret.equals ("") || ret.equals ("Object") ? "void " : ret;
@@ -535,7 +535,7 @@ final class NodeFilesCpp
     if (!JJTreeOptions.getVisitor ())
       return;
 
-    final File file = new File (getVisitorIncludeFile ());
+    final File file = new File (_getVisitorIncludeFile ());
     try (final OutputFile outputFile = new OutputFile (file); final PrintWriter ostr = outputFile.getPrintWriter ())
     {
       generatePrologue ();
@@ -550,8 +550,8 @@ final class NodeFilesCpp
         ostr.println ("namespace " + Options.stringValue ("NAMESPACE_OPEN"));
       }
 
-      generateVisitorInterface (ostr);
-      generateDefaultVisitor (ostr);
+      _generateVisitorInterface (ostr);
+      _generateDefaultVisitor (ostr);
 
       if (hasNamespace)
       {
@@ -566,7 +566,7 @@ final class NodeFilesCpp
     }
   }
 
-  private static void generateVisitorInterface (final PrintWriter ostr)
+  private static void _generateVisitorInterface (final PrintWriter ostr)
   {
     final String name = getVisitorClass ();
     final List <String> nodeNames = ASTNodeDescriptor.getNodeNames ();
@@ -574,8 +574,8 @@ final class NodeFilesCpp
     ostr.println ("class " + name);
     ostr.println ("{");
 
-    String argumentType = getVisitorArgumentType ();
-    final String returnType = getVisitorReturnType ();
+    String argumentType = _getVisitorArgumentType ();
+    final String returnType = _getVisitorReturnType ();
     if (!JJTreeOptions.getVisitorDataType ().equals (""))
     {
       argumentType = JJTreeOptions.getVisitorDataType ();
@@ -596,7 +596,7 @@ final class NodeFilesCpp
         ostr.println ("  virtual " +
                       returnType +
                       " " +
-                      getVisitMethodName (nodeType) +
+                      _getVisitMethodName (nodeType) +
                       "(const " +
                       nodeType +
                       " *node, " +
@@ -614,15 +614,15 @@ final class NodeFilesCpp
     return JJTreeGlobals.s_parserName + "DefaultVisitor";
   }
 
-  private static void generateDefaultVisitor (final PrintWriter ostr)
+  private static void _generateDefaultVisitor (final PrintWriter ostr)
   {
     final String className = defaultVisitorClass ();
     final List <String> nodeNames = ASTNodeDescriptor.getNodeNames ();
 
     ostr.println ("class " + className + " : public " + getVisitorClass () + " {");
 
-    final String argumentType = getVisitorArgumentType ();
-    final String ret = getVisitorReturnType ();
+    final String argumentType = _getVisitorArgumentType ();
+    final String ret = _getVisitorReturnType ();
 
     ostr.println ("public:");
     ostr.println ("  virtual " + ret + " defaultVisit(const SimpleNode *node, " + argumentType + " data) = 0;");
@@ -648,7 +648,7 @@ final class NodeFilesCpp
         ostr.println ("  virtual " +
                       ret +
                       " " +
-                      getVisitMethodName (nodeType) +
+                      _getVisitMethodName (nodeType) +
                       "(const " +
                       nodeType +
                       " *node, " +

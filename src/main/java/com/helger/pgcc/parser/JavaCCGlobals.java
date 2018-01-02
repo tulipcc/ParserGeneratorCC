@@ -582,7 +582,7 @@ public abstract class JavaCCGlobals
 
   protected static String printToken (final Token t)
   {
-    String retval = "";
+    String ret = "";
     Token tt = t.specialToken;
     if (tt != null)
     {
@@ -590,12 +590,12 @@ public abstract class JavaCCGlobals
         tt = tt.specialToken;
       while (tt != null)
       {
-        retval += printTokenOnly (tt);
+        ret += printTokenOnly (tt);
         tt = tt.next;
       }
     }
-    retval += printTokenOnly (t);
-    return retval;
+    ret += printTokenOnly (t);
+    return ret;
   }
 
   protected static String printLeadingComments (final Token t)
