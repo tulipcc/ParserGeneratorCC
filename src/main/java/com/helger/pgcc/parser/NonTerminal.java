@@ -58,7 +58,7 @@ public class NonTerminal extends Expansion
   /**
    * The production this non-terminal corresponds to.
    */
-  private NormalProduction prod;
+  private NormalProduction m_prod;
 
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
@@ -139,9 +139,9 @@ public class NonTerminal extends Expansion
    * @param prod
    *        the prod to set
    */
-  public NormalProduction setProd (final NormalProduction prod)
+  public void setProd (final NormalProduction prod)
   {
-    return this.prod = prod;
+    this.m_prod = prod;
   }
 
   /**
@@ -149,6 +149,6 @@ public class NonTerminal extends Expansion
    */
   public NormalProduction getProd ()
   {
-    return prod;
+    return m_prod;
   }
 }

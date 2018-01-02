@@ -44,10 +44,9 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Generate lexer.
@@ -58,8 +57,6 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
   @Override
   void printClassHead ()
   {
-    int i, j;
-
     final List <String> tn = new ArrayList <> (s_toolNames);
     tn.add (s_toolName);
 
@@ -89,14 +86,13 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
 
     genCodeLine ("class " + s_cu_name + ";");
 
-    final int l = 0, kind;
-    i = 1;
     /*
-     * namespace? for (;;) { if (cu_to_insertion_point_1.size() <= l) break;
-     * kind = ((Token)cu_to_insertion_point_1.get(l)).kind; if(kind == PACKAGE
-     * || kind == IMPORT) { for (; i < cu_to_insertion_point_1.size(); i++) {
-     * kind = ((Token)cu_to_insertion_point_1.get(i)).kind; if (kind == CLASS) {
-     * cline = ((Token)(cu_to_insertion_point_1.get(l))).beginLine; ccol =
+     * final int l = 0, kind; i = 1; namespace? for (;;) { if
+     * (cu_to_insertion_point_1.size() <= l) break; kind =
+     * ((Token)cu_to_insertion_point_1.get(l)).kind; if(kind == PACKAGE || kind
+     * == IMPORT) { for (; i < cu_to_insertion_point_1.size(); i++) { kind =
+     * ((Token)cu_to_insertion_point_1.get(i)).kind; if (kind == CLASS) { cline
+     * = ((Token)(cu_to_insertion_point_1.get(l))).beginLine; ccol =
      * ((Token)(cu_to_insertion_point_1.get(l))).beginColumn; for (j = l; j < i;
      * j++) { printToken((Token)(cu_to_insertion_point_1.get(j))); } if (kind ==
      * SEMICOLON) printToken((Token)(cu_to_insertion_point_1.get(j)));
@@ -121,7 +117,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       m_ccol = 1;
 
       switchToMainFile ();
-      for (j = 0; j < s_token_mgr_decls.size (); j++)
+      for (int j = 0; j < s_token_mgr_decls.size (); j++)
       {
         t = s_token_mgr_decls.get (j);
         if (t.kind == IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
@@ -187,7 +183,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     writeTemplate ("/templates/cpp/DumpDebugMethods.template", "maxOrdinal", maxOrdinal, "stateSetSize", stateSetSize);
   }
 
-  static void BuildLexStatesTable ()
+  static void buildLexStatesTable ()
   {
     final Iterator <TokenProduction> it = s_rexprlist.iterator ();
     TokenProduction tp;
@@ -202,10 +198,12 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
 
       for (i = 0; i < tp.lexStates.length; i++)
       {
-        if ((tps = (List <TokenProduction>) allTpsForState.get (tp.lexStates[i])) == null)
+        tps = s_allTpsForState.get (tp.lexStates[i]);
+        if (tps == null)
         {
           tmpLexStateName[maxLexStates++] = tp.lexStates[i];
-          allTpsForState.put (tp.lexStates[i], tps = new ArrayList ());
+          tps = new ArrayList <> ();
+          s_allTpsForState.put (tp.lexStates[i], tps);
         }
 
         tps.add (tp);
@@ -214,10 +212,12 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       if (respecs == null || respecs.size () == 0)
         continue;
 
-      RegularExpression re;
       for (i = 0; i < respecs.size (); i++)
-        if (maxOrdinal <= (re = respecs.get (i).rexp).m_ordinal)
+      {
+        final RegularExpression re = respecs.get (i).rexp;
+        if (maxOrdinal <= re.m_ordinal)
           maxOrdinal = re.m_ordinal + 1;
+      }
     }
 
     kinds = new int [maxOrdinal];
@@ -229,7 +229,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     actions = new Action [maxOrdinal];
     actions[0] = s_actForEof;
     hasTokenActions = s_actForEof != null;
-    initStates = new Hashtable ();
+    initStates.clear ();
     canMatchAnyChar = new int [maxLexStates];
     canLoop = new boolean [maxLexStates];
     stateHasActions = new boolean [maxLexStates];
@@ -254,7 +254,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     canReachOnMore = new boolean [maxLexStates];
   }
 
-  static int GetIndex (final String name)
+  static int getIndex (final String name)
   {
     for (int i = 0; i < lexStateName.length; i++)
       if (lexStateName[i] != null && lexStateName[i].equals (name))
@@ -263,7 +263,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     throw new Error (); // Should never come here
   }
 
-  public static void AddCharToSkip (final char c, final int kind)
+  public static void addCharToSkip (final char c, final int kind)
   {
     singlesToSkip[lexStateIndex].addChar (c);
     singlesToSkip[lexStateIndex].kind = kind;
@@ -283,23 +283,22 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     tokMgrClassName = s_cu_name + "TokenManager";
 
     printClassHead ();
-    BuildLexStatesTable ();
-
-    final Enumeration e = allTpsForState.keys ();
+    buildLexStatesTable ();
 
     boolean ignoring = false;
 
-    while (e.hasMoreElements ())
+    for (final Map.Entry <String, List <TokenProduction>> aEntry : s_allTpsForState.entrySet ())
     {
       NfaState.reInitStatic ();
       RStringLiteral.reInitStatic ();
 
-      final String key = (String) e.nextElement ();
+      final String key = aEntry.getKey ();
 
-      lexStateIndex = GetIndex (key);
+      lexStateIndex = getIndex (key);
       lexStateSuffix = "_" + lexStateIndex;
-      final List <TokenProduction> allTps = (List <TokenProduction>) allTpsForState.get (key);
-      initStates.put (key, initialState = new NfaState ());
+      final List <TokenProduction> allTps = aEntry.getValue ();
+      initialState = new NfaState ();
+      initStates.put (key, initialState);
       ignoring = false;
 
       singlesToSkip[lexStateIndex] = new NfaState ();
@@ -335,7 +334,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
 
           if (curRE instanceof RStringLiteral && !((RStringLiteral) curRE).m_image.equals (""))
           {
-            ((RStringLiteral) curRE).generateDfa (this, curRE.m_ordinal);
+            ((RStringLiteral) curRE).generateDfa ();
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
               mixed[lexStateIndex] = true;
           }
@@ -394,7 +393,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
               toMore[curRE.m_ordinal / 64] |= 1L << (curRE.m_ordinal % 64);
 
               if (newLexState[curRE.m_ordinal] != null)
-                canReachOnMore[GetIndex (newLexState[curRE.m_ordinal])] = true;
+                canReachOnMore[getIndex (newLexState[curRE.m_ordinal])] = true;
               else
                 canReachOnMore[lexStateIndex] = true;
 
@@ -564,7 +563,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
         if (newLexState[i] == null)
           genCode ("-1, ");
         else
-          genCode (GetIndex (newLexState[i]) + ", ");
+          genCode (getIndex (newLexState[i]) + ", ");
       }
       genCodeLine ("\n};");
     }

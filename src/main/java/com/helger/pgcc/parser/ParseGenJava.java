@@ -77,7 +77,6 @@ public class ParseGenJava extends CodeGenerator implements JavaCCParserConstants
       genCodeLine ("/* " + getIdString (tn, s_cu_name + ".java") + " */");
 
       boolean implementsExists = false;
-      final boolean extendsExists = false;
 
       if (s_cu_to_insertion_point_1.size () != 0)
       {

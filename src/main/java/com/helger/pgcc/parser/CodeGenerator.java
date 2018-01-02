@@ -98,21 +98,9 @@ public class CodeGenerator
     m_outputBuffer.append (s);
   }
 
-  public void genCode (final String... code)
-  {
-    for (final String s : code)
-      m_outputBuffer.append (s);
-  }
-
   public void genCodeLine (final String s)
   {
     genCode (s);
-    genCode ("\n");
-  }
-
-  public void genCodeLine (final String... code)
-  {
-    genCode (code);
     genCode ("\n");
   }
 

@@ -49,8 +49,8 @@ public final class OptionsTest extends TestCase
 
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());
-    assertEquals (0, JavaCCErrors.get_parse_error_count ());
-    assertEquals (0, JavaCCErrors.get_semantic_error_count ());
+    assertEquals (0, JavaCCErrors.getParseErrorCount ());
+    assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
   public void testSetBooleanOption ()
@@ -72,8 +72,8 @@ public final class OptionsTest extends TestCase
 
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());
-    assertEquals (0, JavaCCErrors.get_parse_error_count ());
-    assertEquals (0, JavaCCErrors.get_semantic_error_count ());
+    assertEquals (0, JavaCCErrors.getParseErrorCount ());
+    assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
   public void testIntBooleanOption ()
@@ -93,8 +93,8 @@ public final class OptionsTest extends TestCase
     assertEquals (1, JavaCCErrors.getWarningCount ());
 
     assertEquals (0, JavaCCErrors.getErrorCount ());
-    assertEquals (0, JavaCCErrors.get_parse_error_count ());
-    assertEquals (0, JavaCCErrors.get_semantic_error_count ());
+    assertEquals (0, JavaCCErrors.getParseErrorCount ());
+    assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
   public void testSetStringOption ()
@@ -128,8 +128,8 @@ public final class OptionsTest extends TestCase
     assertEquals (1, JavaCCErrors.getWarningCount ());
 
     assertEquals (0, JavaCCErrors.getErrorCount ());
-    assertEquals (0, JavaCCErrors.get_parse_error_count ());
-    assertEquals (0, JavaCCErrors.get_semantic_error_count ());
+    assertEquals (0, JavaCCErrors.getParseErrorCount ());
+    assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
   public void testSetWrongTypeForOption ()
@@ -143,8 +143,8 @@ public final class OptionsTest extends TestCase
     assertEquals (1, JavaCCErrors.getWarningCount ());
 
     assertEquals (0, JavaCCErrors.getErrorCount ());
-    assertEquals (0, JavaCCErrors.get_parse_error_count ());
-    assertEquals (0, JavaCCErrors.get_semantic_error_count ());
+    assertEquals (0, JavaCCErrors.getParseErrorCount ());
+    assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
   public void testNormalize ()
@@ -163,8 +163,8 @@ public final class OptionsTest extends TestCase
 
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());
-    assertEquals (0, JavaCCErrors.get_parse_error_count ());
-    assertEquals (0, JavaCCErrors.get_semantic_error_count ());
+    assertEquals (0, JavaCCErrors.getParseErrorCount ());
+    assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
   public void testOptionsString () throws ParseException

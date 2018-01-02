@@ -1039,13 +1039,15 @@ public class Semanticize extends JavaCCGlobals
       if (e instanceof NonTerminal)
       {
         final NonTerminal nt = (NonTerminal) e;
-        if ((nt.setProd (s_production_table.get (nt.getName ()))) == null)
+        final NormalProduction np = s_production_table.get (nt.getName ());
+        if (np == null)
         {
           JavaCCErrors.semantic_error (e, "Non-terminal " + nt.getName () + " has not been defined.");
         }
         else
         {
-          nt.getProd ().getParents ().add (nt);
+          nt.setProd (np);
+          np.getParents ().add (nt);
         }
       }
     }
@@ -1160,10 +1162,9 @@ public class Semanticize extends JavaCCGlobals
 
   public static void reInit ()
   {
-    removeList = new ArrayList ();
-    itemList = new ArrayList ();
+    removeList.clear ();
+    itemList.clear ();
     other = null;
     loopString = null;
   }
-
 }

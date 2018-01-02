@@ -39,7 +39,7 @@ public final class JavaCCErrors
   private JavaCCErrors ()
   {}
 
-  private static void printLocationInfo (final Object node)
+  private static void _printLocationInfo (final Object node)
   {
     if (node instanceof NormalProduction)
     {
@@ -81,7 +81,7 @@ public final class JavaCCErrors
   public static void parse_error (final Object node, final String mess)
   {
     System.err.print ("Error: ");
-    printLocationInfo (node);
+    _printLocationInfo (node);
     System.err.println (mess);
     s_parse_error_count++;
   }
@@ -93,7 +93,7 @@ public final class JavaCCErrors
     s_parse_error_count++;
   }
 
-  public static int get_parse_error_count ()
+  public static int getParseErrorCount ()
   {
     return s_parse_error_count;
   }
@@ -101,7 +101,7 @@ public final class JavaCCErrors
   public static void semantic_error (final Object node, final String mess)
   {
     System.err.print ("Error: ");
-    printLocationInfo (node);
+    _printLocationInfo (node);
     System.err.println (mess);
     s_semantic_error_count++;
   }
@@ -113,7 +113,7 @@ public final class JavaCCErrors
     s_semantic_error_count++;
   }
 
-  public static int get_semantic_error_count ()
+  public static int getSemanticErrorCount ()
   {
     return s_semantic_error_count;
   }
@@ -121,7 +121,7 @@ public final class JavaCCErrors
   public static void warning (final Object node, final String mess)
   {
     System.err.print ("Warning: ");
-    printLocationInfo (node);
+    _printLocationInfo (node);
     System.err.println (mess);
     s_warning_count++;
   }
@@ -143,16 +143,16 @@ public final class JavaCCErrors
     return s_parse_error_count + s_semantic_error_count;
   }
 
+  public static void fatal (final String message)
+  {
+    System.err.println ("Fatal Error: " + message);
+    throw new IllegalStateException ("Fatal Error: " + message);
+  }
+
   public static void reInit ()
   {
     s_parse_error_count = 0;
     s_semantic_error_count = 0;
     s_warning_count = 0;
-  }
-
-  public static void fatal (final String message)
-  {
-    System.err.println ("Fatal Error: " + message);
-    throw new RuntimeException ("Fatal Error: " + message);
   }
 }

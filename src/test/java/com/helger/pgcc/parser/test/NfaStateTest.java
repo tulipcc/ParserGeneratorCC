@@ -424,7 +424,7 @@ public class NfaStateTest extends JavaCCTestCase
     final CodeGenerator cg = new CodeGenerator ();
     setupState ();
     NfaState.dumpMoveNfa (cg);
-    assertEquals ("private int jjMoveNfa_3(int startState, int curPos)\n" + "{\n" + "   return curPos;\n" + "}",
+    assertEquals ("private int jjMoveNfa_4(int startState, int curPos)\n" + "{\n" + "   return curPos;\n" + "}",
                   cg.getGeneratedCode ().replaceAll ("\r", "").trim ());
   }
 

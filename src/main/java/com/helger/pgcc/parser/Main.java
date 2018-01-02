@@ -202,10 +202,7 @@ public class Main
       help_message ();
       return 1;
     }
-    else
-    {
-      System.out.println ("(type \"javacc\" with no arguments for help)");
-    }
+    System.out.println ("(type \"javacc\" with no arguments for help)");
 
     if (Options.isOption (args[args.length - 1]))
     {

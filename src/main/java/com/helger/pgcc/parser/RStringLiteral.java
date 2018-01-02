@@ -40,42 +40,41 @@ import java.util.Set;
 
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
-final class KindInfo
-{
-  long [] validKinds;
-  long [] finalKinds;
-  int validKindCnt = 0;
-  int finalKindCnt = 0;
-  Set <Integer> finalKindSet = new HashSet <> ();
-  Set <Integer> validKindSet = new HashSet <> ();
-
-  KindInfo (final int maxKind)
-  {
-    validKinds = new long [maxKind / 64 + 1];
-    finalKinds = new long [maxKind / 64 + 1];
-  }
-
-  public void insertValidKind (final int kind)
-  {
-    validKinds[kind / 64] |= (1L << (kind % 64));
-    validKindCnt++;
-    validKindSet.add (kind);
-  }
-
-  public void insertFinalKind (final int kind)
-  {
-    finalKinds[kind / 64] |= (1L << (kind % 64));
-    finalKindCnt++;
-    finalKindSet.add (kind);
-  }
-}
-
 /**
  * Describes string literals.
  */
-
 public class RStringLiteral extends RegularExpression
 {
+  private static final class KindInfo
+  {
+    final long [] m_validKinds;
+    final long [] m_finalKinds;
+    int m_validKindCnt = 0;
+    int m_finalKindCnt = 0;
+    final Set <Integer> m_finalKindSet = new HashSet <> ();
+    final Set <Integer> m_validKindSet = new HashSet <> ();
+
+    KindInfo (final int maxKind)
+    {
+      m_validKinds = new long [maxKind / 64 + 1];
+      m_finalKinds = new long [maxKind / 64 + 1];
+    }
+
+    public void insertValidKind (final int kind)
+    {
+      m_validKinds[kind / 64] |= (1L << (kind % 64));
+      m_validKindCnt++;
+      m_validKindSet.add (kind);
+    }
+
+    public void insertFinalKind (final int kind)
+    {
+      m_finalKinds[kind / 64] |= (1L << (kind % 64));
+      m_finalKindCnt++;
+      m_finalKindSet.add (kind);
+    }
+  }
+
   /**
    * The string image of the literal.
    */
@@ -305,7 +304,7 @@ public class RStringLiteral extends RegularExpression
    * @param codeGenerator
    * @param kind
    */
-  public void generateDfa (final CodeGenerator codeGenerator, final int kind)
+  public void generateDfa ()
   {
     String s;
     Map <String, KindInfo> temp;
@@ -1092,17 +1091,17 @@ public class RStringLiteral extends RegularExpression
 
         if (i == 0 &&
             c < 128 &&
-            info.finalKindCnt != 0 &&
+            info.m_finalKindCnt != 0 &&
             (NfaState.s_generatedStates == 0 || !NfaState.canStartNfaUsingAscii (c)))
         {
           int kind;
           int j = 0;
           for (; j < maxLongsReqd; j++)
-            if (info.finalKinds[j] != 0L)
+            if (info.m_finalKinds[j] != 0L)
               break;
 
           for (int k = 0; k < 64; k++)
-            if ((info.finalKinds[j] & (1L << k)) != 0L && !s_subString[kind = (j * 64 + k)])
+            if ((info.m_finalKinds[j] & (1L << k)) != 0L && !s_subString[kind = (j * 64 + k)])
             {
               if ((s_intermediateKinds != null &&
                    s_intermediateKinds[(j * 64 + k)] != null &&
@@ -1148,11 +1147,11 @@ public class RStringLiteral extends RegularExpression
         long matchedKind;
         final String prefix = (i == 0) ? "         " : "            ";
 
-        if (info.finalKindCnt != 0)
+        if (info.m_finalKindCnt != 0)
         {
           for (int j = 0; j < maxLongsReqd; j++)
           {
-            if ((matchedKind = info.finalKinds[j]) == 0L)
+            if ((matchedKind = info.m_finalKinds[j]) == 0L)
               continue;
 
             for (int k = 0; k < 64; k++)
@@ -1253,7 +1252,7 @@ public class RStringLiteral extends RegularExpression
           }
         }
 
-        if (info.validKindCnt != 0)
+        if (info.m_validKindCnt != 0)
         {
           atLeastOne = false;
 
@@ -1271,7 +1270,7 @@ public class RStringLiteral extends RegularExpression
                 else
                   atLeastOne = true;
 
-                codeGenerator.genCode ("0x" + Long.toHexString (info.validKinds[j]) + Options.getLongSuffix ());
+                codeGenerator.genCode ("0x" + Long.toHexString (info.m_validKinds[j]) + Options.getLongSuffix ());
               }
 
             if ((i + 1) <= s_maxLenForActive[j])
@@ -1279,7 +1278,7 @@ public class RStringLiteral extends RegularExpression
               if (atLeastOne)
                 codeGenerator.genCode (", ");
 
-              codeGenerator.genCode ("0x" + Long.toHexString (info.validKinds[j]) + Options.getLongSuffix ());
+              codeGenerator.genCode ("0x" + Long.toHexString (info.m_validKinds[j]) + Options.getLongSuffix ());
             }
             codeGenerator.genCodeLine (");");
           }
@@ -1298,11 +1297,11 @@ public class RStringLiteral extends RegularExpression
                 else
                   atLeastOne = true;
 
-                if (info.validKinds[j] != 0L)
+                if (info.m_validKinds[j] != 0L)
                   codeGenerator.genCode ("active" +
                                          j +
                                          ", 0x" +
-                                         Long.toHexString (info.validKinds[j]) +
+                                         Long.toHexString (info.m_validKinds[j]) +
                                          Options.getLongSuffix ());
                 else
                   codeGenerator.genCode ("active" + j + ", 0L");
@@ -1312,11 +1311,11 @@ public class RStringLiteral extends RegularExpression
             {
               if (atLeastOne)
                 codeGenerator.genCode (", ");
-              if (info.validKinds[j] != 0L)
+              if (info.m_validKinds[j] != 0L)
                 codeGenerator.genCode ("active" +
                                        j +
                                        ", 0x" +
-                                       Long.toHexString (info.validKinds[j]) +
+                                       Long.toHexString (info.m_validKinds[j]) +
                                        Options.getLongSuffix ());
               else
                 codeGenerator.genCode ("active" + j + ", 0L");
@@ -1860,7 +1859,7 @@ public class RStringLiteral extends RegularExpression
   static final Map <Integer, Integer> kindToLexicalState = new HashMap <> ();
   static final Map <Integer, NfaState> nfaStateMap = new HashMap <> ();
 
-  public static void updateStringLiteralData (final int generatedNfaStates, final int lexStateIndex)
+  public static void updateStringLiteralData (final int lexStateIndex)
   {
     for (int kind = 0; kind < s_allImages.length; kind++)
     {

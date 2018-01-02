@@ -32,8 +32,8 @@ public final class JJTreeOptionsTest extends TestCase {
 
         assertEquals(0, JavaCCErrors.getWarningCount());
         assertEquals(0, JavaCCErrors.getErrorCount());
-        assertEquals(0, JavaCCErrors.get_parse_error_count());
-        assertEquals(0, JavaCCErrors.get_semantic_error_count());
+        assertEquals(0, JavaCCErrors.getParseErrorCount());
+        assertEquals(0, JavaCCErrors.getSemanticErrorCount());
     }
 
     public void testNodeFactory() {
@@ -56,8 +56,8 @@ public final class JJTreeOptionsTest extends TestCase {
       assertEquals(0, JavaCCErrors.getWarningCount());
 
       assertEquals(0, JavaCCErrors.getErrorCount());
-      assertEquals(0, JavaCCErrors.get_parse_error_count());
-      assertEquals(0, JavaCCErrors.get_semantic_error_count());
+      assertEquals(0, JavaCCErrors.getParseErrorCount());
+      assertEquals(0, JavaCCErrors.getSemanticErrorCount());
     }
 
     public void testNodeClass() {

@@ -48,10 +48,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,8 +68,8 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
   public static String staticString;
   public static String tokMgrClassName;
 
-  // Hashtable of vectors
-  static Hashtable allTpsForState = new Hashtable ();
+  // Order is important!
+  static final Map <String, List <TokenProduction>> s_allTpsForState = new LinkedHashMap <> ();
   public static int lexStateIndex = 0;
   static int [] kinds;
   public static int maxOrdinal = 1;
@@ -79,7 +78,8 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
   public static int [] lexStates;
   public static boolean [] ignoreCase;
   public static Action [] actions;
-  public static Hashtable initStates = new Hashtable ();
+  // Order is important!
+  public static final Map <String, NfaState> initStates = new LinkedHashMap <> ();
   public static int stateSetSize;
   public static int totalNumStates;
   public static int maxLexStates;
@@ -273,10 +273,11 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     }
 
     final OutputFileGenerator gen = new OutputFileGenerator (name, options);
-    final StringWriter sw = new StringWriter ();
-    gen.generate (new PrintWriter (sw));
-    sw.close ();
-    genCode (sw.toString ());
+    try (final StringWriter sw = new StringWriter ())
+    {
+      gen.generate (new PrintWriter (sw));
+      genCode (sw.toString ());
+    }
   }
 
   void dumpDebugMethods () throws IOException
@@ -299,10 +300,12 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
       for (i = 0; i < tp.lexStates.length; i++)
       {
-        if ((tps = (List) allTpsForState.get (tp.lexStates[i])) == null)
+        tps = s_allTpsForState.get (tp.lexStates[i]);
+        if (tps == null)
         {
           tmpLexStateName[maxLexStates++] = tp.lexStates[i];
-          allTpsForState.put (tp.lexStates[i], tps = new ArrayList ());
+          tps = new ArrayList <> ();
+          s_allTpsForState.put (tp.lexStates[i], tps);
         }
 
         tps.add (tp);
@@ -326,7 +329,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     actions = new Action [maxOrdinal];
     actions[0] = s_actForEof;
     hasTokenActions = s_actForEof != null;
-    initStates = new Hashtable ();
+    initStates.clear ();
     canMatchAnyChar = new int [maxLexStates];
     canLoop = new boolean [maxLexStates];
     stateHasActions = new boolean [maxLexStates];
@@ -375,7 +378,6 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     keepLineCol = Options.getKeepLineColumn ();
     errorHandlingClass = Options.getTokenMgrErrorClass ();
     final List <RChoice> choices = new ArrayList <> ();
-    Enumeration e;
     TokenProduction tp;
 
     staticString = (Options.getStatic () ? "static " : "");
@@ -385,21 +387,19 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       printClassHead ();
     buildLexStatesTable ();
 
-    e = allTpsForState.keys ();
-
     boolean ignoring = false;
 
-    while (e.hasMoreElements ())
+    for (final Map.Entry <String, List <TokenProduction>> aEntry : s_allTpsForState.entrySet ())
     {
       int startState = -1;
       NfaState.reInitStatic ();
       RStringLiteral.reInitStatic ();
 
-      final String key = (String) e.nextElement ();
+      final String key = aEntry.getKey ();
 
       lexStateIndex = getIndex (key);
       lexStateSuffix = "_" + lexStateIndex;
-      final List <TokenProduction> allTps = (List <TokenProduction>) allTpsForState.get (key);
+      final List <TokenProduction> allTps = aEntry.getValue ();
       initialState = new NfaState ();
       initStates.put (key, initialState);
       ignoring = false;
@@ -437,7 +437,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
           if (!Options.getNoDfa () && curRE instanceof RStringLiteral && !((RStringLiteral) curRE).m_image.equals (""))
           {
-            ((RStringLiteral) curRE).generateDfa (this, curRE.m_ordinal);
+            ((RStringLiteral) curRE).generateDfa ();
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
             {
               mixed[lexStateIndex] = true;
@@ -552,7 +552,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
       if (generateDataOnly || codeGeneratorClass != null)
       {
-        RStringLiteral.updateStringLiteralData (totalNumStates, lexStateIndex);
+        RStringLiteral.updateStringLiteralData (lexStateIndex);
         NfaState.updateNfaData (totalNumStates, startState, lexStateIndex, canMatchAnyChar[lexStateIndex]);
       }
       else
@@ -863,11 +863,11 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
                    "charStreamName",
                    charStreamName,
                    "protected",
-                   isJavaLanguage () ? "protected" : "",
+                   "protected",
                    "private",
-                   isJavaLanguage () ? "private" : "",
+                   "private",
                    "final",
-                   isJavaLanguage () ? "final" : "",
+                   "final",
                    "lexStateNameLength",
                    lexStateName.length);
   }
@@ -1611,7 +1611,8 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
   public static void reInit ()
   {
     actions = null;
-    allTpsForState = new Hashtable ();
+    s_allTpsForState.clear ();
+    ;
     canLoop = null;
     canMatchAnyChar = null;
     canReachOnMore = null;
@@ -1630,7 +1631,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     hasTokenActions = false;
     ignoreCase = null;
     initMatch = null;
-    initStates = new Hashtable ();
+    initStates.clear ();
     initialState = null;
     keepLineCol = false;
     kinds = null;

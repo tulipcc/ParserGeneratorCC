@@ -375,7 +375,7 @@ void javacc_input() #Grammar :
   (
     "PARSER_BEGIN" "(" t=identifier() ")"
 	{
-	  JJTreeGlobals.parserName = t.image;
+	  JJTreeGlobals.s_parserName = t.image;
 
           if (!isJavaLanguage) {
             while(getToken(1).kind != _PARSER_END) {
@@ -387,9 +387,9 @@ void javacc_input() #Grammar :
     "PARSER_END" "(" identifier() ")"
 	{
 	  if (JJTreeOptions.getNodePackage().equals("")) {
-	    JJTreeGlobals.nodePackageName = JJTreeGlobals.packageName;
+	    JJTreeGlobals.s_nodePackageName = JJTreeGlobals.s_packageName;
 	  } else {
-	    JJTreeGlobals.nodePackageName = JJTreeOptions.getNodePackage();
+	    JJTreeGlobals.s_nodePackageName = JJTreeOptions.getNodePackage();
 	  }
 	}
   ) #CompilationUnit(true)
@@ -476,7 +476,7 @@ void javacode_production() #Javacode :
 	  String n;
 	}
 {
-        {
+  {
 	  prod = jjtThis;
 	}
   "JAVACODE"
@@ -491,11 +491,11 @@ void javacode_production() #Javacode :
     [
       "throws" n=Name()
 	{
-	  prod.throws_list.add(n);
+	  prod.m_throws_list.add(n);
 	}
       ( "," n=Name()
 	{
-	  prod.throws_list.add(n);
+	  prod.m_throws_list.add(n);
 	}
       )*
     ]
@@ -504,7 +504,7 @@ void javacode_production() #Javacode :
     // This is really a Block()
     t2="{"
         {
-	  prod.name = t1.image;
+	  prod.m_name = t1.image;
 	  prod.stmBeginLoc = t2;
           if (!isJavaLanguage) {
             eatUptoCloseBrace();
@@ -518,7 +518,7 @@ void javacode_production() #Javacode :
     ) #JavacodeBody
     "}"
         {
-	  JJTreeGlobals.productions.put(prod.name, prod);
+	  JJTreeGlobals.s_productions.put(prod.m_name, prod);
 	}
 }
 
@@ -546,11 +546,11 @@ void bnf_production() #BNF :
   [
     "throws" n=Name()
         {
-	  prod.throws_list.add(n);
+	  prod.m_throws_list.add(n);
 	}
     ( "," n=Name()
         {
-	  prod.throws_list.add(n);
+	  prod.m_throws_list.add(n);
 	}
     )*
   ]
@@ -560,7 +560,7 @@ void bnf_production() #BNF :
   // This is really a Block()
   t2="{"
         {
-	  prod.name = t1.image;
+	  prod.m_name = t1.image;
 	  prod.declBeginLoc = t2;
 	  ns = new NodeScope(prod, nd);
           if (!isJavaLanguage) {
@@ -585,7 +585,7 @@ void bnf_production() #BNF :
   ) #BNFNodeScope
  "}"
         {
-	  JJTreeGlobals.productions.put(prod.name, prod);
+	  JJTreeGlobals.s_productions.put(prod.m_name, prod);
 	}
 }
 
@@ -992,7 +992,7 @@ void CompilationUnit() :
 {}
 {
   [ LOOKAHEAD( ( Annotation() )* "package" ) PackageDeclaration() ]
-  { JJTreeGlobals.parserImports = getToken(1); }
+  { JJTreeGlobals.s_parserImports = getToken(1); }
   ( ImportDeclaration() )*
   ( TypeDeclaration() )*
 }
@@ -1004,7 +1004,7 @@ void PackageDeclaration() :
 {
   Modifiers() "package" s=Name() ";"
                 {
-		  JJTreeGlobals.packageName = s;
+		  JJTreeGlobals.s_packageName = s;
 		}
 }
 
@@ -1086,13 +1086,13 @@ void ClassOrInterfaceDeclaration():
   [ ExtendsList() ]
   [ { t = getToken(1); } ImplementsList() ]
                 {
-		  if (s.equals(JJTreeGlobals.parserName)) {
+		  if (s.equals(JJTreeGlobals.s_parserName)) {
 		    if (t != null) {
-		      JJTreeGlobals.parserImplements = t;
+		      JJTreeGlobals.s_parserImplements = t;
 		    } else {
-		      JJTreeGlobals.parserImplements = getToken(1);
+		      JJTreeGlobals.s_parserImplements = getToken(1);
 		    }
-		    JJTreeGlobals.parserClassBodyStart = getToken(1);
+		    JJTreeGlobals.s_parserClassBodyStart = getToken(1);
 		  }
 		}
   ClassOrInterfaceBody()

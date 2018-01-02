@@ -58,15 +58,15 @@ public class NfaState
   private static boolean [] s_stateDone;
 
   private static List <NfaState> s_allStates = new ArrayList <> ();
-  private static List <NfaState> s_indexedAllStates = new ArrayList <> ();
-  private static List <NfaState> s_nonAsciiTableForMethod = new ArrayList <> ();
-  private static Map <String, NfaState> s_equivStatesTable = new HashMap <> ();
-  private static Map <String, int []> s_allNextStates = new HashMap <> ();
-  private static Map <String, Integer> s_lohiByteTab = new HashMap <> ();
-  private static Map <String, Integer> s_stateNameForComposite = new HashMap <> ();
-  private static Map <String, int []> s_compositeStateTable = new HashMap <> ();
-  private static Map <String, String> s_stateBlockTable = new HashMap <> ();
-  private static Map <String, int []> s_stateSetsToFix = new HashMap <> ();
+  private static final List <NfaState> s_indexedAllStates = new ArrayList <> ();
+  private static final List <NfaState> s_nonAsciiTableForMethod = new ArrayList <> ();
+  private static final Map <String, NfaState> s_equivStatesTable = new HashMap <> ();
+  private static final Map <String, int []> s_allNextStates = new HashMap <> ();
+  private static final Map <String, Integer> s_lohiByteTab = new HashMap <> ();
+  private static final Map <String, Integer> s_stateNameForComposite = new HashMap <> ();
+  private static final Map <String, int []> s_compositeStateTable = new HashMap <> ();
+  private static final Map <String, String> s_stateBlockTable = new HashMap <> ();
+  private static final Map <String, int []> s_stateSetsToFix = new HashMap <> ();
 
   private static boolean s_jjCheckNAddStatesUnaryNeeded = false;
   private static boolean s_jjCheckNAddStatesDualNeeded = false;
@@ -852,7 +852,7 @@ public class NfaState
     return Integer.MAX_VALUE;
   }
 
-  static List <String> allBitVectors = new ArrayList <> ();
+  private static List <String> s_allBitVectors = new ArrayList <> ();
 
   /*
    * This function generates the bit vectors of low and hi bytes for common bit
@@ -862,7 +862,7 @@ public class NfaState
    * code to match a char with the common bit vectors. (Need a better comment).
    */
 
-  static int [] tmpIndices = new int [512]; // 2 * 256
+  private static int [] s_tmpIndices = new int [512]; // 2 * 256
 
   void generateNonAsciiMoves (final CodeGenerator codeGenerator)
   {
@@ -971,7 +971,7 @@ public class NfaState
               "L\n};";
         if ((ind = s_lohiByteTab.get (tmp)) == null)
         {
-          allBitVectors.add (tmp);
+          s_allBitVectors.add (tmp);
 
           if (!allBitsSet (tmp))
           {
@@ -1001,7 +1001,7 @@ public class NfaState
           s_lohiByteTab.put (tmp, ind = Integer.valueOf (s_lohiByteCnt++));
         }
 
-        tmpIndices[cnt++] = ind.intValue ();
+        s_tmpIndices[cnt++] = ind.intValue ();
 
         tmp = "{\n   0x" +
               Long.toHexString (loBytes[i][0]) +
@@ -1017,7 +1017,7 @@ public class NfaState
               "L\n};";
         if ((ind = s_lohiByteTab.get (tmp)) == null)
         {
-          allBitVectors.add (tmp);
+          s_allBitVectors.add (tmp);
 
           if (!allBitsSet (tmp))
             switch (codeGenerator.getOutputLanguage ())
@@ -1046,14 +1046,14 @@ public class NfaState
           s_lohiByteTab.put (tmp, ind = Integer.valueOf (s_lohiByteCnt++));
         }
 
-        tmpIndices[cnt++] = ind.intValue ();
+        s_tmpIndices[cnt++] = ind.intValue ();
 
         common = null;
       }
     }
 
     m_nonAsciiMoveIndices = new int [cnt];
-    System.arraycopy (tmpIndices, 0, m_nonAsciiMoveIndices, 0, cnt);
+    System.arraycopy (s_tmpIndices, 0, m_nonAsciiMoveIndices, 0, cnt);
 
     /*
      * System.out.println("state : " + stateName + " cnt : " + cnt); while (cnt
@@ -1086,7 +1086,7 @@ public class NfaState
 
         if ((ind = s_lohiByteTab.get (tmp)) == null)
         {
-          allBitVectors.add (tmp);
+          s_allBitVectors.add (tmp);
 
           if (!allBitsSet (tmp))
             switch (codeGenerator.getOutputLanguage ())
@@ -1182,14 +1182,14 @@ public class NfaState
     return true;
   }
 
-  static String allBits = "{\n   0xffffffffffffffffL, " +
-                          "0xffffffffffffffffL, " +
-                          "0xffffffffffffffffL, " +
-                          "0xffffffffffffffffL\n};";
+  static String s_allBits = "{\n   0xffffffffffffffffL, " +
+                            "0xffffffffffffffffL, " +
+                            "0xffffffffffffffffL, " +
+                            "0xffffffffffffffffL\n};";
 
   static boolean allBitsSet (final String bitVec)
   {
-    return bitVec.equals (allBits);
+    return bitVec.equals (s_allBits);
   }
 
   static int addStartStateSet (final String stateSetString)
@@ -1298,24 +1298,24 @@ public class NfaState
     return addStartStateSet (m_epsilonMovesString);
   }
 
-  static Map <String, int []> tableToDump = new HashMap <> ();
-  static List <int []> orderedStateSet = new ArrayList <> ();
+  private static final Map <String, int []> s_tableToDump = new HashMap <> ();
+  private static final List <int []> s_orderedStateSet = new ArrayList <> ();
 
-  static int lastIndex = 0;
+  private static int s_lastIndex = 0;
 
   private static int [] _getStateSetIndicesForUse (final String arrayString)
   {
     int [] ret;
     final int [] set = s_allNextStates.get (arrayString);
 
-    if ((ret = tableToDump.get (arrayString)) == null)
+    if ((ret = s_tableToDump.get (arrayString)) == null)
     {
       ret = new int [2];
-      ret[0] = lastIndex;
-      ret[1] = lastIndex + set.length - 1;
-      lastIndex += set.length;
-      tableToDump.put (arrayString, ret);
-      orderedStateSet.add (set);
+      ret[0] = s_lastIndex;
+      ret[1] = s_lastIndex + set.length - 1;
+      s_lastIndex += set.length;
+      s_tableToDump.put (arrayString, ret);
+      s_orderedStateSet.add (set);
     }
 
     return ret;
@@ -1337,10 +1337,10 @@ public class NfaState
       default:
         throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
     }
-    if (orderedStateSet.size () > 0)
-      for (int i = 0; i < orderedStateSet.size (); i++)
+    if (s_orderedStateSet.size () > 0)
+      for (int i = 0; i < s_orderedStateSet.size (); i++)
       {
-        final int [] set = orderedStateSet.get (i);
+        final int [] set = s_orderedStateSet.get (i);
 
         for (final int aElement : set)
         {
@@ -1766,7 +1766,8 @@ public class NfaState
     final List <List <NfaState>> partition = new ArrayList <> ();
     NfaState tmp;
 
-    for (final int aState : states)
+    for (@SuppressWarnings ("unused")
+    final int x : states)
       original.add (null);
 
     int cnt = 0;
@@ -2752,7 +2753,7 @@ public class NfaState
       for (j = 0; j < m_loByteVec.size (); j += 2)
       {
         codeGenerator.genCodeLine ("      case " + m_loByteVec.get (j).intValue () + ":");
-        if (!allBitsSet (allBitVectors.get (m_loByteVec.get (j + 1).intValue ())))
+        if (!allBitsSet (s_allBitVectors.get (m_loByteVec.get (j + 1).intValue ())))
         {
           codeGenerator.genCodeLine ("         return ((jjbitVec" +
                                      m_loByteVec.get (j + 1).intValue () +
@@ -2770,9 +2771,9 @@ public class NfaState
     {
       do
       {
-        if (!allBitsSet (allBitVectors.get (m_nonAsciiMoveIndices[j - 2])))
+        if (!allBitsSet (s_allBitVectors.get (m_nonAsciiMoveIndices[j - 2])))
           codeGenerator.genCodeLine ("         if ((jjbitVec" + m_nonAsciiMoveIndices[j - 2] + "[i1] & l1) != 0L)");
-        if (!allBitsSet (allBitVectors.get (m_nonAsciiMoveIndices[j - 1])))
+        if (!allBitsSet (s_allBitVectors.get (m_nonAsciiMoveIndices[j - 1])))
         {
           codeGenerator.genCodeLine ("            if ((jjbitVec" + m_nonAsciiMoveIndices[j - 1] + "[i2] & l2) == 0L)");
           codeGenerator.genCodeLine ("               return false;");
@@ -3008,8 +3009,8 @@ public class NfaState
     }
   }
 
-  static int [] [] kinds;
-  static int [] [] [] statesForState;
+  static int [] [] s_kinds;
+  static int [] [] [] s_statesForState;
 
   public static void dumpMoveNfa (final CodeGenerator codeGenerator)
   {
@@ -3019,10 +3020,10 @@ public class NfaState
     // boilerPlateDumped = true;
     int [] kindsForStates = null;
 
-    if (kinds == null)
+    if (s_kinds == null)
     {
-      kinds = new int [LexGenJava.maxLexStates] [];
-      statesForState = new int [LexGenJava.maxLexStates] [] [];
+      s_kinds = new int [LexGenJava.maxLexStates] [];
+      s_statesForState = new int [LexGenJava.maxLexStates] [] [];
     }
 
     _reArrange ();
@@ -3037,11 +3038,11 @@ public class NfaState
       if (kindsForStates == null)
       {
         kindsForStates = new int [s_generatedStates];
-        statesForState[LexGenJava.lexStateIndex] = new int [Math.max (s_generatedStates, s_dummyStateIndex + 1)] [];
+        s_statesForState[LexGenJava.lexStateIndex] = new int [Math.max (s_generatedStates, s_dummyStateIndex + 1)] [];
       }
 
       kindsForStates[temp.stateName] = temp.m_lookingFor;
-      statesForState[LexGenJava.lexStateIndex][temp.stateName] = temp.m_compositeStates;
+      s_statesForState[LexGenJava.lexStateIndex][temp.stateName] = temp.m_compositeStates;
 
       temp.generateNonAsciiMoves (codeGenerator);
     }
@@ -3052,13 +3053,13 @@ public class NfaState
       final int state = aEntry.getValue ().intValue ();
 
       if (state >= s_generatedStates)
-        statesForState[LexGenJava.lexStateIndex][state] = s_allNextStates.get (s);
+        s_statesForState[LexGenJava.lexStateIndex][state] = s_allNextStates.get (s);
     }
 
     if (s_stateSetsToFix.size () != 0)
       _fixStateSets ();
 
-    kinds[LexGenJava.lexStateIndex] = kindsForStates;
+    s_kinds[LexGenJava.lexStateIndex] = kindsForStates;
 
     switch (codeGenerator.getOutputLanguage ())
     {
@@ -3347,7 +3348,7 @@ public class NfaState
 
   public static void dumpStatesForStateCPP (final CodeGenerator codeGenerator)
   {
-    if (statesForState == null)
+    if (s_statesForState == null)
     {
       assert (false) : "This should never be null.";
       codeGenerator.genCodeLine ("null;");
@@ -3357,14 +3358,14 @@ public class NfaState
     codeGenerator.switchToStaticsFile ();
     for (int i = 0; i < LexGenJava.maxLexStates; i++)
     {
-      if (statesForState[i] == null)
+      if (s_statesForState[i] == null)
       {
         continue;
       }
 
-      for (int j = 0; j < statesForState[i].length; j++)
+      for (int j = 0; j < s_statesForState[i].length; j++)
       {
-        final int [] stateSet = statesForState[i][j];
+        final int [] stateSet = s_statesForState[i][j];
 
         codeGenerator.genCode ("const int stateSet_" + i + "_" + j + "[" + LexGenJava.stateSetSize + "] = ");
         if (stateSet == null)
@@ -3386,14 +3387,14 @@ public class NfaState
     for (int i = 0; i < LexGenJava.maxLexStates; i++)
     {
       codeGenerator.genCodeLine ("const int *stateSet_" + i + "[] = {");
-      if (statesForState[i] == null)
+      if (s_statesForState[i] == null)
       {
         codeGenerator.genCodeLine (" NULL, ");
         codeGenerator.genCodeLine ("};");
         continue;
       }
 
-      for (int j = 0; j < statesForState[i].length; j++)
+      for (int j = 0; j < s_statesForState[i].length; j++)
       {
         codeGenerator.genCode ("stateSet_" + i + "_" + j + ",");
       }
@@ -3414,7 +3415,7 @@ public class NfaState
   {
     codeGenerator.genCode ("protected static final int[][][] statesForState = ");
 
-    if (statesForState == null)
+    if (s_statesForState == null)
     {
       if (false)
         assert false : "This should never be null.";
@@ -3426,7 +3427,7 @@ public class NfaState
 
     for (int i = 0; i < LexGenJava.maxLexStates; i++)
     {
-      if (statesForState[i] == null)
+      if (s_statesForState[i] == null)
       {
         codeGenerator.genCodeLine (" {},");
         continue;
@@ -3434,9 +3435,9 @@ public class NfaState
 
       codeGenerator.genCodeLine (" {");
 
-      for (int j = 0; j < statesForState[i].length; j++)
+      for (int j = 0; j < s_statesForState[i].length; j++)
       {
-        final int [] stateSet = statesForState[i][j];
+        final int [] stateSet = s_statesForState[i][j];
 
         if (stateSet == null)
         {
@@ -3491,14 +3492,14 @@ public class NfaState
         throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
     }
 
-    if (kinds == null)
+    if (s_kinds == null)
     {
       codeGenerator.genCodeLine ("null;");
       return;
     }
     codeGenerator.genCodeLine ("{");
 
-    for (final int [] aKind : kinds)
+    for (final int [] aKind : s_kinds)
     {
       if (moreThanOne)
         codeGenerator.genCodeLine (",");
@@ -3540,30 +3541,30 @@ public class NfaState
     s_done = false;
     s_mark = null;
     s_stateDone = null;
-    s_allStates = new ArrayList <> ();
-    s_indexedAllStates = new ArrayList <> ();
-    s_nonAsciiTableForMethod = new ArrayList <> ();
-    s_equivStatesTable = new HashMap <> ();
-    s_allNextStates = new HashMap <> ();
-    s_lohiByteTab = new HashMap <> ();
-    s_stateNameForComposite = new HashMap <> ();
-    s_compositeStateTable = new HashMap <> ();
-    s_stateBlockTable = new HashMap <> ();
-    s_stateSetsToFix = new HashMap <> ();
-    allBitVectors = new ArrayList <> ();
-    tmpIndices = new int [512];
-    allBits = "{\n   0xffffffffffffffffL, " +
-              "0xffffffffffffffffL, " +
-              "0xffffffffffffffffL, " +
-              "0xffffffffffffffffL\n};";
-    tableToDump = new HashMap <> ();
-    orderedStateSet = new ArrayList <> ();
-    lastIndex = 0;
+    s_allStates.clear ();
+    s_indexedAllStates.clear ();
+    s_nonAsciiTableForMethod.clear ();
+    s_equivStatesTable.clear ();
+    s_allNextStates.clear ();
+    s_lohiByteTab.clear ();
+    s_stateNameForComposite.clear ();
+    s_compositeStateTable.clear ();
+    s_stateBlockTable.clear ();
+    s_stateSetsToFix.clear ();
+    s_allBitVectors.clear ();
+    s_tmpIndices = new int [512];
+    s_allBits = "{\n   0xffffffffffffffffL, " +
+                "0xffffffffffffffffL, " +
+                "0xffffffffffffffffL, " +
+                "0xffffffffffffffffL\n};";
+    s_tableToDump.clear ();
+    s_orderedStateSet.clear ();
+    s_lastIndex = 0;
     // boilerPlateDumped = false;
     s_jjCheckNAddStatesUnaryNeeded = false;
     s_jjCheckNAddStatesDualNeeded = false;
-    kinds = null;
-    statesForState = null;
+    s_kinds = null;
+    s_statesForState = null;
   }
 
   private static final Map <Integer, NfaState> s_initialStates = new HashMap <> ();

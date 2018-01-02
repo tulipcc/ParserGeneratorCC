@@ -37,10 +37,8 @@ import java.util.Set;
  * expansion unit, then a sequence is created with this node as the first
  * element, and the expansion unit as the second and last element.
  */
-
 public class Lookahead extends Expansion
 {
-
   /**
    * Contains the list of tokens that make up the semantic lookahead if any. If
    * this node represents a different kind of lookahead (other than semantic
@@ -49,13 +47,13 @@ public class Lookahead extends Expansion
    * lookahead. In this case, the following fields "amount" and "la_expansion"
    * are ignored.
    */
-  private final List <Token> action_tokens = new ArrayList <> ();
+  private final List <Token> m_action_tokens = new ArrayList <> ();
 
   /**
    * The lookahead amount. Its default value essentially gives us infinite
    * lookahead.
    */
-  private int amount = Integer.MAX_VALUE;
+  private int m_amount = Integer.MAX_VALUE;
 
   /**
    * The expansion used to determine whether or not to choose the corresponding
@@ -63,21 +61,21 @@ public class Lookahead extends Expansion
    * until a complete match for it is found. Usually, this is the same as the
    * expansion to be parsed.
    */
-  private Expansion la_expansion;
+  private Expansion m_la_expansion;
 
   /**
    * Is set to true if this is an explicit lookahead specification.
    */
-  private boolean isExplicit;
+  private boolean m_bIsExplicit;
 
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final StringBuilder sb = super.dump (indent, alreadyDumped).append (isExplicit ? " explicit" : " implicit");
+    final StringBuilder sb = super.dump (indent, alreadyDumped).append (m_bIsExplicit ? " explicit" : " implicit");
     if (alreadyDumped.contains (this))
       return sb;
     alreadyDumped.add (this);
-    sb.append (eol).append (la_expansion.dump (indent + 1, alreadyDumped));
+    sb.append (eol).append (m_la_expansion.dump (indent + 1, alreadyDumped));
     return sb;
   }
 
@@ -86,7 +84,7 @@ public class Lookahead extends Expansion
    */
   public List <Token> getActionTokens ()
   {
-    return action_tokens;
+    return m_action_tokens;
   }
 
   /**
@@ -95,7 +93,7 @@ public class Lookahead extends Expansion
    */
   public void setAmount (final int amount)
   {
-    this.amount = amount;
+    this.m_amount = amount;
   }
 
   /**
@@ -103,7 +101,7 @@ public class Lookahead extends Expansion
    */
   public int getAmount ()
   {
-    return amount;
+    return m_amount;
   }
 
   /**
@@ -112,7 +110,7 @@ public class Lookahead extends Expansion
    */
   public void setLaExpansion (final Expansion la_expansion)
   {
-    this.la_expansion = la_expansion;
+    this.m_la_expansion = la_expansion;
   }
 
   /**
@@ -120,7 +118,7 @@ public class Lookahead extends Expansion
    */
   public Expansion getLaExpansion ()
   {
-    return la_expansion;
+    return m_la_expansion;
   }
 
   /**
@@ -129,7 +127,7 @@ public class Lookahead extends Expansion
    */
   public void setExplicit (final boolean isExplicit)
   {
-    this.isExplicit = isExplicit;
+    this.m_bIsExplicit = isExplicit;
   }
 
   /**
@@ -137,6 +135,6 @@ public class Lookahead extends Expansion
    */
   public boolean isExplicit ()
   {
-    return isExplicit;
+    return m_bIsExplicit;
   }
 }
