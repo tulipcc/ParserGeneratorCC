@@ -58,7 +58,7 @@ public class FilesCpp extends JavaCCGlobals
    */
   static double getVersion (final String fileName)
   {
-    final String commentHeader = "/* " + getIdString (m_toolName, fileName) + " Version ";
+    final String commentHeader = "/* " + getIdString (s_toolName, fileName) + " Version ";
     final File file = new File (Options.getOutputDirectory (), replaceBackslash (fileName));
 
     if (!file.exists ())

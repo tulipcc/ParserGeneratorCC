@@ -607,11 +607,11 @@ void javacc_input() :
 	  parser_class_name = id1;
 
           if (!isJavaLanguage()) {
-            JavaCCGlobals.otherLanguageDeclTokenBeg = getToken(1);
+            JavaCCGlobals.s_otherLanguageDeclTokenBeg = getToken(1);
             while(getToken(1).kind != _PARSER_END) {
               getNextToken();
             }
-            JavaCCGlobals.otherLanguageDeclTokenEnd = getToken(1);
+            JavaCCGlobals.s_otherLanguageDeclTokenEnd = getToken(1);
           }
 	}
     CompilationUnit()
@@ -728,7 +728,7 @@ void production() :
 
 void javacode_production() :
 	{
-	  JavaCodeProduction p = new JavaCodeProduction();
+	  CodeProductionJava p = new CodeProductionJava();
 	  String lhs;
 	  Token t = getToken(1);
 	  p.setFirstToken(t);
@@ -770,7 +770,7 @@ void javacode_production() :
 
 void cppcode_production() :
 	{
-	  CppCodeProduction p = new CppCodeProduction();
+	  CodeProductionCpp p = new CodeProductionCpp();
 	  String lhs;
 	  Token t = getToken(1);
 	  p.setFirstToken(t);

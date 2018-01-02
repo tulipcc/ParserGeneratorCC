@@ -71,7 +71,7 @@ public class OutputFile implements AutoCloseable
 
   TrapClosePrintWriter m_pw;
   DigestOutputStream dos;
-  String m_toolName = JavaCCGlobals.m_toolName;
+  String m_toolName = JavaCCGlobals.s_toolName;
   final File m_file;
   final String m_compatibleVersion;
   final String [] m_options;

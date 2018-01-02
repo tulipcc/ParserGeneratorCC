@@ -43,8 +43,8 @@ public class JJDoc extends JJDocGlobals
   {
     s_generator = getGenerator ();
     s_generator.documentStart ();
-    emitTokenProductions (s_generator, rexprlist);
-    emitNormalProductions (s_generator, bnfproductions);
+    emitTokenProductions (s_generator, s_rexprlist);
+    emitNormalProductions (s_generator, s_bnfproductions);
     s_generator.documentEnd ();
   }
 
@@ -69,8 +69,8 @@ public class JJDoc extends JJDocGlobals
     String s = "";
     if (tok != null)
     {
-      cline = tok.beginLine;
-      ccol = tok.beginColumn;
+      s_cline = tok.beginLine;
+      s_ccol = tok.beginColumn;
       while (tok != null)
       {
         s += printTokenOnly (tok);
@@ -194,9 +194,9 @@ public class JJDoc extends JJDocGlobals
           gen.cppcode ((CodeProductionCpp) np);
         }
         else
-          if (np instanceof JavaCodeProduction)
+          if (np instanceof CodeProductionJava)
           {
-            gen.javacode ((JavaCodeProduction) np);
+            gen.javacode ((CodeProductionJava) np);
           }
     }
     gen.nonterminalsEnd ();

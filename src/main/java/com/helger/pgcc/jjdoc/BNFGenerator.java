@@ -36,7 +36,7 @@ import java.util.Map;
 
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.Expansion;
-import com.helger.pgcc.parser.JavaCodeProduction;
+import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.NonTerminal;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.RCharacterList;
@@ -152,7 +152,7 @@ public class BNFGenerator implements IDocGenerator
   public void tokensEnd ()
   {}
 
-  public void javacode (final JavaCodeProduction jp)
+  public void javacode (final CodeProductionJava jp)
   {}
 
   public void cppcode (final CodeProductionCpp cp)

@@ -309,7 +309,7 @@ public class Main
           // Must always create the lexer object even if not building a parser.
           new LexGenJava ().start ();
 
-          Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.cu_name);
+          Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.s_cu_name);
           OtherFilesGen.start (isJavaModern);
           break;
         case CPP:
@@ -322,7 +322,7 @@ public class Main
           {
             new LexGenCpp ().start ();
           }
-          Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.cu_name);
+          Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.s_cu_name);
           OtherFilesGenCPP.start ();
           break;
         default:

@@ -189,7 +189,7 @@ public class FilesJava extends JavaCCGlobals
    */
   static double getVersion (final String fileName)
   {
-    final String commentHeader = "/* " + getIdString (m_toolName, fileName) + " Version ";
+    final String commentHeader = "/* " + getIdString (s_toolName, fileName) + " Version ";
     final File file = new File (Options.getOutputDirectory (), replaceBackslash (fileName));
 
     if (!file.exists ())
@@ -260,17 +260,17 @@ public class FilesJava extends JavaCCGlobals
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
           {
-            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              cline = (cu_to_insertion_point_1.get (0)).beginLine;
-              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
+              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+                printToken (s_cu_to_insertion_point_1.get (j), ostr);
               }
               ostr.println ("");
               ostr.println ("");
@@ -311,17 +311,17 @@ public class FilesJava extends JavaCCGlobals
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
           {
-            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              cline = (cu_to_insertion_point_1.get (0)).beginLine;
-              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
+              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
               ostr.println ("");
               ostr.println ("");
@@ -362,17 +362,17 @@ public class FilesJava extends JavaCCGlobals
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
           {
-            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              cline = (cu_to_insertion_point_1.get (0)).beginLine;
-              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
+              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
               ostr.println ("");
               ostr.println ("");
@@ -418,17 +418,17 @@ public class FilesJava extends JavaCCGlobals
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
           {
-            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              cline = (cu_to_insertion_point_1.get (0)).beginLine;
-              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
+              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
               ostr.println ("");
               ostr.println ("");
@@ -464,17 +464,17 @@ public class FilesJava extends JavaCCGlobals
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
           {
-            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              cline = (cu_to_insertion_point_1.get (0)).beginLine;
-              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
+              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
               ostr.println ("");
               ostr.println ("");
@@ -513,17 +513,17 @@ public class FilesJava extends JavaCCGlobals
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
           {
-            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              cline = (cu_to_insertion_point_1.get (0)).beginLine;
-              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
+              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
               ostr.println ("");
               ostr.println ("");
@@ -562,17 +562,17 @@ public class FilesJava extends JavaCCGlobals
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
           {
-            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              cline = (cu_to_insertion_point_1.get (0)).beginLine;
-              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
+              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
               ostr.println ("");
               ostr.println ("");
@@ -609,17 +609,17 @@ public class FilesJava extends JavaCCGlobals
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
-          for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
           {
-            if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              cline = (cu_to_insertion_point_1.get (0)).beginLine;
-              ccol = (cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
+              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((cu_to_insertion_point_1.get (j)), ostr);
+                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
               ostr.println ("");
               ostr.println ("");

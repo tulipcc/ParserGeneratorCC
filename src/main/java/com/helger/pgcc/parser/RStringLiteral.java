@@ -1118,15 +1118,15 @@ public class RStringLiteral extends RegularExpression
                     LexGenJava.actions[kind] == null &&
                     LexGenJava.newLexState[kind] == null)
                 {
-                  LexGenJava.AddCharToSkip (c, kind);
+                  LexGenJava.addCharToSkip (c, kind);
 
                   if (Options.getIgnoreCase ())
                   {
                     if (c != Character.toUpperCase (c))
-                      LexGenJava.AddCharToSkip (Character.toUpperCase (c), kind);
+                      LexGenJava.addCharToSkip (Character.toUpperCase (c), kind);
 
                     if (c != Character.toLowerCase (c))
-                      LexGenJava.AddCharToSkip (Character.toLowerCase (c), kind);
+                      LexGenJava.addCharToSkip (Character.toLowerCase (c), kind);
                   }
                   continue CaseLoop;
                 }

@@ -51,7 +51,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
   public static void start (final boolean isJavaModern) throws MetaParseException
   {
     final IJavaResourceTemplateLocations templateLoc = isJavaModern ? FilesJava.RESOURCES_JAVA_MODERN
-                                                                   : FilesJava.RESOURCES_JAVA_CLASSIC;
+                                                                    : FilesJava.RESOURCES_JAVA_CLASSIC;
 
     Token t = null;
 
@@ -107,29 +107,29 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
     try
     {
       ostr = new PrintWriter (new BufferedWriter (new FileWriter (new File (Options.getOutputDirectory (),
-                                                                            cu_name + CONSTANTS_FILENAME_SUFFIX)),
+                                                                            s_cu_name + CONSTANTS_FILENAME_SUFFIX)),
                                                   8192));
     }
     catch (final IOException e)
     {
-      JavaCCErrors.semantic_error ("Could not open file " + cu_name + "Constants.java for writing.");
+      JavaCCErrors.semantic_error ("Could not open file " + s_cu_name + "Constants.java for writing.");
       throw new Error ();
     }
 
     final List <String> tn = new ArrayList <> (s_toolNames);
-    tn.add (m_toolName);
-    ostr.println ("/* " + getIdString (tn, cu_name + CONSTANTS_FILENAME_SUFFIX) + " */");
+    tn.add (s_toolName);
+    ostr.println ("/* " + getIdString (tn, s_cu_name + CONSTANTS_FILENAME_SUFFIX) + " */");
 
-    if (cu_to_insertion_point_1.size () != 0 && cu_to_insertion_point_1.get (0).kind == PACKAGE)
+    if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
     {
-      for (int i = 1; i < cu_to_insertion_point_1.size (); i++)
+      for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
       {
-        if (cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+        if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
         {
-          printTokenSetup ((cu_to_insertion_point_1.get (0)));
+          printTokenSetup ((s_cu_to_insertion_point_1.get (0)));
           for (int j = 0; j <= i; j++)
           {
-            t = (cu_to_insertion_point_1.get (j));
+            t = (s_cu_to_insertion_point_1.get (j));
             printToken (t, ostr);
           }
           printTrailingComments (t);
@@ -149,13 +149,13 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
     {
       ostr.print ("public ");
     }
-    ostr.println ("interface " + cu_name + "Constants {");
+    ostr.println ("interface " + s_cu_name + "Constants {");
     ostr.println ("");
 
     RegularExpression re;
     ostr.println ("  /** End of File. */");
     ostr.println ("  int EOF = 0;");
-    for (final java.util.Iterator <RegularExpression> it = ordered_named_tokens.iterator (); it.hasNext ();)
+    for (final java.util.Iterator <RegularExpression> it = s_ordered_named_tokens.iterator (); it.hasNext ();)
     {
       re = it.next ();
       ostr.println ("  /** RegularExpression Id. */");
@@ -175,7 +175,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
     ostr.println ("  String[] tokenImage = {");
     ostr.println ("    \"<EOF>\",");
 
-    for (final TokenProduction aTokenProduction : rexprlist)
+    for (final TokenProduction aTokenProduction : s_rexprlist)
     {
       final TokenProduction tp = (aTokenProduction);
       final List <RegExprSpec> respecs = tp.respecs;

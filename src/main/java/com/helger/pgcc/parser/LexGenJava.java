@@ -31,17 +31,17 @@
 
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.actForEof;
-import static com.helger.pgcc.parser.JavaCCGlobals.cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.cu_to_insertion_point_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_actForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
-import static com.helger.pgcc.parser.JavaCCGlobals.lexstate_I2S;
-import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
-import static com.helger.pgcc.parser.JavaCCGlobals.nextStateForEof;
-import static com.helger.pgcc.parser.JavaCCGlobals.rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_nextStateForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
-import static com.helger.pgcc.parser.JavaCCGlobals.token_mgr_decls;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,7 +120,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     int i, j;
 
     final List <String> tn = new ArrayList <> (s_toolNames);
-    tn.add (m_toolName);
+    tn.add (s_toolName);
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
     genCodeLine ("/* " + getIdString (tn, tokMgrClassName + getFileExtension ()) + " */");
@@ -129,15 +129,15 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     i = 1;
     for (;;)
     {
-      if (cu_to_insertion_point_1.size () <= l)
+      if (s_cu_to_insertion_point_1.size () <= l)
         break;
 
-      kind = cu_to_insertion_point_1.get (l).kind;
+      kind = s_cu_to_insertion_point_1.get (l).kind;
       if (kind == PACKAGE || kind == IMPORT)
       {
-        for (; i < cu_to_insertion_point_1.size (); i++)
+        for (; i < s_cu_to_insertion_point_1.size (); i++)
         {
-          kind = cu_to_insertion_point_1.get (i).kind;
+          kind = s_cu_to_insertion_point_1.get (i).kind;
           if (kind == SEMICOLON ||
               kind == ABSTRACT ||
               kind == FINAL ||
@@ -145,14 +145,14 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
               kind == CLASS ||
               kind == INTERFACE)
           {
-            m_cline = (cu_to_insertion_point_1.get (l)).beginLine;
-            m_ccol = (cu_to_insertion_point_1.get (l)).beginColumn;
+            m_cline = (s_cu_to_insertion_point_1.get (l)).beginLine;
+            m_ccol = (s_cu_to_insertion_point_1.get (l)).beginColumn;
             for (j = l; j < i; j++)
             {
-              printToken ((cu_to_insertion_point_1.get (j)));
+              printToken ((s_cu_to_insertion_point_1.get (j)));
             }
             if (kind == SEMICOLON)
-              printToken ((cu_to_insertion_point_1.get (j)));
+              printToken ((s_cu_to_insertion_point_1.get (j)));
             genCodeLine ("");
             break;
           }
@@ -174,21 +174,21 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     // cu_name + "Constants");
     // String superClass =
     // Options.stringValue(Options.USEROPTION__TOKEN_MANAGER_SUPER_CLASS);
-    genClassStart (null, tokMgrClassName, new String [] {}, new String [] { cu_name + "Constants" });
+    genClassStart (null, tokMgrClassName, new String [] {}, new String [] { s_cu_name + "Constants" });
     // genCodeLine("{"); // }
 
-    if (token_mgr_decls != null && token_mgr_decls.size () > 0)
+    if (s_token_mgr_decls != null && s_token_mgr_decls.size () > 0)
     {
-      Token t = token_mgr_decls.get (0);
+      Token t = s_token_mgr_decls.get (0);
       boolean commonTokenActionSeen = false;
       final boolean commonTokenActionNeeded = Options.getCommonTokenAction ();
 
-      printTokenSetup (token_mgr_decls.get (0));
+      printTokenSetup (s_token_mgr_decls.get (0));
       m_ccol = 1;
 
-      for (j = 0; j < token_mgr_decls.size (); j++)
+      for (j = 0; j < s_token_mgr_decls.size (); j++)
       {
-        t = token_mgr_decls.get (j);
+        t = s_token_mgr_decls.get (j);
         if (t.kind == IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
           commonTokenActionSeen = t.image.equals ("CommonTokenAction");
 
@@ -225,7 +225,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     if (Options.getTokenManagerUsesParser ())
     {
       genCodeLine ("");
-      genCodeLine ("  public " + cu_name + " parser = null;");
+      genCodeLine ("  public " + s_cu_name + " parser = null;");
     }
   }
 
@@ -250,7 +250,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     for (final int l : maxLongsReqd)
       x = Math.max (x, l);
     options.put ("maxLongs", x);
-    options.put ("cu_name", cu_name);
+    options.put ("cu_name", s_cu_name);
 
     // options.put("", .valueOf(maxOrdinal));
 
@@ -279,18 +279,18 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     genCode (sw.toString ());
   }
 
-  void DumpDebugMethods () throws IOException
+  void dumpDebugMethods () throws IOException
   {
     writeTemplate (DUMP_DEBUG_METHODS_TEMPLATE_RESOURCE_URL);
   }
 
-  static void BuildLexStatesTable ()
+  static void buildLexStatesTable ()
   {
-    final Iterator <TokenProduction> it = rexprlist.iterator ();
+    final Iterator <TokenProduction> it = s_rexprlist.iterator ();
     TokenProduction tp;
     int i;
 
-    final String [] tmpLexStateName = new String [lexstate_I2S.size ()];
+    final String [] tmpLexStateName = new String [s_lexstate_I2S.size ()];
     while (it.hasNext ())
     {
       tp = it.next ();
@@ -324,8 +324,8 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     toToken = new long [maxOrdinal / 64 + 1];
     toToken[0] = 1L;
     actions = new Action [maxOrdinal];
-    actions[0] = actForEof;
-    hasTokenActions = actForEof != null;
+    actions[0] = s_actForEof;
+    hasTokenActions = s_actForEof != null;
     initStates = new Hashtable ();
     canMatchAnyChar = new int [maxLexStates];
     canLoop = new boolean [maxLexStates];
@@ -342,7 +342,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     maxLongsReqd = new int [maxLexStates];
     initMatch = new int [maxLexStates];
     newLexState = new String [maxOrdinal];
-    newLexState[0] = nextStateForEof;
+    newLexState[0] = s_nextStateForEof;
     hasEmptyMatch = false;
     lexStates = new int [maxOrdinal];
     ignoreCase = new boolean [maxOrdinal];
@@ -351,7 +351,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     canReachOnMore = new boolean [maxLexStates];
   }
 
-  static int GetIndex (final String name)
+  static int getIndex (final String name)
   {
     for (int i = 0; i < lexStateName.length; i++)
       if (lexStateName[i] != null && lexStateName[i].equals (name))
@@ -360,7 +360,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     throw new Error (); // Should never come here
   }
 
-  public static void AddCharToSkip (final char c, final int kind)
+  public static void addCharToSkip (final char c, final int kind)
   {
     singlesToSkip[lexStateIndex].addChar (c);
     singlesToSkip[lexStateIndex].kind = kind;
@@ -379,11 +379,11 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     TokenProduction tp;
 
     staticString = (Options.getStatic () ? "static " : "");
-    tokMgrClassName = cu_name + "TokenManager";
+    tokMgrClassName = s_cu_name + "TokenManager";
 
     if (!generateDataOnly && codeGeneratorClass == null)
       printClassHead ();
-    BuildLexStatesTable ();
+    buildLexStatesTable ();
 
     e = allTpsForState.keys ();
 
@@ -397,7 +397,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
       final String key = (String) e.nextElement ();
 
-      lexStateIndex = GetIndex (key);
+      lexStateIndex = getIndex (key);
       lexStateSuffix = "_" + lexStateIndex;
       final List <TokenProduction> allTps = (List <TokenProduction>) allTpsForState.get (key);
       initialState = new NfaState ();
@@ -498,7 +498,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
               toMore[curRE.m_ordinal / 64] |= 1L << (curRE.m_ordinal % 64);
 
               if (newLexState[curRE.m_ordinal] != null)
-                canReachOnMore[GetIndex (newLexState[curRE.m_ordinal])] = true;
+                canReachOnMore[getIndex (newLexState[curRE.m_ordinal])] = true;
               else
                 canReachOnMore[lexStateIndex] = true;
 
@@ -571,21 +571,21 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     for (final RChoice aItem : choices)
       aItem.CheckUnmatchability ();
 
-    CheckEmptyStringMatch ();
+    checkEmptyStringMatch ();
 
     if (generateDataOnly || codeGeneratorClass != null)
     {
-      tokenizerData.setParserName (cu_name);
+      tokenizerData.setParserName (s_cu_name);
       NfaState.buildTokenizerData (tokenizerData);
       RStringLiteral.BuildTokenizerData (tokenizerData);
       final int [] newLexStateIndices = new int [maxOrdinal];
       final StringBuilder tokenMgrDecls = new StringBuilder ();
-      if (token_mgr_decls != null && token_mgr_decls.size () > 0)
+      if (s_token_mgr_decls != null && s_token_mgr_decls.size () > 0)
       {
-        final Token t = token_mgr_decls.get (0);
-        for (int j = 0; j < token_mgr_decls.size (); j++)
+        final Token t = s_token_mgr_decls.get (0);
+        for (int j = 0; j < s_token_mgr_decls.size (); j++)
         {
-          tokenMgrDecls.append (token_mgr_decls.get (j).image + " ");
+          tokenMgrDecls.append (s_token_mgr_decls.get (j).image + " ");
         }
       }
       tokenizerData.setDecls (tokenMgrDecls.toString ());
@@ -598,7 +598,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         }
         else
         {
-          newLexStateIndices[i] = GetIndex (newLexState[i]);
+          newLexStateIndices[i] = getIndex (newLexState[i]);
         }
         // For java, we have this but for other languages, eventually we will
         // simply have a string.
@@ -639,15 +639,15 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     }
 
     RStringLiteral.dumpStrLiteralImages (this);
-    DumpFillToken ();
+    dumpFillToken ();
     NfaState.dumpStateSets (this);
     NfaState.dumpNonAsciiMoveMethods (this);
-    DumpGetNextToken ();
+    dumpGetNextToken ();
 
     if (Options.getDebugTokenManager ())
     {
       NfaState.dumpStatesForKind (this);
-      DumpDebugMethods ();
+      dumpDebugMethods ();
     }
 
     if (hasLoop)
@@ -664,9 +664,9 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
                    "];");
     }
 
-    DumpSkipActions ();
-    DumpMoreActions ();
-    DumpTokenActions ();
+    dumpSkipActions ();
+    dumpMoreActions ();
+    dumpTokenActions ();
 
     NfaState.printBoilerPlateJava (this);
 
@@ -693,7 +693,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
                    "generatedStates",
                    totalNumStates);
 
-    DumpStaticVarDeclarations (charStreamName);
+    _dumpStaticVarDeclarations (charStreamName);
     genCodeLine (/* { */ "}");
 
     // TODO :: CBA -- Require Unification of output language specific processing
@@ -706,7 +706,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     }
   }
 
-  static void CheckEmptyStringMatch ()
+  static void checkEmptyStringMatch ()
   {
     int i, j, k, len;
     final boolean [] seen = new boolean [maxLexStates];
@@ -733,7 +733,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       while (newLexState[initMatch[j]] != null)
       {
         cycle += newLexState[initMatch[j]];
-        if (seen[j = GetIndex (newLexState[initMatch[j]])])
+        if (seen[j = getIndex (newLexState[initMatch[j]])])
           break;
 
         cycle += "-->";
@@ -784,7 +784,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     }
   }
 
-  private void DumpStaticVarDeclarations (final String charStreamName) throws IOException
+  private void _dumpStaticVarDeclarations (final String charStreamName) throws IOException
   {
     int i;
 
@@ -808,7 +808,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
         if (newLexState[i] == null)
           genCode ("-1, ");
         else
-          genCode (GetIndex (newLexState[i]) + ", ");
+          genCode (getIndex (newLexState[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -875,7 +875,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
   }
 
   // Assumes l != 0L
-  static char MaxChar (final long l)
+  static char maxChar (final long l)
   {
     for (int i = 64; i-- > 0;)
       if ((l & (1L << i)) != 0L)
@@ -884,7 +884,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     return 0xffff;
   }
 
-  void DumpFillToken ()
+  void dumpFillToken ()
   {
     final double tokenVersion = FilesJava.getVersion ("Token.java");
     final boolean hasBinaryNewToken = tokenVersion > 4.09;
@@ -975,7 +975,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     genCodeLine ("}");
   }
 
-  void DumpGetNextToken ()
+  void dumpGetNextToken ()
   {
     int i;
 
@@ -1016,7 +1016,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     if (hasSpecial)
       genCodeLine ("      matchedToken.specialToken = specialToken;");
 
-    if (nextStateForEof != null || actForEof != null)
+    if (s_nextStateForEof != null || s_actForEof != null)
       genCodeLine ("      TokenLexicalActions(matchedToken);");
 
     if (Options.getCommonTokenAction ())
@@ -1082,7 +1082,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
           {
             genCodeLine (prefix +
                          "   while (curChar <= " +
-                         (int) MaxChar (singlesToSkip[i].asciiMoves[0]) +
+                         (int) maxChar (singlesToSkip[i].asciiMoves[0]) +
                          " && (0x" +
                          Long.toHexString (singlesToSkip[i].asciiMoves[0]) +
                          "L & (1L << curChar)) != 0L)");
@@ -1092,7 +1092,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
             {
               genCodeLine (prefix +
                            "   while (curChar > 63 && curChar <= " +
-                           (MaxChar (singlesToSkip[i].asciiMoves[1]) + 64) +
+                           (maxChar (singlesToSkip[i].asciiMoves[1]) + 64) +
                            " && (0x" +
                            Long.toHexString (singlesToSkip[i].asciiMoves[1]) +
                            "L & (1L << (curChar & 077))) != 0L)");
@@ -1371,7 +1371,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     genCodeLine ("");
   }
 
-  public void DumpSkipActions ()
+  public void dumpSkipActions ()
   {
     Action act;
 
@@ -1447,7 +1447,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     genCodeLine ("}");
   }
 
-  public void DumpMoreActions ()
+  public void dumpMoreActions ()
   {
     Action act;
 
@@ -1524,7 +1524,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     genCodeLine ("}");
   }
 
-  public void DumpTokenActions ()
+  public void dumpTokenActions ()
   {
     Action act;
     int i;

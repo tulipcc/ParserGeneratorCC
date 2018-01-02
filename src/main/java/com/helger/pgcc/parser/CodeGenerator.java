@@ -4,7 +4,7 @@
 package com.helger.pgcc.parser;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.addUnicodeEscapes;
-import static com.helger.pgcc.parser.JavaCCGlobals.cu_name;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
 
 import java.io.File;
@@ -140,7 +140,7 @@ public class CodeGenerator
         m_mainBuffer.insert (0, "#include \"SimpleNode.h\"\n");
       }
       if (Options.getTokenManagerUsesParser ())
-        m_mainBuffer.insert (0, "#include \"" + cu_name + ".h\"\n");
+        m_mainBuffer.insert (0, "#include \"" + s_cu_name + ".h\"\n");
       m_mainBuffer.insert (0, "#include \"TokenMgrError.h\"\n");
       m_mainBuffer.insert (0, "#include \"" + incfileName + "\"\n");
       m_includeBuffer.append ("#endif\n");

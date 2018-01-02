@@ -31,15 +31,15 @@
 
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.actForEof;
-import static com.helger.pgcc.parser.JavaCCGlobals.cu_name;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_actForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
-import static com.helger.pgcc.parser.JavaCCGlobals.lexstate_I2S;
-import static com.helger.pgcc.parser.JavaCCGlobals.m_toolName;
-import static com.helger.pgcc.parser.JavaCCGlobals.nextStateForEof;
-import static com.helger.pgcc.parser.JavaCCGlobals.rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_nextStateForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
-import static com.helger.pgcc.parser.JavaCCGlobals.token_mgr_decls;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     int i, j;
 
     final List <String> tn = new ArrayList <> (s_toolNames);
-    tn.add (m_toolName);
+    tn.add (s_toolName);
 
     switchToStaticsFile ();
 
@@ -73,7 +73,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     genCodeLine ("#include \"Token.h\"");
     genCodeLine ("#include \"ErrorHandler.h\"");
     genCodeLine ("#include \"TokenManager.h\"");
-    genCodeLine ("#include \"" + cu_name + "Constants.h\"");
+    genCodeLine ("#include \"" + s_cu_name + "Constants.h\"");
 
     if (Options.stringValue (Options.USEROPTION__CPP_TOKEN_MANAGER_INCLUDES).length () > 0)
     {
@@ -87,7 +87,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       genCodeLine ("namespace " + Options.stringValue ("NAMESPACE_OPEN"));
     }
 
-    genCodeLine ("class " + cu_name + ";");
+    genCodeLine ("class " + s_cu_name + ";");
 
     final int l = 0, kind;
     i = 1;
@@ -111,24 +111,24 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
                    new String [] {},
                    new String [] { "public TokenManager" + (superClass == null ? "" : ", public " + superClass) });
 
-    if (token_mgr_decls != null && token_mgr_decls.size () > 0)
+    if (s_token_mgr_decls != null && s_token_mgr_decls.size () > 0)
     {
-      Token t = token_mgr_decls.get (0);
+      Token t = s_token_mgr_decls.get (0);
       boolean commonTokenActionSeen = false;
       final boolean commonTokenActionNeeded = Options.getCommonTokenAction ();
 
-      printTokenSetup (token_mgr_decls.get (0));
+      printTokenSetup (s_token_mgr_decls.get (0));
       m_ccol = 1;
 
       switchToMainFile ();
-      for (j = 0; j < token_mgr_decls.size (); j++)
+      for (j = 0; j < s_token_mgr_decls.size (); j++)
       {
-        t = token_mgr_decls.get (j);
+        t = s_token_mgr_decls.get (j);
         if (t.kind == IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
         {
           commonTokenActionSeen = t.image.equals ("CommonTokenAction");
           if (commonTokenActionSeen)
-            t.image = cu_name + "TokenManager::" + t.image;
+            t.image = s_cu_name + "TokenManager::" + t.image;
         }
 
         printToken (t);
@@ -140,7 +140,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       if (Options.getTokenManagerUsesParser ())
       {
         genCodeLine ("  void setParser(void* parser) {");
-        genCodeLine ("      this->parser = (" + cu_name + "*) parser;");
+        genCodeLine ("      this->parser = (" + s_cu_name + "*) parser;");
         genCodeLine ("  }");
       }
       genCodeLine ("");
@@ -176,24 +176,24 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     {
       genCodeLine ("");
       genCodeLine ("private:");
-      genCodeLine ("  " + cu_name + "* parser = nullptr;");
+      genCodeLine ("  " + s_cu_name + "* parser = nullptr;");
     }
     switchToMainFile ();
   }
 
   @Override
-  void DumpDebugMethods () throws IOException
+  void dumpDebugMethods () throws IOException
   {
     writeTemplate ("/templates/cpp/DumpDebugMethods.template", "maxOrdinal", maxOrdinal, "stateSetSize", stateSetSize);
   }
 
   static void BuildLexStatesTable ()
   {
-    final Iterator <TokenProduction> it = rexprlist.iterator ();
+    final Iterator <TokenProduction> it = s_rexprlist.iterator ();
     TokenProduction tp;
     int i;
 
-    final String [] tmpLexStateName = new String [lexstate_I2S.size ()];
+    final String [] tmpLexStateName = new String [s_lexstate_I2S.size ()];
     while (it.hasNext ())
     {
       tp = it.next ();
@@ -227,8 +227,8 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     toToken = new long [maxOrdinal / 64 + 1];
     toToken[0] = 1L;
     actions = new Action [maxOrdinal];
-    actions[0] = actForEof;
-    hasTokenActions = actForEof != null;
+    actions[0] = s_actForEof;
+    hasTokenActions = s_actForEof != null;
     initStates = new Hashtable ();
     canMatchAnyChar = new int [maxLexStates];
     canLoop = new boolean [maxLexStates];
@@ -245,7 +245,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     maxLongsReqd = new int [maxLexStates];
     initMatch = new int [maxLexStates];
     newLexState = new String [maxOrdinal];
-    newLexState[0] = nextStateForEof;
+    newLexState[0] = s_nextStateForEof;
     hasEmptyMatch = false;
     lexStates = new int [maxOrdinal];
     ignoreCase = new boolean [maxOrdinal];
@@ -280,7 +280,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     TokenProduction tp;
 
     staticString = (Options.getStatic () ? "static " : "");
-    tokMgrClassName = cu_name + "TokenManager";
+    tokMgrClassName = s_cu_name + "TokenManager";
 
     printClassHead ();
     BuildLexStatesTable ();
@@ -459,16 +459,16 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
       aItem.CheckUnmatchability ();
 
     NfaState.dumpStateSets (this);
-    CheckEmptyStringMatch ();
+    checkEmptyStringMatch ();
     NfaState.dumpNonAsciiMoveMethods (this);
     RStringLiteral.dumpStrLiteralImages (this);
-    DumpFillToken ();
-    DumpGetNextToken ();
+    dumpFillToken ();
+    dumpGetNextToken ();
 
     if (Options.getDebugTokenManager ())
     {
       NfaState.dumpStatesForKind (this);
-      DumpDebugMethods ();
+      dumpDebugMethods ();
     }
 
     if (hasLoop)
@@ -481,11 +481,11 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     }
 
     if (hasSkipActions)
-      DumpSkipActions ();
+      dumpSkipActions ();
     if (hasMoreActions)
-      DumpMoreActions ();
+      dumpMoreActions ();
     if (hasTokenActions)
-      DumpTokenActions ();
+      dumpTokenActions ();
 
     NfaState.printBoilerPlateCPP (this);
 
@@ -493,7 +493,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
                    "charStreamName",
                    "CharStream",
                    "parserClassName",
-                   cu_name,
+                   s_cu_name,
                    "defaultLexState",
                    "defaultLexState",
                    "lexStateNameLength",
@@ -618,7 +618,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
   }
 
   @Override
-  void DumpFillToken ()
+  void dumpFillToken ()
   {
     final double tokenVersion = FilesJava.getVersion ("Token.java");
     final boolean hasBinaryNewToken = tokenVersion > 4.09;
@@ -719,7 +719,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
   }
 
   @Override
-  void DumpGetNextToken ()
+  void dumpGetNextToken ()
   {
     int i;
 
@@ -764,7 +764,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     if (hasSpecial)
       genCodeLine ("      matchedToken->specialToken = specialToken;");
 
-    if (nextStateForEof != null || actForEof != null)
+    if (s_nextStateForEof != null || s_actForEof != null)
       genCodeLine ("      TokenLexicalActions(matchedToken);");
 
     if (Options.getCommonTokenAction ())
@@ -831,7 +831,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
           {
             genCodeLine (prefix +
                          "   while (curChar <= " +
-                         (int) MaxChar (singlesToSkip[i].asciiMoves[0]) +
+                         (int) maxChar (singlesToSkip[i].asciiMoves[0]) +
                          " && (0x" +
                          Long.toHexString (singlesToSkip[i].asciiMoves[0]) +
                          "L & (1L << curChar)) != 0L)");
@@ -841,7 +841,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
             {
               genCodeLine (prefix +
                            "   while (curChar > 63 && curChar <= " +
-                           (MaxChar (singlesToSkip[i].asciiMoves[1]) + 64) +
+                           (maxChar (singlesToSkip[i].asciiMoves[1]) + 64) +
                            " && (0x" +
                            Long.toHexString (singlesToSkip[i].asciiMoves[1]) +
                            "L & (1L << (curChar & 077))) != 0L)");
@@ -1104,7 +1104,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
   }
 
   @Override
-  public void DumpSkipActions ()
+  public void dumpSkipActions ()
   {
     Action act;
 
@@ -1175,7 +1175,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
   }
 
   @Override
-  public void DumpMoreActions ()
+  public void dumpMoreActions ()
   {
     Action act;
 
@@ -1247,7 +1247,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
   }
 
   @Override
-  public void DumpTokenActions ()
+  public void dumpTokenActions ()
   {
     Action act;
     int i;

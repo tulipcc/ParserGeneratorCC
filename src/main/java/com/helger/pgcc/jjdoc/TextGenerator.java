@@ -35,7 +35,7 @@ import java.io.PrintWriter;
 
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.Expansion;
-import com.helger.pgcc.parser.JavaCodeProduction;
+import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.NonTerminal;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.RegularExpression;
@@ -101,7 +101,7 @@ public class TextGenerator implements IDocGenerator
   public void tokensEnd ()
   {}
 
-  public void javacode (final JavaCodeProduction jp)
+  public void javacode (final CodeProductionJava jp)
   {
     productionStart (jp);
     text ("java code");
