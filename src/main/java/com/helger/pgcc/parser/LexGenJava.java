@@ -362,7 +362,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
   public static void AddCharToSkip (final char c, final int kind)
   {
-    singlesToSkip[lexStateIndex].AddChar (c);
+    singlesToSkip[lexStateIndex].addChar (c);
     singlesToSkip[lexStateIndex].kind = kind;
   }
 
@@ -392,7 +392,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     while (e.hasMoreElements ())
     {
       int startState = -1;
-      NfaState.ReInit ();
+      NfaState.reInit2 ();
       RStringLiteral.ReInit ();
 
       final String key = (String) e.nextElement ();
@@ -459,7 +459,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
               temp = curRE.GenerateNfa (ignore);
               temp.end.isFinal = true;
               temp.end.kind = curRE.m_ordinal;
-              initialState.AddMove (temp.start);
+              initialState.addMove (temp.start);
             }
 
           if (kinds.length < curRE.m_ordinal)
@@ -515,13 +515,13 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       NfaState.computeClosures ();
 
       for (final NfaState aItem : initialState.epsilonMoves)
-        aItem.GenerateCode ();
+        aItem.generateCode ();
 
       hasNfa[lexStateIndex] = (NfaState.generatedStates != 0);
       if (hasNfa[lexStateIndex])
       {
-        initialState.GenerateCode ();
-        startState = initialState.GenerateInitMoves (this);
+        initialState.generateCode ();
+        startState = initialState.generateInitMoves (this);
       }
 
       if (initialState.kind != Integer.MAX_VALUE && initialState.kind != 0)
@@ -553,14 +553,14 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       if (generateDataOnly || codeGeneratorClass != null)
       {
         RStringLiteral.UpdateStringLiteralData (totalNumStates, lexStateIndex);
-        NfaState.UpdateNfaData (totalNumStates, startState, lexStateIndex, canMatchAnyChar[lexStateIndex]);
+        NfaState.updateNfaData (totalNumStates, startState, lexStateIndex, canMatchAnyChar[lexStateIndex]);
       }
       else
       {
         RStringLiteral.DumpDfaCode (this);
         if (hasNfa[lexStateIndex])
         {
-          NfaState.DumpMoveNfa (this);
+          NfaState.dumpMoveNfa (this);
         }
       }
       totalNumStates += NfaState.generatedStates;
@@ -576,7 +576,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     if (generateDataOnly || codeGeneratorClass != null)
     {
       tokenizerData.setParserName (cu_name);
-      NfaState.BuildTokenizerData (tokenizerData);
+      NfaState.buildTokenizerData (tokenizerData);
       RStringLiteral.BuildTokenizerData (tokenizerData);
       final int [] newLexStateIndices = new int [maxOrdinal];
       final StringBuilder tokenMgrDecls = new StringBuilder ();
@@ -640,13 +640,13 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
 
     RStringLiteral.DumpStrLiteralImages (this);
     DumpFillToken ();
-    NfaState.DumpStateSets (this);
-    NfaState.DumpNonAsciiMoveMethods (this);
+    NfaState.dumpStateSets (this);
+    NfaState.dumpNonAsciiMoveMethods (this);
     DumpGetNextToken ();
 
     if (Options.getDebugTokenManager ())
     {
-      NfaState.DumpStatesForKind (this);
+      NfaState.dumpStatesForKind (this);
       DumpDebugMethods ();
     }
 
@@ -668,7 +668,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     DumpMoreActions ();
     DumpTokenActions ();
 
-    NfaState.PrintBoilerPlate (this);
+    NfaState.printBoilerPlateJava (this);
 
     String charStreamName;
     if (Options.getUserCharStream ())

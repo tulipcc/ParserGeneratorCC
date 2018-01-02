@@ -79,8 +79,8 @@ public class RChoice extends RegularExpression
 
       temp = curRE.GenerateNfa (ignoreCase);
 
-      startState.AddMove (temp.start);
-      temp.end.AddMove (finalState);
+      startState.addMove (temp.start);
+      temp.end.addMove (finalState);
     }
 
     return retVal;

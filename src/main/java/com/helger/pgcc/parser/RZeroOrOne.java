@@ -48,9 +48,9 @@ public class RZeroOrOne extends RegularExpression
 
     final Nfa temp = regexpr.GenerateNfa (ignoreCase);
 
-    startState.AddMove (temp.start);
-    startState.AddMove (finalState);
-    temp.end.AddMove (finalState);
+    startState.addMove (temp.start);
+    startState.addMove (finalState);
+    temp.end.addMove (finalState);
 
     return retVal;
   }

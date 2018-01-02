@@ -49,89 +49,89 @@ public class NfaState
   public static boolean unicodeWarningGiven = false;
   public static int generatedStates = 0;
 
-  private static int idCnt = 0;
-  private static int lohiByteCnt;
-  private static int dummyStateIndex = -1;
-  private static boolean m_done;
-  private static boolean mark[];
-  private static boolean stateDone[];
+  private static int s_idCnt = 0;
+  private static int s_lohiByteCnt;
+  private static int s_dummyStateIndex = -1;
+  private static boolean s_done;
+  private static boolean [] s_mark;
+  private static boolean [] s_stateDone;
 
-  private static List <NfaState> allStates = new Vector <> ();
-  private static List <NfaState> indexedAllStates = new ArrayList <> ();
-  private static List <NfaState> nonAsciiTableForMethod = new ArrayList <> ();
-  private static Map <String, NfaState> equivStatesTable = new HashMap <> ();
-  private static Map <String, int []> allNextStates = new HashMap <> ();
-  private static Map <String, Integer> lohiByteTab = new HashMap <> ();
-  private static Map <String, Integer> stateNameForComposite = new HashMap <> ();
-  private static Map <String, int []> compositeStateTable = new HashMap <> ();
-  private static Map <String, String> stateBlockTable = new HashMap <> ();
-  private static Map <String, int []> stateSetsToFix = new HashMap <> ();
+  private static List <NfaState> s_allStates = new Vector <> ();
+  private static List <NfaState> s_indexedAllStates = new ArrayList <> ();
+  private static List <NfaState> s_nonAsciiTableForMethod = new ArrayList <> ();
+  private static Map <String, NfaState> s_equivStatesTable = new HashMap <> ();
+  private static Map <String, int []> s_allNextStates = new HashMap <> ();
+  private static Map <String, Integer> s_lohiByteTab = new HashMap <> ();
+  private static Map <String, Integer> s_stateNameForComposite = new HashMap <> ();
+  private static Map <String, int []> s_compositeStateTable = new HashMap <> ();
+  private static Map <String, String> s_stateBlockTable = new HashMap <> ();
+  private static Map <String, int []> s_stateSetsToFix = new HashMap <> ();
 
-  private static boolean jjCheckNAddStatesUnaryNeeded = false;
-  private static boolean jjCheckNAddStatesDualNeeded = false;
+  private static boolean s_jjCheckNAddStatesUnaryNeeded = false;
+  private static boolean s_jjCheckNAddStatesDualNeeded = false;
 
-  public static void ReInit ()
+  public static void reInit2 ()
   {
     generatedStates = 0;
-    idCnt = 0;
-    dummyStateIndex = -1;
-    m_done = false;
-    mark = null;
-    stateDone = null;
+    s_idCnt = 0;
+    s_dummyStateIndex = -1;
+    s_done = false;
+    s_mark = null;
+    s_stateDone = null;
 
-    allStates.clear ();
-    indexedAllStates.clear ();
-    equivStatesTable.clear ();
-    allNextStates.clear ();
-    compositeStateTable.clear ();
-    stateBlockTable.clear ();
-    stateNameForComposite.clear ();
-    stateSetsToFix.clear ();
+    s_allStates.clear ();
+    s_indexedAllStates.clear ();
+    s_equivStatesTable.clear ();
+    s_allNextStates.clear ();
+    s_compositeStateTable.clear ();
+    s_stateBlockTable.clear ();
+    s_stateNameForComposite.clear ();
+    s_stateSetsToFix.clear ();
   }
 
   long [] asciiMoves = new long [2];
   char [] charMoves = null;
-  private char [] rangeMoves = null;
+  private char [] m_rangeMoves = null;
   NfaState next = null;
-  private NfaState stateForCase;
+  private NfaState m_stateForCase;
   final List <NfaState> epsilonMoves = new ArrayList <> ();
-  private String epsilonMovesString;
+  private String m_epsilonMovesString;
 
-  private final int id;
+  private final int m_id;
   int stateName = -1;
   int kind = Integer.MAX_VALUE;
-  private int lookingFor;
-  private int usefulEpsilonMoves = 0;
+  private int m_lookingFor;
+  private int m_usefulEpsilonMoves = 0;
   int inNextOf;
-  private int lexState;
-  private int nonAsciiMethod = -1;
-  private int kindToPrint = Integer.MAX_VALUE;
+  private int m_lexState;
+  private int m_nonAsciiMethod = -1;
+  private int m_kindToPrint = Integer.MAX_VALUE;
   boolean dummy = false;
-  private boolean isComposite = false;
-  private int [] compositeStates = null;
+  private boolean m_isComposite = false;
+  private int [] m_compositeStates = null;
   boolean isFinal = false;
-  private List <Integer> loByteVec;
-  private int [] nonAsciiMoveIndices;
-  private int round = 0;
-  private int onlyChar = 0;
-  private char matchSingleChar;
+  private List <Integer> m_loByteVec;
+  private int [] m_nonAsciiMoveIndices;
+  private int m_round = 0;
+  private int m_onlyChar = 0;
+  private char m_matchSingleChar;
 
   NfaState ()
   {
-    id = idCnt++;
-    allStates.add (this);
-    lexState = LexGenJava.lexStateIndex;
-    lookingFor = LexGenJava.curKind;
+    m_id = s_idCnt++;
+    s_allStates.add (this);
+    m_lexState = LexGenJava.lexStateIndex;
+    m_lookingFor = LexGenJava.curKind;
   }
 
-  NfaState CreateClone ()
+  NfaState createClone ()
   {
     final NfaState retVal = new NfaState ();
 
     retVal.isFinal = isFinal;
     retVal.kind = kind;
-    retVal.lookingFor = lookingFor;
-    retVal.lexState = lexState;
+    retVal.m_lookingFor = m_lookingFor;
+    retVal.m_lexState = m_lexState;
     retVal.inNextOf = inNextOf;
 
     retVal.mergeMoves (this);
@@ -145,9 +145,9 @@ public class NfaState
     for (; j < v.size (); j++)
     {
       final NfaState tmp = v.get (j);
-      if (tmp.id > s.id)
+      if (tmp.m_id > s.m_id)
         break;
-      if (tmp.id == s.id)
+      if (tmp.m_id == s.m_id)
         return;
     }
 
@@ -161,27 +161,27 @@ public class NfaState
     return ret;
   }
 
-  void AddMove (final NfaState newState)
+  void addMove (final NfaState newState)
   {
     if (!epsilonMoves.contains (newState))
       _insertInOrder (epsilonMoves, newState);
   }
 
-  private final void AddASCIIMove (final char c)
+  private final void _addASCIIMove (final char c)
   {
     asciiMoves[c / 64] |= (1L << (c % 64));
   }
 
-  void AddChar (final char c)
+  void addChar (final char c)
   {
-    onlyChar++;
-    matchSingleChar = c;
+    m_onlyChar++;
+    m_matchSingleChar = c;
     char temp;
     char temp1;
 
     if (c < 128) // ASCII char
     {
-      AddASCIIMove (c);
+      _addASCIIMove (c);
       return;
     }
 
@@ -227,7 +227,7 @@ public class NfaState
   void addRange (final char pleft, final char right)
   {
     char left = pleft;
-    onlyChar = 2;
+    m_onlyChar = 2;
     char tempLeft1, tempLeft2, tempRight1, tempRight2;
 
     if (left < 128)
@@ -235,13 +235,13 @@ public class NfaState
       if (right < 128)
       {
         for (; left <= right; left++)
-          AddASCIIMove (left);
+          _addASCIIMove (left);
 
         return;
       }
 
       for (; left < 128; left++)
-        AddASCIIMove (left);
+        _addASCIIMove (left);
     }
 
     if (!unicodeWarningGiven &&
@@ -256,36 +256,38 @@ public class NfaState
                                               "one that can handle your character set.");
     }
 
-    if (rangeMoves == null)
-      rangeMoves = new char [20];
+    if (m_rangeMoves == null)
+      m_rangeMoves = new char [20];
 
-    int len = rangeMoves.length;
+    int len = m_rangeMoves.length;
 
-    if (rangeMoves[len - 1] != 0)
+    if (m_rangeMoves[len - 1] != 0)
     {
-      rangeMoves = _expandCharArr (rangeMoves, 20);
+      m_rangeMoves = _expandCharArr (m_rangeMoves, 20);
       len += 20;
     }
 
     int i = 0;
     for (; i < len; i += 2)
-      if (rangeMoves[i] == 0 || (rangeMoves[i] > left) || ((rangeMoves[i] == left) && (rangeMoves[i + 1] > right)))
+      if (m_rangeMoves[i] == 0 ||
+          (m_rangeMoves[i] > left) ||
+          ((m_rangeMoves[i] == left) && (m_rangeMoves[i + 1] > right)))
         break;
 
-    tempLeft1 = rangeMoves[i];
-    tempRight1 = rangeMoves[i + 1];
-    rangeMoves[i] = left;
-    rangeMoves[i + 1] = right;
+    tempLeft1 = m_rangeMoves[i];
+    tempRight1 = m_rangeMoves[i + 1];
+    m_rangeMoves[i] = left;
+    m_rangeMoves[i + 1] = right;
 
     for (i += 2; i < len; i += 2)
     {
       if (tempLeft1 == 0)
         break;
 
-      tempLeft2 = rangeMoves[i];
-      tempRight2 = rangeMoves[i + 1];
-      rangeMoves[i] = tempLeft1;
-      rangeMoves[i + 1] = tempRight1;
+      tempLeft2 = m_rangeMoves[i];
+      tempRight2 = m_rangeMoves[i + 1];
+      m_rangeMoves[i] = tempLeft1;
+      m_rangeMoves[i + 1] = tempRight1;
       tempLeft1 = tempLeft2;
       tempRight1 = tempRight2;
     }
@@ -310,7 +312,7 @@ public class NfaState
 
   // From hereon down all the functions are used for code generation
 
-  private boolean closureDone = false;
+  private boolean m_closureDone = false;
 
   /**
    * This function computes the closure and also updates the kind so that any
@@ -321,10 +323,10 @@ public class NfaState
 
   private void _recursiveEpsilonClosure ()
   {
-    if (closureDone || mark[id])
+    if (m_closureDone || s_mark[m_id])
       return;
 
-    mark[id] = true;
+    s_mark[m_id] = true;
 
     // Recursively do closure
     for (final NfaState tmp : epsilonMoves)
@@ -338,7 +340,7 @@ public class NfaState
         if (tmp1._isUsefulState () && !epsilonMoves.contains (tmp1))
         {
           _insertInOrder (epsilonMoves, tmp1);
-          m_done = false;
+          s_done = false;
         }
       }
 
@@ -360,7 +362,7 @@ public class NfaState
     return (asciiMoves[0] != 0L ||
             asciiMoves[1] != 0L ||
             (charMoves != null && charMoves[0] != 0) ||
-            (rangeMoves != null && rangeMoves[0] != 0));
+            (m_rangeMoves != null && m_rangeMoves[0] != 0));
   }
 
   void mergeMoves (final NfaState other)
@@ -387,36 +389,36 @@ public class NfaState
         charMoves = tmpCharMoves;
 
         for (final char aCharMove : other.charMoves)
-          AddChar (aCharMove);
+          addChar (aCharMove);
       }
     }
 
-    if (other.rangeMoves != null)
+    if (other.m_rangeMoves != null)
     {
-      if (rangeMoves == null)
-        rangeMoves = other.rangeMoves;
+      if (m_rangeMoves == null)
+        m_rangeMoves = other.m_rangeMoves;
       else
       {
-        final char [] tmpRangeMoves = new char [rangeMoves.length + other.rangeMoves.length];
-        System.arraycopy (rangeMoves, 0, tmpRangeMoves, 0, rangeMoves.length);
-        rangeMoves = tmpRangeMoves;
-        for (int i = 0; i < other.rangeMoves.length; i += 2)
-          addRange (other.rangeMoves[i], other.rangeMoves[i + 1]);
+        final char [] tmpRangeMoves = new char [m_rangeMoves.length + other.m_rangeMoves.length];
+        System.arraycopy (m_rangeMoves, 0, tmpRangeMoves, 0, m_rangeMoves.length);
+        m_rangeMoves = tmpRangeMoves;
+        for (int i = 0; i < other.m_rangeMoves.length; i += 2)
+          addRange (other.m_rangeMoves[i], other.m_rangeMoves[i + 1]);
       }
     }
 
     if (other.kind < kind)
       kind = other.kind;
 
-    if (other.kindToPrint < kindToPrint)
-      kindToPrint = other.kindToPrint;
+    if (other.m_kindToPrint < m_kindToPrint)
+      m_kindToPrint = other.m_kindToPrint;
 
     isFinal |= other.isFinal;
   }
 
-  NfaState CreateEquivState (final List <NfaState> states)
+  NfaState createEquivState (final List <NfaState> states)
   {
-    final NfaState newState = states.get (0).CreateClone ();
+    final NfaState newState = states.get (0).createClone ();
 
     newState.next = new NfaState ();
 
@@ -437,19 +439,19 @@ public class NfaState
     return newState;
   }
 
-  private NfaState GetEquivalentRunTimeState ()
+  private NfaState _getEquivalentRunTimeState ()
   {
-    Outer: for (int i = allStates.size (); i-- > 0;)
+    Outer: for (int i = s_allStates.size (); i-- > 0;)
     {
-      final NfaState other = allStates.get (i);
+      final NfaState other = s_allStates.get (i);
 
       if (this != other &&
           other.stateName != -1 &&
-          kindToPrint == other.kindToPrint &&
+          m_kindToPrint == other.m_kindToPrint &&
           asciiMoves[0] == other.asciiMoves[0] &&
           asciiMoves[1] == other.asciiMoves[1] &&
           _equalCharArr (charMoves, other.charMoves) &&
-          _equalCharArr (rangeMoves, other.rangeMoves))
+          _equalCharArr (m_rangeMoves, other.m_rangeMoves))
       {
         if (next == other.next)
           return other;
@@ -472,21 +474,21 @@ public class NfaState
   }
 
   // generates code (without outputting it) and returns the name used.
-  void GenerateCode ()
+  void generateCode ()
   {
     if (stateName != -1)
       return;
 
     if (next != null)
     {
-      next.GenerateCode ();
+      next.generateCode ();
       if (next.kind != Integer.MAX_VALUE)
-        kindToPrint = next.kind;
+        m_kindToPrint = next.kind;
     }
 
     if (stateName == -1 && hasTransitions ())
     {
-      final NfaState tmp = GetEquivalentRunTimeState ();
+      final NfaState tmp = _getEquivalentRunTimeState ();
 
       if (tmp != null)
       {
@@ -499,31 +501,31 @@ public class NfaState
       }
 
       stateName = generatedStates++;
-      indexedAllStates.add (this);
-      GenerateNextStatesCode ();
+      s_indexedAllStates.add (this);
+      generateNextStatesCode ();
     }
   }
 
   public static void computeClosures ()
   {
     // Back to front
-    for (int i = allStates.size () - 1; i >= 0; --i)
+    for (int i = s_allStates.size () - 1; i >= 0; --i)
     {
-      final NfaState tmp = allStates.get (i);
-      if (!tmp.closureDone)
+      final NfaState tmp = s_allStates.get (i);
+      if (!tmp.m_closureDone)
         tmp._optimizeEpsilonMoves (true);
     }
 
     // Operate on copy!
-    for (final NfaState tmp : new ArrayList <> (allStates))
-      if (!tmp.closureDone)
+    for (final NfaState tmp : new ArrayList <> (s_allStates))
+      if (!tmp.m_closureDone)
         tmp._optimizeEpsilonMoves (false);
 
     if (false)
     {
-      for (int i = 0; i < allStates.size (); i++)
+      for (int i = 0; i < s_allStates.size (); i++)
       {
-        final NfaState tmp = allStates.get (i);
+        final NfaState tmp = s_allStates.get (i);
         final NfaState [] epsilonMoveArray = new NfaState [tmp.epsilonMoves.size ()];
         tmp.epsilonMoves.toArray (epsilonMoveArray);
       }
@@ -533,23 +535,23 @@ public class NfaState
   private void _optimizeEpsilonMoves (final boolean optReqd)
   {
     // First do epsilon closure
-    m_done = false;
-    while (!m_done)
+    s_done = false;
+    while (!s_done)
     {
-      if (mark == null || mark.length < allStates.size ())
-        mark = new boolean [allStates.size ()];
+      if (s_mark == null || s_mark.length < s_allStates.size ())
+        s_mark = new boolean [s_allStates.size ()];
 
-      for (int i = allStates.size (); i-- > 0;)
-        mark[i] = false;
+      for (int i = s_allStates.size (); i-- > 0;)
+        s_mark[i] = false;
 
-      m_done = true;
+      s_done = true;
       _recursiveEpsilonClosure ();
     }
 
-    for (int i = allStates.size (); i-- > 0;)
+    for (int i = s_allStates.size (); i-- > 0;)
     {
-      final NfaState tmp = allStates.get (i);
-      tmp.closureDone = mark[tmp.id];
+      final NfaState tmp = s_allStates.get (i);
+      tmp.m_closureDone = s_mark[tmp.m_id];
     }
 
     // Warning : The following piece of code is just an optimization.
@@ -576,7 +578,7 @@ public class NfaState
                 (tmp1.asciiMoves[0] == tmp2.asciiMoves[0] &&
                  tmp1.asciiMoves[1] == tmp2.asciiMoves[1] &&
                  _equalCharArr (tmp1.charMoves, tmp2.charMoves) &&
-                 _equalCharArr (tmp1.rangeMoves, tmp2.rangeMoves)))
+                 _equalCharArr (tmp1.m_rangeMoves, tmp2.m_rangeMoves)))
             {
               if (equivStates == null)
               {
@@ -595,12 +597,12 @@ public class NfaState
           sometingOptimized = true;
           String tmp = "";
           for (int l = 0; l < equivStates.size (); l++)
-            tmp += String.valueOf (equivStates.get (l).id) + ", ";
+            tmp += String.valueOf (equivStates.get (l).m_id) + ", ";
 
-          if ((newState = equivStatesTable.get (tmp)) == null)
+          if ((newState = s_equivStatesTable.get (tmp)) == null)
           {
-            newState = CreateEquivState (equivStates);
-            equivStatesTable.put (tmp, newState);
+            newState = createEquivState (equivStates);
+            s_equivStatesTable.put (tmp, newState);
           }
 
           epsilonMoves.remove (i--);
@@ -624,7 +626,7 @@ public class NfaState
           {
             if (newState == null)
             {
-              newState = tmp1.CreateClone ();
+              newState = tmp1.createClone ();
               newState.next = tmp1.next;
               sometingOptimized = true;
             }
@@ -651,75 +653,75 @@ public class NfaState
       for (int i = 0; i < epsilonMoves.size (); i++)
         // Since we are doing a closure, just epsilon moves are unncessary
         if (epsilonMoves.get (i).hasTransitions ())
-          usefulEpsilonMoves++;
+          m_usefulEpsilonMoves++;
         else
           epsilonMoves.remove (i--);
     }
   }
 
-  void GenerateNextStatesCode ()
+  void generateNextStatesCode ()
   {
-    if (next.usefulEpsilonMoves > 0)
-      next.GetEpsilonMovesString ();
+    if (next.m_usefulEpsilonMoves > 0)
+      next.getEpsilonMovesString ();
   }
 
-  String GetEpsilonMovesString ()
+  String getEpsilonMovesString ()
   {
-    final int [] stateNames = new int [usefulEpsilonMoves];
+    final int [] stateNames = new int [m_usefulEpsilonMoves];
     int cnt = 0;
 
-    if (epsilonMovesString != null)
-      return epsilonMovesString;
+    if (m_epsilonMovesString != null)
+      return m_epsilonMovesString;
 
-    if (usefulEpsilonMoves > 0)
+    if (m_usefulEpsilonMoves > 0)
     {
       NfaState tempState;
-      epsilonMovesString = "{ ";
+      m_epsilonMovesString = "{ ";
       for (int i = 0; i < epsilonMoves.size (); i++)
       {
         if ((tempState = epsilonMoves.get (i)).hasTransitions ())
         {
           if (tempState.stateName == -1)
-            tempState.GenerateCode ();
+            tempState.generateCode ();
 
-          indexedAllStates.get (tempState.stateName).inNextOf++;
+          s_indexedAllStates.get (tempState.stateName).inNextOf++;
           stateNames[cnt] = tempState.stateName;
-          epsilonMovesString += tempState.stateName + ", ";
+          m_epsilonMovesString += tempState.stateName + ", ";
           if (cnt++ > 0 && cnt % 16 == 0)
-            epsilonMovesString += "\n";
+            m_epsilonMovesString += "\n";
         }
       }
 
-      epsilonMovesString += "};";
+      m_epsilonMovesString += "};";
     }
 
-    usefulEpsilonMoves = cnt;
-    if (epsilonMovesString != null && allNextStates.get (epsilonMovesString) == null)
+    m_usefulEpsilonMoves = cnt;
+    if (m_epsilonMovesString != null && s_allNextStates.get (m_epsilonMovesString) == null)
     {
-      final int [] statesToPut = new int [usefulEpsilonMoves];
+      final int [] statesToPut = new int [m_usefulEpsilonMoves];
 
       System.arraycopy (stateNames, 0, statesToPut, 0, cnt);
-      allNextStates.put (epsilonMovesString, statesToPut);
+      s_allNextStates.put (m_epsilonMovesString, statesToPut);
     }
 
-    return epsilonMovesString;
+    return m_epsilonMovesString;
   }
 
-  public static boolean CanStartNfaUsingAscii (final char c)
+  public static boolean canStartNfaUsingAscii (final char c)
   {
     if (c >= 128)
       throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu");
 
-    final String s = LexGenJava.initialState.GetEpsilonMovesString ();
+    final String s = LexGenJava.initialState.getEpsilonMovesString ();
 
     if (s == null || s.equals ("null;"))
       return false;
 
-    final int [] states = allNextStates.get (s);
+    final int [] states = s_allNextStates.get (s);
 
     for (final int aState : states)
     {
-      final NfaState tmp = indexedAllStates.get (aState);
+      final NfaState tmp = s_indexedAllStates.get (aState);
 
       if ((tmp.asciiMoves[c / 64] & (1L << c % 64)) != 0L)
         return true;
@@ -728,10 +730,10 @@ public class NfaState
     return false;
   }
 
-  final boolean CanMoveUsingChar (final char c)
+  final boolean canMoveUsingChar (final char c)
   {
-    if (onlyChar == 1)
-      return c == matchSingleChar;
+    if (m_onlyChar == 1)
+      return c == m_matchSingleChar;
 
     if (c < 128)
       return ((asciiMoves[c / 64] & (1L << c % 64)) != 0L);
@@ -751,12 +753,12 @@ public class NfaState
 
     // For ranges, iterate thru the table to see if the current char
     // is in some range
-    if (rangeMoves != null && rangeMoves[0] != 0)
-      for (int i = 0; i < rangeMoves.length; i += 2)
-        if (c >= rangeMoves[i] && c <= rangeMoves[i + 1])
+    if (m_rangeMoves != null && m_rangeMoves[0] != 0)
+      for (int i = 0; i < m_rangeMoves.length; i += 2)
+        if (c >= m_rangeMoves[i] && c <= m_rangeMoves[i + 1])
           return true;
         else
-          if (c < rangeMoves[i] || rangeMoves[i] == 0)
+          if (c < m_rangeMoves[i] || m_rangeMoves[i] == 0)
             break;
 
     // return (nextForNegatedList != null);
@@ -766,9 +768,9 @@ public class NfaState
   public int getFirstValidPos (final String s, final int nPos, final int len)
   {
     int i = nPos;
-    if (onlyChar == 1)
+    if (m_onlyChar == 1)
     {
-      final char c = matchSingleChar;
+      final char c = m_matchSingleChar;
       while (c != s.charAt (i) && ++i < len)
       {}
       return i;
@@ -776,21 +778,21 @@ public class NfaState
 
     do
     {
-      if (CanMoveUsingChar (s.charAt (i)))
+      if (canMoveUsingChar (s.charAt (i)))
         return i;
     } while (++i < len);
 
     return i;
   }
 
-  public int MoveFrom (final char c, final List <NfaState> newStates)
+  public int moveFrom (final char c, final List <NfaState> newStates)
   {
-    if (CanMoveUsingChar (c))
+    if (canMoveUsingChar (c))
     {
       for (int i = next.epsilonMoves.size (); i-- > 0;)
         _insertInOrder (newStates, next.epsilonMoves.get (i));
 
-      return kindToPrint;
+      return m_kindToPrint;
     }
 
     return Integer.MAX_VALUE;
@@ -802,7 +804,7 @@ public class NfaState
 
     for (int i = states.size (); i-- > 0;)
     {
-      final int tmp = states.get (i).MoveFrom (c, newStates);
+      final int tmp = states.get (i).moveFrom (c, newStates);
       if (retVal > tmp)
         retVal = tmp;
     }
@@ -824,9 +826,9 @@ public class NfaState
       if (tmp1 == null)
         break;
 
-      if (tmp1.CanMoveUsingChar (c))
+      if (tmp1.canMoveUsingChar (c))
       {
-        if (tmp1.kindToPrint != Integer.MAX_VALUE)
+        if (tmp1.m_kindToPrint != Integer.MAX_VALUE)
         {
           newStates[start] = null;
           return 1;
@@ -836,9 +838,9 @@ public class NfaState
         for (int j = v.size () - 1; j >= 0; j--)
         {
           final NfaState tmp2 = v.get (j);
-          if (tmp2.round != round)
+          if (tmp2.m_round != round)
           {
-            tmp2.round = round;
+            tmp2.m_round = round;
             newStates[start++] = tmp2;
           }
         }
@@ -861,14 +863,14 @@ public class NfaState
 
   static int [] tmpIndices = new int [512]; // 2 * 256
 
-  void GenerateNonAsciiMoves (final CodeGenerator codeGenerator)
+  void generateNonAsciiMoves (final CodeGenerator codeGenerator)
   {
     int i = 0, j = 0;
     char hiByte;
     int cnt = 0;
     final long [] [] loBytes = new long [256] [4];
 
-    if ((charMoves == null || charMoves[0] == 0) && (rangeMoves == null || rangeMoves[0] == 0))
+    if ((charMoves == null || charMoves[0] == 0) && (m_rangeMoves == null || m_rangeMoves[0] == 0))
       return;
 
     if (charMoves != null)
@@ -883,30 +885,30 @@ public class NfaState
       }
     }
 
-    if (rangeMoves != null)
+    if (m_rangeMoves != null)
     {
-      for (i = 0; i < rangeMoves.length; i += 2)
+      for (i = 0; i < m_rangeMoves.length; i += 2)
       {
-        if (rangeMoves[i] == 0)
+        if (m_rangeMoves[i] == 0)
           break;
 
         char c, r;
 
-        r = (char) (rangeMoves[i + 1] & 0xff);
-        hiByte = (char) (rangeMoves[i] >> 8);
+        r = (char) (m_rangeMoves[i + 1] & 0xff);
+        hiByte = (char) (m_rangeMoves[i] >> 8);
 
-        if (hiByte == (char) (rangeMoves[i + 1] >> 8))
+        if (hiByte == (char) (m_rangeMoves[i + 1] >> 8))
         {
-          for (c = (char) (rangeMoves[i] & 0xff); c <= r; c++)
+          for (c = (char) (m_rangeMoves[i] & 0xff); c <= r; c++)
             loBytes[hiByte][c / 64] |= (1L << (c % 64));
 
           continue;
         }
 
-        for (c = (char) (rangeMoves[i] & 0xff); c <= 0xff; c++)
+        for (c = (char) (m_rangeMoves[i] & 0xff); c <= 0xff; c++)
           loBytes[hiByte][c / 64] |= (1L << (c % 64));
 
-        while (++hiByte < (char) (rangeMoves[i + 1] >> 8))
+        while (++hiByte < (char) (m_rangeMoves[i + 1] >> 8))
         {
           loBytes[hiByte][0] |= 0xffffffffffffffffL;
           loBytes[hiByte][1] |= 0xffffffffffffffffL;
@@ -966,18 +968,18 @@ public class NfaState
               "0x" +
               Long.toHexString (common[3]) +
               "L\n};";
-        if ((ind = lohiByteTab.get (tmp)) == null)
+        if ((ind = s_lohiByteTab.get (tmp)) == null)
         {
           allBitVectors.add (tmp);
 
-          if (!AllBitsSet (tmp))
+          if (!allBitsSet (tmp))
           {
             if (CodeGenerator.isJavaLanguage ())
             {
               codeGenerator.genCodeLine ("static final " +
                                          Options.getLongType () +
                                          "[] jjbitVec" +
-                                         lohiByteCnt +
+                                         s_lohiByteCnt +
                                          " = " +
                                          tmp);
             }
@@ -987,12 +989,12 @@ public class NfaState
               codeGenerator.genCodeLine ("static const " +
                                          Options.getLongType () +
                                          " jjbitVec" +
-                                         lohiByteCnt +
+                                         s_lohiByteCnt +
                                          "[] = " +
                                          tmp);
             }
           }
-          lohiByteTab.put (tmp, ind = new Integer (lohiByteCnt++));
+          s_lohiByteTab.put (tmp, ind = new Integer (s_lohiByteCnt++));
         }
 
         tmpIndices[cnt++] = ind.intValue ();
@@ -1009,17 +1011,17 @@ public class NfaState
               "0x" +
               Long.toHexString (loBytes[i][3]) +
               "L\n};";
-        if ((ind = lohiByteTab.get (tmp)) == null)
+        if ((ind = s_lohiByteTab.get (tmp)) == null)
         {
           allBitVectors.add (tmp);
 
-          if (!AllBitsSet (tmp))
+          if (!allBitsSet (tmp))
             if (CodeGenerator.isJavaLanguage ())
             {
               codeGenerator.genCodeLine ("static final " +
                                          Options.getLongType () +
                                          "[] jjbitVec" +
-                                         lohiByteCnt +
+                                         s_lohiByteCnt +
                                          " = " +
                                          tmp);
             }
@@ -1029,12 +1031,12 @@ public class NfaState
               codeGenerator.genCodeLine ("static const " +
                                          Options.getLongType () +
                                          " jjbitVec" +
-                                         lohiByteCnt +
+                                         s_lohiByteCnt +
                                          "[] = " +
                                          tmp);
               codeGenerator.switchToMainFile ();
             }
-          lohiByteTab.put (tmp, ind = new Integer (lohiByteCnt++));
+          s_lohiByteTab.put (tmp, ind = new Integer (s_lohiByteCnt++));
         }
 
         tmpIndices[cnt++] = ind.intValue ();
@@ -1043,8 +1045,8 @@ public class NfaState
       }
     }
 
-    nonAsciiMoveIndices = new int [cnt];
-    System.arraycopy (tmpIndices, 0, nonAsciiMoveIndices, 0, cnt);
+    m_nonAsciiMoveIndices = new int [cnt];
+    System.arraycopy (tmpIndices, 0, m_nonAsciiMoveIndices, 0, cnt);
 
     /*
      * System.out.println("state : " + stateName + " cnt : " + cnt); while (cnt
@@ -1075,17 +1077,17 @@ public class NfaState
               Long.toHexString (loBytes[i][3]) +
               "L\n};";
 
-        if ((ind = lohiByteTab.get (tmp)) == null)
+        if ((ind = s_lohiByteTab.get (tmp)) == null)
         {
           allBitVectors.add (tmp);
 
-          if (!AllBitsSet (tmp))
+          if (!allBitsSet (tmp))
             if (CodeGenerator.isJavaLanguage ())
             {
               codeGenerator.genCodeLine ("static final " +
                                          Options.getLongType () +
                                          "[] jjbitVec" +
-                                         lohiByteCnt +
+                                         s_lohiByteCnt +
                                          " = " +
                                          tmp);
             }
@@ -1095,42 +1097,42 @@ public class NfaState
               codeGenerator.genCodeLine ("static const " +
                                          Options.getLongType () +
                                          " jjbitVec" +
-                                         lohiByteCnt +
+                                         s_lohiByteCnt +
                                          "[] = " +
                                          tmp);
             }
-          lohiByteTab.put (tmp, ind = new Integer (lohiByteCnt++));
+          s_lohiByteTab.put (tmp, ind = new Integer (s_lohiByteCnt++));
         }
 
-        if (loByteVec == null)
-          loByteVec = new Vector <> ();
+        if (m_loByteVec == null)
+          m_loByteVec = new Vector <> ();
 
-        loByteVec.add (new Integer (i));
-        loByteVec.add (ind);
+        m_loByteVec.add (new Integer (i));
+        m_loByteVec.add (ind);
       }
     }
     // System.out.println("");
-    UpdateDuplicateNonAsciiMoves ();
+    _updateDuplicateNonAsciiMoves ();
   }
 
-  private void UpdateDuplicateNonAsciiMoves ()
+  private void _updateDuplicateNonAsciiMoves ()
   {
-    for (int i = 0; i < nonAsciiTableForMethod.size (); i++)
+    for (int i = 0; i < s_nonAsciiTableForMethod.size (); i++)
     {
-      final NfaState tmp = nonAsciiTableForMethod.get (i);
-      if (EqualLoByteVectors (loByteVec, tmp.loByteVec) &&
-          EqualNonAsciiMoveIndices (nonAsciiMoveIndices, tmp.nonAsciiMoveIndices))
+      final NfaState tmp = s_nonAsciiTableForMethod.get (i);
+      if (_equalLoByteVectors (m_loByteVec, tmp.m_loByteVec) &&
+          _equalNonAsciiMoveIndices (m_nonAsciiMoveIndices, tmp.m_nonAsciiMoveIndices))
       {
-        nonAsciiMethod = i;
+        m_nonAsciiMethod = i;
         return;
       }
     }
 
-    nonAsciiMethod = nonAsciiTableForMethod.size ();
-    nonAsciiTableForMethod.add (this);
+    m_nonAsciiMethod = s_nonAsciiTableForMethod.size ();
+    s_nonAsciiTableForMethod.add (this);
   }
 
-  private static boolean EqualLoByteVectors (final List <Integer> vec1, final List <Integer> vec2)
+  private static boolean _equalLoByteVectors (final List <Integer> vec1, final List <Integer> vec2)
   {
     if (vec1 == null || vec2 == null)
       return false;
@@ -1150,7 +1152,7 @@ public class NfaState
     return true;
   }
 
-  private static boolean EqualNonAsciiMoveIndices (final int [] moves1, final int [] moves2)
+  private static boolean _equalNonAsciiMoveIndices (final int [] moves1, final int [] moves2)
   {
     if (moves1 == moves2)
       return true;
@@ -1175,28 +1177,28 @@ public class NfaState
                           "0xffffffffffffffffL, " +
                           "0xffffffffffffffffL\n};";
 
-  static boolean AllBitsSet (final String bitVec)
+  static boolean allBitsSet (final String bitVec)
   {
     return bitVec.equals (allBits);
   }
 
-  static int AddStartStateSet (final String stateSetString)
+  static int addStartStateSet (final String stateSetString)
   {
-    return AddCompositeStateSet (stateSetString, true);
+    return _addCompositeStateSet (stateSetString, true);
   }
 
-  private static int AddCompositeStateSet (final String stateSetString, final boolean starts)
+  private static int _addCompositeStateSet (final String stateSetString, final boolean starts)
   {
     Integer stateNameToReturn;
 
-    if ((stateNameToReturn = stateNameForComposite.get (stateSetString)) != null)
+    if ((stateNameToReturn = s_stateNameForComposite.get (stateSetString)) != null)
       return stateNameToReturn.intValue ();
 
     int toRet = 0;
-    final int [] nameSet = allNextStates.get (stateSetString);
+    final int [] nameSet = s_allNextStates.get (stateSetString);
 
     if (!starts)
-      stateBlockTable.put (stateSetString, stateSetString);
+      s_stateBlockTable.put (stateSetString, stateSetString);
 
     if (nameSet == null)
       throw new Error ("JavaCC Bug: Please file a bug at: http://javacc.java.net");
@@ -1204,7 +1206,7 @@ public class NfaState
     if (nameSet.length == 1)
     {
       stateNameToReturn = new Integer (nameSet[0]);
-      stateNameForComposite.put (stateSetString, stateNameToReturn);
+      s_stateNameForComposite.put (stateSetString, stateNameToReturn);
       return nameSet[0];
     }
 
@@ -1213,23 +1215,23 @@ public class NfaState
       if (aElement == -1)
         continue;
 
-      final NfaState st = indexedAllStates.get (aElement);
-      st.isComposite = true;
-      st.compositeStates = nameSet;
+      final NfaState st = s_indexedAllStates.get (aElement);
+      st.m_isComposite = true;
+      st.m_compositeStates = nameSet;
     }
 
-    while (toRet < nameSet.length && (starts && indexedAllStates.get (nameSet[toRet]).inNextOf > 1))
+    while (toRet < nameSet.length && (starts && s_indexedAllStates.get (nameSet[toRet]).inNextOf > 1))
       toRet++;
 
-    for (final String s : compositeStateTable.keySet ())
+    for (final String s : s_compositeStateTable.keySet ())
     {
       if (!s.equals (stateSetString) && _intersect (stateSetString, s))
       {
-        final int [] other = compositeStateTable.get (s);
+        final int [] other = s_compositeStateTable.get (s);
 
         while (toRet < nameSet.length &&
-               ((starts && indexedAllStates.get (nameSet[toRet]).inNextOf > 1) ||
-                ElemOccurs (nameSet[toRet], other) >= 0))
+               ((starts && s_indexedAllStates.get (nameSet[toRet]).inNextOf > 1) ||
+                _elemOccurs (nameSet[toRet], other) >= 0))
           toRet++;
       }
     }
@@ -1238,17 +1240,17 @@ public class NfaState
 
     if (toRet >= nameSet.length)
     {
-      if (dummyStateIndex == -1)
-        tmp = dummyStateIndex = generatedStates;
+      if (s_dummyStateIndex == -1)
+        tmp = s_dummyStateIndex = generatedStates;
       else
-        tmp = ++dummyStateIndex;
+        tmp = ++s_dummyStateIndex;
 
       // TODO(sreeni) : Fix this
       if (Options.getTokenManagerCodeGenerator () != null)
       {
         final NfaState dummyState = new NfaState ();
-        dummyState.isComposite = true;
-        dummyState.compositeStates = nameSet;
+        dummyState.m_isComposite = true;
+        dummyState.m_compositeStates = nameSet;
         dummyState.stateName = tmp;
       }
     }
@@ -1256,34 +1258,34 @@ public class NfaState
       tmp = nameSet[toRet];
 
     stateNameToReturn = new Integer (tmp);
-    stateNameForComposite.put (stateSetString, stateNameToReturn);
-    compositeStateTable.put (stateSetString, nameSet);
+    s_stateNameForComposite.put (stateSetString, stateNameToReturn);
+    s_compositeStateTable.put (stateSetString, nameSet);
 
     return tmp;
   }
 
-  private static int StateNameForComposite (final String stateSetString)
+  private static int _stateNameForComposite (final String stateSetString)
   {
-    return stateNameForComposite.get (stateSetString).intValue ();
+    return s_stateNameForComposite.get (stateSetString).intValue ();
   }
 
-  static int InitStateName ()
+  static int initStateName ()
   {
-    final String s = LexGenJava.initialState.GetEpsilonMovesString ();
+    final String s = LexGenJava.initialState.getEpsilonMovesString ();
 
-    if (LexGenJava.initialState.usefulEpsilonMoves != 0)
-      return StateNameForComposite (s);
+    if (LexGenJava.initialState.m_usefulEpsilonMoves != 0)
+      return _stateNameForComposite (s);
     return -1;
   }
 
-  public int GenerateInitMoves (final CodeGenerator codeGenerator)
+  public int generateInitMoves (final CodeGenerator codeGenerator)
   {
-    GetEpsilonMovesString ();
+    getEpsilonMovesString ();
 
-    if (epsilonMovesString == null)
-      epsilonMovesString = "null;";
+    if (m_epsilonMovesString == null)
+      m_epsilonMovesString = "null;";
 
-    return AddStartStateSet (epsilonMovesString);
+    return addStartStateSet (m_epsilonMovesString);
   }
 
   static Map <String, int []> tableToDump = new HashMap <> ();
@@ -1291,10 +1293,10 @@ public class NfaState
 
   static int lastIndex = 0;
 
-  private static int [] GetStateSetIndicesForUse (final String arrayString)
+  private static int [] _getStateSetIndicesForUse (final String arrayString)
   {
     int [] ret;
-    final int [] set = allNextStates.get (arrayString);
+    final int [] set = s_allNextStates.get (arrayString);
 
     if ((ret = tableToDump.get (arrayString)) == null)
     {
@@ -1309,7 +1311,7 @@ public class NfaState
     return ret;
   }
 
-  public static void DumpStateSets (final CodeGenerator codeGenerator)
+  public static void dumpStateSets (final CodeGenerator codeGenerator)
   {
     int cnt = 0;
 
@@ -1345,7 +1347,7 @@ public class NfaState
     }
   }
 
-  static String GetStateSetString (final int [] states)
+  static String getStateSetString (final int [] states)
   {
     String retVal = "{ ";
     for (int i = 0; i < states.length;)
@@ -1357,11 +1359,11 @@ public class NfaState
     }
 
     retVal += "};";
-    allNextStates.put (retVal, states);
+    s_allNextStates.put (retVal, states);
     return retVal;
   }
 
-  static String GetStateSetString (final List <NfaState> states)
+  static String getStateSetString (final List <NfaState> states)
   {
     if (states == null || states.size () == 0)
       return "null;";
@@ -1379,11 +1381,11 @@ public class NfaState
     }
 
     retVal += "};";
-    allNextStates.put (retVal, set);
+    s_allNextStates.put (retVal, set);
     return retVal;
   }
 
-  static int NumberOfBitsSet (final long l)
+  static int numberOfBitsSet (final long l)
   {
     int ret = 0;
     for (int i = 0; i < 63; i++)
@@ -1393,7 +1395,7 @@ public class NfaState
     return ret;
   }
 
-  static int OnlyOneBitSet (final long l)
+  static int onlyOneBitSet (final long l)
   {
     int oneSeen = -1;
     for (int i = 0; i < 64; i++)
@@ -1407,7 +1409,7 @@ public class NfaState
     return oneSeen;
   }
 
-  private static int ElemOccurs (final int elem, final int [] arr)
+  private static int _elemOccurs (final int elem, final int [] arr)
   {
     for (int i = arr.length; i-- > 0;)
       if (arr[i] == elem)
@@ -1419,28 +1421,28 @@ public class NfaState
   @SuppressWarnings ("unused")
   private boolean _findCommonBlocks ()
   {
-    if (next == null || next.usefulEpsilonMoves <= 1)
+    if (next == null || next.m_usefulEpsilonMoves <= 1)
       return false;
 
-    if (stateDone == null)
-      stateDone = new boolean [generatedStates];
+    if (s_stateDone == null)
+      s_stateDone = new boolean [generatedStates];
 
-    final String set = next.epsilonMovesString;
+    final String set = next.m_epsilonMovesString;
 
-    final int [] nameSet = allNextStates.get (set);
+    final int [] nameSet = s_allNextStates.get (set);
 
-    if (nameSet.length <= 2 || compositeStateTable.get (set) != null)
+    if (nameSet.length <= 2 || s_compositeStateTable.get (set) != null)
       return false;
 
     final int freq[] = new int [nameSet.length];
     final boolean live[] = new boolean [nameSet.length];
-    final int [] count = new int [allNextStates.size ()];
+    final int [] count = new int [s_allNextStates.size ()];
 
     for (int i = 0; i < nameSet.length; i++)
     {
       if (nameSet[i] != -1)
       {
-        live[i] = !stateDone[nameSet[i]];
+        live[i] = !s_stateDone[nameSet[i]];
         if (live[i])
           count[0]++;
       }
@@ -1449,7 +1451,7 @@ public class NfaState
     int blockLen = 0, commonFreq = 0;
     boolean needUpdate;
 
-    for (final Map.Entry <String, int []> aEntry : allNextStates.entrySet ())
+    for (final Map.Entry <String, int []> aEntry : s_allNextStates.entrySet ())
     {
       final int [] tmpSet = aEntry.getValue ();
       if (tmpSet == nameSet)
@@ -1461,7 +1463,7 @@ public class NfaState
         if (nameSet[j] == -1)
           continue;
 
-        if (live[j] && ElemOccurs (nameSet[j], tmpSet) >= 0)
+        if (live[j] && _elemOccurs (nameSet[j], tmpSet) >= 0)
         {
           if (!needUpdate)
           {
@@ -1509,10 +1511,10 @@ public class NfaState
     {
       if (live[i])
       {
-        if (indexedAllStates.get (nameSet[i]).isComposite)
+        if (s_indexedAllStates.get (nameSet[i]).m_isComposite)
           return false;
 
-        stateDone[nameSet[i]] = true;
+        s_stateDone[nameSet[i]] = true;
         commonBlock[cnt++] = nameSet[i];
         // System.out.print(nameSet[i] + ", ");
       }
@@ -1520,9 +1522,9 @@ public class NfaState
 
     // System.out.println("");
 
-    final String s = GetStateSetString (commonBlock);
+    final String s = getStateSetString (commonBlock);
 
-    Outer: for (final Map.Entry <String, int []> aEntry : allNextStates.entrySet ())
+    Outer: for (final Map.Entry <String, int []> aEntry : s_allNextStates.entrySet ())
     {
       boolean firstOne = true;
       final String stringToFix = aEntry.getKey ();
@@ -1533,7 +1535,7 @@ public class NfaState
 
       for (int k = 0; k < cnt; k++)
       {
-        final int at = ElemOccurs (commonBlock[k], setToFix);
+        final int at = _elemOccurs (commonBlock[k], setToFix);
         if (at >= 0)
         {
           if (!firstOne)
@@ -1544,40 +1546,40 @@ public class NfaState
           continue Outer;
       }
 
-      if (stateSetsToFix.get (stringToFix) == null)
-        stateSetsToFix.put (stringToFix, setToFix);
+      if (s_stateSetsToFix.get (stringToFix) == null)
+        s_stateSetsToFix.put (stringToFix, setToFix);
     }
 
-    next.usefulEpsilonMoves -= blockLen - 1;
-    AddCompositeStateSet (s, false);
+    next.m_usefulEpsilonMoves -= blockLen - 1;
+    _addCompositeStateSet (s, false);
     return true;
   }
 
   @SuppressWarnings ("unused")
   private boolean _checkNextOccursTogether ()
   {
-    if (next == null || next.usefulEpsilonMoves <= 1)
+    if (next == null || next.m_usefulEpsilonMoves <= 1)
       return true;
 
-    final String set = next.epsilonMovesString;
+    final String set = next.m_epsilonMovesString;
 
-    final int [] nameSet = allNextStates.get (set);
+    final int [] nameSet = s_allNextStates.get (set);
 
-    if (nameSet.length == 1 || compositeStateTable.get (set) != null || stateSetsToFix.get (set) != null)
+    if (nameSet.length == 1 || s_compositeStateTable.get (set) != null || s_stateSetsToFix.get (set) != null)
       return false;
 
     final Map <String, int []> occursIn = new HashMap <> ();
-    final NfaState tmp = allStates.get (nameSet[0]);
+    final NfaState tmp = s_allStates.get (nameSet[0]);
 
     for (int i = 1; i < nameSet.length; i++)
     {
-      final NfaState tmp1 = allStates.get (nameSet[i]);
+      final NfaState tmp1 = s_allStates.get (nameSet[i]);
 
       if (tmp.inNextOf != tmp1.inNextOf)
         return false;
     }
 
-    for (final Map.Entry <String, int []> aEntry : allNextStates.entrySet ())
+    for (final Map.Entry <String, int []> aEntry : s_allNextStates.entrySet ())
     {
       final String s = aEntry.getKey ();
       final int [] tmpSet = aEntry.getValue ();
@@ -1589,7 +1591,7 @@ public class NfaState
       int j = 0;
       for (final int aElement : nameSet)
       {
-        if (ElemOccurs (aElement, tmpSet) >= 0)
+        if (_elemOccurs (aElement, tmpSet) >= 0)
           isPresent++;
         else
           if (isPresent > 0)
@@ -1603,7 +1605,7 @@ public class NfaState
           occursIn.put (s, tmpSet);
 
         // May not need. But safe.
-        if (compositeStateTable.get (s) != null || stateSetsToFix.get (s) != null)
+        if (s_compositeStateTable.get (s) != null || s_stateSetsToFix.get (s) != null)
           return false;
       }
       else
@@ -1616,28 +1618,28 @@ public class NfaState
       final String s = aEntry.getKey ();
       final int [] setToFix = aEntry.getValue ();
 
-      if (!stateSetsToFix.containsKey (s))
-        stateSetsToFix.put (s, setToFix);
+      if (!s_stateSetsToFix.containsKey (s))
+        s_stateSetsToFix.put (s, setToFix);
 
       for (int k = 0; k < setToFix.length; k++)
       {
         // Not >= since need the first one (0)
-        if (ElemOccurs (setToFix[k], nameSet) > 0)
+        if (_elemOccurs (setToFix[k], nameSet) > 0)
           setToFix[k] = -1;
       }
     }
 
-    next.usefulEpsilonMoves = 1;
-    AddCompositeStateSet (next.epsilonMovesString, false);
+    next.m_usefulEpsilonMoves = 1;
+    _addCompositeStateSet (next.m_epsilonMovesString, false);
     return true;
   }
 
-  private static void FixStateSets ()
+  private static void _fixStateSets ()
   {
     final Map <String, int []> fixedSets = new HashMap <> ();
     final int [] tmp = new int [generatedStates];
 
-    for (final Map.Entry <String, int []> aEntry : stateSetsToFix.entrySet ())
+    for (final Map.Entry <String, int []> aEntry : s_stateSetsToFix.entrySet ())
     {
       final String s = aEntry.getKey ();
       final int [] toFix = aEntry.getValue ();
@@ -1654,30 +1656,30 @@ public class NfaState
       final int [] fixed = new int [cnt];
       System.arraycopy (tmp, 0, fixed, 0, cnt);
       fixedSets.put (s, fixed);
-      allNextStates.put (s, fixed);
+      s_allNextStates.put (s, fixed);
       // System.out.println(" as " + GetStateSetString(fixed));
     }
 
-    for (int i = 0; i < allStates.size (); i++)
+    for (int i = 0; i < s_allStates.size (); i++)
     {
-      final NfaState tmpState = allStates.get (i);
+      final NfaState tmpState = s_allStates.get (i);
 
-      if (tmpState.next == null || tmpState.next.usefulEpsilonMoves == 0)
+      if (tmpState.next == null || tmpState.next.m_usefulEpsilonMoves == 0)
         continue;
 
       /*
        * if (compositeStateTable.get(tmpState.next.epsilonMovesString) != null)
        * tmpState.next.usefulEpsilonMoves = 1; else
        */
-      final int [] newSet = fixedSets.get (tmpState.next.epsilonMovesString);
+      final int [] newSet = fixedSets.get (tmpState.next.m_epsilonMovesString);
       if (newSet != null)
-        tmpState.FixNextStates (newSet);
+        tmpState._fixNextStates (newSet);
     }
   }
 
-  private final void FixNextStates (final int [] newSet)
+  private final void _fixNextStates (final int [] newSet)
   {
-    next.usefulEpsilonMoves = newSet.length;
+    next.m_usefulEpsilonMoves = newSet.length;
     // next.epsilonMovesString = GetStateSetString(newSet);
   }
 
@@ -1686,8 +1688,8 @@ public class NfaState
     if (set1 == null || set2 == null)
       return false;
 
-    final int [] nameSet1 = allNextStates.get (set1);
-    final int [] nameSet2 = allNextStates.get (set2);
+    final int [] nameSet1 = s_allNextStates.get (set1);
+    final int [] nameSet2 = s_allNextStates.get (set2);
 
     if (nameSet1 == null || nameSet2 == null)
       return false;
@@ -1743,7 +1745,7 @@ public class NfaState
     codeGenerator.genCodeLine ("            {");
   }
 
-  private static Vector <List <NfaState>> PartitionStatesSetForAscii (final int [] states, final int byteNum)
+  private static Vector <List <NfaState>> _partitionStatesSetForAscii (final int [] states, final int byteNum)
   {
     final int [] cardinalities = new int [states.length];
     final Vector <NfaState> original = new Vector <> ();
@@ -1754,12 +1756,12 @@ public class NfaState
     int cnt = 0;
     for (int i = 0; i < states.length; i++)
     {
-      tmp = allStates.get (states[i]);
+      tmp = s_allStates.get (states[i]);
 
       if (tmp.asciiMoves[byteNum] != 0L)
       {
         int j;
-        final int p = NumberOfBitsSet (tmp.asciiMoves[byteNum]);
+        final int p = numberOfBitsSet (tmp.asciiMoves[byteNum]);
 
         for (j = 0; j < i; j++)
           if (cardinalities[j] <= p)
@@ -1804,7 +1806,7 @@ public class NfaState
     return partition;
   }
 
-  private String PrintNoBreak (final CodeGenerator codeGenerator, final int byteNum, final boolean [] dumped)
+  private String _printNoBreak (final CodeGenerator codeGenerator, final int byteNum, final boolean [] dumped)
   {
     if (inNextOf != 1)
       throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu");
@@ -1816,40 +1818,40 @@ public class NfaState
       if (asciiMoves[byteNum] != 0L)
       {
         codeGenerator.genCodeLine ("               case " + stateName + ":");
-        DumpAsciiMoveForCompositeState (codeGenerator, byteNum, false);
+        _dumpAsciiMoveForCompositeState (codeGenerator, byteNum, false);
         return "";
       }
     }
     else
-      if (nonAsciiMethod != -1)
+      if (m_nonAsciiMethod != -1)
       {
         codeGenerator.genCodeLine ("               case " + stateName + ":");
-        DumpNonAsciiMoveForCompositeState (codeGenerator);
+        _dumpNonAsciiMoveForCompositeState (codeGenerator);
         return "";
       }
 
     return ("               case " + stateName + ":\n");
   }
 
-  private static void DumpCompositeStatesAsciiMoves (final CodeGenerator codeGenerator,
+  private static void _dumpCompositeStatesAsciiMoves (final CodeGenerator codeGenerator,
                                                      final String key,
                                                      final int byteNum,
                                                      final boolean [] dumped)
   {
-    final int [] nameSet = allNextStates.get (key);
+    final int [] nameSet = s_allNextStates.get (key);
 
-    if (nameSet.length == 1 || dumped[StateNameForComposite (key)])
+    if (nameSet.length == 1 || dumped[_stateNameForComposite (key)])
       return;
 
     NfaState toBePrinted = null;
     int neededStates = 0;
     NfaState stateForCase = null;
     String toPrint = "";
-    final boolean stateBlock = (stateBlockTable.get (key) != null);
+    final boolean stateBlock = (s_stateBlockTable.get (key) != null);
 
     for (final int aElement : nameSet)
     {
-      final NfaState tmp = allStates.get (aElement);
+      final NfaState tmp = s_allStates.get (aElement);
 
       if (tmp.asciiMoves[byteNum] != 0L)
       {
@@ -1860,17 +1862,17 @@ public class NfaState
       else
         dumped[tmp.stateName] = true;
 
-      if (tmp.stateForCase != null)
+      if (tmp.m_stateForCase != null)
       {
         if (stateForCase != null)
           throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu : ");
 
-        stateForCase = tmp.stateForCase;
+        stateForCase = tmp.m_stateForCase;
       }
     }
 
     if (stateForCase != null)
-      toPrint = stateForCase.PrintNoBreak (codeGenerator, byteNum, dumped);
+      toPrint = stateForCase._printNoBreak (codeGenerator, byteNum, dumped);
 
     if (neededStates == 0)
     {
@@ -1888,22 +1890,22 @@ public class NfaState
       if (!toPrint.equals (""))
         codeGenerator.genCode (toPrint);
 
-      codeGenerator.genCodeLine ("               case " + StateNameForComposite (key) + ":");
+      codeGenerator.genCodeLine ("               case " + _stateNameForComposite (key) + ":");
 
       if (!dumped[toBePrinted.stateName] && !stateBlock && toBePrinted.inNextOf > 1)
         codeGenerator.genCodeLine ("               case " + toBePrinted.stateName + ":");
 
       dumped[toBePrinted.stateName] = true;
-      toBePrinted.DumpAsciiMove (codeGenerator, byteNum, dumped);
+      toBePrinted._dumpAsciiMove (codeGenerator, byteNum, dumped);
       return;
     }
 
-    final List <List <NfaState>> partition = PartitionStatesSetForAscii (nameSet, byteNum);
+    final List <List <NfaState>> partition = _partitionStatesSetForAscii (nameSet, byteNum);
 
     if (!toPrint.equals (""))
       codeGenerator.genCode (toPrint);
 
-    final int keyState = StateNameForComposite (key);
+    final int keyState = _stateNameForComposite (key);
     codeGenerator.genCodeLine ("               case " + keyState + ":");
     if (keyState < generatedStates)
       dumped[keyState] = true;
@@ -1916,7 +1918,7 @@ public class NfaState
       {
         if (stateBlock)
           dumped[tmp.stateName] = true;
-        tmp.DumpAsciiMoveForCompositeState (codeGenerator, byteNum, nIndex != 0);
+        tmp._dumpAsciiMoveForCompositeState (codeGenerator, byteNum, nIndex != 0);
         ++nIndex;
       }
     }
@@ -1927,24 +1929,24 @@ public class NfaState
       codeGenerator.genCodeLine ("                  break;");
   }
 
-  private boolean selfLoop ()
+  private boolean _selfLoop ()
   {
-    if (next == null || next.epsilonMovesString == null)
+    if (next == null || next.m_epsilonMovesString == null)
       return false;
 
-    final int [] set = allNextStates.get (next.epsilonMovesString);
-    return ElemOccurs (stateName, set) >= 0;
+    final int [] set = s_allNextStates.get (next.m_epsilonMovesString);
+    return _elemOccurs (stateName, set) >= 0;
   }
 
-  private void DumpAsciiMoveForCompositeState (final CodeGenerator codeGenerator,
+  private void _dumpAsciiMoveForCompositeState (final CodeGenerator codeGenerator,
                                                final int byteNum,
                                                final boolean elseNeeded)
   {
-    boolean nextIntersects = selfLoop ();
+    boolean nextIntersects = _selfLoop ();
 
-    for (int j = 0; j < allStates.size (); j++)
+    for (int j = 0; j < s_allStates.size (); j++)
     {
-      final NfaState temp1 = allStates.get (j);
+      final NfaState temp1 = s_allStates.get (j);
 
       if (this == temp1 ||
           temp1.stateName == -1 ||
@@ -1953,7 +1955,7 @@ public class NfaState
           temp1.asciiMoves[byteNum] == 0L)
         continue;
 
-      if (!nextIntersects && _intersect (temp1.next.epsilonMovesString, next.epsilonMovesString))
+      if (!nextIntersects && _intersect (temp1.next.m_epsilonMovesString, next.m_epsilonMovesString))
       {
         nextIntersects = true;
         break;
@@ -1965,7 +1967,7 @@ public class NfaState
     String prefix = "";
     if (asciiMoves[byteNum] != 0xffffffffffffffffL)
     {
-      final int oneBit = OnlyOneBitSet (asciiMoves[byteNum]);
+      final int oneBit = onlyOneBitSet (asciiMoves[byteNum]);
 
       if (oneBit != -1)
         codeGenerator.genCodeLine ("                  " +
@@ -1982,21 +1984,21 @@ public class NfaState
       prefix = "   ";
     }
 
-    if (kindToPrint != Integer.MAX_VALUE)
+    if (m_kindToPrint != Integer.MAX_VALUE)
     {
       if (asciiMoves[byteNum] != 0xffffffffffffffffL)
       {
         codeGenerator.genCodeLine ("                  {");
       }
 
-      codeGenerator.genCodeLine (prefix + "                  if (kind > " + kindToPrint + ")");
-      codeGenerator.genCodeLine (prefix + "                     kind = " + kindToPrint + ";");
+      codeGenerator.genCodeLine (prefix + "                  if (kind > " + m_kindToPrint + ")");
+      codeGenerator.genCodeLine (prefix + "                     kind = " + m_kindToPrint + ";");
     }
 
-    if (next != null && next.usefulEpsilonMoves > 0)
+    if (next != null && next.m_usefulEpsilonMoves > 0)
     {
-      final int [] stateNames = allNextStates.get (next.epsilonMovesString);
-      if (next.usefulEpsilonMoves == 1)
+      final int [] stateNames = s_allNextStates.get (next.m_epsilonMovesString);
+      if (next.m_usefulEpsilonMoves == 1)
       {
         final int name = stateNames[0];
 
@@ -2006,7 +2008,7 @@ public class NfaState
           codeGenerator.genCodeLine (prefix + "                  jjstateSet[jjnewStateCnt++] = " + name + ";");
       }
       else
-        if (next.usefulEpsilonMoves == 2 && nextIntersects)
+        if (next.m_usefulEpsilonMoves == 2 && nextIntersects)
         {
           codeGenerator.genCodeLine (prefix +
                                      "                  { jjCheckNAddTwoStates(" +
@@ -2017,7 +2019,7 @@ public class NfaState
         }
         else
         {
-          final int [] indices = GetStateSetIndicesForUse (next.epsilonMovesString);
+          final int [] indices = _getStateSetIndicesForUse (next.m_epsilonMovesString);
           final boolean notTwo = (indices[0] + 1 != indices[1]);
 
           if (nextIntersects)
@@ -2025,12 +2027,12 @@ public class NfaState
             codeGenerator.genCode (prefix + "                  { jjCheckNAddStates(" + indices[0]);
             if (notTwo)
             {
-              jjCheckNAddStatesDualNeeded = true;
+              s_jjCheckNAddStatesDualNeeded = true;
               codeGenerator.genCode (", " + indices[1]);
             }
             else
             {
-              jjCheckNAddStatesUnaryNeeded = true;
+              s_jjCheckNAddStatesUnaryNeeded = true;
             }
             codeGenerator.genCodeLine ("); }");
           }
@@ -2044,18 +2046,18 @@ public class NfaState
         }
     }
 
-    if (asciiMoves[byteNum] != 0xffffffffffffffffL && kindToPrint != Integer.MAX_VALUE)
+    if (asciiMoves[byteNum] != 0xffffffffffffffffL && m_kindToPrint != Integer.MAX_VALUE)
       codeGenerator.genCodeLine ("                  }");
   }
 
-  private void DumpAsciiMove (final CodeGenerator codeGenerator, final int byteNum, final boolean dumped[])
+  private void _dumpAsciiMove (final CodeGenerator codeGenerator, final int byteNum, final boolean dumped[])
   {
-    boolean nextIntersects = selfLoop () && isComposite;
+    boolean nextIntersects = _selfLoop () && m_isComposite;
     boolean onlyState = true;
 
-    for (int j = 0; j < allStates.size (); j++)
+    for (int j = 0; j < s_allStates.size (); j++)
     {
-      final NfaState temp1 = allStates.get (j);
+      final NfaState temp1 = s_allStates.get (j);
 
       if (this == temp1 ||
           temp1.stateName == -1 ||
@@ -2067,17 +2069,17 @@ public class NfaState
       if (onlyState && (asciiMoves[byteNum] & temp1.asciiMoves[byteNum]) != 0L)
         onlyState = false;
 
-      if (!nextIntersects && _intersect (temp1.next.epsilonMovesString, next.epsilonMovesString))
+      if (!nextIntersects && _intersect (temp1.next.m_epsilonMovesString, next.m_epsilonMovesString))
         nextIntersects = true;
 
       if (!dumped[temp1.stateName] &&
-          !temp1.isComposite &&
+          !temp1.m_isComposite &&
           asciiMoves[byteNum] == temp1.asciiMoves[byteNum] &&
-          kindToPrint == temp1.kindToPrint &&
-          (next.epsilonMovesString == temp1.next.epsilonMovesString ||
-           (next.epsilonMovesString != null &&
-            temp1.next.epsilonMovesString != null &&
-            next.epsilonMovesString.equals (temp1.next.epsilonMovesString))))
+          m_kindToPrint == temp1.m_kindToPrint &&
+          (next.m_epsilonMovesString == temp1.next.m_epsilonMovesString ||
+           (next.m_epsilonMovesString != null &&
+            temp1.next.m_epsilonMovesString != null &&
+            next.m_epsilonMovesString.equals (temp1.next.m_epsilonMovesString))))
       {
         dumped[temp1.stateName] = true;
         codeGenerator.genCodeLine ("               case " + temp1.stateName + ":");
@@ -2087,15 +2089,15 @@ public class NfaState
     // if (onlyState)
     // nextIntersects = false;
 
-    final int oneBit = OnlyOneBitSet (asciiMoves[byteNum]);
+    final int oneBit = onlyOneBitSet (asciiMoves[byteNum]);
     if (asciiMoves[byteNum] != 0xffffffffffffffffL)
     {
-      if ((next == null || next.usefulEpsilonMoves == 0) && kindToPrint != Integer.MAX_VALUE)
+      if ((next == null || next.m_usefulEpsilonMoves == 0) && m_kindToPrint != Integer.MAX_VALUE)
       {
         String kindCheck = "";
 
         if (!onlyState)
-          kindCheck = " && kind > " + kindToPrint;
+          kindCheck = " && kind > " + m_kindToPrint;
 
         if (oneBit != -1)
           codeGenerator.genCodeLine ("                  if (curChar == " + (64 * byteNum + oneBit) + kindCheck + ")");
@@ -2106,7 +2108,7 @@ public class NfaState
                                      kindCheck +
                                      ")");
 
-        codeGenerator.genCodeLine ("                     kind = " + kindToPrint + ";");
+        codeGenerator.genCodeLine ("                     kind = " + m_kindToPrint + ";");
 
         if (onlyState)
           codeGenerator.genCodeLine ("                  break;");
@@ -2118,7 +2120,7 @@ public class NfaState
     }
 
     String prefix = "";
-    if (kindToPrint != Integer.MAX_VALUE)
+    if (m_kindToPrint != Integer.MAX_VALUE)
     {
 
       if (oneBit != -1)
@@ -2137,12 +2139,12 @@ public class NfaState
 
       if (onlyState)
       {
-        codeGenerator.genCodeLine ("                  kind = " + kindToPrint + ";");
+        codeGenerator.genCodeLine ("                  kind = " + m_kindToPrint + ";");
       }
       else
       {
-        codeGenerator.genCodeLine ("                  if (kind > " + kindToPrint + ")");
-        codeGenerator.genCodeLine ("                     kind = " + kindToPrint + ";");
+        codeGenerator.genCodeLine ("                  if (kind > " + m_kindToPrint + ")");
+        codeGenerator.genCodeLine ("                     kind = " + m_kindToPrint + ";");
       }
     }
     else
@@ -2162,10 +2164,10 @@ public class NfaState
         }
     }
 
-    if (next != null && next.usefulEpsilonMoves > 0)
+    if (next != null && next.m_usefulEpsilonMoves > 0)
     {
-      final int [] stateNames = allNextStates.get (next.epsilonMovesString);
-      if (next.usefulEpsilonMoves == 1)
+      final int [] stateNames = s_allNextStates.get (next.m_epsilonMovesString);
+      if (next.m_usefulEpsilonMoves == 1)
       {
         final int name = stateNames[0];
         if (nextIntersects)
@@ -2174,7 +2176,7 @@ public class NfaState
           codeGenerator.genCodeLine (prefix + "                  jjstateSet[jjnewStateCnt++] = " + name + ";");
       }
       else
-        if (next.usefulEpsilonMoves == 2 && nextIntersects)
+        if (next.m_usefulEpsilonMoves == 2 && nextIntersects)
         {
           codeGenerator.genCodeLine (prefix +
                                      "                  { jjCheckNAddTwoStates(" +
@@ -2185,7 +2187,7 @@ public class NfaState
         }
         else
         {
-          final int [] indices = GetStateSetIndicesForUse (next.epsilonMovesString);
+          final int [] indices = _getStateSetIndicesForUse (next.m_epsilonMovesString);
           final boolean notTwo = (indices[0] + 1 != indices[1]);
 
           if (nextIntersects)
@@ -2193,12 +2195,12 @@ public class NfaState
             codeGenerator.genCode (prefix + "                  { jjCheckNAddStates(" + indices[0]);
             if (notTwo)
             {
-              jjCheckNAddStatesDualNeeded = true;
+              s_jjCheckNAddStatesDualNeeded = true;
               codeGenerator.genCode (", " + indices[1]);
             }
             else
             {
-              jjCheckNAddStatesUnaryNeeded = true;
+              s_jjCheckNAddStatesUnaryNeeded = true;
             }
             codeGenerator.genCodeLine ("); }");
           }
@@ -2218,21 +2220,21 @@ public class NfaState
       codeGenerator.genCodeLine ("                  break;");
   }
 
-  private static void DumpAsciiMoves (final CodeGenerator codeGenerator, final int byteNum)
+  private static void _dumpAsciiMoves (final CodeGenerator codeGenerator, final int byteNum)
   {
-    final boolean [] dumped = new boolean [Math.max (generatedStates, dummyStateIndex + 1)];
+    final boolean [] dumped = new boolean [Math.max (generatedStates, s_dummyStateIndex + 1)];
 
     _dumpHeadForCase (codeGenerator, byteNum);
 
-    for (final String s : compositeStateTable.keySet ())
-      DumpCompositeStatesAsciiMoves (codeGenerator, s, byteNum, dumped);
+    for (final String s : s_compositeStateTable.keySet ())
+      _dumpCompositeStatesAsciiMoves (codeGenerator, s, byteNum, dumped);
 
-    for (int i = 0; i < allStates.size (); i++)
+    for (int i = 0; i < s_allStates.size (); i++)
     {
-      final NfaState temp = allStates.get (i);
+      final NfaState temp = s_allStates.get (i);
 
       if (dumped[temp.stateName] ||
-          temp.lexState != LexGenJava.lexStateIndex ||
+          temp.m_lexState != LexGenJava.lexStateIndex ||
           !temp.hasTransitions () ||
           temp.dummy ||
           temp.stateName == -1)
@@ -2240,15 +2242,15 @@ public class NfaState
 
       String toPrint = "";
 
-      if (temp.stateForCase != null)
+      if (temp.m_stateForCase != null)
       {
         if (temp.inNextOf == 1)
           continue;
 
-        if (dumped[temp.stateForCase.stateName])
+        if (dumped[temp.m_stateForCase.stateName])
           continue;
 
-        toPrint = (temp.stateForCase.PrintNoBreak (codeGenerator, byteNum, dumped));
+        toPrint = (temp.m_stateForCase._printNoBreak (codeGenerator, byteNum, dumped));
 
         if (temp.asciiMoves[byteNum] == 0L)
         {
@@ -2267,7 +2269,7 @@ public class NfaState
 
       dumped[temp.stateName] = true;
       codeGenerator.genCodeLine ("               case " + temp.stateName + ":");
-      temp.DumpAsciiMove (codeGenerator, byteNum, dumped);
+      temp._dumpAsciiMove (codeGenerator, byteNum, dumped);
     }
 
     if (byteNum != 0 && byteNum != 1)
@@ -2283,13 +2285,13 @@ public class NfaState
     codeGenerator.genCodeLine ("         } while(i != startsAt);");
   }
 
-  private static void DumpCompositeStatesNonAsciiMoves (final CodeGenerator codeGenerator,
+  private static void _dumpCompositeStatesNonAsciiMoves (final CodeGenerator codeGenerator,
                                                         final String key,
                                                         final boolean [] dumped)
   {
-    final int [] nameSet = allNextStates.get (key);
+    final int [] nameSet = s_allNextStates.get (key);
 
-    if (nameSet.length == 1 || dumped[StateNameForComposite (key)])
+    if (nameSet.length == 1 || dumped[_stateNameForComposite (key)])
       return;
 
     NfaState toBePrinted = null;
@@ -2297,13 +2299,13 @@ public class NfaState
     NfaState tmp;
     NfaState stateForCase = null;
     String toPrint = "";
-    final boolean stateBlock = (stateBlockTable.get (key) != null);
+    final boolean stateBlock = (s_stateBlockTable.get (key) != null);
 
     for (final int aElement : nameSet)
     {
-      tmp = allStates.get (aElement);
+      tmp = s_allStates.get (aElement);
 
-      if (tmp.nonAsciiMethod != -1)
+      if (tmp.m_nonAsciiMethod != -1)
       {
         if (neededStates++ == 1)
           break;
@@ -2312,17 +2314,17 @@ public class NfaState
       else
         dumped[tmp.stateName] = true;
 
-      if (tmp.stateForCase != null)
+      if (tmp.m_stateForCase != null)
       {
         if (stateForCase != null)
           throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu : ");
 
-        stateForCase = tmp.stateForCase;
+        stateForCase = tmp.m_stateForCase;
       }
     }
 
     if (stateForCase != null)
-      toPrint = stateForCase.PrintNoBreak (codeGenerator, -1, dumped);
+      toPrint = stateForCase._printNoBreak (codeGenerator, -1, dumped);
 
     if (neededStates == 0)
     {
@@ -2337,33 +2339,33 @@ public class NfaState
       if (!toPrint.equals (""))
         codeGenerator.genCode (toPrint);
 
-      codeGenerator.genCodeLine ("               case " + StateNameForComposite (key) + ":");
+      codeGenerator.genCodeLine ("               case " + _stateNameForComposite (key) + ":");
 
       if (!dumped[toBePrinted.stateName] && !stateBlock && toBePrinted.inNextOf > 1)
         codeGenerator.genCodeLine ("               case " + toBePrinted.stateName + ":");
 
       dumped[toBePrinted.stateName] = true;
-      toBePrinted.DumpNonAsciiMove (codeGenerator, dumped);
+      toBePrinted._dumpNonAsciiMove (codeGenerator, dumped);
       return;
     }
 
     if (!toPrint.equals (""))
       codeGenerator.genCode (toPrint);
 
-    final int keyState = StateNameForComposite (key);
+    final int keyState = _stateNameForComposite (key);
     codeGenerator.genCodeLine ("               case " + keyState + ":");
     if (keyState < generatedStates)
       dumped[keyState] = true;
 
     for (final int aElement : nameSet)
     {
-      tmp = allStates.get (aElement);
+      tmp = s_allStates.get (aElement);
 
-      if (tmp.nonAsciiMethod != -1)
+      if (tmp.m_nonAsciiMethod != -1)
       {
         if (stateBlock)
           dumped[tmp.stateName] = true;
-        tmp.DumpNonAsciiMoveForCompositeState (codeGenerator);
+        tmp._dumpNonAsciiMoveForCompositeState (codeGenerator);
       }
     }
 
@@ -2373,21 +2375,21 @@ public class NfaState
       codeGenerator.genCodeLine ("                  break;");
   }
 
-  private final void DumpNonAsciiMoveForCompositeState (final CodeGenerator codeGenerator)
+  private final void _dumpNonAsciiMoveForCompositeState (final CodeGenerator codeGenerator)
   {
-    boolean nextIntersects = selfLoop ();
-    for (int j = 0; j < allStates.size (); j++)
+    boolean nextIntersects = _selfLoop ();
+    for (int j = 0; j < s_allStates.size (); j++)
     {
-      final NfaState temp1 = allStates.get (j);
+      final NfaState temp1 = s_allStates.get (j);
 
       if (this == temp1 ||
           temp1.stateName == -1 ||
           temp1.dummy ||
           stateName == temp1.stateName ||
-          (temp1.nonAsciiMethod == -1))
+          (temp1.m_nonAsciiMethod == -1))
         continue;
 
-      if (!nextIntersects && _intersect (temp1.next.epsilonMovesString, next.epsilonMovesString))
+      if (!nextIntersects && _intersect (temp1.next.m_epsilonMovesString, next.m_epsilonMovesString))
       {
         nextIntersects = true;
         break;
@@ -2396,28 +2398,28 @@ public class NfaState
 
     if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
     {
-      if (loByteVec != null && loByteVec.size () > 1)
+      if (m_loByteVec != null && m_loByteVec.size () > 1)
         codeGenerator.genCodeLine ("                  if ((jjbitVec" +
-                                   loByteVec.get (1).intValue () +
+                                   m_loByteVec.get (1).intValue () +
                                    "[i2" +
                                    "] & l2) != 0L)");
     }
     else
     {
-      codeGenerator.genCodeLine ("                  if (jjCanMove_" + nonAsciiMethod + "(hiByte, i1, i2, l1, l2))");
+      codeGenerator.genCodeLine ("                  if (jjCanMove_" + m_nonAsciiMethod + "(hiByte, i1, i2, l1, l2))");
     }
 
-    if (kindToPrint != Integer.MAX_VALUE)
+    if (m_kindToPrint != Integer.MAX_VALUE)
     {
       codeGenerator.genCodeLine ("                  {");
-      codeGenerator.genCodeLine ("                     if (kind > " + kindToPrint + ")");
-      codeGenerator.genCodeLine ("                        kind = " + kindToPrint + ";");
+      codeGenerator.genCodeLine ("                     if (kind > " + m_kindToPrint + ")");
+      codeGenerator.genCodeLine ("                        kind = " + m_kindToPrint + ";");
     }
 
-    if (next != null && next.usefulEpsilonMoves > 0)
+    if (next != null && next.m_usefulEpsilonMoves > 0)
     {
-      final int [] stateNames = allNextStates.get (next.epsilonMovesString);
-      if (next.usefulEpsilonMoves == 1)
+      final int [] stateNames = s_allNextStates.get (next.m_epsilonMovesString);
+      if (next.m_usefulEpsilonMoves == 1)
       {
         final int name = stateNames[0];
         if (nextIntersects)
@@ -2426,7 +2428,7 @@ public class NfaState
           codeGenerator.genCodeLine ("                     jjstateSet[jjnewStateCnt++] = " + name + ";");
       }
       else
-        if (next.usefulEpsilonMoves == 2 && nextIntersects)
+        if (next.m_usefulEpsilonMoves == 2 && nextIntersects)
         {
           codeGenerator.genCodeLine ("                     { jjCheckNAddTwoStates(" +
                                      stateNames[0] +
@@ -2436,7 +2438,7 @@ public class NfaState
         }
         else
         {
-          final int [] indices = GetStateSetIndicesForUse (next.epsilonMovesString);
+          final int [] indices = _getStateSetIndicesForUse (next.m_epsilonMovesString);
           final boolean notTwo = (indices[0] + 1 != indices[1]);
 
           if (nextIntersects)
@@ -2444,12 +2446,12 @@ public class NfaState
             codeGenerator.genCode ("                     { jjCheckNAddStates(" + indices[0]);
             if (notTwo)
             {
-              jjCheckNAddStatesDualNeeded = true;
+              s_jjCheckNAddStatesDualNeeded = true;
               codeGenerator.genCode (", " + indices[1]);
             }
             else
             {
-              jjCheckNAddStatesUnaryNeeded = true;
+              s_jjCheckNAddStatesUnaryNeeded = true;
             }
             codeGenerator.genCodeLine ("); }");
           }
@@ -2458,51 +2460,51 @@ public class NfaState
         }
     }
 
-    if (kindToPrint != Integer.MAX_VALUE)
+    if (m_kindToPrint != Integer.MAX_VALUE)
       codeGenerator.genCodeLine ("                  }");
   }
 
-  private final void DumpNonAsciiMove (final CodeGenerator codeGenerator, final boolean dumped[])
+  private final void _dumpNonAsciiMove (final CodeGenerator codeGenerator, final boolean dumped[])
   {
-    boolean nextIntersects = selfLoop () && isComposite;
+    boolean nextIntersects = _selfLoop () && m_isComposite;
 
-    for (int j = 0; j < allStates.size (); j++)
+    for (int j = 0; j < s_allStates.size (); j++)
     {
-      final NfaState temp1 = allStates.get (j);
+      final NfaState temp1 = s_allStates.get (j);
 
       if (this == temp1 ||
           temp1.stateName == -1 ||
           temp1.dummy ||
           stateName == temp1.stateName ||
-          (temp1.nonAsciiMethod == -1))
+          (temp1.m_nonAsciiMethod == -1))
         continue;
 
-      if (!nextIntersects && _intersect (temp1.next.epsilonMovesString, next.epsilonMovesString))
+      if (!nextIntersects && _intersect (temp1.next.m_epsilonMovesString, next.m_epsilonMovesString))
         nextIntersects = true;
 
       if (!dumped[temp1.stateName] &&
-          !temp1.isComposite &&
-          nonAsciiMethod == temp1.nonAsciiMethod &&
-          kindToPrint == temp1.kindToPrint &&
-          (next.epsilonMovesString == temp1.next.epsilonMovesString ||
-           (next.epsilonMovesString != null &&
-            temp1.next.epsilonMovesString != null &&
-            next.epsilonMovesString.equals (temp1.next.epsilonMovesString))))
+          !temp1.m_isComposite &&
+          m_nonAsciiMethod == temp1.m_nonAsciiMethod &&
+          m_kindToPrint == temp1.m_kindToPrint &&
+          (next.m_epsilonMovesString == temp1.next.m_epsilonMovesString ||
+           (next.m_epsilonMovesString != null &&
+            temp1.next.m_epsilonMovesString != null &&
+            next.m_epsilonMovesString.equals (temp1.next.m_epsilonMovesString))))
       {
         dumped[temp1.stateName] = true;
         codeGenerator.genCodeLine ("               case " + temp1.stateName + ":");
       }
     }
 
-    if (next == null || next.usefulEpsilonMoves <= 0)
+    if (next == null || next.m_usefulEpsilonMoves <= 0)
     {
-      final String kindCheck = " && kind > " + kindToPrint;
+      final String kindCheck = " && kind > " + m_kindToPrint;
 
       if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
       {
-        if (loByteVec != null && loByteVec.size () > 1)
+        if (m_loByteVec != null && m_loByteVec.size () > 1)
           codeGenerator.genCodeLine ("                  if ((jjbitVec" +
-                                     loByteVec.get (1).intValue () +
+                                     m_loByteVec.get (1).intValue () +
                                      "[i2" +
                                      "] & l2) != 0L" +
                                      kindCheck +
@@ -2511,25 +2513,25 @@ public class NfaState
       else
       {
         codeGenerator.genCodeLine ("                  if (jjCanMove_" +
-                                   nonAsciiMethod +
+                                   m_nonAsciiMethod +
                                    "(hiByte, i1, i2, l1, l2)" +
                                    kindCheck +
                                    ")");
       }
-      codeGenerator.genCodeLine ("                     kind = " + kindToPrint + ";");
+      codeGenerator.genCodeLine ("                     kind = " + m_kindToPrint + ";");
       codeGenerator.genCodeLine ("                  break;");
       return;
     }
 
     String prefix = "   ";
-    if (kindToPrint != Integer.MAX_VALUE)
+    if (m_kindToPrint != Integer.MAX_VALUE)
     {
       if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
       {
-        if (loByteVec != null && loByteVec.size () > 1)
+        if (m_loByteVec != null && m_loByteVec.size () > 1)
         {
           codeGenerator.genCodeLine ("                  if ((jjbitVec" +
-                                     loByteVec.get (1).intValue () +
+                                     m_loByteVec.get (1).intValue () +
                                      "[i2" +
                                      "] & l2) == 0L)");
           codeGenerator.genCodeLine ("                     break;");
@@ -2537,32 +2539,34 @@ public class NfaState
       }
       else
       {
-        codeGenerator.genCodeLine ("                  if (!jjCanMove_" + nonAsciiMethod + "(hiByte, i1, i2, l1, l2))");
+        codeGenerator.genCodeLine ("                  if (!jjCanMove_" +
+                                   m_nonAsciiMethod +
+                                   "(hiByte, i1, i2, l1, l2))");
         codeGenerator.genCodeLine ("                     break;");
       }
 
-      codeGenerator.genCodeLine ("                  if (kind > " + kindToPrint + ")");
-      codeGenerator.genCodeLine ("                     kind = " + kindToPrint + ";");
+      codeGenerator.genCodeLine ("                  if (kind > " + m_kindToPrint + ")");
+      codeGenerator.genCodeLine ("                     kind = " + m_kindToPrint + ";");
       prefix = "";
     }
     else
       if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
       {
-        if (loByteVec != null && loByteVec.size () > 1)
+        if (m_loByteVec != null && m_loByteVec.size () > 1)
           codeGenerator.genCodeLine ("                  if ((jjbitVec" +
-                                     loByteVec.get (1).intValue () +
+                                     m_loByteVec.get (1).intValue () +
                                      "[i2" +
                                      "] & l2) != 0L)");
       }
       else
       {
-        codeGenerator.genCodeLine ("                  if (jjCanMove_" + nonAsciiMethod + "(hiByte, i1, i2, l1, l2))");
+        codeGenerator.genCodeLine ("                  if (jjCanMove_" + m_nonAsciiMethod + "(hiByte, i1, i2, l1, l2))");
       }
 
-    if (next != null && next.usefulEpsilonMoves > 0)
+    if (next != null && next.m_usefulEpsilonMoves > 0)
     {
-      final int [] stateNames = allNextStates.get (next.epsilonMovesString);
-      if (next.usefulEpsilonMoves == 1)
+      final int [] stateNames = s_allNextStates.get (next.m_epsilonMovesString);
+      if (next.m_usefulEpsilonMoves == 1)
       {
         final int name = stateNames[0];
         if (nextIntersects)
@@ -2571,7 +2575,7 @@ public class NfaState
           codeGenerator.genCodeLine (prefix + "                  jjstateSet[jjnewStateCnt++] = " + name + ";");
       }
       else
-        if (next.usefulEpsilonMoves == 2 && nextIntersects)
+        if (next.m_usefulEpsilonMoves == 2 && nextIntersects)
         {
           codeGenerator.genCodeLine (prefix +
                                      "                  { jjCheckNAddTwoStates(" +
@@ -2582,7 +2586,7 @@ public class NfaState
         }
         else
         {
-          final int [] indices = GetStateSetIndicesForUse (next.epsilonMovesString);
+          final int [] indices = _getStateSetIndicesForUse (next.m_epsilonMovesString);
           final boolean notTwo = (indices[0] + 1 != indices[1]);
 
           if (nextIntersects)
@@ -2590,12 +2594,12 @@ public class NfaState
             codeGenerator.genCode (prefix + "                  { jjCheckNAddStates(" + indices[0]);
             if (notTwo)
             {
-              jjCheckNAddStatesDualNeeded = true;
+              s_jjCheckNAddStatesDualNeeded = true;
               codeGenerator.genCode (", " + indices[1]);
             }
             else
             {
-              jjCheckNAddStatesUnaryNeeded = true;
+              s_jjCheckNAddStatesUnaryNeeded = true;
             }
             codeGenerator.genCodeLine ("); }");
           }
@@ -2612,37 +2616,37 @@ public class NfaState
     codeGenerator.genCodeLine ("                  break;");
   }
 
-  public static void DumpCharAndRangeMoves (final CodeGenerator codeGenerator)
+  public static void dumpCharAndRangeMoves (final CodeGenerator codeGenerator)
   {
-    final boolean [] dumped = new boolean [Math.max (generatedStates, dummyStateIndex + 1)];
+    final boolean [] dumped = new boolean [Math.max (generatedStates, s_dummyStateIndex + 1)];
 
     _dumpHeadForCase (codeGenerator, -1);
 
-    for (final String s : compositeStateTable.keySet ())
-      DumpCompositeStatesNonAsciiMoves (codeGenerator, s, dumped);
+    for (final String s : s_compositeStateTable.keySet ())
+      _dumpCompositeStatesNonAsciiMoves (codeGenerator, s, dumped);
 
-    for (final NfaState temp : allStates)
+    for (final NfaState temp : s_allStates)
     {
       if (temp.stateName == -1 ||
           dumped[temp.stateName] ||
-          temp.lexState != LexGenJava.lexStateIndex ||
+          temp.m_lexState != LexGenJava.lexStateIndex ||
           !temp.hasTransitions () ||
           temp.dummy)
         continue;
 
       String toPrint = "";
 
-      if (temp.stateForCase != null)
+      if (temp.m_stateForCase != null)
       {
         if (temp.inNextOf == 1)
           continue;
 
-        if (dumped[temp.stateForCase.stateName])
+        if (dumped[temp.m_stateForCase.stateName])
           continue;
 
-        toPrint = (temp.stateForCase.PrintNoBreak (codeGenerator, -1, dumped));
+        toPrint = (temp.m_stateForCase._printNoBreak (codeGenerator, -1, dumped));
 
-        if (temp.nonAsciiMethod == -1)
+        if (temp.m_nonAsciiMethod == -1)
         {
           if (toPrint.equals (""))
             codeGenerator.genCodeLine ("                  break;");
@@ -2651,7 +2655,7 @@ public class NfaState
         }
       }
 
-      if (temp.nonAsciiMethod == -1)
+      if (temp.m_nonAsciiMethod == -1)
         continue;
 
       if (!toPrint.equals (""))
@@ -2660,7 +2664,7 @@ public class NfaState
       dumped[temp.stateName] = true;
       // System.out.println("case : " + temp.stateName);
       codeGenerator.genCodeLine ("               case " + temp.stateName + ":");
-      temp.DumpNonAsciiMove (codeGenerator, dumped);
+      temp._dumpNonAsciiMove (codeGenerator, dumped);
     }
 
     if (Options.getJavaUnicodeEscape () || unicodeWarningGiven)
@@ -2675,22 +2679,22 @@ public class NfaState
     codeGenerator.genCodeLine ("         } while(i != startsAt);");
   }
 
-  public static void DumpNonAsciiMoveMethods (final CodeGenerator codeGenerator)
+  public static void dumpNonAsciiMoveMethods (final CodeGenerator codeGenerator)
   {
     if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
       return;
 
-    if (nonAsciiTableForMethod.size () <= 0)
+    if (s_nonAsciiTableForMethod.size () <= 0)
       return;
 
-    for (int i = 0; i < nonAsciiTableForMethod.size (); i++)
+    for (int i = 0; i < s_nonAsciiTableForMethod.size (); i++)
     {
-      final NfaState tmp = nonAsciiTableForMethod.get (i);
-      tmp.DumpNonAsciiMoveMethod (codeGenerator);
+      final NfaState tmp = s_nonAsciiTableForMethod.get (i);
+      tmp.dumpNonAsciiMoveMethod (codeGenerator);
     }
   }
 
-  void DumpNonAsciiMoveMethod (final CodeGenerator codeGenerator)
+  void dumpNonAsciiMoveMethod (final CodeGenerator codeGenerator)
   {
     int j;
     if (CodeGenerator.isJavaLanguage ())
@@ -2698,7 +2702,7 @@ public class NfaState
       codeGenerator.genCodeLine ("private static final " +
                                  Options.getBooleanType () +
                                  " jjCanMove_" +
-                                 nonAsciiMethod +
+                                 m_nonAsciiMethod +
                                  "(int hiByte, int i1, int i2, " +
                                  Options.getLongType () +
                                  " l1, " +
@@ -2710,7 +2714,7 @@ public class NfaState
       codeGenerator.generateMethodDefHeader ("" + Options.getBooleanType () + "",
                                              LexGenJava.tokMgrClassName,
                                              "jjCanMove_" +
-                                                                         nonAsciiMethod +
+                                                                         m_nonAsciiMethod +
                                                                          "(int hiByte, int i1, int i2, " +
                                                                          Options.getLongType () +
                                                                          " l1, " +
@@ -2721,15 +2725,15 @@ public class NfaState
     codeGenerator.genCodeLine ("   switch(hiByte)");
     codeGenerator.genCodeLine ("   {");
 
-    if (loByteVec != null && loByteVec.size () > 0)
+    if (m_loByteVec != null && m_loByteVec.size () > 0)
     {
-      for (j = 0; j < loByteVec.size (); j += 2)
+      for (j = 0; j < m_loByteVec.size (); j += 2)
       {
-        codeGenerator.genCodeLine ("      case " + loByteVec.get (j).intValue () + ":");
-        if (!AllBitsSet (allBitVectors.get (loByteVec.get (j + 1).intValue ())))
+        codeGenerator.genCodeLine ("      case " + m_loByteVec.get (j).intValue () + ":");
+        if (!allBitsSet (allBitVectors.get (m_loByteVec.get (j + 1).intValue ())))
         {
           codeGenerator.genCodeLine ("         return ((jjbitVec" +
-                                     loByteVec.get (j + 1).intValue () +
+                                     m_loByteVec.get (j + 1).intValue () +
                                      "[i2" +
                                      "] & l2) != 0L);");
         }
@@ -2740,15 +2744,15 @@ public class NfaState
 
     codeGenerator.genCodeLine ("      default :");
 
-    if (nonAsciiMoveIndices != null && (j = nonAsciiMoveIndices.length) > 0)
+    if (m_nonAsciiMoveIndices != null && (j = m_nonAsciiMoveIndices.length) > 0)
     {
       do
       {
-        if (!AllBitsSet (allBitVectors.get (nonAsciiMoveIndices[j - 2])))
-          codeGenerator.genCodeLine ("         if ((jjbitVec" + nonAsciiMoveIndices[j - 2] + "[i1] & l1) != 0L)");
-        if (!AllBitsSet (allBitVectors.get (nonAsciiMoveIndices[j - 1])))
+        if (!allBitsSet (allBitVectors.get (m_nonAsciiMoveIndices[j - 2])))
+          codeGenerator.genCodeLine ("         if ((jjbitVec" + m_nonAsciiMoveIndices[j - 2] + "[i1] & l1) != 0L)");
+        if (!allBitsSet (allBitVectors.get (m_nonAsciiMoveIndices[j - 1])))
         {
-          codeGenerator.genCodeLine ("            if ((jjbitVec" + nonAsciiMoveIndices[j - 1] + "[i2] & l2) == 0L)");
+          codeGenerator.genCodeLine ("            if ((jjbitVec" + m_nonAsciiMoveIndices[j - 1] + "[i2] & l2) == 0L)");
           codeGenerator.genCodeLine ("               return false;");
           codeGenerator.genCodeLine ("            else");
         }
@@ -2761,24 +2765,24 @@ public class NfaState
     codeGenerator.genCodeLine ("}");
   }
 
-  private static void ReArrange ()
+  private static void _reArrange ()
   {
-    final List <NfaState> v = allStates;
-    allStates = new ArrayList <> (Collections.nCopies (generatedStates, null));
+    final List <NfaState> v = s_allStates;
+    s_allStates = new ArrayList <> (Collections.nCopies (generatedStates, null));
 
-    if (allStates.size () != generatedStates)
+    if (s_allStates.size () != generatedStates)
       throw new Error ("What??");
 
     for (int j = 0; j < v.size (); j++)
     {
       final NfaState tmp = v.get (j);
       if (tmp.stateName != -1 && !tmp.dummy)
-        allStates.set (tmp.stateName, tmp);
+        s_allStates.set (tmp.stateName, tmp);
     }
   }
 
   // private static boolean boilerPlateDumped = false;
-  static void PrintBoilerPlate (final CodeGenerator codeGenerator)
+  static void printBoilerPlateJava (final CodeGenerator codeGenerator)
   {
     codeGenerator.genCodeLine ((Options.getStatic () ? "static " : "") + "private void " + "jjCheckNAdd(int state)");
     codeGenerator.genCodeLine ("{");
@@ -2807,7 +2811,7 @@ public class NfaState
     codeGenerator.genCodeLine ("}");
     codeGenerator.genCodeLine ("");
 
-    if (jjCheckNAddStatesDualNeeded)
+    if (s_jjCheckNAddStatesDualNeeded)
     {
       codeGenerator.genCodeLine ((Options.getStatic () ? "static " : "") +
                                  "private void " +
@@ -2820,7 +2824,7 @@ public class NfaState
       codeGenerator.genCodeLine ("");
     }
 
-    if (jjCheckNAddStatesUnaryNeeded)
+    if (s_jjCheckNAddStatesUnaryNeeded)
     {
       codeGenerator.genCodeLine ((Options.getStatic () ? "static " : "") +
                                  "private void " +
@@ -2834,7 +2838,7 @@ public class NfaState
   }
 
   // private static boolean boilerPlateDumped = false;
-  static void PrintBoilerPlateCPP (final CodeGenerator codeGenerator)
+  static void printBoilerPlateCPP (final CodeGenerator codeGenerator)
   {
     codeGenerator.switchToIncludeFile ();
     codeGenerator.genCodeLine ("#define jjCheckNAdd(state)\\");
@@ -2860,7 +2864,7 @@ public class NfaState
     codeGenerator.genCodeLine ("}");
     codeGenerator.genCodeLine ("");
 
-    if (jjCheckNAddStatesDualNeeded)
+    if (s_jjCheckNAddStatesDualNeeded)
     {
       codeGenerator.genCodeLine ("#define jjCheckNAddStates(start, end)\\");
       codeGenerator.genCodeLine ("{\\");
@@ -2871,7 +2875,7 @@ public class NfaState
       codeGenerator.genCodeLine ("");
     }
 
-    if (jjCheckNAddStatesUnaryNeeded)
+    if (s_jjCheckNAddStatesUnaryNeeded)
     {
       codeGenerator.genCodeLine ("#define jjCheckNAddStates(start)\\");
       codeGenerator.genCodeLine ("{\\");
@@ -2891,25 +2895,25 @@ public class NfaState
     int cnt = 0;
     int foundAt = 0;
 
-    Outer: for (int j = 0; j < allStates.size (); j++)
+    Outer: for (int j = 0; j < s_allStates.size (); j++)
     {
       NfaState stateForCase = null;
-      final NfaState tmpState = allStates.get (j);
+      final NfaState tmpState = s_allStates.get (j);
 
       if (tmpState.stateName == -1 ||
           tmpState.dummy ||
           !tmpState._isUsefulState () ||
           tmpState.next == null ||
-          tmpState.next.usefulEpsilonMoves < 1)
+          tmpState.next.m_usefulEpsilonMoves < 1)
         continue;
 
-      final String s = tmpState.next.epsilonMovesString;
+      final String s = tmpState.next.m_epsilonMovesString;
 
-      if (compositeStateTable.get (s) != null || printed.get (s) != null)
+      if (s_compositeStateTable.get (s) != null || printed.get (s) != null)
         continue;
 
       printed.put (s, s);
-      final int [] nexts = allNextStates.get (s);
+      final int [] nexts = s_allNextStates.get (s);
 
       if (nexts.length == 1)
         continue;
@@ -2921,9 +2925,9 @@ public class NfaState
         if ((state = nexts[i]) == -1)
           continue;
 
-        final NfaState tmp = allStates.get (state);
+        final NfaState tmp = s_allStates.get (state);
 
-        if (!tmp.isComposite && tmp.inNextOf == 1)
+        if (!tmp.m_isComposite && tmp.inNextOf == 1)
         {
           if (put[state])
             throw new Error ("JavaCC Bug: Please send mail to sankar@cs.stanford.edu");
@@ -2947,9 +2951,9 @@ public class NfaState
         if ((state = nexts[i]) == -1)
           continue;
 
-        final NfaState tmp = allStates.get (state);
+        final NfaState tmp = s_allStates.get (state);
 
-        if (!put[state] && tmp.inNextOf > 1 && !tmp.isComposite && tmp.stateForCase == null)
+        if (!put[state] && tmp.inNextOf > 1 && !tmp.m_isComposite && tmp.m_stateForCase == null)
         {
           cnt++;
           nexts[i] = -1;
@@ -2959,9 +2963,9 @@ public class NfaState
           nexts[0] = nexts[foundAt];
           nexts[foundAt] = toSwap;
 
-          tmp.stateForCase = stateForCase;
-          stateForCase.stateForCase = tmp;
-          stateSetsToFix.put (s, nexts);
+          tmp.m_stateForCase = stateForCase;
+          stateForCase.m_stateForCase = tmp;
+          s_stateSetsToFix.put (s, nexts);
 
           // System.out.println("For : " + s + "; " + stateForCase.stateName +
           // " and " + tmp.stateName);
@@ -2975,7 +2979,7 @@ public class NfaState
         if ((state = aNext) == -1)
           continue;
 
-        final NfaState tmp = allStates.get (state);
+        final NfaState tmp = s_allStates.get (state);
         if (tmp.inNextOf <= 1)
           put[state] = false;
       }
@@ -2985,7 +2989,7 @@ public class NfaState
   static int [] [] kinds;
   static int [] [] [] statesForState;
 
-  public static void DumpMoveNfa (final CodeGenerator codeGenerator)
+  public static void dumpMoveNfa (final CodeGenerator codeGenerator)
   {
     // if (!boilerPlateDumped)
     // PrintBoilerPlate(codeGenerator);
@@ -2999,38 +3003,38 @@ public class NfaState
       statesForState = new int [LexGenJava.maxLexStates] [] [];
     }
 
-    ReArrange ();
+    _reArrange ();
 
-    for (int i = 0; i < allStates.size (); i++)
+    for (int i = 0; i < s_allStates.size (); i++)
     {
-      final NfaState temp = allStates.get (i);
+      final NfaState temp = s_allStates.get (i);
 
-      if (temp.lexState != LexGenJava.lexStateIndex || !temp.hasTransitions () || temp.dummy || temp.stateName == -1)
+      if (temp.m_lexState != LexGenJava.lexStateIndex || !temp.hasTransitions () || temp.dummy || temp.stateName == -1)
         continue;
 
       if (kindsForStates == null)
       {
         kindsForStates = new int [generatedStates];
-        statesForState[LexGenJava.lexStateIndex] = new int [Math.max (generatedStates, dummyStateIndex + 1)] [];
+        statesForState[LexGenJava.lexStateIndex] = new int [Math.max (generatedStates, s_dummyStateIndex + 1)] [];
       }
 
-      kindsForStates[temp.stateName] = temp.lookingFor;
-      statesForState[LexGenJava.lexStateIndex][temp.stateName] = temp.compositeStates;
+      kindsForStates[temp.stateName] = temp.m_lookingFor;
+      statesForState[LexGenJava.lexStateIndex][temp.stateName] = temp.m_compositeStates;
 
-      temp.GenerateNonAsciiMoves (codeGenerator);
+      temp.generateNonAsciiMoves (codeGenerator);
     }
 
-    for (final Map.Entry <String, Integer> aEntry : stateNameForComposite.entrySet ())
+    for (final Map.Entry <String, Integer> aEntry : s_stateNameForComposite.entrySet ())
     {
       final String s = aEntry.getKey ();
       final int state = aEntry.getValue ().intValue ();
 
       if (state >= generatedStates)
-        statesForState[LexGenJava.lexStateIndex][state] = allNextStates.get (s);
+        statesForState[LexGenJava.lexStateIndex][state] = s_allNextStates.get (s);
     }
 
-    if (stateSetsToFix.size () != 0)
-      FixStateSets ();
+    if (s_stateSetsToFix.size () != 0)
+      _fixStateSets ();
 
     kinds[LexGenJava.lexStateIndex] = kindsForStates;
 
@@ -3123,7 +3127,7 @@ public class NfaState
     codeGenerator.genCodeLine ("      if (curChar < 64)");
     codeGenerator.genCodeLine ("      {");
 
-    DumpAsciiMoves (codeGenerator, 0);
+    _dumpAsciiMoves (codeGenerator, 0);
 
     codeGenerator.genCodeLine ("      }");
 
@@ -3131,14 +3135,14 @@ public class NfaState
 
     codeGenerator.genCodeLine ("      {");
 
-    DumpAsciiMoves (codeGenerator, 1);
+    _dumpAsciiMoves (codeGenerator, 1);
 
     codeGenerator.genCodeLine ("      }");
 
     codeGenerator.genCodeLine ("      else");
     codeGenerator.genCodeLine ("      {");
 
-    DumpCharAndRangeMoves (codeGenerator);
+    dumpCharAndRangeMoves (codeGenerator);
 
     codeGenerator.genCodeLine ("      }");
 
@@ -3296,10 +3300,10 @@ public class NfaState
     }
 
     codeGenerator.genCodeLine ("}");
-    allStates.clear ();
+    s_allStates.clear ();
   }
 
-  public static void DumpStatesForStateCPP (final CodeGenerator codeGenerator)
+  public static void dumpStatesForStateCPP (final CodeGenerator codeGenerator)
   {
     if (statesForState == null)
     {
@@ -3364,7 +3368,7 @@ public class NfaState
     codeGenerator.switchToMainFile ();
   }
 
-  public static void DumpStatesForState (final CodeGenerator codeGenerator)
+  public static void dumpStatesForStateJava (final CodeGenerator codeGenerator)
   {
     codeGenerator.genCode ("protected static final int[][][] statesForState = ");
 
@@ -3412,15 +3416,15 @@ public class NfaState
     codeGenerator.genCodeLine ("\n};");
   }
 
-  public static void DumpStatesForKind (final CodeGenerator codeGenerator)
+  public static void dumpStatesForKind (final CodeGenerator codeGenerator)
   {
     if (CodeGenerator.isJavaLanguage ())
     {
-      DumpStatesForState (codeGenerator);
+      dumpStatesForStateJava (codeGenerator);
     }
     else
     {
-      DumpStatesForStateCPP (codeGenerator);
+      dumpStatesForStateCPP (codeGenerator);
     }
     boolean moreThanOne = false;
     int cnt = 0;
@@ -3482,22 +3486,22 @@ public class NfaState
   {
     unicodeWarningGiven = false;
     generatedStates = 0;
-    idCnt = 0;
-    lohiByteCnt = 0;
-    dummyStateIndex = -1;
-    m_done = false;
-    mark = null;
-    stateDone = null;
-    allStates = new ArrayList <> ();
-    indexedAllStates = new ArrayList <> ();
-    nonAsciiTableForMethod = new ArrayList <> ();
-    equivStatesTable = new HashMap <> ();
-    allNextStates = new HashMap <> ();
-    lohiByteTab = new HashMap <> ();
-    stateNameForComposite = new HashMap <> ();
-    compositeStateTable = new HashMap <> ();
-    stateBlockTable = new HashMap <> ();
-    stateSetsToFix = new HashMap <> ();
+    s_idCnt = 0;
+    s_lohiByteCnt = 0;
+    s_dummyStateIndex = -1;
+    s_done = false;
+    s_mark = null;
+    s_stateDone = null;
+    s_allStates = new ArrayList <> ();
+    s_indexedAllStates = new ArrayList <> ();
+    s_nonAsciiTableForMethod = new ArrayList <> ();
+    s_equivStatesTable = new HashMap <> ();
+    s_allNextStates = new HashMap <> ();
+    s_lohiByteTab = new HashMap <> ();
+    s_stateNameForComposite = new HashMap <> ();
+    s_compositeStateTable = new HashMap <> ();
+    s_stateBlockTable = new HashMap <> ();
+    s_stateSetsToFix = new HashMap <> ();
     allBitVectors = new ArrayList <> ();
     tmpIndices = new int [512];
     allBits = "{\n   0xffffffffffffffffL, " +
@@ -3508,18 +3512,18 @@ public class NfaState
     orderedStateSet = new ArrayList <> ();
     lastIndex = 0;
     // boilerPlateDumped = false;
-    jjCheckNAddStatesUnaryNeeded = false;
-    jjCheckNAddStatesDualNeeded = false;
+    s_jjCheckNAddStatesUnaryNeeded = false;
+    s_jjCheckNAddStatesDualNeeded = false;
     kinds = null;
     statesForState = null;
   }
 
-  private static final Map <Integer, NfaState> initialStates = new HashMap <> ();
-  private static final Map <Integer, List <NfaState>> statesForLexicalState = new HashMap <> ();
-  private static final Map <Integer, Integer> nfaStateOffset = new HashMap <> ();
-  private static final Map <Integer, Integer> matchAnyChar = new HashMap <> ();
+  private static final Map <Integer, NfaState> s_initialStates = new HashMap <> ();
+  private static final Map <Integer, List <NfaState>> s_statesForLexicalState = new HashMap <> ();
+  private static final Map <Integer, Integer> s_nfaStateOffset = new HashMap <> ();
+  private static final Map <Integer, Integer> s_matchAnyChar = new HashMap <> ();
 
-  static void UpdateNfaData (final int maxState,
+  static void updateNfaData (final int maxState,
                              final int startStateName,
                              final int lexicalStateIndex,
                              final int matchAnyCharKind)
@@ -3528,9 +3532,9 @@ public class NfaState
     final Set <Integer> done = new HashSet <> ();
     final List <NfaState> cleanStates = new ArrayList <> ();
     NfaState startState = null;
-    for (int i = 0; i < allStates.size (); i++)
+    for (int i = 0; i < s_allStates.size (); i++)
     {
-      final NfaState tmp = allStates.get (i);
+      final NfaState tmp = s_allStates.get (i);
       if (tmp.stateName == -1)
         continue;
       if (done.contains (tmp.stateName))
@@ -3543,27 +3547,27 @@ public class NfaState
       }
     }
 
-    initialStates.put (lexicalStateIndex, startState);
-    statesForLexicalState.put (lexicalStateIndex, cleanStates);
-    nfaStateOffset.put (lexicalStateIndex, maxState);
+    s_initialStates.put (lexicalStateIndex, startState);
+    s_statesForLexicalState.put (lexicalStateIndex, cleanStates);
+    s_nfaStateOffset.put (lexicalStateIndex, maxState);
     if (matchAnyCharKind > 0)
     {
-      matchAnyChar.put (lexicalStateIndex, matchAnyCharKind);
+      s_matchAnyChar.put (lexicalStateIndex, matchAnyCharKind);
     }
     else
     {
-      matchAnyChar.put (lexicalStateIndex, Integer.MAX_VALUE);
+      s_matchAnyChar.put (lexicalStateIndex, Integer.MAX_VALUE);
     }
   }
 
-  public static void BuildTokenizerData (final TokenizerData tokenizerData)
+  public static void buildTokenizerData (final TokenizerData tokenizerData)
   {
     NfaState [] cleanStates;
     final List <NfaState> cleanStateList = new ArrayList <> ();
-    for (final int l : statesForLexicalState.keySet ())
+    for (final int l : s_statesForLexicalState.keySet ())
     {
-      final int offset = nfaStateOffset.get (l);
-      final List <NfaState> states = statesForLexicalState.get (l);
+      final int offset = s_nfaStateOffset.get (l);
+      final List <NfaState> states = s_statesForLexicalState.get (l);
       for (int i = 0; i < states.size (); i++)
       {
         final NfaState state = states.get (i);
@@ -3581,7 +3585,7 @@ public class NfaState
       final Set <Character> chars = new TreeSet <> ();
       for (int c = 0; c <= Character.MAX_VALUE; c++)
       {
-        if (s.CanMoveUsingChar ((char) c))
+        if (s.canMoveUsingChar ((char) c))
         {
           chars.add ((char) c);
         }
@@ -3595,34 +3599,34 @@ public class NfaState
         }
       }
       final SortedSet <Integer> composite = new TreeSet <> ();
-      if (s.isComposite)
+      if (s.m_isComposite)
       {
-        for (final int c : s.compositeStates)
+        for (final int c : s.m_compositeStates)
           composite.add (c);
       }
-      tokenizerData.addNfaState (s.stateName, chars, nextStates, composite, s.kindToPrint);
+      tokenizerData.addNfaState (s.stateName, chars, nextStates, composite, s.m_kindToPrint);
     }
     final Map <Integer, Integer> initStates = new HashMap <> ();
-    for (final int l : initialStates.keySet ())
+    for (final int l : s_initialStates.keySet ())
     {
-      if (initialStates.get (l) == null)
+      if (s_initialStates.get (l) == null)
       {
         initStates.put (l, -1);
       }
       else
       {
-        initStates.put (l, initialStates.get (l).stateName);
+        initStates.put (l, s_initialStates.get (l).stateName);
       }
     }
     tokenizerData.setInitialStates (initStates);
-    tokenizerData.setWildcardKind (matchAnyChar);
+    tokenizerData.setWildcardKind (s_matchAnyChar);
   }
 
   static NfaState getNfaState (final int index)
   {
     if (index == -1)
       return null;
-    for (final NfaState s : allStates)
+    for (final NfaState s : s_allStates)
     {
       if (s.stateName == index)
         return s;

@@ -265,7 +265,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
   public static void AddCharToSkip (final char c, final int kind)
   {
-    singlesToSkip[lexStateIndex].AddChar (c);
+    singlesToSkip[lexStateIndex].addChar (c);
     singlesToSkip[lexStateIndex].kind = kind;
   }
 
@@ -292,7 +292,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
     while (e.hasMoreElements ())
     {
-      NfaState.ReInit ();
+      NfaState.reInit2 ();
       RStringLiteral.ReInit ();
 
       final String key = (String) e.nextElement ();
@@ -356,7 +356,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
               temp = curRE.GenerateNfa (ignore);
               temp.end.isFinal = true;
               temp.end.kind = curRE.m_ordinal;
-              initialState.AddMove (temp.start);
+              initialState.addMove (temp.start);
             }
 
           if (kinds.length < curRE.m_ordinal)
@@ -412,13 +412,13 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
       NfaState.computeClosures ();
 
       for (final NfaState aItem : initialState.epsilonMoves)
-        aItem.GenerateCode ();
+        aItem.generateCode ();
 
       hasNfa[lexStateIndex] = (NfaState.generatedStates != 0);
       if (hasNfa[lexStateIndex])
       {
-        initialState.GenerateCode ();
-        initialState.GenerateInitMoves (this);
+        initialState.generateCode ();
+        initialState.generateInitMoves (this);
       }
 
       if (initialState.kind != Integer.MAX_VALUE && initialState.kind != 0)
@@ -450,7 +450,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
       RStringLiteral.DumpDfaCode (this);
 
       if (hasNfa[lexStateIndex])
-        NfaState.DumpMoveNfa (this);
+        NfaState.dumpMoveNfa (this);
 
       if (stateSetSize < NfaState.generatedStates)
         stateSetSize = NfaState.generatedStates;
@@ -459,16 +459,16 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
     for (final RChoice aItem : choices)
       aItem.CheckUnmatchability ();
 
-    NfaState.DumpStateSets (this);
+    NfaState.dumpStateSets (this);
     CheckEmptyStringMatch ();
-    NfaState.DumpNonAsciiMoveMethods (this);
+    NfaState.dumpNonAsciiMoveMethods (this);
     RStringLiteral.DumpStrLiteralImages (this);
     DumpFillToken ();
     DumpGetNextToken ();
 
     if (Options.getDebugTokenManager ())
     {
-      NfaState.DumpStatesForKind (this);
+      NfaState.dumpStatesForKind (this);
       DumpDebugMethods ();
     }
 
@@ -488,7 +488,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
     if (hasTokenActions)
       DumpTokenActions ();
 
-    NfaState.PrintBoilerPlateCPP (this);
+    NfaState.printBoilerPlateCPP (this);
 
     String charStreamName;
     if (Options.getUserCharStream ())

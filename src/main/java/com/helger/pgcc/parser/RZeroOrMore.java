@@ -49,10 +49,10 @@ public class RZeroOrMore extends RegularExpression
 
     final Nfa temp = regexpr.GenerateNfa (ignoreCase);
 
-    startState.AddMove (temp.start);
-    startState.AddMove (finalState);
-    temp.end.AddMove (finalState);
-    temp.end.AddMove (temp.start);
+    startState.addMove (temp.start);
+    startState.addMove (finalState);
+    temp.end.addMove (finalState);
+    temp.end.addMove (temp.start);
 
     return retVal;
   }

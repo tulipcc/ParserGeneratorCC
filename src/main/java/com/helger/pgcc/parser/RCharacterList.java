@@ -1764,13 +1764,13 @@ public class RCharacterList extends RegularExpression
     {
       final Object tmp = m_descriptors.get (i);
       if (tmp instanceof SingleCharacter)
-        startState.AddChar (((SingleCharacter) tmp).getChar ());
+        startState.addChar (((SingleCharacter) tmp).getChar ());
       else // if (descriptors.get(i) instanceof CharacterRange)
       {
         final CharacterRange cr = (CharacterRange) tmp;
 
         if (cr.getLeft () == cr.getRight ())
-          startState.AddChar (cr.getLeft ());
+          startState.addChar (cr.getLeft ());
         else
           startState.addRange (cr.getLeft (), cr.getRight ());
       }

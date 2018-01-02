@@ -85,18 +85,18 @@ public class RSequence extends RegularExpression
 
     curRE = m_units.get (0);
     temp1 = curRE.GenerateNfa (ignoreCase);
-    startState.AddMove (temp1.start);
+    startState.addMove (temp1.start);
 
     for (int i = 1; i < m_units.size (); i++)
     {
       curRE = m_units.get (i);
 
       temp2 = curRE.GenerateNfa (ignoreCase);
-      temp1.end.AddMove (temp2.start);
+      temp1.end.addMove (temp2.start);
       temp1 = temp2;
     }
 
-    temp2.end.AddMove (finalState);
+    temp2.end.addMove (finalState);
 
     return retVal;
   }

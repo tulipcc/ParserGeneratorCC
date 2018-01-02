@@ -416,12 +416,12 @@ public class RStringLiteral extends RegularExpression
     {
       finalState = new NfaState ();
       startState.charMoves = new char [1];
-      startState.AddChar (m_image.charAt (i));
+      startState.addChar (m_image.charAt (i));
 
       if (Options.getIgnoreCase () || ignoreCase)
       {
-        startState.AddChar (Character.toLowerCase (m_image.charAt (i)));
-        startState.AddChar (Character.toUpperCase (m_image.charAt (i)));
+        startState.addChar (Character.toLowerCase (m_image.charAt (i)));
+        startState.addChar (Character.toUpperCase (m_image.charAt (i)));
       }
 
       startState.next = finalState;
@@ -439,7 +439,7 @@ public class RStringLiteral extends RegularExpression
       codeGenerator.genCodeLine ("   return jjMoveNfa" +
                                  LexGenJava.lexStateSuffix +
                                  "(" +
-                                 NfaState.InitStateName () +
+                                 NfaState.initStateName () +
                                  ", 0);");
     else
       codeGenerator.genCodeLine ("   return 1;");
@@ -470,7 +470,7 @@ public class RStringLiteral extends RegularExpression
 
       if (actives != null && (actives[kind / 64] & (1L << (kind % 64))) != 0L)
       {
-        return NfaState.AddStartStateSet (s);
+        return NfaState.addStartStateSet (s);
       }
     }
 
@@ -891,7 +891,7 @@ public class RStringLiteral extends RegularExpression
               codeGenerator.genCodeLine ("      return jjMoveNfa" +
                                          LexGenJava.lexStateSuffix +
                                          "(" +
-                                         NfaState.InitStateName () +
+                                         NfaState.initStateName () +
                                          ", " +
                                          (i - 1) +
                                          ");");
@@ -1031,7 +1031,7 @@ public class RStringLiteral extends RegularExpression
             codeGenerator.genCodeLine ("   return jjMoveNfa" +
                                        LexGenJava.lexStateSuffix +
                                        "(" +
-                                       NfaState.InitStateName () +
+                                       NfaState.initStateName () +
                                        ", " +
                                        (i - 1) +
                                        ");");
@@ -1093,7 +1093,7 @@ public class RStringLiteral extends RegularExpression
         if (i == 0 &&
             c < 128 &&
             info.finalKindCnt != 0 &&
-            (NfaState.generatedStates == 0 || !NfaState.CanStartNfaUsingAscii (c)))
+            (NfaState.generatedStates == 0 || !NfaState.canStartNfaUsingAscii (c)))
         {
           int kind;
           int j = 0;
@@ -1339,7 +1339,7 @@ public class RStringLiteral extends RegularExpression
               codeGenerator.genCodeLine ("         return jjMoveNfa" +
                                          LexGenJava.lexStateSuffix +
                                          "(" +
-                                         NfaState.InitStateName () +
+                                         NfaState.initStateName () +
                                          ", 0);");
             else
               codeGenerator.genCodeLine ("         return 1;");
@@ -1382,7 +1382,7 @@ public class RStringLiteral extends RegularExpression
           codeGenerator.genCodeLine ("         return jjMoveNfa" +
                                      LexGenJava.lexStateSuffix +
                                      "(" +
-                                     NfaState.InitStateName () +
+                                     NfaState.initStateName () +
                                      ", 0);");
         }
         else
@@ -1428,7 +1428,7 @@ public class RStringLiteral extends RegularExpression
               codeGenerator.genCodeLine ("   return jjMoveNfa" +
                                          LexGenJava.lexStateSuffix +
                                          "(" +
-                                         NfaState.InitStateName () +
+                                         NfaState.initStateName () +
                                          ", " +
                                          i +
                                          ");");
@@ -1543,7 +1543,7 @@ public class RStringLiteral extends RegularExpression
                 jjmatchedPos = intermediateMatchedPos[i][j] = intermediateMatchedPos[i][j - 1];
               }
 
-          stateSetString = NfaState.GetStateSetString (newStates);
+          stateSetString = NfaState.getStateSetString (newStates);
         }
 
         if (kind == Integer.MAX_VALUE && (newStates == null || newStates.size () == 0))
@@ -1741,7 +1741,7 @@ public class RStringLiteral extends RegularExpression
           if (stateSetString.equals ("null;"))
             codeGenerator.genCodeLine ("            return -1;");
           else
-            codeGenerator.genCodeLine ("            return " + NfaState.AddStartStateSet (stateSetString) + ";");
+            codeGenerator.genCodeLine ("            return " + NfaState.addStartStateSet (stateSetString) + ";");
 
           if (!kindStr.equals (String.valueOf (Integer.MAX_VALUE)))
             codeGenerator.genCodeLine ("         }");
@@ -1785,7 +1785,7 @@ public class RStringLiteral extends RegularExpression
         codeGenerator.genCodeLine ("   return jjMoveNfa" +
                                    LexGenJava.lexStateSuffix +
                                    "(" +
-                                   NfaState.InitStateName () +
+                                   NfaState.initStateName () +
                                    ", pos + 1);");
       else
         codeGenerator.genCodeLine ("   return pos + 1;");

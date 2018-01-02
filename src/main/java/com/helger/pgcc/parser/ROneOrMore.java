@@ -49,9 +49,9 @@ public class ROneOrMore extends RegularExpression
 
     final Nfa temp = regexpr.GenerateNfa (ignoreCase);
 
-    startState.AddMove (temp.start);
-    temp.end.AddMove (temp.start);
-    temp.end.AddMove (finalState);
+    startState.addMove (temp.start);
+    temp.end.addMove (temp.start);
+    temp.end.addMove (finalState);
 
     return retVal;
   }
