@@ -33,7 +33,5 @@ package com.helger.pgcc.parser;
 
 public class Container
 {
-
   public Object member;
-
 }

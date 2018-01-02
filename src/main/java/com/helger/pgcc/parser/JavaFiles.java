@@ -73,24 +73,24 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
    */
   static final String tokenMgrErrorVersion = Version.majorDotMinor;
 
-  public interface JavaResourceTemplateLocations
+  public interface IJavaResourceTemplateLocations
   {
-    public String getTokenManagerTemplateResourceUrl ();
+    String getTokenManagerTemplateResourceUrl ();
 
-    public String getTokenTemplateResourceUrl ();
+    String getTokenTemplateResourceUrl ();
 
-    public String getTokenMgrErrorTemplateResourceUrl ();
+    String getTokenMgrErrorTemplateResourceUrl ();
 
-    public String getJavaCharStreamTemplateResourceUrl ();
+    String getJavaCharStreamTemplateResourceUrl ();
 
-    public String getCharStreamTemplateResourceUrl ();
+    String getCharStreamTemplateResourceUrl ();
 
-    public String getSimpleCharStreamTemplateResourceUrl ();
+    String getSimpleCharStreamTemplateResourceUrl ();
 
-    public String getParseExceptionTemplateResourceUrl ();
+    String getParseExceptionTemplateResourceUrl ();
   }
 
-  public static class JavaModernResourceTemplateLocationImpl implements JavaResourceTemplateLocations
+  public static class JavaModernResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
   {
     public String getTokenMgrErrorTemplateResourceUrl ()
     {
@@ -132,9 +132,8 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
     }
   }
 
-  public static class JavaResourceTemplateLocationImpl implements JavaResourceTemplateLocations
+  public static class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
   {
-
     public String getTokenTemplateResourceUrl ()
     {
       return "/templates/Token.template";
@@ -172,8 +171,8 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
 
   }
 
-  public static final JavaResourceTemplateLocations RESOURCES_JAVA_CLASSIC = new JavaResourceTemplateLocationImpl ();
-  public static final JavaResourceTemplateLocations RESOURCES_JAVA_MODERN = new JavaModernResourceTemplateLocationImpl ();
+  public static final IJavaResourceTemplateLocations RESOURCES_JAVA_CLASSIC = new JavaResourceTemplateLocationImpl ();
+  public static final IJavaResourceTemplateLocations RESOURCES_JAVA_MODERN = new JavaModernResourceTemplateLocationImpl ();
 
   /**
    * Read the version from the comment in the specified file. This method does
@@ -243,7 +242,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
     }
   }
 
-  public static void gen_JavaCharStream (final JavaResourceTemplateLocations locations)
+  public static void gen_JavaCharStream (final IJavaResourceTemplateLocations locations)
   {
     try
     {
@@ -296,7 +295,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
     }
   }
 
-  public static void gen_SimpleCharStream (final JavaResourceTemplateLocations locations)
+  public static void gen_SimpleCharStream (final IJavaResourceTemplateLocations locations)
   {
     try
     {
@@ -349,7 +348,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
     }
   }
 
-  public static void gen_CharStream (final JavaResourceTemplateLocations locations)
+  public static void gen_CharStream (final IJavaResourceTemplateLocations locations)
   {
     try
     {
@@ -467,7 +466,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
     }
   }
 
-  public static void gen_ParseException (final JavaResourceTemplateLocations locations)
+  public static void gen_ParseException (final IJavaResourceTemplateLocations locations)
   {
     try
     {
@@ -527,7 +526,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
     }
   }
 
-  public static void gen_TokenMgrError (final JavaResourceTemplateLocations locations)
+  public static void gen_TokenMgrError (final IJavaResourceTemplateLocations locations)
   {
 
     final boolean isLegacyExceptionHandling = Options.isLegacyExceptionHandling ();
@@ -578,7 +577,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
     }
   }
 
-  public static void gen_Token (final JavaResourceTemplateLocations locations)
+  public static void gen_Token (final IJavaResourceTemplateLocations locations)
   {
     try
     {
@@ -640,7 +639,7 @@ public class JavaFiles extends JavaCCGlobals implements JavaCCParserConstants
     }
   }
 
-  public static void gen_TokenManager (final JavaResourceTemplateLocations locations)
+  public static void gen_TokenManager (final IJavaResourceTemplateLocations locations)
   {
     try
     {

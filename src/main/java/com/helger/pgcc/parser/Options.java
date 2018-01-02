@@ -45,6 +45,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
 
@@ -127,9 +128,9 @@ public class Options
   public static final String USEROPTION__CPP_PARSER_INCLUDE = "PARSER_INCLUDE";
 
   @Deprecated
-  public static final String OUTPUT_LANGUAGE__CPP = ELanguage.CPP.getID ();
+  public static final String OUTPUT_LANGUAGE__CPP = EOutputLanguage.CPP.getID ();
 
-  public static ELanguage s_language = ELanguage.JAVA;
+  public static EOutputLanguage s_language = EOutputLanguage.JAVA;
 
   /**
    * 2013/07/22 -- GWT Compliant Output -- no external dependencies on GWT, but
@@ -196,7 +197,7 @@ public class Options
     temp.add (new OptionInfo (USEROPTION__TOKEN_EXTENDS, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__TOKEN_FACTORY, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__GRAMMAR_ENCODING, EOptionType.STRING, ""));
-    s_language = ELanguage.JAVA;
+    s_language = EOutputLanguage.JAVA;
     temp.add (new OptionInfo (USEROPTION__OUTPUT_LANGUAGE, EOptionType.STRING, s_language.getID ()));
 
     temp.add (new OptionInfo (USEROPTION__JAVA_TEMPLATE_TYPE, EOptionType.STRING, JAVA_TEMPLATE_TYPE_CLASSIC));
@@ -443,7 +444,7 @@ public class Options
       if (nameUpperCase.equalsIgnoreCase (USEROPTION__OUTPUT_LANGUAGE))
       {
         final String outputLanguage = (String) value;
-        final ELanguage eOutLanguage = getOutputLanguage (outputLanguage);
+        final EOutputLanguage eOutLanguage = getOutputLanguage (outputLanguage);
         if (eOutLanguage == null)
         {
           JavaCCErrors.warning (valueloc,
@@ -471,7 +472,7 @@ public class Options
 
   private static String _getAllValidLanguages ()
   {
-    return "[" + StringHelper.getImplodedMapped (", ", ELanguage.values (), ELanguage::getID) + "]";
+    return "[" + StringHelper.getImplodedMapped (", ", EOutputLanguage.values (), EOutputLanguage::getID) + "]";
   }
 
   /**
@@ -1019,9 +1020,9 @@ public class Options
   }
 
   @Nullable
-  public static ELanguage getOutputLanguage (@Nullable final String language)
+  public static EOutputLanguage getOutputLanguage (@Nullable final String language)
   {
-    return ELanguage.getFromIDCaseInsensitiveOrNull (language);
+    return EOutputLanguage.getFromIDCaseInsensitiveOrNull (language);
   }
 
   public static boolean isValidJavaTemplateType (@Nullable final String type)
@@ -1039,7 +1040,7 @@ public class Options
   }
 
   @Nonnull
-  public static ELanguage getOutputLanguageType ()
+  public static EOutputLanguage getOutputLanguageType ()
   {
     return s_language;
   }

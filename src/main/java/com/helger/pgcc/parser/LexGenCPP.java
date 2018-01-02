@@ -292,7 +292,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
 
     while (e.hasMoreElements ())
     {
-      NfaState.reInit2 ();
+      NfaState.reInitStatic ();
       RStringLiteral.ReInit ();
 
       final String key = (String) e.nextElement ();
@@ -414,7 +414,7 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
       for (final NfaState aItem : initialState.epsilonMoves)
         aItem.generateCode ();
 
-      hasNfa[lexStateIndex] = (NfaState.generatedStates != 0);
+      hasNfa[lexStateIndex] = (NfaState.s_generatedStates != 0);
       if (hasNfa[lexStateIndex])
       {
         initialState.generateCode ();
@@ -452,8 +452,8 @@ public class LexGenCPP extends LexGenJava // CodeGenerator implements
       if (hasNfa[lexStateIndex])
         NfaState.dumpMoveNfa (this);
 
-      if (stateSetSize < NfaState.generatedStates)
-        stateSetSize = NfaState.generatedStates;
+      if (stateSetSize < NfaState.s_generatedStates)
+        stateSetSize = NfaState.s_generatedStates;
     }
 
     for (final RChoice aItem : choices)

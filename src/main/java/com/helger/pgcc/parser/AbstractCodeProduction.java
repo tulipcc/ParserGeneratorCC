@@ -48,5 +48,4 @@ public abstract class AbstractCodeProduction extends NormalProduction
   {
     return m_code_tokens;
   }
-
 }

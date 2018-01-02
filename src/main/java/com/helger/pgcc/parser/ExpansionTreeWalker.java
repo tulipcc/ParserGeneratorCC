@@ -46,9 +46,9 @@ public final class ExpansionTreeWalker
     {
       if (node instanceof Choice)
       {
-        for (final Object aElement : ((Choice) node).getChoices ())
+        for (final Expansion aElement : ((Choice) node).getChoices ())
         {
-          preOrderWalk ((Expansion) aElement, opObj);
+          preOrderWalk (aElement, opObj);
         }
       }
       else
@@ -99,9 +99,9 @@ public final class ExpansionTreeWalker
                     else
                       if (node instanceof RSequence)
                       {
-                        for (final Object aElement : ((RSequence) node).m_units)
+                        for (final Expansion aElement : ((RSequence) node).m_units)
                         {
-                          preOrderWalk ((Expansion) aElement, opObj);
+                          preOrderWalk (aElement, opObj);
                         }
                       }
                       else
@@ -137,17 +137,17 @@ public final class ExpansionTreeWalker
     {
       if (node instanceof Choice)
       {
-        for (final Object aElement : ((Choice) node).getChoices ())
+        for (final Expansion aElement : ((Choice) node).getChoices ())
         {
-          postOrderWalk ((Expansion) aElement, opObj);
+          postOrderWalk (aElement, opObj);
         }
       }
       else
         if (node instanceof Sequence)
         {
-          for (final Object aElement : ((Sequence) node).m_units)
+          for (final Expansion aElement : ((Sequence) node).m_units)
           {
-            postOrderWalk ((Expansion) aElement, opObj);
+            postOrderWalk (aElement, opObj);
           }
         }
         else
@@ -182,17 +182,17 @@ public final class ExpansionTreeWalker
                   else
                     if (node instanceof RChoice)
                     {
-                      for (final Object aElement : ((RChoice) node).getChoices ())
+                      for (final Expansion aElement : ((RChoice) node).getChoices ())
                       {
-                        postOrderWalk ((Expansion) aElement, opObj);
+                        postOrderWalk (aElement, opObj);
                       }
                     }
                     else
                       if (node instanceof RSequence)
                       {
-                        for (final Object aElement : ((RSequence) node).m_units)
+                        for (final Expansion aElement : ((RSequence) node).m_units)
                         {
-                          postOrderWalk ((Expansion) aElement, opObj);
+                          postOrderWalk (aElement, opObj);
                         }
                       }
                       else

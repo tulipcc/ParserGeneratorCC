@@ -32,6 +32,7 @@ package com.helger.pgcc.parser;
 
 import java.util.Set;
 
+import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
 
@@ -262,7 +263,7 @@ public class Main
       // variable
       // to a lexer before the configuration override in the cc file had been
       // read.
-      final ELanguage outputLanguage = Options.getOutputLanguageType ();
+      final EOutputLanguage outputLanguage = Options.getOutputLanguageType ();
 
       // 2013/07/22 Java Modern is a
       final boolean isJavaModern = outputLanguage.isJava () &&
@@ -284,7 +285,7 @@ public class Main
 
       if (Options.getUnicodeInput ())
       {
-        NfaState.unicodeWarningGiven = true;
+        NfaState.s_unicodeWarningGiven = true;
         System.out.println ("Note: UNICODE_INPUT option is specified. " +
                             "Please make sure you create the parser/lexer using a Reader with the correct character encoding.");
       }
@@ -370,7 +371,7 @@ public class Main
     }
   }
 
-  private static int unhandledLanguageExit (final ELanguage outputLanguage)
+  private static int unhandledLanguageExit (final EOutputLanguage outputLanguage)
   {
     System.out.println ("Invalid '" + Options.USEROPTION__OUTPUT_LANGUAGE + "' specified : " + outputLanguage);
     return 1;

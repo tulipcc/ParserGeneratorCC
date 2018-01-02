@@ -9,6 +9,7 @@ package com.helger.pgcc.parser;
 import static com.helger.pgcc.parser.Options.*;
 import java.util.List;
 import java.util.ArrayList;
+import com.helger.pgcc.output.*;
 
 /** Token Manager. */
 public class JavaCCParserTokenManager implements JavaCCParserConstants {

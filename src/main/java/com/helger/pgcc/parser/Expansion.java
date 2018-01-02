@@ -86,7 +86,7 @@ public class Expansion
    * generation is stored in the non-static variable below.
    */
   public static long s_nextGenerationIndex = 1;
-  public long myGeneration = 0;
+  public long m_myGeneration = 0;
 
   /**
    * This flag is used for bookkeeping by the minimumSize method in class

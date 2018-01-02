@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.helger.commons.io.stream.NonBlockingBufferedWriter;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
+import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 public class CodeGenerator
@@ -28,7 +29,7 @@ public class CodeGenerator
   protected int m_cline;
   protected int m_ccol;
 
-  protected static final ELanguage getLanguage ()
+  protected static final EOutputLanguage getLanguage ()
   {
     return Options.getOutputLanguageType ();
   }

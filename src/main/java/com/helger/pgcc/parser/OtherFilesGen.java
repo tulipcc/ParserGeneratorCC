@@ -38,7 +38,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.helger.pgcc.parser.JavaFiles.JavaResourceTemplateLocations;
+import com.helger.pgcc.parser.JavaFiles.IJavaResourceTemplateLocations;
 
 /**
  * Generates the Constants file.
@@ -50,7 +50,7 @@ public class OtherFilesGen extends JavaCCGlobals implements JavaCCParserConstant
 
   public static void start (final boolean isJavaModern) throws MetaParseException
   {
-    final JavaResourceTemplateLocations templateLoc = isJavaModern ? JavaFiles.RESOURCES_JAVA_MODERN
+    final IJavaResourceTemplateLocations templateLoc = isJavaModern ? JavaFiles.RESOURCES_JAVA_MODERN
                                                                    : JavaFiles.RESOURCES_JAVA_CLASSIC;
 
     Token t = null;

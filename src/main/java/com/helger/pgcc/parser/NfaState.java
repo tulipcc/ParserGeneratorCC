@@ -46,8 +46,8 @@ import java.util.Vector;
  */
 public class NfaState
 {
-  public static boolean unicodeWarningGiven = false;
-  public static int generatedStates = 0;
+  public static boolean s_unicodeWarningGiven = false;
+  public static int s_generatedStates = 0;
 
   private static int s_idCnt = 0;
   private static int s_lohiByteCnt;
@@ -70,9 +70,9 @@ public class NfaState
   private static boolean s_jjCheckNAddStatesUnaryNeeded = false;
   private static boolean s_jjCheckNAddStatesDualNeeded = false;
 
-  public static void reInit2 ()
+  public static void reInitStatic ()
   {
-    generatedStates = 0;
+    s_generatedStates = 0;
     s_idCnt = 0;
     s_dummyStateIndex = -1;
     s_done = false;
@@ -201,9 +201,9 @@ public class NfaState
       if (charMoves[i] == 0 || charMoves[i] > c)
         break;
 
-    if (!unicodeWarningGiven && c > 0xff && !Options.getJavaUnicodeEscape () && !Options.getUserCharStream ())
+    if (!s_unicodeWarningGiven && c > 0xff && !Options.getJavaUnicodeEscape () && !Options.getUserCharStream ())
     {
-      unicodeWarningGiven = true;
+      s_unicodeWarningGiven = true;
       JavaCCErrors.warning (LexGenJava.curRE,
                             "Non-ASCII characters used in regular expression.\n" +
                                               "Please make sure you use the correct Reader when you create the parser, " +
@@ -244,12 +244,12 @@ public class NfaState
         _addASCIIMove (left);
     }
 
-    if (!unicodeWarningGiven &&
+    if (!s_unicodeWarningGiven &&
         (left > 0xff || right > 0xff) &&
         !Options.getJavaUnicodeEscape () &&
         !Options.getUserCharStream ())
     {
-      unicodeWarningGiven = true;
+      s_unicodeWarningGiven = true;
       JavaCCErrors.warning (LexGenJava.curRE,
                             "Non-ASCII characters used in regular expression.\n" +
                                               "Please make sure you use the correct Reader when you create the parser, " +
@@ -500,7 +500,7 @@ public class NfaState
         return;
       }
 
-      stateName = generatedStates++;
+      stateName = s_generatedStates++;
       s_indexedAllStates.add (this);
       generateNextStatesCode ();
     }
@@ -1241,7 +1241,7 @@ public class NfaState
     if (toRet >= nameSet.length)
     {
       if (s_dummyStateIndex == -1)
-        tmp = s_dummyStateIndex = generatedStates;
+        tmp = s_dummyStateIndex = s_generatedStates;
       else
         tmp = ++s_dummyStateIndex;
 
@@ -1425,7 +1425,7 @@ public class NfaState
       return false;
 
     if (s_stateDone == null)
-      s_stateDone = new boolean [generatedStates];
+      s_stateDone = new boolean [s_generatedStates];
 
     final String set = next.m_epsilonMovesString;
 
@@ -1637,7 +1637,7 @@ public class NfaState
   private static void _fixStateSets ()
   {
     final Map <String, int []> fixedSets = new HashMap <> ();
-    final int [] tmp = new int [generatedStates];
+    final int [] tmp = new int [s_generatedStates];
 
     for (final Map.Entry <String, int []> aEntry : s_stateSetsToFix.entrySet ())
     {
@@ -1726,7 +1726,7 @@ public class NfaState
       }
       else
       {
-        if (Options.getJavaUnicodeEscape () || unicodeWarningGiven)
+        if (Options.getJavaUnicodeEscape () || s_unicodeWarningGiven)
         {
           codeGenerator.genCodeLine ("         int hiByte = (curChar >> 8);");
           codeGenerator.genCodeLine ("         int i1 = hiByte >> 6;");
@@ -1907,7 +1907,7 @@ public class NfaState
 
     final int keyState = _stateNameForComposite (key);
     codeGenerator.genCodeLine ("               case " + keyState + ":");
-    if (keyState < generatedStates)
+    if (keyState < s_generatedStates)
       dumped[keyState] = true;
 
     for (int i = 0; i < partition.size (); i++)
@@ -2222,7 +2222,7 @@ public class NfaState
 
   private static void _dumpAsciiMoves (final CodeGenerator codeGenerator, final int byteNum)
   {
-    final boolean [] dumped = new boolean [Math.max (generatedStates, s_dummyStateIndex + 1)];
+    final boolean [] dumped = new boolean [Math.max (s_generatedStates, s_dummyStateIndex + 1)];
 
     _dumpHeadForCase (codeGenerator, byteNum);
 
@@ -2354,7 +2354,7 @@ public class NfaState
 
     final int keyState = _stateNameForComposite (key);
     codeGenerator.genCodeLine ("               case " + keyState + ":");
-    if (keyState < generatedStates)
+    if (keyState < s_generatedStates)
       dumped[keyState] = true;
 
     for (final int aElement : nameSet)
@@ -2396,7 +2396,7 @@ public class NfaState
       }
     }
 
-    if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
+    if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
     {
       if (m_loByteVec != null && m_loByteVec.size () > 1)
         codeGenerator.genCodeLine ("                  if ((jjbitVec" +
@@ -2500,7 +2500,7 @@ public class NfaState
     {
       final String kindCheck = " && kind > " + m_kindToPrint;
 
-      if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
+      if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
       {
         if (m_loByteVec != null && m_loByteVec.size () > 1)
           codeGenerator.genCodeLine ("                  if ((jjbitVec" +
@@ -2526,7 +2526,7 @@ public class NfaState
     String prefix = "   ";
     if (m_kindToPrint != Integer.MAX_VALUE)
     {
-      if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
+      if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
       {
         if (m_loByteVec != null && m_loByteVec.size () > 1)
         {
@@ -2550,7 +2550,7 @@ public class NfaState
       prefix = "";
     }
     else
-      if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
+      if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
       {
         if (m_loByteVec != null && m_loByteVec.size () > 1)
           codeGenerator.genCodeLine ("                  if ((jjbitVec" +
@@ -2618,7 +2618,7 @@ public class NfaState
 
   public static void dumpCharAndRangeMoves (final CodeGenerator codeGenerator)
   {
-    final boolean [] dumped = new boolean [Math.max (generatedStates, s_dummyStateIndex + 1)];
+    final boolean [] dumped = new boolean [Math.max (s_generatedStates, s_dummyStateIndex + 1)];
 
     _dumpHeadForCase (codeGenerator, -1);
 
@@ -2667,7 +2667,7 @@ public class NfaState
       temp._dumpNonAsciiMove (codeGenerator, dumped);
     }
 
-    if (Options.getJavaUnicodeEscape () || unicodeWarningGiven)
+    if (Options.getJavaUnicodeEscape () || s_unicodeWarningGiven)
     {
       codeGenerator.genCodeLine ("               default : if (i1 == 0 || l1 == 0 || i2 == 0 ||  l2 == 0) break; else break;");
     }
@@ -2681,7 +2681,7 @@ public class NfaState
 
   public static void dumpNonAsciiMoveMethods (final CodeGenerator codeGenerator)
   {
-    if (!Options.getJavaUnicodeEscape () && !unicodeWarningGiven)
+    if (!Options.getJavaUnicodeEscape () && !s_unicodeWarningGiven)
       return;
 
     if (s_nonAsciiTableForMethod.size () <= 0)
@@ -2768,9 +2768,9 @@ public class NfaState
   private static void _reArrange ()
   {
     final List <NfaState> v = s_allStates;
-    s_allStates = new ArrayList <> (Collections.nCopies (generatedStates, null));
+    s_allStates = new ArrayList <> (Collections.nCopies (s_generatedStates, null));
 
-    if (s_allStates.size () != generatedStates)
+    if (s_allStates.size () != s_generatedStates)
       throw new Error ("What??");
 
     for (int j = 0; j < v.size (); j++)
@@ -2891,7 +2891,7 @@ public class NfaState
   private static void _findStatesWithNoBreak ()
   {
     final Map <String, String> printed = new HashMap <> ();
-    final boolean [] put = new boolean [generatedStates];
+    final boolean [] put = new boolean [s_generatedStates];
     int cnt = 0;
     int foundAt = 0;
 
@@ -3014,8 +3014,8 @@ public class NfaState
 
       if (kindsForStates == null)
       {
-        kindsForStates = new int [generatedStates];
-        statesForState[LexGenJava.lexStateIndex] = new int [Math.max (generatedStates, s_dummyStateIndex + 1)] [];
+        kindsForStates = new int [s_generatedStates];
+        statesForState[LexGenJava.lexStateIndex] = new int [Math.max (s_generatedStates, s_dummyStateIndex + 1)] [];
       }
 
       kindsForStates[temp.stateName] = temp.m_lookingFor;
@@ -3029,7 +3029,7 @@ public class NfaState
       final String s = aEntry.getKey ();
       final int state = aEntry.getValue ().intValue ();
 
-      if (state >= generatedStates)
+      if (state >= s_generatedStates)
         statesForState[LexGenJava.lexStateIndex][state] = s_allNextStates.get (s);
     }
 
@@ -3053,7 +3053,7 @@ public class NfaState
                                              "jjMoveNfa" + LexGenJava.lexStateSuffix + "(int startState, int curPos)");
     }
     codeGenerator.genCodeLine ("{");
-    if (generatedStates == 0)
+    if (s_generatedStates == 0)
     {
       codeGenerator.genCodeLine ("   return curPos;");
       codeGenerator.genCodeLine ("}");
@@ -3081,7 +3081,7 @@ public class NfaState
     }
 
     codeGenerator.genCodeLine ("   int startsAt = 0;");
-    codeGenerator.genCodeLine ("   jjnewStateCnt = " + generatedStates + ";");
+    codeGenerator.genCodeLine ("   jjnewStateCnt = " + s_generatedStates + ";");
     codeGenerator.genCodeLine ("   int i = 1;");
     codeGenerator.genCodeLine ("   jjstateSet[0] = startState;");
 
@@ -3177,13 +3177,13 @@ public class NfaState
     if (CodeGenerator.isJavaLanguage ())
     {
       codeGenerator.genCodeLine ("      if ((i = jjnewStateCnt) == (startsAt = " +
-                                 generatedStates +
+                                 s_generatedStates +
                                  " - (jjnewStateCnt = startsAt)))");
     }
     else
     {
       codeGenerator.genCodeLine ("      if ((i = jjnewStateCnt), (jjnewStateCnt = startsAt), (i == (startsAt = " +
-                                 generatedStates +
+                                 s_generatedStates +
                                  " - startsAt)))");
     }
     if (LexGenJava.mixed[LexGenJava.lexStateIndex])
@@ -3484,8 +3484,8 @@ public class NfaState
 
   public static void reInit ()
   {
-    unicodeWarningGiven = false;
-    generatedStates = 0;
+    s_unicodeWarningGiven = false;
+    s_generatedStates = 0;
     s_idCnt = 0;
     s_lohiByteCnt = 0;
     s_dummyStateIndex = -1;

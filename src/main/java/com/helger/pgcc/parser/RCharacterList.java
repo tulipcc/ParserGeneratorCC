@@ -1949,7 +1949,7 @@ public class RCharacterList extends RegularExpression
     }
 
     // System.out.println("lastRem : " + (int)lastRemoved);
-    if (NfaState.unicodeWarningGiven || Options.getJavaUnicodeEscape ())
+    if (NfaState.s_unicodeWarningGiven || Options.getJavaUnicodeEscape ())
     {
       if (lastRemoved < (char) 0xffff)
         newDescriptors.add (new CharacterRange ((char) (lastRemoved + 1), (char) 0xffff));

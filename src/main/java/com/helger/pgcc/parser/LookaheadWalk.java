@@ -191,12 +191,12 @@ public final class LookaheadWalk
                                                final Expansion exp,
                                                final long generation)
   {
-    if (exp.myGeneration == generation)
+    if (exp.m_myGeneration == generation)
     {
       return new ArrayList <> ();
     }
     // System.out.println("*** Parent: " + exp.parent);
-    exp.myGeneration = generation;
+    exp.m_myGeneration = generation;
     if (exp.m_parent == null)
     {
       final List <MatchInfo> retval = new ArrayList <> ();

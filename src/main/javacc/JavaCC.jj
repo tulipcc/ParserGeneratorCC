@@ -56,6 +56,7 @@ import static com.helger.pgcc.parser.Options.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import com.helger.pgcc.output.*;
 
 public class JavaCCParser extends JavaCCParserInternals {
 
@@ -99,11 +100,11 @@ public class JavaCCParser extends JavaCCParserInternals {
 
   protected static boolean isJavaLanguage()
   {
-    return s_language == ELanguage.JAVA;
+    return s_language == EOutputLanguage.JAVA;
   }
   protected static boolean isCppLanguage()
   {
-    return s_language == ELanguage.CPP;
+    return s_language == EOutputLanguage.CPP;
   }
 
   /*

@@ -328,12 +328,12 @@ public class RStringLiteral extends RegularExpression
       else
         s = "" + (c = m_image.charAt (i));
 
-      if (!NfaState.unicodeWarningGiven &&
+      if (!NfaState.s_unicodeWarningGiven &&
           c > 0xff &&
           !Options.getJavaUnicodeEscape () &&
           !Options.getUserCharStream ())
       {
-        NfaState.unicodeWarningGiven = true;
+        NfaState.s_unicodeWarningGiven = true;
         JavaCCErrors.warning (LexGenJava.curRE,
                               "Non-ASCII characters used in regular expression." +
                                                 "Please make sure you use the correct Reader when you create the parser, " +
@@ -435,7 +435,7 @@ public class RStringLiteral extends RegularExpression
   {
     codeGenerator.genCodeLine ("{");
 
-    if (NfaState.generatedStates != 0)
+    if (NfaState.s_generatedStates != 0)
       codeGenerator.genCodeLine ("   return jjMoveNfa" +
                                  LexGenJava.lexStateSuffix +
                                  "(" +
@@ -449,7 +449,7 @@ public class RStringLiteral extends RegularExpression
 
   private static int GetStateSetForKind (final int pos, final int kind)
   {
-    if (LexGenJava.mixed[LexGenJava.lexStateIndex] || NfaState.generatedStates == 0)
+    if (LexGenJava.mixed[LexGenJava.lexStateIndex] || NfaState.s_generatedStates == 0)
       return -1;
 
     final Map <String, long []> allStateSets = statesForPos[pos];
@@ -873,7 +873,7 @@ public class RStringLiteral extends RegularExpression
           }
 
           codeGenerator.genCodeLine (") == 0L)");
-          if (!LexGenJava.mixed[LexGenJava.lexStateIndex] && NfaState.generatedStates != 0)
+          if (!LexGenJava.mixed[LexGenJava.lexStateIndex] && NfaState.s_generatedStates != 0)
           {
             codeGenerator.genCode ("      return jjStartNfa" + LexGenJava.lexStateSuffix + "(" + (i - 2) + ", ");
             for (j = 0; j < maxLongsReqd - 1; j++)
@@ -887,7 +887,7 @@ public class RStringLiteral extends RegularExpression
               codeGenerator.genCodeLine ("0L);");
           }
           else
-            if (NfaState.generatedStates != 0)
+            if (NfaState.s_generatedStates != 0)
               codeGenerator.genCodeLine ("      return jjMoveNfa" +
                                          LexGenJava.lexStateSuffix +
                                          "(" +
@@ -982,7 +982,7 @@ public class RStringLiteral extends RegularExpression
             throw new RuntimeException ("Output language type not fully implemented : " + Options.getOutputLanguage ());
           }
 
-        if (!LexGenJava.mixed[LexGenJava.lexStateIndex] && NfaState.generatedStates != 0)
+        if (!LexGenJava.mixed[LexGenJava.lexStateIndex] && NfaState.s_generatedStates != 0)
         {
           codeGenerator.genCode ("      jjStopStringLiteralDfa" + LexGenJava.lexStateSuffix + "(" + (i - 1) + ", ");
 
@@ -1026,7 +1026,7 @@ public class RStringLiteral extends RegularExpression
           codeGenerator.genCodeLine ("      return " + i + ";");
         }
         else
-          if (NfaState.generatedStates != 0)
+          if (NfaState.s_generatedStates != 0)
           {
             codeGenerator.genCodeLine ("   return jjMoveNfa" +
                                        LexGenJava.lexStateSuffix +
@@ -1093,7 +1093,7 @@ public class RStringLiteral extends RegularExpression
         if (i == 0 &&
             c < 128 &&
             info.finalKindCnt != 0 &&
-            (NfaState.generatedStates == 0 || !NfaState.canStartNfaUsingAscii (c)))
+            (NfaState.s_generatedStates == 0 || !NfaState.canStartNfaUsingAscii (c)))
         {
           int kind;
           int j = 0;
@@ -1335,7 +1335,7 @@ public class RStringLiteral extends RegularExpression
           if (i == 0 && LexGenJava.mixed[LexGenJava.lexStateIndex])
           {
 
-            if (NfaState.generatedStates != 0)
+            if (NfaState.s_generatedStates != 0)
               codeGenerator.genCodeLine ("         return jjMoveNfa" +
                                          LexGenJava.lexStateSuffix +
                                          "(" +
@@ -1371,7 +1371,7 @@ public class RStringLiteral extends RegularExpression
         }
       }
 
-      if (NfaState.generatedStates != 0)
+      if (NfaState.s_generatedStates != 0)
       {
         if (i == 0)
         {
@@ -1402,7 +1402,7 @@ public class RStringLiteral extends RegularExpression
       {
         if (startNfaNeeded)
         {
-          if (!LexGenJava.mixed[LexGenJava.lexStateIndex] && NfaState.generatedStates != 0)
+          if (!LexGenJava.mixed[LexGenJava.lexStateIndex] && NfaState.s_generatedStates != 0)
           {
             /*
              * Here, a string literal is successfully matched and no more string
@@ -1424,7 +1424,7 @@ public class RStringLiteral extends RegularExpression
               codeGenerator.genCodeLine ("0L);");
           }
           else
-            if (NfaState.generatedStates != 0)
+            if (NfaState.s_generatedStates != 0)
               codeGenerator.genCodeLine ("   return jjMoveNfa" +
                                          LexGenJava.lexStateSuffix +
                                          "(" +
@@ -1440,7 +1440,7 @@ public class RStringLiteral extends RegularExpression
       codeGenerator.genCodeLine ("}");
     }
 
-    if (!LexGenJava.mixed[LexGenJava.lexStateIndex] && NfaState.generatedStates != 0 && createStartNfa)
+    if (!LexGenJava.mixed[LexGenJava.lexStateIndex] && NfaState.s_generatedStates != 0 && createStartNfa)
       DumpStartWithStates (codeGenerator);
   }
 
@@ -1461,7 +1461,7 @@ public class RStringLiteral extends RegularExpression
 
   static void GenerateNfaStartStates (final CodeGenerator codeGenerator, final NfaState initialState)
   {
-    final boolean [] seen = new boolean [NfaState.generatedStates];
+    final boolean [] seen = new boolean [NfaState.s_generatedStates];
     final Map <String, String> stateSets = new HashMap <> ();
     String stateSetString = "";
     int i, j, kind, jjmatchedPos = 0;
@@ -1781,7 +1781,7 @@ public class RStringLiteral extends RegularExpression
 
     if (LexGenJava.mixed[LexGenJava.lexStateIndex])
     {
-      if (NfaState.generatedStates != 0)
+      if (NfaState.s_generatedStates != 0)
         codeGenerator.genCodeLine ("   return jjMoveNfa" +
                                    LexGenJava.lexStateSuffix +
                                    "(" +

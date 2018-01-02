@@ -1,4 +1,4 @@
-package com.helger.pgcc.parser;
+package com.helger.pgcc.output;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,14 +11,14 @@ import com.helger.commons.lang.EnumHelper;
  * Various constants relating to possible values for certain options
  */
 
-public enum ELanguage implements IHasID <String>
+public enum EOutputLanguage implements IHasID <String>
 {
   JAVA ("java"),
   CPP ("c++");
 
   private final String m_sID;
 
-  private ELanguage (@Nonnull @Nonempty final String sID)
+  private EOutputLanguage (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }
@@ -51,8 +51,8 @@ public enum ELanguage implements IHasID <String>
   }
 
   @Nullable
-  public static ELanguage getFromIDCaseInsensitiveOrNull (@Nullable final String sID)
+  public static EOutputLanguage getFromIDCaseInsensitiveOrNull (@Nullable final String sID)
   {
-    return EnumHelper.getFromIDCaseInsensitiveOrNull (ELanguage.class, sID);
+    return EnumHelper.getFromIDCaseInsensitiveOrNull (EOutputLanguage.class, sID);
   }
 }

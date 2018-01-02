@@ -392,7 +392,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
     while (e.hasMoreElements ())
     {
       int startState = -1;
-      NfaState.reInit2 ();
+      NfaState.reInitStatic ();
       RStringLiteral.ReInit ();
 
       final String key = (String) e.nextElement ();
@@ -517,7 +517,7 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
       for (final NfaState aItem : initialState.epsilonMoves)
         aItem.generateCode ();
 
-      hasNfa[lexStateIndex] = (NfaState.generatedStates != 0);
+      hasNfa[lexStateIndex] = (NfaState.s_generatedStates != 0);
       if (hasNfa[lexStateIndex])
       {
         initialState.generateCode ();
@@ -563,9 +563,9 @@ public class LexGenJava extends CodeGenerator implements JavaCCParserConstants
           NfaState.dumpMoveNfa (this);
         }
       }
-      totalNumStates += NfaState.generatedStates;
-      if (stateSetSize < NfaState.generatedStates)
-        stateSetSize = NfaState.generatedStates;
+      totalNumStates += NfaState.s_generatedStates;
+      if (stateSetSize < NfaState.s_generatedStates)
+        stateSetSize = NfaState.s_generatedStates;
     }
 
     for (final RChoice aItem : choices)
