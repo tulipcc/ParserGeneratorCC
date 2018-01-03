@@ -3455,50 +3455,49 @@ public class NfaState
 
   public static void dumpStatesForStateJava (final CodeGenerator codeGenerator)
   {
-    codeGenerator.genCode ("protected static final int[][][] statesForState = ");
+    codeGenerator.genCodeLine ("protected static final class States {");
+    codeGenerator.genCode ("  protected static final int[][][] statesForState = ");
 
     if (s_statesForState == null)
     {
-      if (false)
-        assert false : "This should never be null.";
       codeGenerator.genCodeLine ("null;");
-      return;
     }
-
-    codeGenerator.genCodeLine ("{");
-
-    for (int i = 0; i < LexGenJava.s_maxLexStates; i++)
+    else
     {
-      if (s_statesForState[i] == null)
+      codeGenerator.genCodeLine ("{");
+      for (int i = 0; i < LexGenJava.s_maxLexStates; i++)
       {
-        codeGenerator.genCodeLine (" {},");
-        continue;
-      }
-
-      codeGenerator.genCodeLine (" {");
-
-      for (int j = 0; j < s_statesForState[i].length; j++)
-      {
-        final int [] stateSet = s_statesForState[i][j];
-
-        if (stateSet == null)
+        if (s_statesForState[i] == null)
         {
-          codeGenerator.genCodeLine ("   { " + j + " },");
+          codeGenerator.genCodeLine (" {},");
           continue;
         }
 
-        codeGenerator.genCode ("   { ");
+        codeGenerator.genCodeLine (" {");
+        for (int j = 0; j < s_statesForState[i].length; j++)
+        {
+          final int [] stateSet = s_statesForState[i][j];
 
-        for (final int aElement : stateSet)
-          codeGenerator.genCode (aElement + ", ");
-
+          if (stateSet == null)
+          {
+            codeGenerator.genCodeLine ("   { " + j + " },");
+          }
+          else
+          {
+            codeGenerator.genCode ("   { ");
+            for (final int aElement : stateSet)
+              codeGenerator.genCode (aElement + ", ");
+            codeGenerator.genCodeLine ("},");
+          }
+        }
         codeGenerator.genCodeLine ("},");
       }
 
-      codeGenerator.genCodeLine ("},");
+      codeGenerator.genCodeLine ("\n};");
     }
 
-    codeGenerator.genCodeLine ("\n};");
+    // Close class
+    codeGenerator.genCodeLine ("}");
   }
 
   public static void dumpStatesForKind (final CodeGenerator codeGenerator)
@@ -3520,7 +3519,8 @@ public class NfaState
     switch (codeGenerator.getOutputLanguage ())
     {
       case JAVA:
-        codeGenerator.genCode ("protected static final int[][] kindForState = ");
+        codeGenerator.genCodeLine ("protected static final class Kinds {");
+        codeGenerator.genCode ("  protected static final int[][] kindForState = ");
         break;
       case CPP:
         codeGenerator.switchToStaticsFile ();
@@ -3537,39 +3537,52 @@ public class NfaState
     if (s_kinds == null)
     {
       codeGenerator.genCodeLine ("null;");
-      return;
     }
-    codeGenerator.genCodeLine ("{");
-
-    for (final int [] aKind : s_kinds)
+    else
     {
-      if (moreThanOne)
-        codeGenerator.genCodeLine (",");
-      moreThanOne = true;
+      codeGenerator.genCodeLine ("{");
 
-      if (aKind == null)
-        codeGenerator.genCodeLine ("{}");
-      else
+      for (final int [] aKind : s_kinds)
       {
-        cnt = 0;
-        codeGenerator.genCode ("{ ");
-        for (final int aElement : aKind)
+        if (moreThanOne)
+          codeGenerator.genCodeLine (",");
+        moreThanOne = true;
+
+        if (aKind == null)
+          codeGenerator.genCodeLine ("{}");
+        else
         {
-          if (cnt % 15 == 0)
-            codeGenerator.genCode ("\n  ");
-          else
-            if (cnt > 1)
-              codeGenerator.genCode (" ");
+          cnt = 0;
+          codeGenerator.genCode ("{ ");
+          for (final int aElement : aKind)
+          {
+            if (cnt % 15 == 0)
+              codeGenerator.genCode ("\n  ");
+            else
+              if (cnt > 1)
+                codeGenerator.genCode (" ");
 
-          codeGenerator.genCode (Integer.toString (aElement));
-          codeGenerator.genCode (", ");
+            codeGenerator.genCode (aElement + ", ");
+          }
 
+          codeGenerator.genCode ("}");
         }
-
-        codeGenerator.genCode ("}");
       }
+      codeGenerator.genCodeLine ("\n};");
     }
-    codeGenerator.genCodeLine ("\n};");
+
+    switch (codeGenerator.getOutputLanguage ())
+    {
+      case JAVA:
+        // Close class
+        codeGenerator.genCode ("}");
+        break;
+      case CPP:
+        // empty
+        break;
+      default:
+        throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
+    }
     codeGenerator.switchToMainFile ();
   }
 

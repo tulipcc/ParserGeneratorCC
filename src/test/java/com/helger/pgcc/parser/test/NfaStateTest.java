@@ -453,7 +453,10 @@ public class NfaStateTest extends AbstractJavaCCTestCase
     final CodeGenerator cg = new CodeGenerator ();
     NfaState.dumpStatesForStateJava (cg);
     final String result = cg.getGeneratedCode ().replaceAll ("\r", "");
-    assertEquals ("protected static final int[][][] statesForState = null;", result.trim ());
+    assertEquals ("protected static final class States {\n" +
+                  "  protected static final int[][][] statesForState = null;\n" +
+                  "}",
+                  result.trim ());
   }
 
   /**
@@ -467,114 +470,8 @@ public class NfaStateTest extends AbstractJavaCCTestCase
     setupState ();
     NfaState.dumpStatesForStateJava (cg);
     final String result = cg.getGeneratedCode ().replaceAll ("\r", "");
-    assertEquals ("protected static final int[][][] statesForState = {\n" +
-                  " {\n" +
-                  "   { 0 },\n" +
-                  "   { 1 },\n" +
-                  "   { 2 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 5 },\n" +
-                  "   { 6 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 8 },\n" +
-                  "   { 9 },\n" +
-                  "   { 10 },\n" +
-                  "   { 11 },\n" +
-                  "   { 12 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 14 },\n" +
-                  "   { 15 },\n" +
-                  "   { 16 },\n" +
-                  "   { 17 },\n" +
-                  "   { 18 },\n" +
-                  "   { 19 },\n" +
-                  "   { 20 },\n" +
-                  "   { 21 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 23 },\n" +
-                  "   { 24 },\n" +
-                  "   { 25 },\n" +
-                  "   { 26 },\n" +
-                  "   { 27 },\n" +
-                  "   { 28 },\n" +
-                  "   { 29 },\n" +
-                  "   { 30 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 32 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 34 },\n" +
-                  "   { 35 },\n" +
-                  "   { 36 },\n" +
-                  "   { 37 },\n" +
-                  "   { 38 },\n" +
-                  "   { 39 },\n" +
-                  "   { 40 },\n" +
-                  "   { 41 },\n" +
-                  "   { 42 },\n" +
-                  "   { 43 },\n" +
-                  "   { 44 },\n" +
-                  "   { 45 },\n" +
-                  "   { 46 },\n" +
-                  "   { 47 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 49 },\n" +
-                  "   { 50 },\n" +
-                  "   { 51 },\n" +
-                  "   { 52 },\n" +
-                  "   { 53 },\n" +
-                  "   { 54 },\n" +
-                  "   { 55 },\n" +
-                  "   { 56 },\n" +
-                  "   { 57 },\n" +
-                  "   { 58 },\n" +
-                  "   { 59 },\n" +
-                  "   { 60 },\n" +
-                  "   { 61 },\n" +
-                  "   { 62 },\n" +
-                  "   { 63 },\n" +
-                  "   { 64 },\n" +
-                  "},\n" +
-                  " {},\n" +
-                  " {\n" +
-                  "   { 0, 2, },\n" +
-                  "   { 1 },\n" +
-                  "   { 0, 2, },\n" +
-                  "},\n" +
-                  " {},\n" +
-                  " {},\n" +
-                  "\n" +
-                  "};",
-                  result.trim ());
-  }
-
-  /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpStatesForKind(CodeGenerator)}.
-   */
-  @Test
-  public void testDumpStatesForKind ()
-  {
-    final CodeGenerator cg = new CodeGenerator ();
-    NfaState.dumpStatesForKind (cg);
-    final String result = cg.getGeneratedCode ().replaceAll ("\r", "");
-    assertEquals ("protected static final int[][][] statesForState = null;\n" +
-                  "protected static final int[][] kindForState = null;",
-                  result.trim ());
-  }
-
-  /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpStatesForKind(CodeGenerator)}.
-   */
-  @Test
-  public void testDumpStatesForKindInitialised ()
-  {
-    final CodeGenerator cg = new CodeGenerator ();
-    setupState ();
-    NfaState.dumpStatesForKind (cg);
-    final String result = cg.getGeneratedCode ().replaceAll ("\r", "");
-    assertEquals ("protected static final int[][][] statesForState = {\n" +
+    assertEquals ("protected static final class States {\n" +
+                  "  protected static final int[][][] statesForState = {\n" +
                   " {\n" +
                   "   { 0 },\n" +
                   "   { 1 },\n" +
@@ -652,7 +549,122 @@ public class NfaStateTest extends AbstractJavaCCTestCase
                   " {},\n" +
                   "\n" +
                   "};\n" +
-                  "protected static final int[][] kindForState = {\n" +
+                  "}",
+                  result.trim ());
+  }
+
+  /**
+   * Test method for
+   * {@link org.javacc.parser.NfaState#DumpStatesForKind(CodeGenerator)}.
+   */
+  @Test
+  public void testDumpStatesForKind ()
+  {
+    final CodeGenerator cg = new CodeGenerator ();
+    NfaState.dumpStatesForKind (cg);
+    final String result = cg.getGeneratedCode ().replaceAll ("\r", "");
+    assertEquals ("protected static final class States {\n" +
+                  "  protected static final int[][][] statesForState = null;\n" +
+                  "}\n" +
+                  "protected static final class Kinds {\n" +
+                  "  protected static final int[][] kindForState = null;\n" +
+                  "}",
+                  result.trim ());
+  }
+
+  /**
+   * Test method for
+   * {@link org.javacc.parser.NfaState#DumpStatesForKind(CodeGenerator)}.
+   */
+  @Test
+  public void testDumpStatesForKindInitialised ()
+  {
+    final CodeGenerator cg = new CodeGenerator ();
+    setupState ();
+    NfaState.dumpStatesForKind (cg);
+    final String result = cg.getGeneratedCode ().replaceAll ("\r", "");
+    assertEquals ("protected static final class States {\n" +
+                  "  protected static final int[][][] statesForState = {\n" +
+                  " {\n" +
+                  "   { 0 },\n" +
+                  "   { 1 },\n" +
+                  "   { 2 },\n" +
+                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 5 },\n" +
+                  "   { 6 },\n" +
+                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 8 },\n" +
+                  "   { 9 },\n" +
+                  "   { 10 },\n" +
+                  "   { 11 },\n" +
+                  "   { 12 },\n" +
+                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 14 },\n" +
+                  "   { 15 },\n" +
+                  "   { 16 },\n" +
+                  "   { 17 },\n" +
+                  "   { 18 },\n" +
+                  "   { 19 },\n" +
+                  "   { 20 },\n" +
+                  "   { 21 },\n" +
+                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 23 },\n" +
+                  "   { 24 },\n" +
+                  "   { 25 },\n" +
+                  "   { 26 },\n" +
+                  "   { 27 },\n" +
+                  "   { 28 },\n" +
+                  "   { 29 },\n" +
+                  "   { 30 },\n" +
+                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 32 },\n" +
+                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 34 },\n" +
+                  "   { 35 },\n" +
+                  "   { 36 },\n" +
+                  "   { 37 },\n" +
+                  "   { 38 },\n" +
+                  "   { 39 },\n" +
+                  "   { 40 },\n" +
+                  "   { 41 },\n" +
+                  "   { 42 },\n" +
+                  "   { 43 },\n" +
+                  "   { 44 },\n" +
+                  "   { 45 },\n" +
+                  "   { 46 },\n" +
+                  "   { 47 },\n" +
+                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 49 },\n" +
+                  "   { 50 },\n" +
+                  "   { 51 },\n" +
+                  "   { 52 },\n" +
+                  "   { 53 },\n" +
+                  "   { 54 },\n" +
+                  "   { 55 },\n" +
+                  "   { 56 },\n" +
+                  "   { 57 },\n" +
+                  "   { 58 },\n" +
+                  "   { 59 },\n" +
+                  "   { 60 },\n" +
+                  "   { 61 },\n" +
+                  "   { 62 },\n" +
+                  "   { 63 },\n" +
+                  "   { 64 },\n" +
+                  "},\n" +
+                  " {},\n" +
+                  " {\n" +
+                  "   { 0, 2, },\n" +
+                  "   { 1 },\n" +
+                  "   { 0, 2, },\n" +
+                  "},\n" +
+                  " {},\n" +
+                  " {},\n" +
+                  "\n" +
+                  "};\n" +
+                  "}\n" +
+                  "protected static final class Kinds {\n" +
+                  "  protected static final int[][] kindForState = {\n" +
                   "{ \n" +
                   "  27, \n" +
                   "  27, \n" +
@@ -728,7 +740,8 @@ public class NfaStateTest extends AbstractJavaCCTestCase
                   "{}\n" +
                   ",\n" +
                   "{}\n\n" +
-                  "};",
+                  "};\n" +
+                  "}",
                   result.trim ());
   }
 }
