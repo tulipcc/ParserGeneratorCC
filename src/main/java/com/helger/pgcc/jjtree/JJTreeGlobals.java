@@ -43,44 +43,6 @@ import java.util.Set;
 
 class JJTreeGlobals
 {
-  static void initialize ()
-  {
-    toolList = new ArrayList <> ();
-    s_parserName = null;
-    s_packageName = "";
-    s_parserImplements = null;
-    s_parserClassBodyStart = null;
-    s_parserImports = null;
-    s_productions = new HashMap <> ();
-
-    s_jjtreeOptions = new HashSet <> ();
-    s_jjtreeOptions.add ("JJTREE_OUTPUT_DIRECTORY");
-    s_jjtreeOptions.add ("MULTI");
-    s_jjtreeOptions.add ("NODE_PREFIX");
-    s_jjtreeOptions.add ("NODE_PACKAGE");
-    s_jjtreeOptions.add ("NODE_EXTENDS");
-    s_jjtreeOptions.add ("NODE_CLASS");
-    s_jjtreeOptions.add ("NODE_STACK_SIZE");
-    s_jjtreeOptions.add ("NODE_DEFAULT_VOID");
-    s_jjtreeOptions.add ("OUTPUT_FILE");
-    s_jjtreeOptions.add ("CHECK_DEFINITE_NODE");
-    s_jjtreeOptions.add ("NODE_SCOPE_HOOK");
-    s_jjtreeOptions.add ("TRACK_TOKENS");
-    s_jjtreeOptions.add ("NODE_FACTORY");
-    s_jjtreeOptions.add ("NODE_USES_PARSER");
-    s_jjtreeOptions.add ("BUILD_NODE_FILES");
-    s_jjtreeOptions.add ("VISITOR");
-    s_jjtreeOptions.add ("VISITOR_EXCEPTION");
-    s_jjtreeOptions.add ("VISITOR_DATA_TYPE");
-    s_jjtreeOptions.add ("VISITOR_RETURN_TYPE");
-    s_jjtreeOptions.add ("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME");
-    s_jjtreeOptions.add ("NODE_INCLUDES");
-  }
-
-  static
-  {
-    initialize ();
-  }
 
   /**
    * This set stores the JJTree-specific options that should not be passed down
@@ -88,12 +50,7 @@ class JJTreeGlobals
    */
   private static Set <String> s_jjtreeOptions;
 
-  public static boolean isOptionJJTreeOnly (final String optionName)
-  {
-    return s_jjtreeOptions.contains (optionName.toUpperCase (Locale.US));
-  }
-
-  static List <String> toolList = new ArrayList <> ();
+  static final List <String> toolList = new ArrayList <> ();
 
   /**
    * Use this like className.
@@ -134,5 +91,49 @@ class JJTreeGlobals
   /**
    * This is mapping from production names to ASTProduction objects.
    **/
-  static Map <String, ASTProduction> s_productions = new HashMap <> ();
+  static final Map <String, ASTProduction> s_productions = new HashMap <> ();
+
+  static void initialize ()
+  {
+    toolList.clear ();
+    s_parserName = null;
+    s_packageName = "";
+    s_parserImplements = null;
+    s_parserClassBodyStart = null;
+    s_parserImports = null;
+    s_productions.clear ();
+
+    s_jjtreeOptions = new HashSet <> ();
+    s_jjtreeOptions.add ("JJTREE_OUTPUT_DIRECTORY");
+    s_jjtreeOptions.add ("MULTI");
+    s_jjtreeOptions.add ("NODE_PREFIX");
+    s_jjtreeOptions.add ("NODE_PACKAGE");
+    s_jjtreeOptions.add ("NODE_EXTENDS");
+    s_jjtreeOptions.add ("NODE_CLASS");
+    s_jjtreeOptions.add ("NODE_STACK_SIZE");
+    s_jjtreeOptions.add ("NODE_DEFAULT_VOID");
+    s_jjtreeOptions.add ("OUTPUT_FILE");
+    s_jjtreeOptions.add ("CHECK_DEFINITE_NODE");
+    s_jjtreeOptions.add ("NODE_SCOPE_HOOK");
+    s_jjtreeOptions.add ("TRACK_TOKENS");
+    s_jjtreeOptions.add ("NODE_FACTORY");
+    s_jjtreeOptions.add ("NODE_USES_PARSER");
+    s_jjtreeOptions.add ("BUILD_NODE_FILES");
+    s_jjtreeOptions.add ("VISITOR");
+    s_jjtreeOptions.add ("VISITOR_EXCEPTION");
+    s_jjtreeOptions.add ("VISITOR_DATA_TYPE");
+    s_jjtreeOptions.add ("VISITOR_RETURN_TYPE");
+    s_jjtreeOptions.add ("VISITOR_METHOD_NAME_INCLUDES_TYPE_NAME");
+    s_jjtreeOptions.add ("NODE_INCLUDES");
+  }
+
+  static
+  {
+    initialize ();
+  }
+
+  public static boolean isOptionJJTreeOnly (final String optionName)
+  {
+    return s_jjtreeOptions.contains (optionName.toUpperCase (Locale.US));
+  }
 }

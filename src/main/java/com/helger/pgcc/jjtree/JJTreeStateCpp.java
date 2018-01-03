@@ -63,9 +63,9 @@ final class JJTreeStateCpp
                                         "JJT" + JJTreeGlobals.s_parserName + "State").getAbsolutePath ();
 
     OutputFile outputFile = new OutputFile (new File (filePrefix + ".h"), JJTStateVersion, new String [0]);
-    NodeFilesCpp.generateFile (outputFile, "/templates/cpp/JJTTreeState.h.template", options, true);
+    NodeFilesCpp.generateFile (outputFile, "/templates/jjtree/cpp/JJTTreeState.h.template", options, true);
 
     outputFile = new OutputFile (new File (filePrefix + ".cc"), JJTStateVersion, new String [0]);
-    NodeFilesCpp.generateFile (outputFile, "/templates/cpp/JJTTreeState.cc.template", options, true);
+    NodeFilesCpp.generateFile (outputFile, "/templates/jjtree/cpp/JJTTreeState.cc.template", options, true);
   }
 }

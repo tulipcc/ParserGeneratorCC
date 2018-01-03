@@ -33,7 +33,6 @@
  */
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.s_rexps_of_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_actForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_bnfproductions;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
@@ -44,12 +43,14 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_nextStateForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ordered_named_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_production_table;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_rexps_of_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_simple_tokens_table;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Semanticize
@@ -260,7 +261,7 @@ public class Semanticize
           for (int i = 0; i < table.length; i++)
           {
             // Get table of all case variants of "sl.image" into table2.
-            Map <String, AbstractExpRegularExpression> table2 = table[i].get (sl.m_image.toUpperCase ());
+            Map <String, AbstractExpRegularExpression> table2 = table[i].get (sl.m_image.toUpperCase (Locale.US));
             if (table2 == null)
             {
               // There are no case variants of "sl.image" earlier than the
@@ -272,7 +273,7 @@ public class Semanticize
               }
               table2 = new HashMap <> ();
               table2.put (sl.m_image, sl);
-              table[i].put (sl.m_image.toUpperCase (), table2);
+              table[i].put (sl.m_image.toUpperCase (Locale.US), table2);
             }
             else
               if (hasIgnoreCase (table2, sl.m_image))

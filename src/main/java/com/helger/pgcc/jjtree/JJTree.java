@@ -189,7 +189,8 @@ public class JJTree
       }
       _println ("Reading from file " + io.getInputFilename () + " . . .");
 
-      JJTreeGlobals.toolList = JavaCCGlobals.getToolNames (fn);
+      JJTreeGlobals.toolList.clear ();
+      JJTreeGlobals.toolList.addAll (JavaCCGlobals.getToolNames (fn));
       JJTreeGlobals.toolList.add ("JJTree");
 
       try

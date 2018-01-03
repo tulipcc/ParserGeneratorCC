@@ -66,6 +66,7 @@ package com.helger.pgcc.jjtree;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ASTNodeDescriptor extends JJTreeNode
@@ -124,7 +125,7 @@ public class ASTNodeDescriptor extends JJTreeNode
 
   String getNodeId ()
   {
-    return "JJT" + m_name.toUpperCase ().replace ('.', '_');
+    return "JJT" + m_name.toUpperCase (Locale.US).replace ('.', '_');
   }
 
   boolean isVoid ()

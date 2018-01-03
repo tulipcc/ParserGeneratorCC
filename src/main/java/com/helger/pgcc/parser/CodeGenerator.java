@@ -144,8 +144,10 @@ public class CodeGenerator
     {
       final String incfilePath = fileName.replace (".cc", ".h");
       final String incfileName = new File (incfilePath).getName ();
-      m_includeBuffer.insert (0, "#define " + incfileName.replace ('.', '_').toUpperCase () + "\n");
-      m_includeBuffer.insert (0, "#ifndef " + incfileName.replace ('.', '_').toUpperCase () + "\n");
+
+      final String sDefine = incfileName.replace ('.', '_').toUpperCase (Locale.US);
+      m_includeBuffer.insert (0, "#define " + sDefine + "\n");
+      m_includeBuffer.insert (0, "#ifndef " + sDefine + "\n");
 
       // dump the statics into the main file with the code.
       m_mainBuffer.insert (0, m_staticsBuffer);

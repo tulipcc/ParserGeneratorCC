@@ -258,7 +258,4 @@ final class JJTreeStateJava
     ostr.println ("  }");
     ostr.println ("}");
   }
-
 }
-
-/* end */

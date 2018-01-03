@@ -435,7 +435,7 @@ final class NodeFilesCpp
       optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
       optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
       optionMap.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (_getVisitorReturnType ().equals ("void")));
-      generateFile (outputFile, "/templates/jjtree/cpp/TreeImplHeader.template", optionMap, false);
+      generateFile (outputFile, "/templates/jjtree/cpp/_unused_TreeImplHeader.template", optionMap, false);
 
       final boolean hasNamespace = Options.stringValue (Options.USEROPTION__CPP_NAMESPACE).length () > 0;
       if (hasNamespace)
@@ -485,8 +485,8 @@ final class NodeFilesCpp
       final List <String> nodeNames = ASTNodeDescriptor.getNodeNames ();
 
       generatePrologue ();
-      ostr.println ("#ifndef " + file.getName ().replace ('.', '_').toUpperCase ());
-      ostr.println ("#define " + file.getName ().replace ('.', '_').toUpperCase ());
+      ostr.println ("#ifndef " + file.getName ().replace ('.', '_').toUpperCase (Locale.US));
+      ostr.println ("#define " + file.getName ().replace ('.', '_').toUpperCase (Locale.US));
 
       ostr.println ("\n#include \"JavaCC.h\"");
       final boolean hasNamespace = Options.stringValue (Options.USEROPTION__CPP_NAMESPACE).length () > 0;
@@ -573,8 +573,8 @@ final class NodeFilesCpp
     try (final OutputFile outputFile = new OutputFile (file); final PrintWriter ostr = outputFile.getPrintWriter ())
     {
       generatePrologue ();
-      ostr.println ("#ifndef " + file.getName ().replace ('.', '_').toUpperCase ());
-      ostr.println ("#define " + file.getName ().replace ('.', '_').toUpperCase ());
+      ostr.println ("#ifndef " + file.getName ().replace ('.', '_').toUpperCase (Locale.US));
+      ostr.println ("#define " + file.getName ().replace ('.', '_').toUpperCase (Locale.US));
       ostr.println ("\n#include \"JavaCC.h\"");
       ostr.println ("#include \"" + JJTreeGlobals.s_parserName + "Tree.h" + "\"");
 

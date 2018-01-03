@@ -74,6 +74,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.OutputFile;
@@ -88,9 +89,9 @@ final class NodeFilesJava
    * ID of the latest version (of JJTree) in which one of the Node classes was
    * modified.
    */
-  static final String nodeVersion = PGVersion.MAJOR_DOT_MINOR;
+  static final String s_nodeVersion = PGVersion.MAJOR_DOT_MINOR;
 
-  static Set <String> nodesGenerated = new HashSet <> ();
+  static final Set <String> s_nodesGenerated = new HashSet <> ();
 
   static void ensure (final JJTreeIO io, final String nodeType)
   {
@@ -117,7 +118,7 @@ final class NodeFilesJava
       return;
     }
 
-    if (file.exists () && nodesGenerated.contains (file.getName ()))
+    if (file.exists () && s_nodesGenerated.contains (file.getName ()))
     {
       return;
     }
@@ -130,11 +131,11 @@ final class NodeFilesJava
                                               "NODE_EXTENDS",
                                               "NODE_FACTORY",
                                               Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
-    try (final OutputFile outputFile = new OutputFile (file, nodeVersion, options))
+    try (final OutputFile outputFile = new OutputFile (file, s_nodeVersion, options))
     {
       outputFile.setToolName ("JJTree");
 
-      nodesGenerated.add (file.getName ());
+      s_nodesGenerated.add (file.getName ());
 
       if (!outputFile.needToWrite)
       {
@@ -177,7 +178,6 @@ final class NodeFilesJava
         ostr.println ("import " + JJTreeGlobals.s_packageName + ".*;");
         ostr.println ();
       }
-
     }
   }
 
@@ -416,6 +416,8 @@ final class NodeFilesJava
       final Map <String, Object> options = Options.getAllOptions ();
       options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
+      options.put ("AT_LEAST_JDK15",
+                   Boolean.valueOf (Options.getJdkVersion ().isNewerOrEqualsThan (EJDKVersion.JDK_15)));
 
       final OutputFileGenerator generator = new OutputFileGenerator ("/templates/jjtree/java/SimpleNode.template",
                                                                      options);

@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -190,7 +191,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
               (LexGenJava.toMore[i / 64] & (1L << (i % 64))) != 0L ||
               LexGenJava.canReachOnMore[LexGenJava.lexStates[i]] ||
               ((Options.isIgnoreCase () || LexGenJava.ignoreCase[i]) &&
-               (!image.equals (image.toLowerCase ()) || !image.equals (image.toUpperCase ()))))
+               (!image.equals (image.toLowerCase (Locale.US)) || !image.equals (image.toUpperCase (Locale.US)))))
           {
             s_allImages[i] = null;
             if ((s_charCnt += 6) > 80)
@@ -274,7 +275,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
           (LexGenJava.toMore[i / 64] & (1L << (i % 64))) != 0L ||
           LexGenJava.canReachOnMore[LexGenJava.lexStates[i]] ||
           ((Options.isIgnoreCase () || LexGenJava.ignoreCase[i]) &&
-           (!image.equals (image.toLowerCase ()) || !image.equals (image.toUpperCase ()))))
+           (!image.equals (image.toLowerCase (Locale.US)) || !image.equals (image.toUpperCase (Locale.US)))))
       {
         s_allImages[i] = null;
         if ((s_charCnt += 6) > 80)
@@ -1919,7 +1920,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       kindToLexicalState.put (actualKind, lexStateIndex);
       if (Options.isIgnoreCase ())
       {
-        s = s.toLowerCase ();
+        s = s.toLowerCase (Locale.US);
       }
       final char c = s.charAt (0);
       final int key = LexGenJava.lexStateIndex << 16 | c;

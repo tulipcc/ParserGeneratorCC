@@ -312,6 +312,7 @@ public final class JavaCCGlobals
    * Returns a List of names of the tools that have been used to generate the
    * given file.
    */
+  @Nonnull
   public static List <String> getToolNames (final String fileName)
   {
     final char [] buf = new char [256];
