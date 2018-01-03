@@ -41,14 +41,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-class JJTreeGlobals
-{
+import javax.annotation.Nonnull;
 
+public class JJTreeGlobals
+{
   /**
    * This set stores the JJTree-specific options that should not be passed down
    * to JavaCC
    */
-  private static Set <String> s_jjtreeOptions;
+  private static final Set <String> s_jjtreeOptions = new HashSet <> ();
 
   static final List <String> toolList = new ArrayList <> ();
 
@@ -103,7 +104,7 @@ class JJTreeGlobals
     s_parserImports = null;
     s_productions.clear ();
 
-    s_jjtreeOptions = new HashSet <> ();
+    s_jjtreeOptions.clear ();
     s_jjtreeOptions.add ("JJTREE_OUTPUT_DIRECTORY");
     s_jjtreeOptions.add ("MULTI");
     s_jjtreeOptions.add ("NODE_PREFIX");
@@ -132,7 +133,7 @@ class JJTreeGlobals
     initialize ();
   }
 
-  public static boolean isOptionJJTreeOnly (final String optionName)
+  public static boolean isOptionJJTreeOnly (@Nonnull final String optionName)
   {
     return s_jjtreeOptions.contains (optionName.toUpperCase (Locale.US));
   }

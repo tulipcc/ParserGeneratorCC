@@ -31,7 +31,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.jjtree;
+package com.helger.pgcc.jjtree.output;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,19 +39,22 @@ import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 
 import com.helger.pgcc.EJDKVersion;
+import com.helger.pgcc.jjtree.JJTreeGlobals;
+import com.helger.pgcc.jjtree.JJTreeIO;
+import com.helger.pgcc.jjtree.JJTreeOptions;
 import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.Options;
 
 /**
  * Generate the State of a tree.
  */
-final class JJTreeStateJava
+public final class JJTreeStateJava
 {
 
   private JJTreeStateJava ()
   {}
 
-  static void insertParserMembers (final JJTreeIO io)
+  public static void insertParserMembers (final JJTreeIO io)
   {
     io.println ();
     io.println ("  protected " +
@@ -68,7 +71,7 @@ final class JJTreeStateJava
     return "JJT" + JJTreeGlobals.s_parserName + "State";
   }
 
-  static void generateTreeState_java ()
+  public static void generateTreeState_java ()
   {
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), _nameState () + ".java");
 

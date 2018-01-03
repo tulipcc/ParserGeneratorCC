@@ -208,9 +208,8 @@ public class ParseGenCPP extends ParseGenJava
         if (s_maskVals.size () > 0)
         {
           genCodeLine ("  unsigned int jj_la1_" + i + "[] = {");
-          for (final Object aElement : s_maskVals)
+          for (final int [] tokenMask : s_maskVals)
           {
-            final int [] tokenMask = (int []) (aElement);
             genCode ("0x" + Integer.toHexString (tokenMask[i]) + ",");
           }
           genCodeLine ("};");

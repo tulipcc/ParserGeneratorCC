@@ -572,7 +572,7 @@ public class Semanticize
       // done, a left-recursion check can be performed.
       for (final NormalProduction prod : s_bnfproductions)
       {
-        addLeftMost (prod, prod.getExpansion ());
+        _addLeftMost (prod, prod.getExpansion ());
       }
 
       // Now the following loop calls a recursive walk routine that searches for
@@ -584,7 +584,7 @@ public class Semanticize
       {
         if (prod.getWalkStatus () == 0)
         {
-          prodWalk (prod);
+          _prodWalk (prod);
         }
       }
 
@@ -607,10 +607,10 @@ public class Semanticize
             if (rexp.m_walkStatus == 0)
             {
               rexp.m_walkStatus = -1;
-              if (rexpWalk (rexp))
+              if (_rexpWalk (rexp))
               {
-                loopString = "..." + rexp.m_label + "... --> " + loopString;
-                JavaCCErrors.semantic_error (rexp, "Loop in regular expression detected: \"" + loopString + "\"");
+                s_loopString = "..." + rexp.m_label + "... --> " + s_loopString;
+                JavaCCErrors.semantic_error (rexp, "Loop in regular expression detected: \"" + s_loopString + "\"");
               }
               rexp.m_walkStatus = 1;
             }
@@ -668,68 +668,59 @@ public class Semanticize
     {
       return ((ExpNonTerminal) exp).getProd ().isEmptyPossible ();
     }
-    else
-      if (exp instanceof ExpAction)
-      {
-        return true;
-      }
-      else
-        if (exp instanceof AbstractExpRegularExpression)
-        {
+
+    if (exp instanceof ExpAction)
+    {
+      return true;
+    }
+
+    if (exp instanceof AbstractExpRegularExpression)
+    {
+      return false;
+    }
+
+    if (exp instanceof ExpOneOrMore)
+    {
+      return emptyExpansionExists (((ExpOneOrMore) exp).m_expansion);
+    }
+
+    if (exp instanceof ExpZeroOrMore || exp instanceof ExpZeroOrOne)
+    {
+      return true;
+    }
+
+    if (exp instanceof ExpLookahead)
+    {
+      return true;
+    }
+
+    if (exp instanceof ExpChoice)
+    {
+      for (final Expansion aElement : ((ExpChoice) exp).getChoices ())
+        if (emptyExpansionExists (aElement))
+          return true;
+      return false;
+    }
+
+    if (exp instanceof ExpSequence)
+    {
+      for (final Expansion aElement : ((ExpSequence) exp).m_units)
+        if (!emptyExpansionExists (aElement))
           return false;
-        }
-        else
-          if (exp instanceof ExpOneOrMore)
-          {
-            return emptyExpansionExists (((ExpOneOrMore) exp).m_expansion);
-          }
-          else
-            if (exp instanceof ExpZeroOrMore || exp instanceof ExpZeroOrOne)
-            {
-              return true;
-            }
-            else
-              if (exp instanceof ExpLookahead)
-              {
-                return true;
-              }
-              else
-                if (exp instanceof ExpChoice)
-                {
-                  for (final Object aElement : ((ExpChoice) exp).getChoices ())
-                  {
-                    if (emptyExpansionExists ((Expansion) aElement))
-                    {
-                      return true;
-                    }
-                  }
-                  return false;
-                }
-                else
-                  if (exp instanceof ExpSequence)
-                  {
-                    for (final Object aElement : ((ExpSequence) exp).m_units)
-                    {
-                      if (!emptyExpansionExists ((Expansion) aElement))
-                      {
-                        return false;
-                      }
-                    }
-                    return true;
-                  }
-                  else
-                    if (exp instanceof ExpTryBlock)
-                    {
-                      return emptyExpansionExists (((ExpTryBlock) exp).m_exp);
-                    }
-                    else
-                    {
-                      return false; // This should be dead code.
-                    }
+      return true;
+    }
+
+    if (exp instanceof ExpTryBlock)
+    {
+      return emptyExpansionExists (((ExpTryBlock) exp).m_exp);
+    }
+
+    // This should be dead code.
+    return false;
   }
 
   // Updates prod.leftExpansions based on a walk of exp.
-  static private void addLeftMost (final NormalProduction prod, final Expansion exp)
+  static private void _addLeftMost (final NormalProduction prod, final Expansion exp)
   {
     if (exp instanceof ExpNonTerminal)
     {
@@ -751,24 +742,24 @@ public class Semanticize
     else
       if (exp instanceof ExpOneOrMore)
       {
-        addLeftMost (prod, ((ExpOneOrMore) exp).m_expansion);
+        _addLeftMost (prod, ((ExpOneOrMore) exp).m_expansion);
       }
       else
         if (exp instanceof ExpZeroOrMore)
         {
-          addLeftMost (prod, ((ExpZeroOrMore) exp).m_expansion);
+          _addLeftMost (prod, ((ExpZeroOrMore) exp).m_expansion);
         }
         else
           if (exp instanceof ExpZeroOrOne)
           {
-            addLeftMost (prod, ((ExpZeroOrOne) exp).m_expansion);
+            _addLeftMost (prod, ((ExpZeroOrOne) exp).m_expansion);
           }
           else
             if (exp instanceof ExpChoice)
             {
               for (final Object aObject : ((ExpChoice) exp).getChoices ())
               {
-                addLeftMost (prod, (Expansion) aObject);
+                _addLeftMost (prod, (Expansion) aObject);
               }
             }
             else
@@ -777,7 +768,7 @@ public class Semanticize
                 for (final Object aObject : ((ExpSequence) exp).m_units)
                 {
                   final Expansion e = (Expansion) aObject;
-                  addLeftMost (prod, e);
+                  _addLeftMost (prod, e);
                   if (!emptyExpansionExists (e))
                   {
                     break;
@@ -787,16 +778,16 @@ public class Semanticize
               else
                 if (exp instanceof ExpTryBlock)
                 {
-                  addLeftMost (prod, ((ExpTryBlock) exp).m_exp);
+                  _addLeftMost (prod, ((ExpTryBlock) exp).m_exp);
                 }
   }
 
   // The string in which the following methods store information.
-  static private String loopString;
+  private static String s_loopString;
 
   // Returns true to indicate an unraveling of a detected left recursion loop,
   // and returns false otherwise.
-  static private boolean prodWalk (final NormalProduction prod)
+  private static boolean _prodWalk (final NormalProduction prod)
   {
     prod.setWalkStatus (-1);
     for (int i = 0; i < prod.m_leIndex; i++)
@@ -804,11 +795,11 @@ public class Semanticize
       if (prod.getLeftExpansions ()[i].getWalkStatus () == -1)
       {
         prod.getLeftExpansions ()[i].setWalkStatus (-2);
-        loopString = prod.getLhs () + "... --> " + prod.getLeftExpansions ()[i].getLhs () + "...";
+        s_loopString = prod.getLhs () + "... --> " + prod.getLeftExpansions ()[i].getLhs () + "...";
         if (prod.getWalkStatus () == -2)
         {
           prod.setWalkStatus (1);
-          JavaCCErrors.semantic_error (prod, "Left recursion detected: \"" + loopString + "\"");
+          JavaCCErrors.semantic_error (prod, "Left recursion detected: \"" + s_loopString + "\"");
           return false;
         }
         prod.setWalkStatus (1);
@@ -817,13 +808,13 @@ public class Semanticize
       else
         if (prod.getLeftExpansions ()[i].getWalkStatus () == 0)
         {
-          if (prodWalk (prod.getLeftExpansions ()[i]))
+          if (_prodWalk (prod.getLeftExpansions ()[i]))
           {
-            loopString = prod.getLhs () + "... --> " + loopString;
+            s_loopString = prod.getLhs () + "... --> " + s_loopString;
             if (prod.getWalkStatus () == -2)
             {
               prod.setWalkStatus (1);
-              JavaCCErrors.semantic_error (prod, "Left recursion detected: \"" + loopString + "\"");
+              JavaCCErrors.semantic_error (prod, "Left recursion detected: \"" + s_loopString + "\"");
               return false;
             }
             prod.setWalkStatus (1);
@@ -837,7 +828,7 @@ public class Semanticize
 
   // Returns true to indicate an unraveling of a detected loop,
   // and returns false otherwise.
-  static private boolean rexpWalk (final AbstractExpRegularExpression rexp)
+  static private boolean _rexpWalk (final AbstractExpRegularExpression rexp)
   {
     if (rexp instanceof ExpRJustName)
     {
@@ -845,7 +836,7 @@ public class Semanticize
       if (jn.m_regexpr.m_walkStatus == -1)
       {
         jn.m_regexpr.m_walkStatus = -2;
-        loopString = "..." + jn.m_regexpr.m_label + "...";
+        s_loopString = "..." + jn.m_regexpr.m_label + "...";
         // Note: Only the regexpr's of RJustName nodes and the top leve
         // regexpr's can have labels. Hence it is only in these cases that
         // the labels are checked for to be added to the loopString.
@@ -855,13 +846,14 @@ public class Semanticize
         if (jn.m_regexpr.m_walkStatus == 0)
         {
           jn.m_regexpr.m_walkStatus = -1;
-          if (rexpWalk (jn.m_regexpr))
+          if (_rexpWalk (jn.m_regexpr))
           {
-            loopString = "..." + jn.m_regexpr.m_label + "... --> " + loopString;
+            s_loopString = "..." + jn.m_regexpr.m_label + "... --> " + s_loopString;
             if (jn.m_regexpr.m_walkStatus == -2)
             {
               jn.m_regexpr.m_walkStatus = 1;
-              JavaCCErrors.semantic_error (jn.m_regexpr, "Loop in regular expression detected: \"" + loopString + "\"");
+              JavaCCErrors.semantic_error (jn.m_regexpr,
+                                           "Loop in regular expression detected: \"" + s_loopString + "\"");
               return false;
             }
             jn.m_regexpr.m_walkStatus = 1;
@@ -871,50 +863,43 @@ public class Semanticize
           return false;
         }
     }
-    else
-      if (rexp instanceof ExpRChoice)
-      {
-        for (final AbstractExpRegularExpression aElement : ((ExpRChoice) rexp).getChoices ())
-        {
-          if (rexpWalk (aElement))
-          {
-            return true;
-          }
-        }
-        return false;
-      }
-      else
-        if (rexp instanceof ExpRSequence)
-        {
-          for (final Object aElement : ((ExpRSequence) rexp).m_units)
-          {
-            if (rexpWalk ((AbstractExpRegularExpression) aElement))
-            {
-              return true;
-            }
-          }
-          return false;
-        }
-        else
-          if (rexp instanceof ExpROneOrMore)
-          {
-            return rexpWalk (((ExpROneOrMore) rexp).m_regexpr);
-          }
-          else
-            if (rexp instanceof ExpRZeroOrMore)
-            {
-              return rexpWalk (((ExpRZeroOrMore) rexp).m_regexpr);
-            }
-            else
-              if (rexp instanceof ExpRZeroOrOne)
-              {
-                return rexpWalk (((ExpRZeroOrOne) rexp).m_regexpr);
-              }
-              else
-                if (rexp instanceof ExpRRepetitionRange)
-                {
-                  return rexpWalk (((ExpRRepetitionRange) rexp).m_regexpr);
-                }
+
+    if (rexp instanceof ExpRChoice)
+    {
+      for (final AbstractExpRegularExpression aElement : ((ExpRChoice) rexp).getChoices ())
+        if (_rexpWalk (aElement))
+          return true;
+      return false;
+    }
+
+    if (rexp instanceof ExpRSequence)
+    {
+      for (final AbstractExpRegularExpression aElement : ((ExpRSequence) rexp).m_units)
+        if (_rexpWalk (aElement))
+          return true;
+      return false;
+    }
+
+    if (rexp instanceof ExpROneOrMore)
+    {
+      return _rexpWalk (((ExpROneOrMore) rexp).m_regexpr);
+    }
+
+    if (rexp instanceof ExpRZeroOrMore)
+    {
+      return _rexpWalk (((ExpRZeroOrMore) rexp).m_regexpr);
+    }
+
+    if (rexp instanceof ExpRZeroOrOne)
+    {
+      return _rexpWalk (((ExpRZeroOrOne) rexp).m_regexpr);
+    }
+
+    if (rexp instanceof ExpRRepetitionRange)
+    {
+      return _rexpWalk (((ExpRRepetitionRange) rexp).m_regexpr);
+    }
+
     return false;
   }
 
@@ -1176,7 +1161,6 @@ public class Semanticize
       final ExpLookahead la = (ExpLookahead) obj;
       return !la.isExplicit ();
     }
-
   }
 
   public static void reInit ()
@@ -1184,6 +1168,6 @@ public class Semanticize
     removeList.clear ();
     itemList.clear ();
     other = null;
-    loopString = null;
+    s_loopString = null;
   }
 }

@@ -64,6 +64,7 @@
 
 package com.helger.pgcc.jjtree;
 
+import com.helger.pgcc.jjtree.output.NodeFilesCpp;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.parser.Options;
 

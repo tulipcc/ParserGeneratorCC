@@ -40,6 +40,7 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.helger.pgcc.jjtree.output.NodeFilesCpp;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
 

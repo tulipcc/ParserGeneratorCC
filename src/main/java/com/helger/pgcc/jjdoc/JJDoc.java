@@ -178,9 +178,8 @@ public final class JJDoc
         {
           boolean first = true;
           final ExpChoice c = (ExpChoice) np.getExpansion ();
-          for (final Object aElement : c.getChoices ())
+          for (final Expansion e : c.getChoices ())
           {
-            final Expansion e = (Expansion) (aElement);
             gen.expansionStart (e, first);
             _emitExpansionTree (e, gen);
             gen.expansionEnd (e, first);

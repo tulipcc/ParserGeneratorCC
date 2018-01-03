@@ -62,7 +62,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.helger.pgcc.jjtree;
+package com.helger.pgcc.jjtree.output;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,12 +77,15 @@ import java.util.Set;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.jjtree.ASTNodeDescriptor;
+import com.helger.pgcc.jjtree.JJTreeGlobals;
+import com.helger.pgcc.jjtree.JJTreeOptions;
 import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.output.cpp.OtherFilesGenCPP;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
-final class NodeFilesCpp
+public final class NodeFilesCpp
 {
   private NodeFilesCpp ()
   {}
@@ -94,9 +97,9 @@ final class NodeFilesCpp
    */
   static final String s_nodeVersion = PGVersion.MAJOR_DOT_MINOR;
 
-  static Set <String> s_nodesToGenerate = new HashSet <> ();
+  static final Set <String> s_nodesToGenerate = new HashSet <> ();
 
-  static void addType (final String type)
+  public static void addType (final String type)
   {
     if (!type.equals ("Node") && !type.equals ("SimpleNode"))
     {
@@ -157,7 +160,7 @@ final class NodeFilesCpp
     return new File (JJTreeOptions.getJJTreeOutputDirectory (), name + ".h").getAbsolutePath ();
   }
 
-  static void generateTreeClasses ()
+  public static void generateTreeClasses ()
   {
     _generateNodeHeader ();
     _generateSimpleNodeHeader ();
@@ -471,7 +474,7 @@ final class NodeFilesCpp
     return JJTreeGlobals.s_parserName + "TreeConstants";
   }
 
-  static void generateTreeConstants ()
+  public static void generateTreeConstants ()
   {
     final String name = nodeConstants ();
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), name + ".h");
@@ -564,7 +567,7 @@ final class NodeFilesCpp
     return ret == null || ret.length () == 0 || ret.equals ("Object") ? "void " : ret;
   }
 
-  static void generateVisitors ()
+  public static void generateVisitors ()
   {
     if (!JJTreeOptions.isVisitor ())
       return;

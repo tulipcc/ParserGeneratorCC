@@ -31,27 +31,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.jjtree;
+// Copyright 2011 Google Inc. All Rights Reserved.
+// Author: sreeni@google.com (Sreeni Viswanadha)
 
+package com.helger.pgcc.jjtree.output;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+
+import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.jjtree.JJTreeGlobals;
+import com.helger.pgcc.jjtree.JJTreeOptions;
+import com.helger.pgcc.output.OutputFile;
+import com.helger.pgcc.parser.Options;
 
 /**
- * Thrown when there is a problem reading or writing to the file system.
+ * Generate the State of a tree.
  */
-public class JJTreeIOException extends IOException
+public final class JJTreeStateCpp
 {
-  public JJTreeIOException (final String sMsg)
-  {
-    super (sMsg);
-  }
+  static final String JJTStateVersion = PGVersion.MAJOR_DOT_MINOR;
 
-  public JJTreeIOException (final String sMsg, final Throwable aCause)
-  {
-    super (sMsg, aCause);
-  }
+  private JJTreeStateCpp ()
+  {}
 
-  public JJTreeIOException (final Throwable aCause)
+  public static void generateTreeState () throws IOException
   {
-    super (aCause);
+    final Map <String, Object> options = Options.getAllOptions ();
+    options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
+
+    final String filePrefix = new File (JJTreeOptions.getJJTreeOutputDirectory (),
+                                        "JJT" + JJTreeGlobals.s_parserName + "State").getAbsolutePath ();
+
+    OutputFile outputFile = new OutputFile (new File (filePrefix + ".h"), JJTStateVersion, new String [0]);
+    NodeFilesCpp.generateFile (outputFile, "/templates/jjtree/cpp/JJTTreeState.h.template", options, true);
+
+    outputFile = new OutputFile (new File (filePrefix + ".cc"), JJTStateVersion, new String [0]);
+    NodeFilesCpp.generateFile (outputFile, "/templates/jjtree/cpp/JJTTreeState.cc.template", options, true);
   }
 }

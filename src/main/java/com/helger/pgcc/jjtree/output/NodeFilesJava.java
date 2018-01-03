@@ -62,7 +62,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.helger.pgcc.jjtree;
+package com.helger.pgcc.jjtree.output;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,11 +76,15 @@ import java.util.Set;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.jjtree.ASTNodeDescriptor;
+import com.helger.pgcc.jjtree.JJTreeGlobals;
+import com.helger.pgcc.jjtree.JJTreeIO;
+import com.helger.pgcc.jjtree.JJTreeOptions;
 import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
-final class NodeFilesJava
+public final class NodeFilesJava
 {
   private NodeFilesJava ()
   {}
@@ -93,19 +97,23 @@ final class NodeFilesJava
 
   static final Set <String> s_nodesGenerated = new HashSet <> ();
 
-  static void ensure (final JJTreeIO io, final String nodeType)
+  public static void ensure (final JJTreeIO io, final String nodeType)
   {
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), nodeType + ".java");
 
     if (nodeType.equals ("Node"))
-    {}
+    {
+      // Nothing
+    }
     else
       if (nodeType.equals ("SimpleNode"))
       {
+        // Check super interface
         ensure (io, "Node");
       }
       else
       {
+        // Whatever - SimpleNode is as deep as we can handle
         ensure (io, "SimpleNode");
       }
 
@@ -153,7 +161,7 @@ final class NodeFilesJava
         }
         else
         {
-          _generateMULTINode_java (outputFile, nodeType);
+          _generateMultiNode_java (outputFile, nodeType);
         }
     }
     catch (final IOException e)
@@ -181,12 +189,12 @@ final class NodeFilesJava
     }
   }
 
-  static String nodeConstants ()
+  public static String nodeConstants ()
   {
     return JJTreeGlobals.s_parserName + "TreeConstants";
   }
 
-  static void generateTreeConstants_java ()
+  public static void generateTreeConstants_java ()
   {
     final String name = nodeConstants ();
     final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), name + ".java");
@@ -230,7 +238,7 @@ final class NodeFilesJava
     return JJTreeGlobals.s_parserName + "Visitor";
   }
 
-  static void generateVisitor_java ()
+  public static void generateVisitor_java ()
   {
     if (!JJTreeOptions.isVisitor ())
     {
@@ -310,7 +318,7 @@ final class NodeFilesJava
     return sb.toString ();
   }
 
-  static void generateDefaultVisitor_java ()
+  public static void generateDefaultVisitor_java ()
   {
     if (!JJTreeOptions.isVisitor ())
     {
@@ -426,7 +434,7 @@ final class NodeFilesJava
     }
   }
 
-  private static void _generateMULTINode_java (final OutputFile outputFile, final String nodeType) throws IOException
+  private static void _generateMultiNode_java (final OutputFile outputFile, final String nodeType) throws IOException
   {
     try (final PrintWriter ostr = outputFile.getPrintWriter ())
     {

@@ -64,6 +64,12 @@
 
 package com.helger.pgcc.jjtree;
 
+import java.io.IOException;
+
+import com.helger.pgcc.jjtree.output.JJTreeStateCpp;
+import com.helger.pgcc.jjtree.output.JJTreeStateJava;
+import com.helger.pgcc.jjtree.output.NodeFilesCpp;
+import com.helger.pgcc.jjtree.output.NodeFilesJava;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
 
@@ -182,7 +188,7 @@ public class JJTree
       {
         io.setInput (fn);
       }
-      catch (final JJTreeIOException ioe)
+      catch (final IOException ioe)
       {
         _println ("Error setting input: " + ioe.getMessage ());
         return 1;
@@ -207,7 +213,7 @@ public class JJTree
         {
           io.setOutput ();
         }
-        catch (final JJTreeIOException ioe)
+        catch (final IOException ioe)
         {
           _println ("Error setting output: " + ioe.getMessage ());
           return 1;
@@ -228,9 +234,7 @@ public class JJTree
           case CPP:
             NodeFilesCpp.generateTreeConstants ();
             NodeFilesCpp.generateVisitors ();
-            // CPPNodeFiles.generateDefaultVisitor();
             JJTreeStateCpp.generateTreeState ();
-            // CPPNodeFiles.generateJJTreeH();
             break;
           default:
             _println ("Unsupported JJTree output language : " + Options.getOutputLanguage ());

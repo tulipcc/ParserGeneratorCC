@@ -84,12 +84,12 @@ public class ASTNodeDescriptor extends JJTreeNode
     return nd;
   }
 
-  static List <String> getNodeIds ()
+  public static List <String> getNodeIds ()
   {
     return s_nodeIds;
   }
 
-  static List <String> getNodeNames ()
+  public static List <String> getNodeNames ()
   {
     return s_nodeNames;
   }

@@ -76,7 +76,7 @@ import com.helger.pgcc.parser.Options;
  *
  * @author Kees Jan Koster &lt;kjkoster@kjkoster.org&gt;
  */
-class JJTreeOptions extends Options
+public class JJTreeOptions extends Options
 {
   /**
    * Limit subclassing to derived classes.
