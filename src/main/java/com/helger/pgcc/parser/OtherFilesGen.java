@@ -83,7 +83,8 @@ import java.util.List;
 
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
-import com.helger.pgcc.parser.FilesJava.IJavaResourceTemplateLocations;
+import com.helger.pgcc.output.java.FilesJava;
+import com.helger.pgcc.output.java.IJavaResourceTemplateLocations;
 
 /**
  * Generates the Constants file.

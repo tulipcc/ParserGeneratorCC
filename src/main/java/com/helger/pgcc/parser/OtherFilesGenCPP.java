@@ -82,6 +82,7 @@ import java.util.List;
 
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.output.cpp.FilesCpp;
 
 /**
  * Generates the Constants file.

@@ -31,10 +31,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-// Copyright 2011 Google Inc. All Rights Reserved.
-// Author: sreeni@google.com (Sreeni Viswanadha)
 
-package com.helger.pgcc.parser;
+package com.helger.pgcc.output.cpp;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.replaceBackslash;
@@ -48,6 +46,9 @@ import java.io.UncheckedIOException;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.parser.JavaCCErrors;
+import com.helger.pgcc.parser.Options;
+import com.helger.pgcc.parser.OutputFile;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 /**
@@ -94,7 +95,7 @@ public class FilesCpp
    * @return The version as a double, eg 4.1
    * @since 4.1
    */
-  static double getVersion (final String fileName)
+  public static double getVersion (final String fileName)
   {
     final String commentHeader = "/* " + getIdString (s_toolName, fileName) + " Version ";
     final File file = new File (Options.getOutputDirectory (), replaceBackslash (fileName));

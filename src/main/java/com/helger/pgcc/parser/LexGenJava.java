@@ -88,6 +88,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.output.java.FilesJava;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 /**

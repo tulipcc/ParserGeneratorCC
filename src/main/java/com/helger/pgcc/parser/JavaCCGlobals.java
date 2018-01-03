@@ -60,7 +60,7 @@ public final class JavaCCGlobals
   /**
    * String that identifies the JavaCC generated files.
    */
-  protected static final String s_toolName = "ParserGeneratorCC";
+  public static final String s_toolName = "ParserGeneratorCC";
 
   /**
    * The name of the grammar file being processed.
@@ -169,13 +169,13 @@ public final class JavaCCGlobals
    * defined with a label). The index to the table is the image of the label and
    * the contents of the table are of type "RegularExpression".
    */
-  public static Map <String, RegularExpression> s_named_tokens_table = new HashMap <> ();
+  public static final Map <String, RegularExpression> s_named_tokens_table = new HashMap <> ();
 
   /**
    * Contains the same entries as "named_tokens_table", but this is an ordered
    * list which is ordered by the order of appearance in the input file.
    */
-  public static List <RegularExpression> s_ordered_named_tokens = new ArrayList <> ();
+  public static final List <RegularExpression> s_ordered_named_tokens = new ArrayList <> ();
 
   /**
    * A mapping of ordinal values (represented as objects of type "Integer") to
@@ -184,13 +184,13 @@ public final class JavaCCGlobals
    * there are multiple labels representing the same ordinal value, then only
    * one label is stored.
    */
-  public static Map <Integer, String> s_names_of_tokens = new HashMap <> ();
+  public static final Map <Integer, String> s_names_of_tokens = new HashMap <> ();
 
   /**
    * A mapping of ordinal values (represented as objects of type "Integer") to
    * the corresponding RegularExpression's.
    */
-  public static Map <Integer, RegularExpression> rexps_of_tokens = new HashMap <> ();
+  public static final Map <Integer, RegularExpression> rexps_of_tokens = new HashMap <> ();
 
   /**
    * This is a three-level symbol table that contains all simple tokens (those
@@ -201,7 +201,7 @@ public final class JavaCCGlobals
    * hashtable. This third level hashtable contains the actual string of the
    * simple token and maps it to its RegularExpression.
    */
-  public static Map <String, Map <String, Map <String, RegularExpression>>> s_simple_tokens_table = new HashMap <> ();
+  public static final Map <String, Map <String, Map <String, RegularExpression>>> s_simple_tokens_table = new HashMap <> ();
 
   /**
    * maskindex, jj2index, maskVals are variables that are shared between
@@ -210,7 +210,7 @@ public final class JavaCCGlobals
   protected static int s_maskindex = 0;
   protected static int s_jj2index = 0;
   public static boolean s_lookaheadNeeded;
-  protected static List <int []> s_maskVals = new ArrayList <> ();
+  protected static final List <int []> s_maskVals = new ArrayList <> ();
 
   static Action s_actForEof;
   static String s_nextStateForEof;
@@ -503,7 +503,7 @@ public final class JavaCCGlobals
     }
   }
 
-  protected static void printToken (final Token t, final PrintWriter ostr)
+  public static void printToken (final Token t, final PrintWriter ostr)
   {
     Token tt = t.specialToken;
     if (tt != null)
@@ -579,7 +579,7 @@ public final class JavaCCGlobals
     return retval;
   }
 
-  protected static String printToken (final Token t)
+  public static String printToken (final Token t)
   {
     String ret = "";
     Token tt = t.specialToken;
@@ -673,7 +673,7 @@ public final class JavaCCGlobals
   /**
    * Replaces all backslahes with double backslashes.
    */
-  static String replaceBackslash (final String str)
+  public static String replaceBackslash (final String str)
   {
     if (str.indexOf ('\\') < 0)
     {

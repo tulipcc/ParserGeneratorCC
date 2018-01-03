@@ -31,7 +31,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.output.java;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
@@ -53,6 +53,9 @@ import java.util.Map;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.parser.JavaCCErrors;
+import com.helger.pgcc.parser.Options;
+import com.helger.pgcc.parser.OutputFile;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 /**
@@ -89,104 +92,6 @@ public class FilesJava
    */
   static final String tokenMgrErrorVersion = PGVersion.MAJOR_DOT_MINOR;
 
-  public interface IJavaResourceTemplateLocations
-  {
-    String getTokenManagerTemplateResourceUrl ();
-
-    String getTokenTemplateResourceUrl ();
-
-    String getTokenMgrErrorTemplateResourceUrl ();
-
-    String getJavaCharStreamTemplateResourceUrl ();
-
-    String getCharStreamTemplateResourceUrl ();
-
-    String getSimpleCharStreamTemplateResourceUrl ();
-
-    String getParseExceptionTemplateResourceUrl ();
-  }
-
-  private static class JavaModernResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
-  {
-    public String getTokenMgrErrorTemplateResourceUrl ()
-    {
-      // Same as Java
-      return "/templates/TokenMgrError.template";
-    }
-
-    public String getCharStreamTemplateResourceUrl ()
-    {
-      // Same as Java
-      return "/templates/CharStream.template";
-    }
-
-    public String getTokenManagerTemplateResourceUrl ()
-    {
-      // Same as Java
-      return "/templates/TokenManager.template";
-    }
-
-    public String getTokenTemplateResourceUrl ()
-    {
-      // Same as Java
-      return "/templates/Token.template";
-    }
-
-    public String getSimpleCharStreamTemplateResourceUrl ()
-    {
-      return "/templates/gwt/SimpleCharStream.template";
-    }
-
-    public String getJavaCharStreamTemplateResourceUrl ()
-    {
-      return "/templates/gwt/JavaCharStream.template";
-    }
-
-    public String getParseExceptionTemplateResourceUrl ()
-    {
-      return "/templates/gwt/ParseException.template";
-    }
-  }
-
-  private static class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
-  {
-    public String getTokenTemplateResourceUrl ()
-    {
-      return "/templates/Token.template";
-    }
-
-    public String getTokenManagerTemplateResourceUrl ()
-    {
-      return "/templates/TokenManager.template";
-    }
-
-    public String getTokenMgrErrorTemplateResourceUrl ()
-    {
-      return "/templates/TokenMgrError.template";
-    }
-
-    public String getJavaCharStreamTemplateResourceUrl ()
-    {
-      return "/templates/JavaCharStream.template";
-    }
-
-    public String getCharStreamTemplateResourceUrl ()
-    {
-      return "/templates/CharStream.template";
-    }
-
-    public String getSimpleCharStreamTemplateResourceUrl ()
-    {
-      return "/templates/SimpleCharStream.template";
-    }
-
-    public String getParseExceptionTemplateResourceUrl ()
-    {
-      return "/templates/ParseException.template";
-    }
-
-  }
-
   public static final IJavaResourceTemplateLocations RESOURCES_JAVA_CLASSIC = new JavaResourceTemplateLocationImpl ();
   public static final IJavaResourceTemplateLocations RESOURCES_JAVA_MODERN = new JavaModernResourceTemplateLocationImpl ();
 
@@ -200,7 +105,7 @@ public class FilesJava
    * @return The version as a double, eg 4.1
    * @since 4.1
    */
-  static double getVersion (final String fileName)
+  public static double getVersion (final String fileName)
   {
     final String commentHeader = "/* " + getIdString (s_toolName, fileName) + " Version ";
     final File file = new File (Options.getOutputDirectory (), replaceBackslash (fileName));
@@ -285,8 +190,8 @@ public class FilesJava
               {
                 printToken (s_cu_to_insertion_point_1.get (j), ostr);
               }
-              ostr.println ("");
-              ostr.println ("");
+              ostr.println ();
+              ostr.println ();
               break;
             }
           }
@@ -336,8 +241,8 @@ public class FilesJava
               {
                 printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
-              ostr.println ("");
-              ostr.println ("");
+              ostr.println ();
+              ostr.println ();
               break;
             }
           }
@@ -387,8 +292,8 @@ public class FilesJava
               {
                 printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
-              ostr.println ("");
-              ostr.println ("");
+              ostr.println ();
+              ostr.println ();
               break;
             }
           }
@@ -443,8 +348,8 @@ public class FilesJava
               {
                 printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
-              ostr.println ("");
-              ostr.println ("");
+              ostr.println ();
+              ostr.println ();
               break;
             }
           }
@@ -489,8 +394,8 @@ public class FilesJava
               {
                 printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
-              ostr.println ("");
-              ostr.println ("");
+              ostr.println ();
+              ostr.println ();
               break;
             }
           }
@@ -536,8 +441,8 @@ public class FilesJava
               {
                 printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
-              ostr.println ("");
-              ostr.println ("");
+              ostr.println ();
+              ostr.println ();
               break;
             }
           }
@@ -585,8 +490,8 @@ public class FilesJava
               {
                 printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
-              ostr.println ("");
-              ostr.println ("");
+              ostr.println ();
+              ostr.println ();
               break;
             }
           }
@@ -626,14 +531,14 @@ public class FilesJava
           {
             if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
-              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
+              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
               for (int j = 0; j <= i; j++)
               {
                 printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
               }
-              ostr.println ("");
-              ostr.println ("");
+              ostr.println ();
+              ostr.println ();
               break;
             }
           }
