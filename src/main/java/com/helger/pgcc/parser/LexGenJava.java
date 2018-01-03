@@ -411,7 +411,6 @@ public class LexGenJava extends CodeGenerator
     s_keepLineCol = Options.isKeepLineColumn ();
     s_errorHandlingClass = Options.getTokenMgrErrorClass ();
     final List <ExpRChoice> choices = new ArrayList <> ();
-    TokenProduction tp;
 
     s_staticString = (Options.isStatic () ? "static " : "");
     s_tokMgrClassName = s_cu_name + "TokenManager";
@@ -445,7 +444,7 @@ public class LexGenJava extends CodeGenerator
 
       for (int i = 0; i < allTps.size (); i++)
       {
-        tp = allTps.get (i);
+        final TokenProduction tp = allTps.get (i);
         final int kind = tp.m_kind;
         final boolean ignore = tp.m_ignoreCase;
         final List <RegExprSpec> rexps = tp.m_respecs;
@@ -1161,29 +1160,35 @@ public class LexGenJava extends CodeGenerator
       }
 
       if (Options.isDebugTokenManager ())
+      {
         genCodeLine ("      debugStream.println(" +
                      (s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                      "\"Current character : \" + " +
                      s_errorHandlingClass +
                      ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
                      "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
+      }
 
       genCodeLine (prefix + "curPos = jjMoveStringLiteralDfa0_" + i + "();");
       if (s_canMatchAnyChar[i] != -1)
       {
         if (s_initMatch[i] != Integer.MAX_VALUE && s_initMatch[i] != 0)
+        {
           genCodeLine (prefix +
                        "if (jjmatchedPos < 0 || (jjmatchedPos == 0 && jjmatchedKind > " +
                        s_canMatchAnyChar[i] +
                        "))");
+        }
         else
           genCodeLine (prefix + "if (jjmatchedPos == 0 && jjmatchedKind > " + s_canMatchAnyChar[i] + ")");
         genCodeLine (prefix + "{");
 
         if (Options.isDebugTokenManager ())
+        {
           genCodeLine ("           debugStream.println(\"   Current character matched as a \" + tokenImage[" +
                        s_canMatchAnyChar[i] +
                        "] + \" token.\");");
+        }
         genCodeLine (prefix + "   jjmatchedKind = " + s_canMatchAnyChar[i] + ";");
 
         if (s_initMatch[i] != Integer.MAX_VALUE && s_initMatch[i] != 0)
@@ -1229,19 +1234,23 @@ public class LexGenJava extends CodeGenerator
       if (Options.isDebugTokenManager ())
       {
         if (Options.isJavaUnicodeEscape () || Options.isJavaUserCharStream ())
+        {
           genCodeLine ("    debugStream.println(" +
                        "\"****** FOUND A \" + tokenImage[jjmatchedKind] + \" MATCH " +
                        "(\" + " +
                        s_errorHandlingClass +
                        ".addEscapes(new String(input_stream.GetSuffix(jjmatchedPos + 1))) + " +
                        "\") ******\\n\");");
+        }
         else
+        {
           genCodeLine ("    debugStream.println(" +
                        "\"****** FOUND A \" + tokenImage[jjmatchedKind] + \" MATCH " +
                        "(\" + " +
                        s_errorHandlingClass +
                        ".addEscapes(new String(input_stream.GetSuffix(jjmatchedPos + 1))) + " +
                        "\") ******\\n\");");
+        }
       }
 
       if (s_hasSkip || s_hasMore || s_hasSpecial)

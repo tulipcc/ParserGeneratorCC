@@ -8,7 +8,6 @@
  * mechanisms so long as you retain the public fields.
  */
 public class ParseException extends Exception {
-
   /**
    * The version identifier for this Serializable class.
    * Increment only if the <i>serialized</i> form of the
@@ -21,13 +20,12 @@ public class ParseException extends Exception {
   /**
    * The end of line string (we do not use System.getProperty("") so that we are compatible with Android/GWT);
    */
-  protected static String EOL = "\n";
+  protected static final String EOL = "\n";
 
   
-  public ParseException(Token currentTokenVal,
-          int[][] expectedTokenSequencesVal,
-          String[] tokenImageVal
-         )
+  public ParseException(final Token currentTokenVal,
+                        final int[][] expectedTokenSequencesVal,
+                        final String[] tokenImageVal)
 	{
 	  this (currentTokenVal, expectedTokenSequencesVal, tokenImageVal, null);
 	}
@@ -39,13 +37,12 @@ public class ParseException extends Exception {
    * a new object of this type with the fields "currentToken",
    * "expectedTokenSequences", and "tokenImage" set.
    */
-  public ParseException(Token currentTokenVal,
-                        int[][] expectedTokenSequencesVal,
-                        String[] tokenImageVal,
-                        String lexicalStateName
-                       )
+  public ParseException(final Token currentTokenVal,
+                        final int[][] expectedTokenSequencesVal,
+                        final String[] tokenImageVal,
+                        final String lexicalStateName)
   {
-    super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal, lexicalStateName));
+    super(_initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal, lexicalStateName));
     currentToken = currentTokenVal;
     expectedTokenSequences = expectedTokenSequencesVal;
     tokenImage = tokenImageVal;
@@ -99,12 +96,12 @@ public class ParseException extends Exception {
    * from the parser) the correct error message
    * gets displayed.
    */
-  private static String initialise(Token currentToken,
-                           int[][] expectedTokenSequences,
-                           String[] tokenImage,
-                           String lexicalStateName) {
-	StringBuilder sb = new StringBuilder();
-    StringBuffer expected = new StringBuffer();
+  private static String _initialise(final Token currentToken,
+                                    final int[][] expectedTokenSequences,
+                                    final String[] tokenImage,
+                                    final String lexicalStateName) {
+	  StringBuilder sb = new StringBuilder();
+    StringBuilder expected = new StringBuilder();
     
     int maxSize = 0;
     java.util.TreeSet<String> sortedOptions = new java.util.TreeSet<String>();
@@ -167,10 +164,10 @@ public class ParseException extends Exception {
    * string literal.
    */
   static String add_escapes(String str) {
-      StringBuffer retval = new StringBuffer();
-      char ch;
+      StringBuilder retval = new StringBuilder();
       for (int i = 0; i < str.length(); i++) {
-        switch (str.charAt(i))
+        final char ch = str.charAt(i);
+        switch (ch)
         {
            case '\b':
               retval.append("\\b");
@@ -197,7 +194,7 @@ public class ParseException extends Exception {
               retval.append("\\\\");
               continue;
            default:
-              if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+              if (ch < 0x20 || ch > 0x7e) {
                  String s = "0000" + Integer.toString(ch, 16);
                  retval.append("\\u" + s.substring(s.length() - 4, s.length()));
               } else {
