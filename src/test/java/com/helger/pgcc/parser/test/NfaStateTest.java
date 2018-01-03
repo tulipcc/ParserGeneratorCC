@@ -33,12 +33,18 @@
  */
 package com.helger.pgcc.parser.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import com.helger.commons.exception.InitializationException;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
-import com.helger.pgcc.JavaCCTestCase;
+import com.helger.pgcc.AbstractJavaCCTestCase;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.JavaCCParser;
@@ -54,44 +60,15 @@ import com.helger.pgcc.parser.Semanticize;
  * @author timp
  * @since 16 Mar 2007
  */
-public class NfaStateTest extends JavaCCTestCase
+public class NfaStateTest extends AbstractJavaCCTestCase
 {
+  private final String parserInput = getJJInputDirectory () + "JavaCC.jj";
 
-  String parserInput = getJJInputDirectory () + "JavaCC.jj";
-
-  /**
-   * @param name
-   *        test case name
-   */
-  public NfaStateTest (final String name)
+  @Before
+  public void setUp () throws Exception
   {
-    super (name);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @throws Exception
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp () throws Exception
-  {
-    super.setUp ();
     Options.init ();
     Main.reInitAll ();
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @throws Exception
-   * @see junit.framework.TestCase#tearDown()
-   */
-  @Override
-  protected void tearDown () throws Exception
-  {
-    super.tearDown ();
   }
 
   protected void setupState ()
@@ -113,10 +90,7 @@ public class NfaStateTest extends JavaCCTestCase
     }
   }
 
-  /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState# DumpStateSets(CodeGenerator)}.
-   */
+  @Test
   public void testDumpStateSets ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -129,6 +103,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpStateSets(CodeGenerator)}.
    */
+  @Test
   public void testDumpStateSetsInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -147,6 +122,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState# DumpCharAndRangeMoves(CodeGenerator)}.
    */
+  @Test
   public void testDumpCharAndRangeMoves ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -168,6 +144,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpCharAndRangeMoves(CodeGenerator)}.
    */
+  @Test
   public void testDumpCharAndRangeMovesInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -192,6 +169,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpNonAsciiMoveMethods(CodeGenerator)}.
    */
+  @Test
   public void testDumpNonAsciiMoveMethods ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -204,6 +182,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpNonAsciiMoveMethods(CodeGenerator)}.
    */
+  @Test
   public void testDumpNonAsciiMoveMethodsInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -396,6 +375,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpMoveNfa(CodeGenerator)}.
    */
+  @Test
   public void testDumpMoveNfa ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -453,6 +433,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpMoveNfa(CodeGenerator)}.
    */
+  @Test
   public void testDumpMoveNfaInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -466,6 +447,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpStatesForState(CodeGenerator)}.
    */
+  @Test
   public void testDumpStatesForState ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -478,6 +460,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpStatesForState(CodeGenerator)}.
    */
+  @Test
   public void testDumpStatesForStateInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -569,6 +552,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpStatesForKind(CodeGenerator)}.
    */
+  @Test
   public void testDumpStatesForKind ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -583,6 +567,7 @@ public class NfaStateTest extends JavaCCTestCase
    * Test method for
    * {@link org.javacc.parser.NfaState#DumpStatesForKind(CodeGenerator)}.
    */
+  @Test
   public void testDumpStatesForKindInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
@@ -746,11 +731,4 @@ public class NfaStateTest extends JavaCCTestCase
                   "};",
                   result.trim ());
   }
-
-  /**
-   * Test method for {@link org.javacc.parser.NfaState#reInit()}.
-   */
-  public void testReInit1 ()
-  {}
-
 }

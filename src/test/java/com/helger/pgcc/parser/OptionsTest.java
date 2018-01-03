@@ -33,23 +33,32 @@
  */
 package com.helger.pgcc.parser;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 
-import com.helger.commons.system.EJavaVersion;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import com.helger.commons.system.EJavaVersion;
 
 /**
  * Test cases to prod at the valitity of Options a little.
  *
  * @author Kees Jan Koster &lt;kjkoster@kjkoster.org&gt;
  */
-public final class OptionsTest extends TestCase
+public final class OptionsTest
 {
-  public void testDefaults ()
+  @Before
+  public void beforeEach ()
   {
     Options.init ();
     JavaCCErrors.reInit ();
+  }
+
+  @Test
+  public void testDefaults ()
+  {
 
     assertEquals (44, Options.s_optionValues.size ());
 
@@ -88,11 +97,9 @@ public final class OptionsTest extends TestCase
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
+  @Test
   public void testSetBooleanOption ()
   {
-    Options.init ();
-    JavaCCErrors.reInit ();
-
     assertEquals (true, Options.isStatic ());
     Options.setCmdLineOption ("-NOSTATIC");
     assertEquals (false, Options.isStatic ());
@@ -111,11 +118,9 @@ public final class OptionsTest extends TestCase
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
+  @Test
   public void testIntBooleanOption ()
   {
-    Options.init ();
-    JavaCCErrors.reInit ();
-
     assertEquals (1, Options.getLookahead ());
     Options.setCmdLineOption ("LOOKAHEAD=2");
     assertEquals (2, Options.getLookahead ());
@@ -132,11 +137,9 @@ public final class OptionsTest extends TestCase
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
+  @Test
   public void testSetStringOption ()
   {
-    Options.init ();
-    JavaCCErrors.reInit ();
-
     assertEquals ("", Options.getTokenExtends ());
     Options.setCmdLineOption ("-TOKEN_EXTENDS=java.lang.Object");
     assertEquals ("java.lang.Object", Options.getTokenExtends ());
@@ -153,11 +156,9 @@ public final class OptionsTest extends TestCase
     assertEquals ("java.lang.Object", Options.getTokenExtends ());
   }
 
+  @Test
   public void testSetNonexistentOption ()
   {
-    Options.init ();
-    JavaCCErrors.reInit ();
-
     assertEquals (0, JavaCCErrors.getWarningCount ());
     Options.setInputFileOption (null, null, "NONEXISTENTOPTION", Boolean.TRUE);
     assertEquals (1, JavaCCErrors.getWarningCount ());
@@ -167,11 +168,9 @@ public final class OptionsTest extends TestCase
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
+  @Test
   public void testSetWrongTypeForOption ()
   {
-    Options.init ();
-    JavaCCErrors.reInit ();
-
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());
     Options.setInputFileOption (null, null, Options.USEROPTION__STATIC, Integer.valueOf (8));
@@ -182,11 +181,9 @@ public final class OptionsTest extends TestCase
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
+  @Test
   public void testNormalize ()
   {
-    Options.init ();
-    JavaCCErrors.reInit ();
-
     assertEquals (false, Options.isDebugLookahead ());
     assertEquals (false, Options.isDebugParser ());
 
@@ -202,11 +199,9 @@ public final class OptionsTest extends TestCase
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
+  @Test
   public void testOptionsString ()
   {
-    Options.init ();
-    JavaCCErrors.reInit ();
-
     Options.setCmdLineOption ("-STATIC=False");
     Options.setCmdLineOption ("-IGNORE_CASE=True");
     final String [] options = { Options.USEROPTION__STATIC, Options.USEROPTION__IGNORE_CASE };

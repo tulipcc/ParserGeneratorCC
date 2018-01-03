@@ -36,34 +36,14 @@
  */
 package com.helger.pgcc;
 
-import junit.framework.TestCase;
-
 /**
  * An ancestor class to enable transition to a different directory structure.
  *
  * @author timp
  * @since 2 Nov 2007
  */
-public abstract class JavaCCTestCase extends TestCase
+public abstract class AbstractJavaCCTestCase
 {
-
-  /**
-   *
-   */
-  public JavaCCTestCase ()
-  {
-    super ();
-  }
-
-  /**
-   * @param name
-   *        the test name
-   */
-  public JavaCCTestCase (final String name)
-  {
-    super (name);
-  }
-
   /**
    * @return the documentation output directory name String relative to the root
    */
@@ -75,7 +55,7 @@ public abstract class JavaCCTestCase extends TestCase
 
   /**
    * Where the input jj files are located
-   * 
+   *
    * @return the directory name String relative to the root
    */
   public String getJJInputDirectory ()

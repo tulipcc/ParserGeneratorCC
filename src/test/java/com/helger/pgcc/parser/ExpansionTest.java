@@ -33,103 +33,116 @@
  */
 package com.helger.pgcc.parser;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
-public final class ExpansionTest extends TestCase
+import org.junit.Before;
+import org.junit.Test;
+
+public final class ExpansionTest
 {
-  private Token t;
-  private Expansion e;
+  private Token m_aToken;
+  private Expansion m_aExp;
 
-  @Override
+  @Before
   public void setUp ()
   {
-    t = new Token ();
-    t.beginColumn = 2;
-    t.beginLine = 3;
-    e = new Expansion ();
-    e.setColumn (5);
-    e.setLine (6);
+    m_aToken = new Token ();
+    m_aToken.beginColumn = 2;
+    m_aToken.beginLine = 3;
+    m_aExp = new Expansion ();
+    m_aExp.setColumn (5);
+    m_aExp.setLine (6);
   }
 
+  @Test
   public void testZeroOrOneConstructor ()
   {
-    final ExpZeroOrOne zoo = new ExpZeroOrOne (t, e);
-    assertEquals (t.beginColumn, zoo.getColumn ());
-    assertEquals (t.beginLine, zoo.getLine ());
-    assertEquals (e, zoo.m_expansion);
-    assertSame (e.m_parent, zoo);
+    final ExpZeroOrOne zoo = new ExpZeroOrOne (m_aToken, m_aExp);
+    assertEquals (m_aToken.beginColumn, zoo.getColumn ());
+    assertEquals (m_aToken.beginLine, zoo.getLine ());
+    assertEquals (m_aExp, zoo.m_expansion);
+    assertSame (m_aExp.m_parent, zoo);
   }
 
+  @Test
   public void testZeroOrMoreConstructor ()
   {
-    final ExpZeroOrMore zom = new ExpZeroOrMore (t, e);
-    assertEquals (t.beginColumn, zom.getColumn ());
-    assertEquals (t.beginLine, zom.getLine ());
-    assertEquals (e, zom.m_expansion);
-    assertEquals (e.m_parent, zom);
+    final ExpZeroOrMore zom = new ExpZeroOrMore (m_aToken, m_aExp);
+    assertEquals (m_aToken.beginColumn, zom.getColumn ());
+    assertEquals (m_aToken.beginLine, zom.getLine ());
+    assertEquals (m_aExp, zom.m_expansion);
+    assertEquals (m_aExp.m_parent, zom);
   }
 
+  @Test
   public void testRZeroOrMoreConstructor ()
   {
     final AbstractExpRegularExpression r = new ExpRChoice ();
-    final ExpRZeroOrMore rzom = new ExpRZeroOrMore (t, r);
-    assertEquals (t.beginColumn, rzom.getColumn ());
-    assertEquals (t.beginLine, rzom.getLine ());
+    final ExpRZeroOrMore rzom = new ExpRZeroOrMore (m_aToken, r);
+    assertEquals (m_aToken.beginColumn, rzom.getColumn ());
+    assertEquals (m_aToken.beginLine, rzom.getLine ());
     assertEquals (r, rzom.m_regexpr);
   }
 
+  @Test
   public void testROneOrMoreConstructor ()
   {
     final AbstractExpRegularExpression r = new ExpRChoice ();
-    final ExpROneOrMore room = new ExpROneOrMore (t, r);
-    assertEquals (t.beginColumn, room.getColumn ());
-    assertEquals (t.beginLine, room.getLine ());
+    final ExpROneOrMore room = new ExpROneOrMore (m_aToken, r);
+    assertEquals (m_aToken.beginColumn, room.getColumn ());
+    assertEquals (m_aToken.beginLine, room.getLine ());
     assertEquals (r, room.m_regexpr);
   }
 
+  @Test
   public void testOneOrMoreConstructor ()
   {
     final Expansion rce = new ExpRChoice ();
-    final ExpOneOrMore oom = new ExpOneOrMore (t, rce);
-    assertEquals (t.beginColumn, oom.getColumn ());
-    assertEquals (t.beginLine, oom.getLine ());
+    final ExpOneOrMore oom = new ExpOneOrMore (m_aToken, rce);
+    assertEquals (m_aToken.beginColumn, oom.getColumn ());
+    assertEquals (m_aToken.beginLine, oom.getLine ());
     assertEquals (rce, oom.m_expansion);
     assertEquals (rce.m_parent, oom);
   }
 
+  @Test
   public void testRStringLiteralConstructor ()
   {
-    final ExpRStringLiteral r = new ExpRStringLiteral (t, "hey");
-    assertEquals (t.beginColumn, r.getColumn ());
-    assertEquals (t.beginLine, r.getLine ());
+    final ExpRStringLiteral r = new ExpRStringLiteral (m_aToken, "hey");
+    assertEquals (m_aToken.beginColumn, r.getColumn ());
+    assertEquals (m_aToken.beginLine, r.getLine ());
     assertEquals ("hey", r.m_image);
   }
 
+  @Test
   public void testChoiceConstructor ()
   {
-    ExpChoice c = new ExpChoice (t);
-    assertEquals (t.beginColumn, c.getColumn ());
-    assertEquals (t.beginLine, c.getLine ());
-    c = new ExpChoice (e);
-    assertEquals (e.getColumn (), c.getColumn ());
-    assertEquals (e.getLine (), c.getLine ());
-    assertEquals (e, c.getChoices ().get (0));
+    ExpChoice c = new ExpChoice (m_aToken);
+    assertEquals (m_aToken.beginColumn, c.getColumn ());
+    assertEquals (m_aToken.beginLine, c.getLine ());
+    c = new ExpChoice (m_aExp);
+    assertEquals (m_aExp.getColumn (), c.getColumn ());
+    assertEquals (m_aExp.getLine (), c.getLine ());
+    assertEquals (m_aExp, c.getChoices ().get (0));
   }
 
+  @Test
   public void testRJustNameConstructor ()
   {
-    final ExpRJustName r = new ExpRJustName (t, "hey");
-    assertEquals (t.beginColumn, r.getColumn ());
-    assertEquals (t.beginLine, r.getLine ());
+    final ExpRJustName r = new ExpRJustName (m_aToken, "hey");
+    assertEquals (m_aToken.beginColumn, r.getColumn ());
+    assertEquals (m_aToken.beginLine, r.getLine ());
     assertEquals ("hey", r.m_label);
   }
 
+  @Test
   public void testSequenceConstructor ()
   {
     final ExpLookahead la = new ExpLookahead ();
-    final ExpSequence s = new ExpSequence (t, la);
-    assertEquals (t.beginColumn, s.getColumn ());
-    assertEquals (t.beginLine, s.getLine ());
+    final ExpSequence s = new ExpSequence (m_aToken, la);
+    assertEquals (m_aToken.beginColumn, s.getColumn ());
+    assertEquals (m_aToken.beginLine, s.getLine ());
     assertSame (la, s.m_units.get (0));
   }
 }

@@ -33,25 +33,33 @@
  */
 package com.helger.pgcc.jjtree;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.Options;
-
-import junit.framework.TestCase;
 
 /**
  * Test the JJTree-specific options.
  *
  * @author Kees Jan Koster &lt;kjkoster@kjkoster.org&gt;
  */
-public final class JJTreeOptionsTest extends TestCase
+public final class JJTreeOptionsTest
 {
-  public void testOutputDirectory ()
+  @Before
+  public void beforeEach ()
   {
     JJTreeOptions.init ();
     JavaCCErrors.reInit ();
+  }
 
+  @Test
+  public void testOutputDirectory ()
+  {
     assertEquals (new File ("."), Options.getOutputDirectory ());
     assertEquals (new File ("."), JJTreeOptions.getJJTreeOutputDirectory ());
 
@@ -69,11 +77,9 @@ public final class JJTreeOptionsTest extends TestCase
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
+  @Test
   public void testNodeFactory ()
   {
-    JJTreeOptions.init ();
-    JavaCCErrors.reInit ();
-
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());
     Options.setInputFileOption (null, null, "NODE_FACTORY", Boolean.FALSE);
@@ -94,11 +100,9 @@ public final class JJTreeOptionsTest extends TestCase
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
   }
 
+  @Test
   public void testNodeClass ()
   {
-    JJTreeOptions.init ();
-    JavaCCErrors.reInit ();
-
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());
 
@@ -106,11 +110,9 @@ public final class JJTreeOptionsTest extends TestCase
     // Need some functional tests, as well.
   }
 
+  @Test
   public void testValidate ()
   {
-    JJTreeOptions.init ();
-    JavaCCErrors.reInit ();
-
     Options.setCmdLineOption ("VISITOR_DATA_TYPE=Object");
     JJTreeOptions.validate ();
     assertEquals (1, JavaCCErrors.getWarningCount ());
@@ -131,11 +133,9 @@ public final class JJTreeOptionsTest extends TestCase
     assertEquals (1, JavaCCErrors.getWarningCount ());
   }
 
+  @Test
   public void testValidateReturnType ()
   {
-    JJTreeOptions.init ();
-    JavaCCErrors.reInit ();
-
     Options.setCmdLineOption ("VISITOR_DATA_TYPE=String");
     JJTreeOptions.validate ();
     assertEquals (1, JavaCCErrors.getWarningCount ());
