@@ -190,18 +190,10 @@ public class ASTNodeDescriptor extends JJTreeNode
   String closeNode (final String nodeVar)
   {
     if (m_expression == null)
-    {
       return "jjtree.closeNodeScope(" + nodeVar + ", true);";
-    }
-    else
-      if (m_isGT)
-      {
-        return "jjtree.closeNodeScope(" + nodeVar + ", jjtree.nodeArity() >" + expression_text () + ");";
-      }
-      else
-      {
-        return "jjtree.closeNodeScope(" + nodeVar + ", " + expression_text () + ");";
-      }
+    if (m_isGT)
+      return "jjtree.closeNodeScope(" + nodeVar + ", jjtree.nodeArity() > " + expression_text () + ");";
+    return "jjtree.closeNodeScope(" + nodeVar + ", " + expression_text () + ");";
   }
 
   @Override

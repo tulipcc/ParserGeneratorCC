@@ -53,19 +53,13 @@ final class JJTreeStateJava
 
   static void insertParserMembers (final JJTreeIO io)
   {
-    String s;
-
-    if (Options.isStatic ())
-    {
-      s = "static ";
-    }
-    else
-    {
-      s = "";
-    }
-
     io.println ();
-    io.println ("  protected " + s + nameState () + " jjtree = new " + nameState () + "();");
+    io.println ("  protected " +
+                (Options.isStatic () ? "static " : "") +
+                nameState () +
+                " jjtree = new " +
+                nameState () +
+                "();");
     io.println ();
   }
 
@@ -93,8 +87,10 @@ final class JJTreeStateJava
   private static void insertState (final PrintWriter ostr)
   {
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
+    final boolean bGenerateAnnotations = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bEmptyImplType = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
+
     ostr.println ("public class " + nameState () + " {");
 
     if (bGenerateGenerics)
@@ -191,7 +187,10 @@ final class JJTreeStateJava
     ostr.println ("  }");
     ostr.println ();
     ostr.println ();
-    ostr.println ("  public void clearNodeScope(final Node n) {");
+    ostr.println ("  /* Parameter is currently unused. */");
+    ostr.println ("  public void clearNodeScope(" +
+                  (bGenerateAnnotations ? "@SuppressWarning(\"unused\") " : "") +
+                  "final Node n) {");
     ostr.println ("    while (sp > mk) {");
     ostr.println ("      popNode();");
     ostr.println ("    }");
@@ -213,11 +212,12 @@ final class JJTreeStateJava
     ostr.println ("     children.  That number of nodes are popped from the stack and");
     ostr.println ("     made the children of the definite node.  Then the definite node");
     ostr.println ("     is pushed on to the stack. */");
-    ostr.println ("  public void closeNodeScope(Node n, int num) {");
+    ostr.println ("  public void closeNodeScope(final Node n, final int numIn) {");
     if (bGenerateGenerics)
       ostr.println ("    mk = marks.remove(marks.size()-1).intValue();");
     else
       ostr.println ("    mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
+    ostr.println ("    int num = numIn;");
     ostr.println ("    while (num-- > 0) {");
     ostr.println ("      Node c = popNode();");
     ostr.println ("      c.jjtSetParent(n);");
@@ -242,7 +242,7 @@ final class JJTreeStateJava
     else
       ostr.println ("      mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
     ostr.println ("      while (a-- > 0) {");
-    ostr.println ("        Node c = popNode();");
+    ostr.println ("        final Node c = popNode();");
     ostr.println ("        c.jjtSetParent(n);");
     ostr.println ("        n.jjtAddChild(c, a);");
     ostr.println ("      }");
@@ -251,7 +251,7 @@ final class JJTreeStateJava
     ostr.println ("      node_created = true;");
     ostr.println ("    } else {");
     if (bGenerateGenerics)
-      ostr.println ("      mk = marks.remove(marks.size()-1);");
+      ostr.println ("      mk = marks.remove(marks.size()-1).intValue();");
     else
       ostr.println ("      mk = ((Integer)marks.remove(marks.size()-1)).intValue();");
     ostr.println ("      node_created = false;");

@@ -919,16 +919,6 @@ public class Options
   }
 
   /**
-   * Should the generated code contain Annotations?
-   *
-   * @return
-   */
-  public static boolean isGenerateAnnotations ()
-  {
-    return _isJdkVersionAtLeast (EJDKVersion.JDK_15);
-  }
-
-  /**
    * Should the generated code class visibility public?
    *
    * @return

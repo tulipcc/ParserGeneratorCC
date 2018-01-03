@@ -99,6 +99,7 @@ public class ParseGenJava extends CodeGenerator
       return;
 
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
+    final boolean bGenerateAnnotations = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
 
@@ -768,7 +769,7 @@ public class ParseGenJava extends CodeGenerator
     genCodeLine ();
     if (s_jj2index != 0)
     {
-      if (Options.isGenerateAnnotations ())
+      if (bGenerateAnnotations)
         genCodeLine ("  @SuppressWarnings(\"serial\")");
       genCodeLine ("  static private final class LookaheadSuccess extends IllegalStateException { }");
       genCodeLine ("  " + javaStaticOpt () + "final private LookaheadSuccess jj_ls = new LookaheadSuccess();");
