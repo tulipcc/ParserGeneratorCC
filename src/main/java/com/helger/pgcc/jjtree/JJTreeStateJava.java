@@ -189,7 +189,7 @@ final class JJTreeStateJava
     ostr.println ();
     ostr.println ("  /* Parameter is currently unused. */");
     ostr.println ("  public void clearNodeScope(" +
-                  (bGenerateAnnotations ? "@SuppressWarning(\"unused\") " : "") +
+                  (bGenerateAnnotations ? "@SuppressWarnings(\"unused\") " : "") +
                   "final Node n) {");
     ostr.println ("    while (sp > mk) {");
     ostr.println ("      popNode();");

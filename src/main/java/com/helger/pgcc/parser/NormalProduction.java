@@ -43,7 +43,7 @@ import java.util.Set;
  */
 public abstract class NormalProduction
 {
-  protected static final String eol = System.getProperty ("line.separator", "\n");
+  protected static final String EOL = System.getProperty ("line.separator", "\n");
 
   /**
    * The line and column number of the construct that corresponds most closely
@@ -151,7 +151,7 @@ public abstract class NormalProduction
       if (getExpansion () != null)
       {
         // cannot re-use already dumped
-        sb.append (eol).append (getExpansion ().dump (indent + 1, new HashSet <> ()));
+        sb.append (EOL).append (getExpansion ().dump (indent + 1, new HashSet <> ()));
       }
     }
 
