@@ -53,16 +53,16 @@ public final class ExpansionTest extends TestCase
 
   public void testZeroOrOneConstructor ()
   {
-    final ZeroOrOne zoo = new ZeroOrOne (t, e);
+    final ExpZeroOrOne zoo = new ExpZeroOrOne (t, e);
     assertEquals (t.beginColumn, zoo.getColumn ());
     assertEquals (t.beginLine, zoo.getLine ());
-    assertEquals (e, zoo.expansion);
+    assertEquals (e, zoo.m_expansion);
     assertSame (e.m_parent, zoo);
   }
 
   public void testZeroOrMoreConstructor ()
   {
-    final ZeroOrMore zom = new ZeroOrMore (t, e);
+    final ExpZeroOrMore zom = new ExpZeroOrMore (t, e);
     assertEquals (t.beginColumn, zom.getColumn ());
     assertEquals (t.beginLine, zom.getLine ());
     assertEquals (e, zom.m_expansion);
@@ -71,35 +71,35 @@ public final class ExpansionTest extends TestCase
 
   public void testRZeroOrMoreConstructor ()
   {
-    final RegularExpression r = new RChoice ();
-    final RZeroOrMore rzom = new RZeroOrMore (t, r);
+    final AbstractExpRegularExpression r = new ExpRChoice ();
+    final ExpRZeroOrMore rzom = new ExpRZeroOrMore (t, r);
     assertEquals (t.beginColumn, rzom.getColumn ());
     assertEquals (t.beginLine, rzom.getLine ());
-    assertEquals (r, rzom.regexpr);
+    assertEquals (r, rzom.m_regexpr);
   }
 
   public void testROneOrMoreConstructor ()
   {
-    final RegularExpression r = new RChoice ();
-    final ROneOrMore room = new ROneOrMore (t, r);
+    final AbstractExpRegularExpression r = new ExpRChoice ();
+    final ExpROneOrMore room = new ExpROneOrMore (t, r);
     assertEquals (t.beginColumn, room.getColumn ());
     assertEquals (t.beginLine, room.getLine ());
-    assertEquals (r, room.regexpr);
+    assertEquals (r, room.m_regexpr);
   }
 
   public void testOneOrMoreConstructor ()
   {
-    final Expansion rce = new RChoice ();
-    final OneOrMore oom = new OneOrMore (t, rce);
+    final Expansion rce = new ExpRChoice ();
+    final ExpOneOrMore oom = new ExpOneOrMore (t, rce);
     assertEquals (t.beginColumn, oom.getColumn ());
     assertEquals (t.beginLine, oom.getLine ());
-    assertEquals (rce, oom.expansion);
+    assertEquals (rce, oom.m_expansion);
     assertEquals (rce.m_parent, oom);
   }
 
   public void testRStringLiteralConstructor ()
   {
-    final RStringLiteral r = new RStringLiteral (t, "hey");
+    final ExpRStringLiteral r = new ExpRStringLiteral (t, "hey");
     assertEquals (t.beginColumn, r.getColumn ());
     assertEquals (t.beginLine, r.getLine ());
     assertEquals ("hey", r.m_image);
@@ -107,10 +107,10 @@ public final class ExpansionTest extends TestCase
 
   public void testChoiceConstructor ()
   {
-    Choice c = new Choice (t);
+    ExpChoice c = new ExpChoice (t);
     assertEquals (t.beginColumn, c.getColumn ());
     assertEquals (t.beginLine, c.getLine ());
-    c = new Choice (e);
+    c = new ExpChoice (e);
     assertEquals (e.getColumn (), c.getColumn ());
     assertEquals (e.getLine (), c.getLine ());
     assertEquals (e, c.getChoices ().get (0));
@@ -118,7 +118,7 @@ public final class ExpansionTest extends TestCase
 
   public void testRJustNameConstructor ()
   {
-    final RJustName r = new RJustName (t, "hey");
+    final ExpRJustName r = new ExpRJustName (t, "hey");
     assertEquals (t.beginColumn, r.getColumn ());
     assertEquals (t.beginLine, r.getLine ());
     assertEquals ("hey", r.m_label);
@@ -126,8 +126,8 @@ public final class ExpansionTest extends TestCase
 
   public void testSequenceConstructor ()
   {
-    final Lookahead la = new Lookahead ();
-    final Sequence s = new Sequence (t, la);
+    final ExpLookahead la = new ExpLookahead ();
+    final ExpSequence s = new ExpSequence (t, la);
     assertEquals (t.beginColumn, s.getColumn ());
     assertEquals (t.beginLine, s.getLine ());
     assertSame (la, s.m_units.get (0));

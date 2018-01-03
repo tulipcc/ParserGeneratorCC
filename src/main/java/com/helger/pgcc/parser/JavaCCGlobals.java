@@ -169,13 +169,13 @@ public final class JavaCCGlobals
    * defined with a label). The index to the table is the image of the label and
    * the contents of the table are of type "RegularExpression".
    */
-  public static final Map <String, RegularExpression> s_named_tokens_table = new HashMap <> ();
+  public static final Map <String, AbstractExpRegularExpression> s_named_tokens_table = new HashMap <> ();
 
   /**
    * Contains the same entries as "named_tokens_table", but this is an ordered
    * list which is ordered by the order of appearance in the input file.
    */
-  public static final List <RegularExpression> s_ordered_named_tokens = new ArrayList <> ();
+  public static final List <AbstractExpRegularExpression> s_ordered_named_tokens = new ArrayList <> ();
 
   /**
    * A mapping of ordinal values (represented as objects of type "Integer") to
@@ -190,7 +190,7 @@ public final class JavaCCGlobals
    * A mapping of ordinal values (represented as objects of type "Integer") to
    * the corresponding RegularExpression's.
    */
-  public static final Map <Integer, RegularExpression> rexps_of_tokens = new HashMap <> ();
+  public static final Map <Integer, AbstractExpRegularExpression> rexps_of_tokens = new HashMap <> ();
 
   /**
    * This is a three-level symbol table that contains all simple tokens (those
@@ -201,7 +201,7 @@ public final class JavaCCGlobals
    * hashtable. This third level hashtable contains the actual string of the
    * simple token and maps it to its RegularExpression.
    */
-  public static final Map <String, Map <String, Map <String, RegularExpression>>> s_simple_tokens_table = new HashMap <> ();
+  public static final Map <String, Map <String, Map <String, AbstractExpRegularExpression>>> s_simple_tokens_table = new HashMap <> ();
 
   /**
    * maskindex, jj2index, maskVals are variables that are shared between
@@ -212,7 +212,7 @@ public final class JavaCCGlobals
   public static boolean s_lookaheadNeeded;
   protected static final List <int []> s_maskVals = new ArrayList <> ();
 
-  static Action s_actForEof;
+  static ExpAction s_actForEof;
   static String s_nextStateForEof;
   static Token s_otherLanguageDeclTokenBeg;
   static Token s_otherLanguageDeclTokenEnd;

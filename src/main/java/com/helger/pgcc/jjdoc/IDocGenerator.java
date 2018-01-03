@@ -37,9 +37,9 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.Expansion;
-import com.helger.pgcc.parser.NonTerminal;
+import com.helger.pgcc.parser.ExpNonTerminal;
 import com.helger.pgcc.parser.NormalProduction;
-import com.helger.pgcc.parser.RegularExpression;
+import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.TokenProduction;
 
 /**
@@ -176,7 +176,7 @@ public interface IDocGenerator
    * @param nt
    *        the NonTerminal being output
    */
-  void nonTerminalStart (NonTerminal nt);
+  void nonTerminalStart (ExpNonTerminal nt);
 
   /**
    * Output end of non-terminal.
@@ -184,7 +184,7 @@ public interface IDocGenerator
    * @param nt
    *        the NonTerminal being output
    */
-  void nonTerminalEnd (NonTerminal nt);
+  void nonTerminalEnd (ExpNonTerminal nt);
 
   /**
    * Output start of regular expression.
@@ -192,7 +192,7 @@ public interface IDocGenerator
    * @param re
    *        the RegularExpression being output
    */
-  void reStart (RegularExpression re);
+  void reStart (AbstractExpRegularExpression re);
 
   /**
    * Output end of regular expression.
@@ -200,7 +200,7 @@ public interface IDocGenerator
    * @param re
    *        the RegularExpression being output
    */
-  void reEnd (RegularExpression re);
+  void reEnd (AbstractExpRegularExpression re);
 
   /**
    * Log debug messages.

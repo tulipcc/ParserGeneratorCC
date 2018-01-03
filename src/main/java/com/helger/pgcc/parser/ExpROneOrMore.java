@@ -33,64 +33,40 @@
  */
 package com.helger.pgcc.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 /**
- * Describes expansions where one of many choices is taken (c1|c2|...).
+ * Describes one-or-more regular expressions (<foo+>).
  */
-public class Choice extends Expansion
+
+public class ExpROneOrMore extends AbstractExpRegularExpression
 {
   /**
-   * The list of choices of this expansion unit. Each List component will narrow
-   * to ExpansionUnit.
+   * The regular expression which is repeated one or more times.
    */
-  private List <Expansion> m_choices = new ArrayList <> ();
+  public AbstractExpRegularExpression m_regexpr;
 
-  public Choice ()
+  public ExpROneOrMore ()
   {}
 
-  public Choice (final Token token)
+  public ExpROneOrMore (final Token t, final AbstractExpRegularExpression re)
   {
-    this.setLine (token.beginLine);
-    this.setColumn (token.beginColumn);
-  }
-
-  public Choice (final Expansion expansion)
-  {
-    this.setLine (expansion.getLine ());
-    this.setColumn (expansion.getColumn ());
-    this.getChoices ().add (expansion);
-  }
-
-  /**
-   * @param choices
-   *        the choices to set
-   */
-  public void setChoices (final List <Expansion> choices)
-  {
-    this.m_choices = choices;
-  }
-
-  /**
-   * @return the choices
-   */
-  public List <Expansion> getChoices ()
-  {
-    return m_choices;
+    this.setLine (t.beginLine);
+    this.setColumn (t.beginColumn);
+    this.m_regexpr = re;
   }
 
   @Override
-  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
-    final StringBuilder sb = super.dump (indent, alreadyDumped);
-    if (!alreadyDumped.contains (this))
-    {
-      alreadyDumped.add (this);
-      for (final Expansion next : getChoices ())
-        sb.append (eol).append (next.dump (indent + 1, alreadyDumped));
-    }
-    return sb;
+    final Nfa retVal = new Nfa ();
+    final NfaState startState = retVal.start;
+    final NfaState finalState = retVal.end;
+
+    final Nfa temp = m_regexpr.generateNfa (ignoreCase);
+
+    startState.addMove (temp.start);
+    temp.end.addMove (temp.start);
+    temp.end.addMove (finalState);
+
+    return retVal;
   }
 }

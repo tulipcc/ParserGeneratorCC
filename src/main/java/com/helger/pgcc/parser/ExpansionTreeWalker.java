@@ -50,85 +50,85 @@ public final class ExpansionTreeWalker
     opObj.action (node);
     if (opObj.goDeeper (node))
     {
-      if (node instanceof Choice)
+      if (node instanceof ExpChoice)
       {
-        for (final Expansion aElement : ((Choice) node).getChoices ())
+        for (final Expansion aElement : ((ExpChoice) node).getChoices ())
         {
           preOrderWalk (aElement, opObj);
         }
       }
       else
-        if (node instanceof Sequence)
+        if (node instanceof ExpSequence)
         {
-          for (final Expansion aElement : ((Sequence) node).m_units)
+          for (final Expansion aElement : ((ExpSequence) node).m_units)
           {
             preOrderWalk (aElement, opObj);
           }
         }
         else
-          if (node instanceof OneOrMore)
+          if (node instanceof ExpOneOrMore)
           {
-            preOrderWalk (((OneOrMore) node).expansion, opObj);
+            preOrderWalk (((ExpOneOrMore) node).m_expansion, opObj);
           }
           else
-            if (node instanceof ZeroOrMore)
+            if (node instanceof ExpZeroOrMore)
             {
-              preOrderWalk (((ZeroOrMore) node).m_expansion, opObj);
+              preOrderWalk (((ExpZeroOrMore) node).m_expansion, opObj);
             }
             else
-              if (node instanceof ZeroOrOne)
+              if (node instanceof ExpZeroOrOne)
               {
-                preOrderWalk (((ZeroOrOne) node).expansion, opObj);
+                preOrderWalk (((ExpZeroOrOne) node).m_expansion, opObj);
               }
               else
-                if (node instanceof Lookahead)
+                if (node instanceof ExpLookahead)
                 {
-                  final Expansion nested_e = ((Lookahead) node).getLaExpansion ();
-                  if (!(nested_e instanceof Sequence && (((Sequence) nested_e).m_units.get (0)) == node))
+                  final Expansion nested_e = ((ExpLookahead) node).getLaExpansion ();
+                  if (!(nested_e instanceof ExpSequence && (((ExpSequence) nested_e).m_units.get (0)) == node))
                   {
                     preOrderWalk (nested_e, opObj);
                   }
                 }
                 else
-                  if (node instanceof TryBlock)
+                  if (node instanceof ExpTryBlock)
                   {
-                    preOrderWalk (((TryBlock) node).exp, opObj);
+                    preOrderWalk (((ExpTryBlock) node).m_exp, opObj);
                   }
                   else
-                    if (node instanceof RChoice)
+                    if (node instanceof ExpRChoice)
                     {
-                      for (final Expansion aExpansion : ((RChoice) node).getChoices ())
+                      for (final Expansion aExpansion : ((ExpRChoice) node).getChoices ())
                       {
                         preOrderWalk (aExpansion, opObj);
                       }
                     }
                     else
-                      if (node instanceof RSequence)
+                      if (node instanceof ExpRSequence)
                       {
-                        for (final Expansion aElement : ((RSequence) node).m_units)
+                        for (final Expansion aElement : ((ExpRSequence) node).m_units)
                         {
                           preOrderWalk (aElement, opObj);
                         }
                       }
                       else
-                        if (node instanceof ROneOrMore)
+                        if (node instanceof ExpROneOrMore)
                         {
-                          preOrderWalk (((ROneOrMore) node).regexpr, opObj);
+                          preOrderWalk (((ExpROneOrMore) node).m_regexpr, opObj);
                         }
                         else
-                          if (node instanceof RZeroOrMore)
+                          if (node instanceof ExpRZeroOrMore)
                           {
-                            preOrderWalk (((RZeroOrMore) node).regexpr, opObj);
+                            preOrderWalk (((ExpRZeroOrMore) node).m_regexpr, opObj);
                           }
                           else
-                            if (node instanceof RZeroOrOne)
+                            if (node instanceof ExpRZeroOrOne)
                             {
-                              preOrderWalk (((RZeroOrOne) node).regexpr, opObj);
+                              preOrderWalk (((ExpRZeroOrOne) node).m_regexpr, opObj);
                             }
                             else
-                              if (node instanceof RRepetitionRange)
+                              if (node instanceof ExpRRepetitionRange)
                               {
-                                preOrderWalk (((RRepetitionRange) node).regexpr, opObj);
+                                preOrderWalk (((ExpRRepetitionRange) node).m_regexpr, opObj);
                               }
     }
   }
@@ -141,85 +141,85 @@ public final class ExpansionTreeWalker
   {
     if (opObj.goDeeper (node))
     {
-      if (node instanceof Choice)
+      if (node instanceof ExpChoice)
       {
-        for (final Expansion aElement : ((Choice) node).getChoices ())
+        for (final Expansion aElement : ((ExpChoice) node).getChoices ())
         {
           postOrderWalk (aElement, opObj);
         }
       }
       else
-        if (node instanceof Sequence)
+        if (node instanceof ExpSequence)
         {
-          for (final Expansion aElement : ((Sequence) node).m_units)
+          for (final Expansion aElement : ((ExpSequence) node).m_units)
           {
             postOrderWalk (aElement, opObj);
           }
         }
         else
-          if (node instanceof OneOrMore)
+          if (node instanceof ExpOneOrMore)
           {
-            postOrderWalk (((OneOrMore) node).expansion, opObj);
+            postOrderWalk (((ExpOneOrMore) node).m_expansion, opObj);
           }
           else
-            if (node instanceof ZeroOrMore)
+            if (node instanceof ExpZeroOrMore)
             {
-              postOrderWalk (((ZeroOrMore) node).m_expansion, opObj);
+              postOrderWalk (((ExpZeroOrMore) node).m_expansion, opObj);
             }
             else
-              if (node instanceof ZeroOrOne)
+              if (node instanceof ExpZeroOrOne)
               {
-                postOrderWalk (((ZeroOrOne) node).expansion, opObj);
+                postOrderWalk (((ExpZeroOrOne) node).m_expansion, opObj);
               }
               else
-                if (node instanceof Lookahead)
+                if (node instanceof ExpLookahead)
                 {
-                  final Expansion nested_e = ((Lookahead) node).getLaExpansion ();
-                  if (!(nested_e instanceof Sequence && (((Sequence) nested_e).m_units.get (0)) == node))
+                  final Expansion nested_e = ((ExpLookahead) node).getLaExpansion ();
+                  if (!(nested_e instanceof ExpSequence && (((ExpSequence) nested_e).m_units.get (0)) == node))
                   {
                     postOrderWalk (nested_e, opObj);
                   }
                 }
                 else
-                  if (node instanceof TryBlock)
+                  if (node instanceof ExpTryBlock)
                   {
-                    postOrderWalk (((TryBlock) node).exp, opObj);
+                    postOrderWalk (((ExpTryBlock) node).m_exp, opObj);
                   }
                   else
-                    if (node instanceof RChoice)
+                    if (node instanceof ExpRChoice)
                     {
-                      for (final Expansion aElement : ((RChoice) node).getChoices ())
+                      for (final Expansion aElement : ((ExpRChoice) node).getChoices ())
                       {
                         postOrderWalk (aElement, opObj);
                       }
                     }
                     else
-                      if (node instanceof RSequence)
+                      if (node instanceof ExpRSequence)
                       {
-                        for (final Expansion aElement : ((RSequence) node).m_units)
+                        for (final Expansion aElement : ((ExpRSequence) node).m_units)
                         {
                           postOrderWalk (aElement, opObj);
                         }
                       }
                       else
-                        if (node instanceof ROneOrMore)
+                        if (node instanceof ExpROneOrMore)
                         {
-                          postOrderWalk (((ROneOrMore) node).regexpr, opObj);
+                          postOrderWalk (((ExpROneOrMore) node).m_regexpr, opObj);
                         }
                         else
-                          if (node instanceof RZeroOrMore)
+                          if (node instanceof ExpRZeroOrMore)
                           {
-                            postOrderWalk (((RZeroOrMore) node).regexpr, opObj);
+                            postOrderWalk (((ExpRZeroOrMore) node).m_regexpr, opObj);
                           }
                           else
-                            if (node instanceof RZeroOrOne)
+                            if (node instanceof ExpRZeroOrOne)
                             {
-                              postOrderWalk (((RZeroOrOne) node).regexpr, opObj);
+                              postOrderWalk (((ExpRZeroOrOne) node).m_regexpr, opObj);
                             }
                             else
-                              if (node instanceof RRepetitionRange)
+                              if (node instanceof ExpRRepetitionRange)
                               {
-                                postOrderWalk (((RRepetitionRange) node).regexpr, opObj);
+                                postOrderWalk (((ExpRRepetitionRange) node).m_regexpr, opObj);
                               }
     }
     opObj.action (node);

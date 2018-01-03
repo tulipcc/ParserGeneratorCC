@@ -33,76 +33,40 @@
  */
 package com.helger.pgcc.parser;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import com.helger.commons.ValueEnforcer;
-
 /**
- * Describes regular expressions which are sequences of other regular
- * expressions.
+ * Describes zero-or-more regular expressions (<foo*>).
  */
 
-public class RSequence extends RegularExpression
+public class ExpRZeroOrMore extends AbstractExpRegularExpression
 {
-
   /**
-   * The list of units in this regular expression sequence. Each list component
-   * will narrow to RegularExpression.
+   * The regular expression which is repeated zero or more times.
    */
-  final List <RegularExpression> m_units;
+  public AbstractExpRegularExpression m_regexpr;
 
-  RSequence ()
-  {
-    m_units = new ArrayList <> ();
-  }
+  public ExpRZeroOrMore ()
+  {}
 
-  RSequence (final List <RegularExpression> seq)
+  public ExpRZeroOrMore (final Token t, final AbstractExpRegularExpression r)
   {
-    m_ordinal = Integer.MAX_VALUE;
-    m_units = seq;
-  }
-
-  public void addUnit (final RegularExpression ex)
-  {
-    ValueEnforcer.notNull (ex, "RegEx");
-    m_units.add (ex);
-  }
-
-  public Iterator <RegularExpression> iterator ()
-  {
-    return m_units.iterator ();
+    this.setLine (t.beginLine);
+    this.setColumn (t.beginColumn);
+    this.m_regexpr = r;
   }
 
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
   {
-    if (m_units.size () == 1)
-      return m_units.get (0).generateNfa (ignoreCase);
-
     final Nfa retVal = new Nfa ();
     final NfaState startState = retVal.start;
     final NfaState finalState = retVal.end;
-    Nfa temp1;
-    Nfa temp2 = null;
 
-    RegularExpression curRE;
+    final Nfa temp = m_regexpr.generateNfa (ignoreCase);
 
-    curRE = m_units.get (0);
-    temp1 = curRE.generateNfa (ignoreCase);
-    startState.addMove (temp1.start);
-
-    for (int i = 1; i < m_units.size (); i++)
-    {
-      curRE = m_units.get (i);
-
-      temp2 = curRE.generateNfa (ignoreCase);
-      temp1.end.addMove (temp2.start);
-      temp1 = temp2;
-    }
-
-    temp2.end.addMove (finalState);
+    startState.addMove (temp.start);
+    startState.addMove (finalState);
+    temp.end.addMove (finalState);
+    temp.end.addMove (temp.start);
 
     return retVal;
   }

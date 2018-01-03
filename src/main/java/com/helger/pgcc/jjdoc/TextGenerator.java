@@ -42,9 +42,9 @@ import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.Expansion;
-import com.helger.pgcc.parser.NonTerminal;
+import com.helger.pgcc.parser.ExpNonTerminal;
 import com.helger.pgcc.parser.NormalProduction;
-import com.helger.pgcc.parser.RegularExpression;
+import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.TokenProduction;
 
 /**
@@ -140,16 +140,16 @@ public class TextGenerator implements IDocGenerator
   public void expansionEnd (final Expansion e, final boolean first)
   {}
 
-  public void nonTerminalStart (final NonTerminal nt)
+  public void nonTerminalStart (final ExpNonTerminal nt)
   {}
 
-  public void nonTerminalEnd (final NonTerminal nt)
+  public void nonTerminalEnd (final ExpNonTerminal nt)
   {}
 
-  public void reStart (final RegularExpression r)
+  public void reStart (final AbstractExpRegularExpression r)
   {}
 
-  public void reEnd (final RegularExpression r)
+  public void reEnd (final AbstractExpRegularExpression r)
   {}
 
   /**

@@ -33,32 +33,41 @@
  */
 package com.helger.pgcc.parser;
 
-/**
- * Describes zero-or-one regular expressions (<foo?>).
- */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
-public class RZeroOrOne extends RegularExpression
+/**
+ * Describes actions that may occur on the right hand side of productions.
+ */
+public class ExpAction extends Expansion
 {
+  /**
+   * Contains the list of tokens that make up the action. This list does not
+   * include the surrounding braces.
+   */
+  private final List <Token> m_action_tokens = new ArrayList <> ();
+
+  public ExpAction ()
+  {}
 
   /**
-   * The regular expression which is repeated zero or one times.
+   * @return the action_tokens
    */
-  public RegularExpression regexpr;
-
-  @Override
-  public Nfa generateNfa (final boolean ignoreCase)
+  public List <Token> getActionTokens ()
   {
-    final Nfa retVal = new Nfa ();
-    final NfaState startState = retVal.start;
-    final NfaState finalState = retVal.end;
-
-    final Nfa temp = regexpr.generateNfa (ignoreCase);
-
-    startState.addMove (temp.start);
-    startState.addMove (finalState);
-    temp.end.addMove (finalState);
-
-    return retVal;
+    return m_action_tokens;
   }
 
+  @Override
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  {
+    final StringBuilder sb = super.dump (indent, alreadyDumped);
+    alreadyDumped.add (this);
+    if (getActionTokens ().size () > 0)
+    {
+      sb.append (' ').append (getActionTokens ().get (0));
+    }
+    return sb;
+  }
 }

@@ -34,16 +34,14 @@
 package com.helger.pgcc.parser;
 
 /**
- * Describes one-or-more regular expressions (<foo+>).
+ * Describes zero-or-one regular expressions (<foo?>).
  */
-
-public class ROneOrMore extends RegularExpression
+public class ExpRZeroOrOne extends AbstractExpRegularExpression
 {
-
   /**
-   * The regular expression which is repeated one or more times.
+   * The regular expression which is repeated zero or one times.
    */
-  public RegularExpression regexpr;
+  public AbstractExpRegularExpression m_regexpr;
 
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
@@ -52,22 +50,12 @@ public class ROneOrMore extends RegularExpression
     final NfaState startState = retVal.start;
     final NfaState finalState = retVal.end;
 
-    final Nfa temp = regexpr.generateNfa (ignoreCase);
+    final Nfa temp = m_regexpr.generateNfa (ignoreCase);
 
     startState.addMove (temp.start);
-    temp.end.addMove (temp.start);
+    startState.addMove (finalState);
     temp.end.addMove (finalState);
 
     return retVal;
-  }
-
-  public ROneOrMore ()
-  {}
-
-  public ROneOrMore (final Token t, final RegularExpression re)
-  {
-    this.setLine (t.beginLine);
-    this.setColumn (t.beginColumn);
-    this.regexpr = re;
   }
 }

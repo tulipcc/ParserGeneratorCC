@@ -44,11 +44,11 @@ import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.Expansion;
-import com.helger.pgcc.parser.NonTerminal;
+import com.helger.pgcc.parser.ExpNonTerminal;
 import com.helger.pgcc.parser.NormalProduction;
-import com.helger.pgcc.parser.RCharacterList;
-import com.helger.pgcc.parser.RJustName;
-import com.helger.pgcc.parser.RegularExpression;
+import com.helger.pgcc.parser.ExpRCharacterList;
+import com.helger.pgcc.parser.ExpRJustName;
+import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.TokenProduction;
 
 public class BNFGenerator implements IDocGenerator
@@ -168,10 +168,10 @@ public class BNFGenerator implements IDocGenerator
   public void expansionEnd (final Expansion e, final boolean first)
   {}
 
-  public void nonTerminalStart (final NonTerminal nt)
+  public void nonTerminalStart (final ExpNonTerminal nt)
   {}
 
-  public void nonTerminalEnd (final NonTerminal nt)
+  public void nonTerminalEnd (final ExpNonTerminal nt)
   {}
 
   public void productionStart (final NormalProduction np)
@@ -193,15 +193,15 @@ public class BNFGenerator implements IDocGenerator
     }
   }
 
-  public void reStart (final RegularExpression r)
+  public void reStart (final AbstractExpRegularExpression r)
   {
-    if (r.getClass ().equals (RJustName.class) || r.getClass ().equals (RCharacterList.class))
+    if (r.getClass ().equals (ExpRJustName.class) || r.getClass ().equals (ExpRCharacterList.class))
     {
       m_bPrinting = false;
     }
   }
 
-  public void reEnd (final RegularExpression r)
+  public void reEnd (final AbstractExpRegularExpression r)
   {
     m_bPrinting = true;
   }

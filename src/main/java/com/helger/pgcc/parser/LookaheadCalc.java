@@ -104,10 +104,10 @@ public final class LookaheadCalc
       }
       else
       {
-        final RegularExpression re = rexps_of_tokens.get (Integer.valueOf (m.m_match[i]));
-        if (re instanceof RStringLiteral)
+        final AbstractExpRegularExpression re = rexps_of_tokens.get (Integer.valueOf (m.m_match[i]));
+        if (re instanceof ExpRStringLiteral)
         {
-          ret += " \"" + addEscapes (((RStringLiteral) re).m_image) + "\"";
+          ret += " \"" + addEscapes (((ExpRStringLiteral) re).m_image) + "\"";
         }
         else
           if (StringHelper.hasText (re.m_label))
@@ -125,7 +125,7 @@ public final class LookaheadCalc
     return ret.substring (1);
   }
 
-  public static void choiceCalc (final Choice ch)
+  public static void choiceCalc (final ExpChoice ch)
   {
     final int first = firstChoice (ch);
     // dbl[i] and dbr[i] are lists of size limited matches for choice i
@@ -240,21 +240,21 @@ public final class LookaheadCalc
 
   static boolean explicitLA (final Expansion exp)
   {
-    if (!(exp instanceof Sequence))
+    if (!(exp instanceof ExpSequence))
     {
       return false;
     }
-    final Sequence seq = (Sequence) exp;
+    final ExpSequence seq = (ExpSequence) exp;
     final Object obj = seq.m_units.get (0);
-    if (!(obj instanceof Lookahead))
+    if (!(obj instanceof ExpLookahead))
     {
       return false;
     }
-    final Lookahead la = (Lookahead) obj;
+    final ExpLookahead la = (ExpLookahead) obj;
     return la.isExplicit ();
   }
 
-  static int firstChoice (final Choice ch)
+  static int firstChoice (final ExpChoice ch)
   {
     if (Options.isForceLaCheck ())
     {
@@ -272,12 +272,12 @@ public final class LookaheadCalc
 
   private static String image (final Expansion exp)
   {
-    if (exp instanceof OneOrMore)
+    if (exp instanceof ExpOneOrMore)
     {
       return "(...)+";
     }
     else
-      if (exp instanceof ZeroOrMore)
+      if (exp instanceof ExpZeroOrMore)
       {
         return "(...)*";
       }

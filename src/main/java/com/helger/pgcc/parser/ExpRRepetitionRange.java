@@ -40,43 +40,43 @@ import java.util.List;
  * Describes one-or-more regular expressions (<foo+>).
  */
 
-public class RRepetitionRange extends RegularExpression
+public class ExpRRepetitionRange extends AbstractExpRegularExpression
 {
 
   /**
    * The regular expression which is repeated one or more times.
    */
-  public RegularExpression regexpr;
-  public int min = 0;
-  public int max = -1;
-  public boolean hasMax;
+  public AbstractExpRegularExpression m_regexpr;
+  public int m_min = 0;
+  public int m_max = -1;
+  public boolean m_hasMax;
 
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
   {
-    final List <RegularExpression> units = new ArrayList <> ();
-    RSequence seq;
+    final List <AbstractExpRegularExpression> units = new ArrayList <> ();
+    ExpRSequence seq;
     int i;
 
-    for (i = 0; i < min; i++)
+    for (i = 0; i < m_min; i++)
     {
-      units.add (regexpr);
+      units.add (m_regexpr);
     }
 
-    if (hasMax && max == -1) // Unlimited
+    if (m_hasMax && m_max == -1) // Unlimited
     {
-      final RZeroOrMore zoo = new RZeroOrMore ();
-      zoo.regexpr = regexpr;
+      final ExpRZeroOrMore zoo = new ExpRZeroOrMore ();
+      zoo.m_regexpr = m_regexpr;
       units.add (zoo);
     }
 
-    while (i++ < max)
+    while (i++ < m_max)
     {
-      final RZeroOrOne zoo = new RZeroOrOne ();
-      zoo.regexpr = regexpr;
+      final ExpRZeroOrOne zoo = new ExpRZeroOrOne ();
+      zoo.m_regexpr = m_regexpr;
       units.add (zoo);
     }
-    seq = new RSequence (units);
+    seq = new ExpRSequence (units);
     return seq.generateNfa (ignoreCase);
   }
 }

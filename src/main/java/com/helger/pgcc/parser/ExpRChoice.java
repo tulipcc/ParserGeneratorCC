@@ -41,19 +41,19 @@ import java.util.List;
  * regular expressions.
  */
 
-public class RChoice extends RegularExpression
+public class ExpRChoice extends AbstractExpRegularExpression
 {
   /**
    * The list of choices of this regular expression. Each list component will
    * narrow to RegularExpression.
    */
-  private List <RegularExpression> m_choices = new ArrayList <> ();
+  private List <AbstractExpRegularExpression> m_choices = new ArrayList <> ();
 
   /**
    * @param choices
    *        the choices to set
    */
-  public void setChoices (final List <RegularExpression> choices)
+  public void setChoices (final List <AbstractExpRegularExpression> choices)
   {
     this.m_choices = choices;
   }
@@ -61,7 +61,7 @@ public class RChoice extends RegularExpression
   /**
    * @return the choices
    */
-  public List <RegularExpression> getChoices ()
+  public List <AbstractExpRegularExpression> getChoices ()
   {
     return m_choices;
   }
@@ -81,7 +81,7 @@ public class RChoice extends RegularExpression
     for (int i = 0; i < getChoices ().size (); i++)
     {
       Nfa temp;
-      final RegularExpression curRE = getChoices ().get (i);
+      final AbstractExpRegularExpression curRE = getChoices ().get (i);
 
       temp = curRE.generateNfa (ignoreCase);
 
@@ -94,33 +94,34 @@ public class RChoice extends RegularExpression
 
   void CompressCharLists ()
   {
-    CompressChoices (); // Unroll nested choices
-    RegularExpression curRE;
-    RCharacterList curCharList = null;
+    compressChoices (); // Unroll nested choices
+    AbstractExpRegularExpression curRE;
+    ExpRCharacterList curCharList = null;
 
     for (int i = 0; i < getChoices ().size (); i++)
     {
       curRE = getChoices ().get (i);
 
-      while (curRE instanceof RJustName)
-        curRE = ((RJustName) curRE).m_regexpr;
+      while (curRE instanceof ExpRJustName)
+        curRE = ((ExpRJustName) curRE).m_regexpr;
 
-      if (curRE instanceof RStringLiteral && ((RStringLiteral) curRE).m_image.length () == 1)
+      if (curRE instanceof ExpRStringLiteral && ((ExpRStringLiteral) curRE).m_image.length () == 1)
       {
-        curRE = new RCharacterList (((RStringLiteral) curRE).m_image.charAt (0));
+        curRE = new ExpRCharacterList (((ExpRStringLiteral) curRE).m_image.charAt (0));
         getChoices ().set (i, curRE);
       }
 
-      if (curRE instanceof RCharacterList)
+      if (curRE instanceof ExpRCharacterList)
       {
-        if (((RCharacterList) curRE).negated_list)
-          ((RCharacterList) curRE).RemoveNegation ();
+        if (((ExpRCharacterList) curRE).m_negated_list)
+          ((ExpRCharacterList) curRE).removeNegation ();
 
-        final List <ICCCharacter> tmp = ((RCharacterList) curRE).m_descriptors;
+        final List <ICCCharacter> tmp = ((ExpRCharacterList) curRE).m_descriptors;
 
         if (curCharList == null)
         {
-          curRE = curCharList = new RCharacterList ();
+          curCharList = new ExpRCharacterList ();
+          curRE = curCharList;
           getChoices ().set (i, curRE);
         }
         else
@@ -133,34 +134,34 @@ public class RChoice extends RegularExpression
     }
   }
 
-  void CompressChoices ()
+  void compressChoices ()
   {
-    RegularExpression curRE;
+    AbstractExpRegularExpression curRE;
 
     for (int i = 0; i < getChoices ().size (); i++)
     {
       curRE = getChoices ().get (i);
 
-      while (curRE instanceof RJustName)
-        curRE = ((RJustName) curRE).m_regexpr;
+      while (curRE instanceof ExpRJustName)
+        curRE = ((ExpRJustName) curRE).m_regexpr;
 
-      if (curRE instanceof RChoice)
+      if (curRE instanceof ExpRChoice)
       {
         getChoices ().remove (i--);
-        for (int j = ((RChoice) curRE).getChoices ().size (); j-- > 0;)
-          getChoices ().add (((RChoice) curRE).getChoices ().get (j));
+        for (int j = ((ExpRChoice) curRE).getChoices ().size (); j-- > 0;)
+          getChoices ().add (((ExpRChoice) curRE).getChoices ().get (j));
       }
     }
   }
 
   public int checkUnmatchability ()
   {
-    RegularExpression curRE;
+    AbstractExpRegularExpression curRE;
     int numStrings = 0;
 
     for (int i = 0; i < getChoices ().size (); i++)
     {
-      if (!(curRE = getChoices ().get (i)).private_rexp &&
+      if (!(curRE = getChoices ().get (i)).m_private_rexp &&
           // curRE instanceof RJustName &&
           curRE.m_ordinal > 0 &&
           curRE.m_ordinal < m_ordinal &&
@@ -180,7 +181,7 @@ public class RChoice extends RegularExpression
                                       m_ordinal);
       }
 
-      if (!curRE.private_rexp && curRE instanceof RStringLiteral)
+      if (!curRE.m_private_rexp && curRE instanceof ExpRStringLiteral)
         numStrings++;
     }
     return numStrings;

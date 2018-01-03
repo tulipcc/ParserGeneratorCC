@@ -33,33 +33,63 @@
  */
 package com.helger.pgcc.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 /**
- * Describes regular expressions which are referred to just by their name. This
- * means that a regular expression with this name has been declared earlier.
+ * Describes expansions where one of many choices is taken (c1|c2|...).
  */
-
-public class RJustName extends RegularExpression
+public class ExpChoice extends Expansion
 {
-
   /**
-   * "regexpr" points to the regular expression denoted by the name.
+   * The list of choices of this expansion unit. Each List component will narrow
+   * to ExpansionUnit.
    */
-  public RegularExpression m_regexpr;
+  private List <Expansion> m_choices = new ArrayList <> ();
 
-  @Override
-  public Nfa generateNfa (final boolean ignoreCase)
-  {
-    return m_regexpr.generateNfa (ignoreCase);
-  }
-
-  public RJustName ()
+  public ExpChoice ()
   {}
 
-  public RJustName (final Token token, final String image)
+  public ExpChoice (final Token token)
   {
     this.setLine (token.beginLine);
     this.setColumn (token.beginColumn);
-    this.m_label = image;
   }
 
+  public ExpChoice (final Expansion expansion)
+  {
+    this.setLine (expansion.getLine ());
+    this.setColumn (expansion.getColumn ());
+    this.getChoices ().add (expansion);
+  }
+
+  /**
+   * @param choices
+   *        the choices to set
+   */
+  public void setChoices (final List <Expansion> choices)
+  {
+    this.m_choices = choices;
+  }
+
+  /**
+   * @return the choices
+   */
+  public List <Expansion> getChoices ()
+  {
+    return m_choices;
+  }
+
+  @Override
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  {
+    final StringBuilder sb = super.dump (indent, alreadyDumped);
+    if (alreadyDumped.add (this))
+    {
+      for (final Expansion next : getChoices ())
+        sb.append (EOL).append (next.dump (indent + 1, alreadyDumped));
+    }
+    return sb;
+  }
 }

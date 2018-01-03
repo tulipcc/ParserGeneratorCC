@@ -33,16 +33,77 @@
  */
 package com.helger.pgcc.parser;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import com.helger.commons.ValueEnforcer;
+
 /**
- * Describes the EOF regular expression
+ * Describes regular expressions which are sequences of other regular
+ * expressions.
  */
 
-public class REndOfFile extends RegularExpression
+public class ExpRSequence extends AbstractExpRegularExpression
 {
+
+  /**
+   * The list of units in this regular expression sequence. Each list component
+   * will narrow to RegularExpression.
+   */
+  final List <AbstractExpRegularExpression> m_units;
+
+  ExpRSequence ()
+  {
+    m_units = new ArrayList <> ();
+  }
+
+  ExpRSequence (final List <AbstractExpRegularExpression> seq)
+  {
+    m_ordinal = Integer.MAX_VALUE;
+    m_units = seq;
+  }
+
+  public void addUnit (final AbstractExpRegularExpression ex)
+  {
+    ValueEnforcer.notNull (ex, "RegEx");
+    m_units.add (ex);
+  }
+
+  public Iterator <AbstractExpRegularExpression> iterator ()
+  {
+    return m_units.iterator ();
+  }
 
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
   {
-    return null;
+    if (m_units.size () == 1)
+      return m_units.get (0).generateNfa (ignoreCase);
+
+    final Nfa retVal = new Nfa ();
+    final NfaState startState = retVal.start;
+    final NfaState finalState = retVal.end;
+    Nfa temp1;
+    Nfa temp2 = null;
+
+    AbstractExpRegularExpression curRE;
+
+    curRE = m_units.get (0);
+    temp1 = curRE.generateNfa (ignoreCase);
+    startState.addMove (temp1.start);
+
+    for (int i = 1; i < m_units.size (); i++)
+    {
+      curRE = m_units.get (i);
+
+      temp2 = curRE.generateNfa (ignoreCase);
+      temp1.end.addMove (temp2.start);
+      temp1 = temp2;
+    }
+
+    temp2.end.addMove (finalState);
+
+    return retVal;
   }
 }

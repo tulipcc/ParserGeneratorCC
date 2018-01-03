@@ -198,10 +198,10 @@ public class OtherFilesGen
       ostr.println ("interface " + s_cu_name + "Constants {");
       ostr.println ("");
 
-      RegularExpression re;
+      AbstractExpRegularExpression re;
       ostr.println ("  /** End of File. */");
       ostr.println ("  int EOF = 0;");
-      for (final java.util.Iterator <RegularExpression> it = s_ordered_named_tokens.iterator (); it.hasNext ();)
+      for (final java.util.Iterator <AbstractExpRegularExpression> it = s_ordered_named_tokens.iterator (); it.hasNext ();)
       {
         re = it.next ();
         ostr.println ("  /** RegularExpression Id. */");
@@ -230,9 +230,9 @@ public class OtherFilesGen
           final RegExprSpec res = (aRegExprSpec);
           re = res.rexp;
           ostr.print ("    ");
-          if (re instanceof RStringLiteral)
+          if (re instanceof ExpRStringLiteral)
           {
-            ostr.println ("\"\\\"" + addEscapes (addEscapes (((RStringLiteral) re).m_image)) + "\\\"\",");
+            ostr.println ("\"\\\"" + addEscapes (addEscapes (((ExpRStringLiteral) re).m_image)) + "\\\"\",");
           }
           else
             if (StringHelper.hasText (re.m_label))
@@ -241,7 +241,7 @@ public class OtherFilesGen
             }
             else
             {
-              if (re.tpContext.m_kind == TokenProduction.TOKEN)
+              if (re.m_tpContext.m_kind == TokenProduction.TOKEN)
               {
                 JavaCCErrors.warning (re, "Consider giving this non-string token a label for better error reporting.");
               }

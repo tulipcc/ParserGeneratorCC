@@ -165,11 +165,11 @@ public class OtherFilesGenCPP
         s_ostr.println ("namespace " + Options.stringValue ("NAMESPACE_OPEN"));
       }
 
-      RegularExpression re;
+      AbstractExpRegularExpression re;
       final String constPrefix = "const";
       s_ostr.println ("  /** End of File. */");
       s_ostr.println (constPrefix + "  int _EOF = 0;");
-      for (final java.util.Iterator <RegularExpression> it = s_ordered_named_tokens.iterator (); it.hasNext ();)
+      for (final java.util.Iterator <AbstractExpRegularExpression> it = s_ordered_named_tokens.iterator (); it.hasNext ();)
       {
         re = it.next ();
         s_ostr.println ("  /** RegularExpression Id. */");
@@ -199,9 +199,9 @@ public class OtherFilesGenCPP
         {
           re = res.rexp;
           s_ostr.println ("  static const JJChar tokenImage_arr_" + ++cnt + "[] = ");
-          if (re instanceof RStringLiteral)
+          if (re instanceof ExpRStringLiteral)
           {
-            printCharArray (s_ostr, "\"" + ((RStringLiteral) re).m_image + "\"");
+            printCharArray (s_ostr, "\"" + ((ExpRStringLiteral) re).m_image + "\"");
           }
           else
             if (StringHelper.hasText (re.m_label))
@@ -210,7 +210,7 @@ public class OtherFilesGenCPP
             }
             else
             {
-              if (re.tpContext.m_kind == TokenProduction.TOKEN)
+              if (re.m_tpContext.m_kind == TokenProduction.TOKEN)
               {
                 JavaCCErrors.warning (re, "Consider giving this non-string token a label for better error reporting.");
               }

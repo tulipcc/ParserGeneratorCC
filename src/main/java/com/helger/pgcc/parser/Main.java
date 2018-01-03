@@ -419,7 +419,7 @@ public class Main
     com.helger.pgcc.parser.JavaCCGlobals.reInitStatic ();
     com.helger.pgcc.parser.Options.init ();
     com.helger.pgcc.parser.JavaCCParserInternals.reInit ();
-    com.helger.pgcc.parser.RStringLiteral.reInit ();
+    com.helger.pgcc.parser.ExpRStringLiteral.reInit ();
     com.helger.pgcc.output.java.FilesJava.reInit ();
     com.helger.pgcc.parser.NfaState.reInit ();
     com.helger.pgcc.parser.MatchInfo.reInitStatic ();

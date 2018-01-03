@@ -43,7 +43,7 @@ import java.util.Set;
  * expansion unit, then a sequence is created with this node as the first
  * element, and the expansion unit as the second and last element.
  */
-public class Lookahead extends Expansion
+public class ExpLookahead extends Expansion
 {
   /**
    * Contains the list of tokens that make up the semantic lookahead if any. If
@@ -78,10 +78,10 @@ public class Lookahead extends Expansion
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
     final StringBuilder sb = super.dump (indent, alreadyDumped).append (m_bIsExplicit ? " explicit" : " implicit");
-    if (alreadyDumped.contains (this))
-      return sb;
-    alreadyDumped.add (this);
-    sb.append (eol).append (m_la_expansion.dump (indent + 1, alreadyDumped));
+    if (alreadyDumped.add (this))
+    {
+      sb.append (EOL).append (m_la_expansion.dump (indent + 1, alreadyDumped));
+    }
     return sb;
   }
 

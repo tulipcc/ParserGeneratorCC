@@ -33,41 +33,28 @@
  */
 package com.helger.pgcc.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 /**
- * Describes actions that may occur on the right hand side of productions.
+ * Describes regular expressions which are referred to just by their name. This
+ * means that a regular expression with this name has been declared earlier.
  */
-public class Action extends Expansion
+
+public class ExpRJustName extends AbstractExpRegularExpression
 {
   /**
-   * Contains the list of tokens that make up the action. This list does not
-   * include the surrounding braces.
+   * "regexpr" points to the regular expression denoted by the name.
    */
-  private final List <Token> action_tokens = new ArrayList <> ();
-
-  public Action ()
-  {}
-
-  /**
-   * @return the action_tokens
-   */
-  public List <Token> getActionTokens ()
-  {
-    return action_tokens;
-  }
+  public AbstractExpRegularExpression m_regexpr;
 
   @Override
-  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
-    final StringBuilder sb = super.dump (indent, alreadyDumped);
-    alreadyDumped.add (this);
-    if (getActionTokens ().size () > 0)
-    {
-      sb.append (' ').append (getActionTokens ().get (0));
-    }
-    return sb;
+    return m_regexpr.generateNfa (ignoreCase);
+  }
+
+  public ExpRJustName (final Token token, final String image)
+  {
+    this.setLine (token.beginLine);
+    this.setColumn (token.beginColumn);
+    this.m_label = image;
   }
 }

@@ -33,43 +33,26 @@
  */
 package com.helger.pgcc.parser;
 
-import java.util.List;
 import java.util.Set;
 
 /**
- * Describes expansions of the form "try {...} ...".
+ * Describes one-or-more expansions (e.g., foo+).
  */
 
-public class TryBlock extends Expansion
+public class ExpOneOrMore extends Expansion
 {
-
   /**
-   * The expansion contained within the try block.
+   * The expansion which is repeated one or more times.
    */
-  public Expansion exp;
+  public Expansion m_expansion;
 
-  /**
-   * The types of each catch block. Each list entry is itself a list which in
-   * turn contains tokens as entries.
-   */
-  public List <List <Token>> types;
-
-  /**
-   * The exception identifiers of each catch block. Each list entry is a token.
-   */
-  public List <Token> m_ids;
-
-  /**
-   * The block part of each catch block. Each list entry is itself a list which
-   * in turn contains tokens as entries.
-   */
-  public List <List <Token>> m_catchblks;
-
-  /**
-   * The block part of the finally block. Each list entry is a token. If there
-   * is no finally block, this is null.
-   */
-  public List <Token> m_finallyblk;
+  public ExpOneOrMore (final Token t, final Expansion e)
+  {
+    this.setLine (t.beginLine);
+    this.setColumn (t.beginColumn);
+    this.m_expansion = e;
+    m_expansion.m_parent = this;
+  }
 
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
@@ -77,9 +60,8 @@ public class TryBlock extends Expansion
     final StringBuilder sb = super.dump (indent, alreadyDumped);
     if (alreadyDumped.add (this))
     {
-      sb.append (eol).append (exp.dump (indent + 1, alreadyDumped));
+      sb.append (EOL).append (m_expansion.dump (indent + 1, alreadyDumped));
     }
     return sb;
   }
-
 }

@@ -189,9 +189,9 @@ public abstract class JavaCCParserInternals
     }
   }
 
-  protected static void add_inline_regexpr (final RegularExpression r)
+  protected static void add_inline_regexpr (final AbstractExpRegularExpression r)
   {
-    if (!(r instanceof REndOfFile))
+    if (!(r instanceof ExpREndOfFile))
     {
       final TokenProduction p = new TokenProduction ();
       p.m_isExplicit = false;
@@ -199,8 +199,8 @@ public abstract class JavaCCParserInternals
       p.m_kind = TokenProduction.TOKEN;
       final RegExprSpec res = new RegExprSpec ();
       res.rexp = r;
-      res.rexp.tpContext = p;
-      res.act = new Action ();
+      res.rexp.m_tpContext = p;
+      res.act = new ExpAction ();
       res.nextState = null;
       res.nsTok = null;
       p.m_respecs.add (res);
@@ -397,13 +397,13 @@ public abstract class JavaCCParserInternals
       JavaCCErrors.parse_error (tryLoc, "Try block must contain at least one catch or finally block.");
       return;
     }
-    final TryBlock tblk = new TryBlock ();
+    final ExpTryBlock tblk = new ExpTryBlock ();
     tblk.setLine (tryLoc.beginLine);
     tblk.setColumn (tryLoc.beginColumn);
-    tblk.exp = (Expansion) (nestedExp.member);
-    tblk.exp.m_parent = tblk;
-    tblk.exp.m_ordinalBase = 0;
-    tblk.types = types;
+    tblk.m_exp = (Expansion) (nestedExp.member);
+    tblk.m_exp.m_parent = tblk;
+    tblk.m_exp.m_ordinalBase = 0;
+    tblk.m_types = types;
     tblk.m_ids = ids;
     tblk.m_catchblks = catchblks;
     tblk.m_finallyblk = finallyblk;

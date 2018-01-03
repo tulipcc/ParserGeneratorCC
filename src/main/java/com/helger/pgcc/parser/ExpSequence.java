@@ -33,39 +33,64 @@
  */
 package com.helger.pgcc.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
 /**
- * Describes one-or-more expansions (e.g., foo+).
+ * Describes expansions that are sequences of expansion units. (c1 c2 ...)
  */
-
-public class OneOrMore extends Expansion
+public class ExpSequence extends Expansion
 {
-
   /**
-   * The expansion which is repeated one or more times.
+   * The list of units in this expansion sequence. Each List component will
+   * narrow to Expansion.
    */
-  public Expansion expansion;
+  final List <Expansion> m_units = new ArrayList <> ();
 
-  public OneOrMore ()
+  public ExpSequence ()
   {}
 
-  public OneOrMore (final Token t, final Expansion e)
+  public ExpSequence (final Token token, final ExpLookahead lookahead)
   {
-    this.setLine (t.beginLine);
-    this.setColumn (t.beginColumn);
-    this.expansion = e;
-    expansion.m_parent = this;
+    this.setLine (token.beginLine);
+    this.setColumn (token.beginColumn);
+    this.m_units.add (lookahead);
+  }
+
+  public void addUnit (final Expansion aObj)
+  {
+    m_units.add (aObj);
+  }
+
+  @Nonnull
+  public Iterable <Expansion> units ()
+  {
+    return m_units;
+  }
+
+  @Nonnegative
+  public int getUnitCount ()
+  {
+    return m_units.size ();
   }
 
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
+    if (!alreadyDumped.add (this))
+    {
+      return super.dump (0, alreadyDumped).insert (0, '[').append (']').insert (0, dumpPrefix (indent));
+    }
+
     final StringBuilder sb = super.dump (indent, alreadyDumped);
-    if (alreadyDumped.contains (this))
-      return sb;
-    alreadyDumped.add (this);
-    sb.append (eol).append (expansion.dump (indent + 1, alreadyDumped));
+    for (final Expansion next : m_units)
+    {
+      sb.append (EOL).append (next.dump (indent + 1, alreadyDumped));
+    }
     return sb;
   }
 }

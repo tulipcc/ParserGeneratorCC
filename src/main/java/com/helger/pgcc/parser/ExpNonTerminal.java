@@ -41,9 +41,8 @@ import java.util.Set;
  * Describes non terminals.
  */
 
-public class NonTerminal extends Expansion
+public class ExpNonTerminal extends Expansion
 {
-
   /**
    * The LHS to which the return value of the non-terminal is assigned. In case
    * there is no LHS, then the vector remains empty.

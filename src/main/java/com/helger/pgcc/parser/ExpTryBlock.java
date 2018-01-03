@@ -33,75 +33,52 @@
  */
 package com.helger.pgcc.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Describes regular expressions.
+ * Describes expansions of the form "try {...} ...".
  */
 
-public abstract class RegularExpression extends Expansion
+public class ExpTryBlock extends Expansion
 {
-  /**
-   * The label of the regular expression (if any). If no label is present, this
-   * is set to "".
-   */
-  public String m_label = "";
 
   /**
-   * The ordinal value assigned to the regular expression. It is used for
-   * internal processing and passing information between the parser and the
-   * lexical analyzer.
+   * The expansion contained within the try block.
    */
-  int m_ordinal;
+  public Expansion m_exp;
 
   /**
-   * The LHS to which the token value of the regular expression is assigned. In
-   * case there is no LHS, then the list remains empty.
+   * The types of each catch block. Each list entry is itself a list which in
+   * turn contains tokens as entries.
    */
-  public List <Token> m_lhsTokens = new ArrayList <> ();
+  public List <List <Token>> m_types;
 
   /**
-   * We now allow qualified access to token members. Store it here.
+   * The exception identifiers of each catch block. Each list entry is a token.
    */
-  public Token m_rhsToken;
+  public List <Token> m_ids;
 
   /**
-   * This flag is set if the regular expression has a label prefixed with the #
-   * symbol - this indicates that the purpose of the regular expression is
-   * solely for defining other regular expressions.
+   * The block part of each catch block. Each list entry is itself a list which
+   * in turn contains tokens as entries.
    */
-  public boolean private_rexp = false;
+  public List <List <Token>> m_catchblks;
 
   /**
-   * If this is a top-level regular expression (nested directly within a
-   * TokenProduction), then this field point to that TokenProduction object.
+   * The block part of the finally block. Each list entry is a token. If there
+   * is no finally block, this is null.
    */
-  public TokenProduction tpContext = null;
-
-  public abstract Nfa generateNfa (boolean ignoreCase);
-
-  public boolean CanMatchAnyChar ()
-  {
-    return false;
-  }
-
-  /**
-   * The following variable is used to maintain state information for the loop
-   * determination algorithm: It is initialized to 0, and set to -1 if this node
-   * has been visited in a pre-order walk, and then it is set to 1 if the
-   * pre-order walk of the whole graph from this node has been traversed. i.e.,
-   * -1 indicates partially processed, and 1 indicates fully processed.
-   */
-  int walkStatus = 0;
+  public List <Token> m_finallyblk;
 
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
     final StringBuilder sb = super.dump (indent, alreadyDumped);
-    alreadyDumped.add (this);
-    sb.append (' ').append (m_label);
+    if (alreadyDumped.add (this))
+    {
+      sb.append (EOL).append (m_exp.dump (indent + 1, alreadyDumped));
+    }
     return sb;
   }
 }

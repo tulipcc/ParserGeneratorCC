@@ -33,35 +33,75 @@
  */
 package com.helger.pgcc.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
- * Describes zero-or-more expansions (e.g., foo*).
+ * Describes regular expressions.
  */
 
-public class ZeroOrMore extends Expansion
+public abstract class AbstractExpRegularExpression extends Expansion
 {
   /**
-   * The expansion which is repeated zero or more times.
+   * The label of the regular expression (if any). If no label is present, this
+   * is set to "".
    */
-  public final Expansion m_expansion;
+  public String m_label = "";
 
-  public ZeroOrMore (final Token token, final Expansion expansion)
+  /**
+   * The ordinal value assigned to the regular expression. It is used for
+   * internal processing and passing information between the parser and the
+   * lexical analyzer.
+   */
+  int m_ordinal;
+
+  /**
+   * The LHS to which the token value of the regular expression is assigned. In
+   * case there is no LHS, then the list remains empty.
+   */
+  public List <Token> m_lhsTokens = new ArrayList <> ();
+
+  /**
+   * We now allow qualified access to token members. Store it here.
+   */
+  public Token m_rhsToken;
+
+  /**
+   * This flag is set if the regular expression has a label prefixed with the #
+   * symbol - this indicates that the purpose of the regular expression is
+   * solely for defining other regular expressions.
+   */
+  public boolean m_private_rexp = false;
+
+  /**
+   * If this is a top-level regular expression (nested directly within a
+   * TokenProduction), then this field point to that TokenProduction object.
+   */
+  public TokenProduction m_tpContext = null;
+
+  public abstract Nfa generateNfa (boolean ignoreCase);
+
+  public boolean canMatchAnyChar ()
   {
-    this.setLine (token.beginLine);
-    this.setColumn (token.beginColumn);
-    this.m_expansion = expansion;
-    this.m_expansion.m_parent = this;
+    return false;
   }
+
+  /**
+   * The following variable is used to maintain state information for the loop
+   * determination algorithm: It is initialized to 0, and set to -1 if this node
+   * has been visited in a pre-order walk, and then it is set to 1 if the
+   * pre-order walk of the whole graph from this node has been traversed. i.e.,
+   * -1 indicates partially processed, and 1 indicates fully processed.
+   */
+  int m_walkStatus = 0;
 
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
     final StringBuilder sb = super.dump (indent, alreadyDumped);
-    if (alreadyDumped.add (this))
-    {
-      sb.append (eol).append (m_expansion.dump (indent + 1, alreadyDumped));
-    }
+    alreadyDumped.add (this);
+    sb.append (' ').append (m_label);
     return sb;
   }
 }

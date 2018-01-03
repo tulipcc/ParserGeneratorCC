@@ -1050,95 +1050,97 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("    }");
       genCodeLine ("    trace_indent = trace_indent + 2;");
       genCodeLine ("  }");
-      // CTD " "
       genCodeLine ();
       genCodeLine ("  " + javaStaticOpt () + "protected void trace_return(String s) {");
-      genCodeLine ("	 trace_indent = trace_indent - 2;");
-      genCodeLine ("	 if (trace_enabled) {");
-      genCodeLine ("	   for (int i = 0; i < trace_indent; i++) { System.out.print(\" \"); }");
-      genCodeLine ("	   System.out.println(\"Return: \" + s);");
-      genCodeLine ("	 }");
+      genCodeLine ("    trace_indent = trace_indent - 2;");
+      genCodeLine ("    if (trace_enabled) {");
+      genCodeLine ("      for (int i = 0; i < trace_indent; i++) { System.out.print(\" \"); }");
+      genCodeLine ("      System.out.println(\"Return: \" + s);");
+      genCodeLine ("    }");
       genCodeLine ("  }");
       genCodeLine ();
       genCodeLine ("  " + javaStaticOpt () + "protected void trace_token(Token t, String where) {");
-      genCodeLine ("	 if (trace_enabled) {");
-      genCodeLine ("	   for (int i = 0; i < trace_indent; i++) { System.out.print(\" \"); }");
-      genCodeLine ("	   System.out.print(\"Consumed token: <\" + tokenImage[t.kind]);");
-      genCodeLine ("	   if (t.kind != 0 && !tokenImage[t.kind].equals(\"\\\"\" + t.image + \"\\\"\")) {");
-      genCodeLine ("		 System.out.print(\": \\\"\" + " +
+      genCodeLine ("    if (trace_enabled) {");
+      genCodeLine ("      for (int i = 0; i < trace_indent; i++) {");
+      genCodeLine ("        System.out.print(\" \");");
+      genCodeLine ("      }");
+      genCodeLine ("      System.out.print(\"Consumed token: <\" + tokenImage[t.kind]);");
+      genCodeLine ("      if (t.kind != 0 && !tokenImage[t.kind].equals(\"\\\"\" + t.image + \"\\\"\")) {");
+      genCodeLine ("        System.out.print(\": \\\"\" + " +
                    Options.getTokenMgrErrorClass () +
                    ".addEscapes(" +
                    "t.image) + \"\\\"\");");
-      genCodeLine ("	   }");
-      genCodeLine ("	   System.out.println(\" at line \" + t.beginLine + " +
+      genCodeLine ("      }");
+      genCodeLine ("      System.out.println(\" at line \" + t.beginLine + " +
                    "\" column \" + t.beginColumn + \">\" + where);");
-      genCodeLine ("	 }");
+      genCodeLine ("    }");
       genCodeLine ("  }");
       genCodeLine ();
       genCodeLine ("  " + javaStaticOpt () + "protected void trace_scan(Token t1, int t2) {");
-      genCodeLine ("	 if (trace_enabled) {");
-      genCodeLine ("	   for (int i = 0; i < trace_indent; i++) { System.out.print(\" \"); }");
-      genCodeLine ("	   System.out.print(\"Visited token: <\" + tokenImage[t1.kind]);");
-      genCodeLine ("	   if (t1.kind != 0 && !tokenImage[t1.kind].equals(\"\\\"\" + t1.image + \"\\\"\")) {");
-      genCodeLine ("		 System.out.print(\": \\\"\" + " +
+      genCodeLine ("    if (trace_enabled) {");
+      genCodeLine ("      for (int i = 0; i < trace_indent; i++) { System.out.print(\" \"); }");
+      genCodeLine ("      System.out.print(\"Visited token: <\" + tokenImage[t1.kind]);");
+      genCodeLine ("      if (t1.kind != 0 && !tokenImage[t1.kind].equals(\"\\\"\" + t1.image + \"\\\"\")) {");
+      genCodeLine ("        System.out.print(\": \\\"\" + " +
                    Options.getTokenMgrErrorClass () +
                    ".addEscapes(" +
                    "t1.image) + \"\\\"\");");
-      genCodeLine ("	   }");
-      genCodeLine ("	   System.out.println(\" at line \" + t1.beginLine + \"" +
+      genCodeLine ("      }");
+      genCodeLine ("      System.out.println(\" at line \" + t1.beginLine + \"" +
                    " column \" + t1.beginColumn + \">; Expected token: <\" + tokenImage[t2] + \">\");");
-      genCodeLine ("	 }");
+      genCodeLine ("    }");
       genCodeLine ("  }");
       genCodeLine ();
     }
     else
     {
       genCodeLine ("  /** Enable tracing. */");
-      genCodeLine ("  " + javaStaticOpt () + "final public void enable_tracing() {");
-      genCodeLine ("  }");
+      genCodeLine ("  " + javaStaticOpt () + "final public void enable_tracing() {}");
       genCodeLine ();
       genCodeLine ("  /** Disable tracing. */");
-      genCodeLine ("  " + javaStaticOpt () + "final public void disable_tracing() {");
-      genCodeLine ("  }");
+      genCodeLine ("  " + javaStaticOpt () + "final public void disable_tracing() {}");
       genCodeLine ();
     }
 
     if (s_jj2index != 0 && Options.isErrorReporting ())
     {
       genCodeLine ("  " + javaStaticOpt () + "private void jj_rescan_token() {");
-      genCodeLine ("	 jj_rescan = true;");
-      genCodeLine ("	 for (int i = 0; i < " + s_jj2index + "; i++) {");
-      genCodeLine ("	   try {");
-      genCodeLine ("		 JJCalls p = jj_2_rtns[i];");
-      genCodeLine ();
-      genCodeLine ("		 do {");
-      genCodeLine ("		   if (p.gen > jj_gen) {");
-      genCodeLine ("			 jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;");
-      genCodeLine ("			 switch (i) {");
+      genCodeLine ("    jj_rescan = true;");
+      genCodeLine ("    for (int i = 0; i < " + s_jj2index + "; i++) {");
+      genCodeLine ("      try {");
+      genCodeLine ("        JJCalls p = jj_2_rtns[i];");
+      genCodeLine ("        do {");
+      genCodeLine ("          if (p.gen > jj_gen) {");
+      genCodeLine ("            jj_la = p.arg;");
+      genCodeLine ("            jj_scanpos = p.first;");
+      genCodeLine ("            jj_lastpos = p.first;");
+      genCodeLine ("            switch (i) {");
       for (int i = 0; i < s_jj2index; i++)
       {
-        genCodeLine ("			   case " + i + ": jj_3_" + (i + 1) + "(); break;");
+        genCodeLine ("              case " + i + ": jj_3_" + (i + 1) + "(); break;");
       }
-      genCodeLine ("			 }");
-      genCodeLine ("		   }");
-      genCodeLine ("		   p = p.next;");
-      genCodeLine ("		 } while (p != null);");
-      genCodeLine ();
-      genCodeLine ("		 } catch(LookaheadSuccess ls) { }");
-      genCodeLine ("	 }");
-      genCodeLine ("	 jj_rescan = false;");
+      genCodeLine ("            }");
+      genCodeLine ("          }");
+      genCodeLine ("          p = p.next;");
+      genCodeLine ("        } while (p != null);");
+      genCodeLine ("      } catch(LookaheadSuccess ls) { /* ignore */ }");
+      genCodeLine ("    }");
+      genCodeLine ("    jj_rescan = false;");
       genCodeLine ("  }");
       genCodeLine ();
       genCodeLine ("  " + javaStaticOpt () + "private void jj_save(int index, int xla) {");
-      genCodeLine ("	 JJCalls p = jj_2_rtns[index];");
-      genCodeLine ("	 while (p.gen > jj_gen) {");
-      genCodeLine ("	   if (p.next == null) { p = p.next = new JJCalls(); break; }");
-      genCodeLine ("	   p = p.next;");
-      genCodeLine ("	 }");
-      genCodeLine ();
-      genCodeLine ("	 p.gen = jj_gen + xla - jj_la; ");
-      genCodeLine ("	 p.first = token;");
-      genCodeLine ("	 p.arg = xla;");
+      genCodeLine ("    JJCalls p = jj_2_rtns[index];");
+      genCodeLine ("    while (p.gen > jj_gen) {");
+      genCodeLine ("      if (p.next == null) {");
+      genCodeLine ("        p.next = new JJCalls();");
+      genCodeLine ("        p = p.next;");
+      genCodeLine ("        break;");
+      genCodeLine ("      }");
+      genCodeLine ("      p = p.next;");
+      genCodeLine ("    }");
+      genCodeLine ("    p.gen = jj_gen + xla - jj_la; ");
+      genCodeLine ("    p.first = token;");
+      genCodeLine ("    p.arg = xla;");
       genCodeLine ("  }");
       genCodeLine ();
     }

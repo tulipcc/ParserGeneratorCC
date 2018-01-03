@@ -77,7 +77,7 @@ import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 /**
  * Describes string literals.
  */
-public class RStringLiteral extends RegularExpression
+public class ExpRStringLiteral extends AbstractExpRegularExpression
 {
   private static final class KindInfo
   {
@@ -114,10 +114,7 @@ public class RStringLiteral extends RegularExpression
    */
   public String m_image;
 
-  public RStringLiteral ()
-  {}
-
-  public RStringLiteral (final Token t, final String image)
+  public ExpRStringLiteral (final Token t, final String image)
   {
     this.setLine (t.beginLine);
     this.setColumn (t.beginColumn);
@@ -451,7 +448,7 @@ public class RStringLiteral extends RegularExpression
   {
     if (m_image.length () == 1)
     {
-      final RCharacterList temp = new RCharacterList (m_image.charAt (0));
+      final ExpRCharacterList temp = new ExpRCharacterList (m_image.charAt (0));
       return temp.generateNfa (ignoreCase);
     }
 
@@ -531,10 +528,10 @@ public class RStringLiteral extends RegularExpression
 
   static String getLabel (final int kind)
   {
-    final RegularExpression re = LexGenJava.rexprs[kind];
+    final AbstractExpRegularExpression re = LexGenJava.rexprs[kind];
 
-    if (re instanceof RStringLiteral)
-      return " \"" + JavaCCGlobals.addEscapes (((RStringLiteral) re).m_image) + "\"";
+    if (re instanceof ExpRStringLiteral)
+      return " \"" + JavaCCGlobals.addEscapes (((ExpRStringLiteral) re).m_image) + "\"";
     if (re.m_label.length () > 0)
       return " <" + re.m_label + ">";
     return " <token of kind " + kind + ">";

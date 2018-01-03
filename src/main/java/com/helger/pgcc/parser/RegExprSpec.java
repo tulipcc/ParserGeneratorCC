@@ -44,12 +44,12 @@ public class RegExprSpec
   /**
    * The regular expression of this specification.
    */
-  public RegularExpression rexp;
+  public AbstractExpRegularExpression rexp;
 
   /**
    * The action corresponding to this specification.
    */
-  public Action act;
+  public ExpAction act;
 
   /**
    * The next state corresponding to this specification. If no next state has

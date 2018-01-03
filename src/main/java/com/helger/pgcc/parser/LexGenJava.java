@@ -112,7 +112,7 @@ public class LexGenJava extends CodeGenerator
   static String [] newLexState;
   public static int [] lexStates;
   public static boolean [] ignoreCase;
-  public static Action [] actions;
+  public static ExpAction [] actions;
   // Order is important!
   public static final Map <String, NfaState> initStates = new LinkedHashMap <> ();
   public static int stateSetSize;
@@ -125,7 +125,7 @@ public class LexGenJava extends CodeGenerator
   public static long [] toMore;
   public static long [] toToken;
   public static int defaultLexState;
-  public static RegularExpression [] rexprs;
+  public static AbstractExpRegularExpression [] rexprs;
   public static int [] maxLongsReqd;
   public static int [] initMatch;
   public static int [] canMatchAnyChar;
@@ -144,7 +144,7 @@ public class LexGenJava extends CodeGenerator
   static boolean hasSpecial = false;
   static boolean hasSkip = false;
   static boolean hasMore = false;
-  public static RegularExpression curRE;
+  public static AbstractExpRegularExpression curRE;
   public static boolean keepLineCol;
   public static String errorHandlingClass;
   public static TokenizerData tokenizerData;
@@ -349,7 +349,7 @@ public class LexGenJava extends CodeGenerator
       if (respecs == null || respecs.size () == 0)
         continue;
 
-      RegularExpression re;
+      AbstractExpRegularExpression re;
       for (i = 0; i < respecs.size (); i++)
         if (maxOrdinal <= (re = respecs.get (i).rexp).m_ordinal)
           maxOrdinal = re.m_ordinal + 1;
@@ -361,7 +361,7 @@ public class LexGenJava extends CodeGenerator
     toMore = new long [maxOrdinal / 64 + 1];
     toToken = new long [maxOrdinal / 64 + 1];
     toToken[0] = 1L;
-    actions = new Action [maxOrdinal];
+    actions = new ExpAction [maxOrdinal];
     actions[0] = s_actForEof;
     hasTokenActions = s_actForEof != null;
     initStates.clear ();
@@ -384,8 +384,8 @@ public class LexGenJava extends CodeGenerator
     hasEmptyMatch = false;
     lexStates = new int [maxOrdinal];
     ignoreCase = new boolean [maxOrdinal];
-    rexprs = new RegularExpression [maxOrdinal];
-    RStringLiteral.s_allImages = new String [maxOrdinal];
+    rexprs = new AbstractExpRegularExpression [maxOrdinal];
+    ExpRStringLiteral.s_allImages = new String [maxOrdinal];
     canReachOnMore = new boolean [maxLexStates];
   }
 
@@ -412,7 +412,7 @@ public class LexGenJava extends CodeGenerator
     final String codeGeneratorClass = Options.getTokenManagerCodeGenerator ();
     keepLineCol = Options.isKeepLineColumn ();
     errorHandlingClass = Options.getTokenMgrErrorClass ();
-    final List <RChoice> choices = new ArrayList <> ();
+    final List <ExpRChoice> choices = new ArrayList <> ();
     TokenProduction tp;
 
     staticString = (Options.isStatic () ? "static " : "");
@@ -428,7 +428,7 @@ public class LexGenJava extends CodeGenerator
     {
       int startState = -1;
       NfaState.reInitStatic ();
-      RStringLiteral.reInitStatic ();
+      ExpRStringLiteral.reInitStatic ();
 
       final String key = aEntry.getKey ();
 
@@ -464,24 +464,24 @@ public class LexGenJava extends CodeGenerator
           lexStates[curRE.m_ordinal] = lexStateIndex;
           ignoreCase[curRE.m_ordinal] = ignore;
 
-          if (curRE.private_rexp)
+          if (curRE.m_private_rexp)
           {
             kinds[curRE.m_ordinal] = -1;
             continue;
           }
 
           if (!Options.isNoDfa () &&
-              curRE instanceof RStringLiteral &&
-              StringHelper.hasText (((RStringLiteral) curRE).m_image))
+              curRE instanceof ExpRStringLiteral &&
+              StringHelper.hasText (((ExpRStringLiteral) curRE).m_image))
           {
-            ((RStringLiteral) curRE).generateDfa ();
+            ((ExpRStringLiteral) curRE).generateDfa ();
             if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
             {
               mixed[lexStateIndex] = true;
             }
           }
           else
-            if (curRE.CanMatchAnyChar ())
+            if (curRE.canMatchAnyChar ())
             {
               if (canMatchAnyChar[lexStateIndex] == -1 || canMatchAnyChar[lexStateIndex] > curRE.m_ordinal)
                 canMatchAnyChar[lexStateIndex] = curRE.m_ordinal;
@@ -490,8 +490,8 @@ public class LexGenJava extends CodeGenerator
             {
               Nfa temp;
 
-              if (curRE instanceof RChoice)
-                choices.add ((RChoice) curRE);
+              if (curRE instanceof ExpRChoice)
+                choices.add ((ExpRChoice) curRE);
 
               temp = curRE.generateNfa (ignore);
               temp.end.isFinal = true;
@@ -584,19 +584,19 @@ public class LexGenJava extends CodeGenerator
         if (initMatch[lexStateIndex] == 0)
           initMatch[lexStateIndex] = Integer.MAX_VALUE;
 
-      RStringLiteral.fillSubString ();
+      ExpRStringLiteral.fillSubString ();
 
       if (hasNfa[lexStateIndex] && !mixed[lexStateIndex])
-        RStringLiteral.generateNfaStartStates (this, initialState);
+        ExpRStringLiteral.generateNfaStartStates (this, initialState);
 
       if (generateDataOnly || codeGeneratorClass != null)
       {
-        RStringLiteral.updateStringLiteralData (lexStateIndex);
+        ExpRStringLiteral.updateStringLiteralData (lexStateIndex);
         NfaState.updateNfaData (totalNumStates, startState, lexStateIndex, canMatchAnyChar[lexStateIndex]);
       }
       else
       {
-        RStringLiteral.dumpDfaCode (this);
+        ExpRStringLiteral.dumpDfaCode (this);
         if (hasNfa[lexStateIndex])
         {
           NfaState.dumpMoveNfa (this);
@@ -607,7 +607,7 @@ public class LexGenJava extends CodeGenerator
         stateSetSize = NfaState.s_generatedStates;
     }
 
-    for (final RChoice aItem : choices)
+    for (final ExpRChoice aItem : choices)
       aItem.checkUnmatchability ();
 
     checkEmptyStringMatch ();
@@ -616,7 +616,7 @@ public class LexGenJava extends CodeGenerator
     {
       tokenizerData.setParserName (s_cu_name);
       NfaState.buildTokenizerData (tokenizerData);
-      RStringLiteral.BuildTokenizerData (tokenizerData);
+      ExpRStringLiteral.BuildTokenizerData (tokenizerData);
       final int [] newLexStateIndices = new int [maxOrdinal];
       final StringBuilder tokenMgrDecls = new StringBuilder ();
       if (s_token_mgr_decls != null && s_token_mgr_decls.size () > 0)
@@ -640,7 +640,7 @@ public class LexGenJava extends CodeGenerator
         }
         // For java, we have this but for other languages, eventually we will
         // simply have a string.
-        final Action act = actions[i];
+        final ExpAction act = actions[i];
         if (act == null)
           continue;
         final StringBuilder sb = new StringBuilder ();
@@ -675,7 +675,7 @@ public class LexGenJava extends CodeGenerator
       return;
     }
 
-    RStringLiteral.dumpStrLiteralImages (this);
+    ExpRStringLiteral.dumpStrLiteralImages (this);
     dumpFillToken ();
     NfaState.dumpStateSets (this);
     NfaState.dumpNonAsciiMoveMethods (this);
@@ -1409,7 +1409,7 @@ public class LexGenJava extends CodeGenerator
 
   public void dumpSkipActions ()
   {
-    Action act;
+    ExpAction act;
 
     genCodeLine (staticString + "void SkipLexicalActions(Token matchedToken)");
     genCodeLine ("{");
@@ -1454,7 +1454,7 @@ public class LexGenJava extends CodeGenerator
           break;
 
         genCode ("         image.append");
-        if (RStringLiteral.s_allImages[i] != null)
+        if (ExpRStringLiteral.s_allImages[i] != null)
         {
           genCodeLine ("(jjstrLiteralImages[" + i + "]);");
           genCodeLine ("        lengthOfMatch = jjstrLiteralImages[" + i + "].length();");
@@ -1485,7 +1485,7 @@ public class LexGenJava extends CodeGenerator
 
   public void dumpMoreActions ()
   {
-    Action act;
+    ExpAction act;
 
     genCodeLine (staticString + "void MoreLexicalActions()");
     genCodeLine ("{");
@@ -1534,7 +1534,7 @@ public class LexGenJava extends CodeGenerator
 
         genCode ("         image.append");
 
-        if (RStringLiteral.s_allImages[i] != null)
+        if (ExpRStringLiteral.s_allImages[i] != null)
           genCodeLine ("(jjstrLiteralImages[" + i + "]);");
         else
           genCodeLine ("(input_stream.GetSuffix(jjimageLen));");
@@ -1562,7 +1562,7 @@ public class LexGenJava extends CodeGenerator
 
   public void dumpTokenActions ()
   {
-    Action act;
+    ExpAction act;
     int i;
 
     genCodeLine (staticString + "void TokenLexicalActions(Token matchedToken)");
@@ -1616,7 +1616,7 @@ public class LexGenJava extends CodeGenerator
         {
           genCode ("        image.append");
 
-          if (RStringLiteral.s_allImages[i] != null)
+          if (ExpRStringLiteral.s_allImages[i] != null)
           {
             genCodeLine ("(jjstrLiteralImages[" + i + "]);");
             genCodeLine ("        lengthOfMatch = jjstrLiteralImages[" + i + "].length();");

@@ -982,15 +982,15 @@ void regexpr_kind(TokenProduction p) :
 void regexpr_spec(TokenProduction p) :
 	{
 	  Container c = new Container();
-	  Action act = new Action();
+	  ExpAction act = new ExpAction();
 	  Token t = null;
 	  RegExprSpec res = new RegExprSpec();
 	}
 {
   regular_expression(c)
 	{
-	  res.rexp = (RegularExpression)c.member;
-	  res.rexp.tpContext = p;
+	  res.rexp = (AbstractExpRegularExpression)c.member;
+	  res.rexp.m_tpContext = p;
 	}
   [
 	{
@@ -1001,7 +1001,7 @@ void regexpr_spec(TokenProduction p) :
 	  if (Options.isUserTokenManager()) {
 	    JavaCCErrors.warning(t, "Ignoring action in regular expression specification since option USER_TOKEN_MANAGER has been set to true.");
 	  }
-	  if (res.rexp.private_rexp) {
+	  if (res.rexp.m_private_rexp) {
 	    JavaCCErrors.parse_error(t, "Actions are not permitted on private (#) regular expressions.");
 	  }
 	}
@@ -1009,7 +1009,7 @@ void regexpr_spec(TokenProduction p) :
   [ ":" t=<IDENTIFIER>
 	{
 	  res.nextState = t.image;
-	  if (res.rexp.private_rexp) {
+	  if (res.rexp.m_private_rexp) {
 	    JavaCCErrors.parse_error(t, "Lexical state changes are not permitted after private (#) regular expressions.");
 	  }
 	}
@@ -1024,7 +1024,7 @@ void regexpr_spec(TokenProduction p) :
 void expansion_choices(Container c1) :
 	{
 	  boolean morethanone = false;
-	  Choice ch = null; // unnecessary initialization to make Java compiler happy!
+	  ExpChoice ch = null; // unnecessary initialization to make Java compiler happy!
 	  Container c2 = new Container();
 	}
 {
@@ -1036,7 +1036,7 @@ void expansion_choices(Container c1) :
 	    ((Expansion)c2.member).m_parent = ch;
 	  } else {
 	    morethanone = true;
-	    ch = new Choice((Expansion)c1.member);
+	    ch = new ExpChoice((Expansion)c1.member);
 	    ((Expansion)c1.member).m_parent = ch;
 	    ch.getChoices().add((Expansion)c2.member);
 	    ((Expansion)c2.member).m_parent = ch;
@@ -1052,9 +1052,9 @@ void expansion_choices(Container c1) :
 
 void expansion(Container c1) :
 	{
-	  Sequence seq = new Sequence();
+	  ExpSequence seq = new ExpSequence();
 	  Container c2 = new Container();
-	  Lookahead la = new Lookahead();
+	  ExpLookahead la = new ExpLookahead();
 	  Token t = getToken(1);
 	  seq.setLine(t.beginLine);
 	  seq.setColumn(t.beginColumn);
@@ -1094,9 +1094,9 @@ void expansion(Container c1) :
 	}
 }
 
-Lookahead local_lookahead() :
+ExpLookahead local_lookahead() :
 	{
-	  Lookahead la = new Lookahead();
+	  ExpLookahead la = new ExpLookahead();
 	  la.setExplicit(true);
 	  Token t = getToken(1);
 	  la.setLine(t.beginLine);
@@ -1172,10 +1172,10 @@ void expansion_unit(Container c) :
 	{
 	  String name;
 	  List<Token> lhsTokens = new ArrayList <Token>();
-	  NonTerminal nt;
-	  Action act;
+	  ExpNonTerminal nt;
+	  ExpAction act;
 	  Token t;
-	  Lookahead la;
+	  ExpLookahead la;
 	}
 {
   LOOKAHEAD(1)
@@ -1187,13 +1187,13 @@ void expansion_unit(Container c) :
 	{
 	  // Now set the la_expansion field of la with a dummy
 	  // expansion (we use EOF).
-	  la.setLaExpansion(new REndOfFile());
+	  la.setLaExpansion(new ExpREndOfFile());
 	  // Create a singleton choice with an empty action.
-	  Choice ch = new Choice(t);
-	  Sequence seq = new Sequence(t, la);
+	  ExpChoice ch = new ExpChoice(t);
+	  ExpSequence seq = new ExpSequence(t, la);
 	  la.m_parent = seq;
 	  la.m_ordinalBase = 0;
-	  act = new Action();
+	  act = new ExpAction();
 	  act.setLine(t.beginLine);
 	  act.setColumn(t.beginColumn);
 	  seq.addUnit(act);
@@ -1213,7 +1213,7 @@ void expansion_unit(Container c) :
 	}
 |
 	{
-	  act = new Action();
+	  act = new ExpAction();
 	  t = getToken(1);
 	  act.setLine(t.beginLine);
 	  act.setColumn(t.beginColumn);
@@ -1230,7 +1230,7 @@ void expansion_unit(Container c) :
 |
   t="[" expansion_choices(c) "]"
 	{
-	  c.member = new ZeroOrOne(t, (Expansion)c.member);
+	  c.member = new ExpZeroOrOne(t, (Expansion)c.member);
 	}
 |
 	{
@@ -1313,7 +1313,7 @@ void expansion_unit(Container c) :
 	LOOKAHEAD( identifier() [ TypeArguments(null) ] "(")
 	{
 	  t = getToken(1);
-	  nt = new NonTerminal();
+	  nt = new ExpNonTerminal();
 	  nt.setLine(t.beginLine);
 	  nt.setColumn(t.beginColumn);
 	  nt.setLhsTokens(lhsTokens);
@@ -1326,22 +1326,22 @@ void expansion_unit(Container c) :
   |
     regular_expression(c)
 	{
-	  ((RegularExpression) c.member).m_lhsTokens = lhsTokens;
-	  add_inline_regexpr((RegularExpression) c.member);
+	  ((AbstractExpRegularExpression) c.member).m_lhsTokens = lhsTokens;
+	  add_inline_regexpr((AbstractExpRegularExpression) c.member);
 	}
-	[ "." t=<IDENTIFIER> { ((RegularExpression) c.member).m_rhsToken = t; } ]
+	[ "." t=<IDENTIFIER> { ((AbstractExpRegularExpression) c.member).m_rhsToken = t; } ]
   )
 |
   t="(" expansion_choices(c) ")"
-  (  "+" { c.member = new OneOrMore(t, (Expansion)c.member); }
-   | "*" { c.member = new ZeroOrMore(t, (Expansion)c.member); }
-   | "?" { c.member = new ZeroOrOne(t, (Expansion)c.member); }
+  (  "+" { c.member = new ExpOneOrMore(t, (Expansion)c.member); }
+   | "*" { c.member = new ExpZeroOrMore(t, (Expansion)c.member); }
+   | "?" { c.member = new ExpZeroOrOne(t, (Expansion)c.member); }
   )?
 }
 
 void regular_expression(Container c) :
 	{
-	  REndOfFile ef;
+	  ExpREndOfFile ef;
 	  String image;
 	  boolean private_rexp = false;
 	  Token t = getToken(1);
@@ -1349,7 +1349,7 @@ void regular_expression(Container c) :
 {
   image=StringLiteral()
 	{
-	  c.member = new RStringLiteral(t, image);
+	  c.member = new ExpRStringLiteral(t, image);
 	}
 |
   LOOKAHEAD(3)
@@ -1367,16 +1367,16 @@ void regular_expression(Container c) :
   ]
   complex_regular_expression_choices(c) < RANGLE: ">" >
 	{
-	  RegularExpression re;
-	  if (c.member instanceof RJustName) {
-	    RSequence seq = new RSequence();
-	    seq.addUnit((RJustName) c.member);
+	  AbstractExpRegularExpression re;
+	  if (c.member instanceof ExpRJustName) {
+	    ExpRSequence seq = new ExpRSequence();
+	    seq.addUnit((ExpRJustName) c.member);
 	    re = seq;
 	  } else {
-	    re = (RegularExpression)c.member;
+	    re = (AbstractExpRegularExpression)c.member;
 	  }
 	  re.m_label = image;
-	  re.private_rexp = private_rexp;
+	  re.m_private_rexp = private_rexp;
 	  re.setLine(t.beginLine);
 	  re.setColumn(t.beginColumn);
 	  c.member = re;
@@ -1385,12 +1385,12 @@ void regular_expression(Container c) :
   LOOKAHEAD(2)
   "<" image=identifier() ">"
 	{
-	  c.member = new RJustName(t, image);
+	  c.member = new ExpRJustName(t, image);
 	}
 |
   "<" "EOF" ">"
 	{
-	  ef = new REndOfFile();
+	  ef = new ExpREndOfFile();
 	  ef.setLine(t.beginLine);
 	  ef.setColumn(t.beginColumn);
 	  ef.m_ordinalBase = 0;
@@ -1401,7 +1401,7 @@ void regular_expression(Container c) :
 void complex_regular_expression_choices(Container c1) :
 	{
 	  boolean morethanone = false;
-	  RChoice ch = null; // unnecessary initialization to make Java compiler happy!
+	  ExpRChoice ch = null; // unnecessary initialization to make Java compiler happy!
 	  Container c2 = new Container();
 	}
 {
@@ -1409,14 +1409,14 @@ void complex_regular_expression_choices(Container c1) :
   ( "|" complex_regular_expression(c2)
 	{
 	  if (morethanone) {
-	    ch.getChoices().add((RegularExpression)c2.member);
+	    ch.getChoices().add((AbstractExpRegularExpression)c2.member);
 	  } else {
 	    morethanone = true;
-	    ch = new RChoice();
-	    ch.setLine(((RegularExpression)c1.member).getLine());
-	    ch.setColumn(((RegularExpression)c1.member).getColumn());
-	    ch.getChoices().add((RegularExpression)c1.member);
-	    ch.getChoices().add((RegularExpression)c2.member);
+	    ch = new ExpRChoice();
+	    ch.setLine(((AbstractExpRegularExpression)c1.member).getLine());
+	    ch.setColumn(((AbstractExpRegularExpression)c1.member).getColumn());
+	    ch.getChoices().add((AbstractExpRegularExpression)c1.member);
+	    ch.getChoices().add((AbstractExpRegularExpression)c2.member);
 	  }
 	}
   )*
@@ -1430,7 +1430,7 @@ void complex_regular_expression_choices(Container c1) :
 void complex_regular_expression(Container c1) :
 	{
 	  int count = 0;
-	  RSequence seq = null; // unnecessary initialization to make Java compiler happy!
+	  ExpRSequence seq = null; // unnecessary initialization to make Java compiler happy!
 	  Container c2 = new Container();
 	}
 {
@@ -1440,13 +1440,13 @@ void complex_regular_expression(Container c1) :
 	  if (count == 1) {
 	    c1.member = c2.member; // if count does not go beyond 1, we are done.
 	  } else if (count == 2) { // more than 1, so create a sequence.
-	    seq = new RSequence();
-	    seq.setLine(((RegularExpression)c1.member).getLine());
-	    seq.setColumn(((RegularExpression)c1.member).getColumn());
-	    seq.addUnit((RegularExpression) c1.member);
-	    seq.addUnit((RegularExpression) c2.member);
+	    seq = new ExpRSequence();
+	    seq.setLine(((AbstractExpRegularExpression)c1.member).getLine());
+	    seq.setColumn(((AbstractExpRegularExpression)c1.member).getColumn());
+	    seq.addUnit((AbstractExpRegularExpression) c1.member);
+	    seq.addUnit((AbstractExpRegularExpression) c2.member);
 	  } else {
-	    seq.addUnit((RegularExpression) c2.member);
+	    seq.addUnit((AbstractExpRegularExpression) c2.member);
 	  }
 	}
   )+
@@ -1461,18 +1461,18 @@ void complex_regular_expression_unit(Container c) :
 	{
 	  String image;
 	  Token t = getToken(1);
-          int r1 = 0, r2 = -1;
-          boolean hasMax = false;
+    int r1 = 0, r2 = -1;
+    boolean hasMax = false;
 	}
 {
   image=StringLiteral()
 	{
-	  c.member = new RStringLiteral(t, image);
+	  c.member = new ExpRStringLiteral(t, image);
 	}
 |
   "<" image=identifier() ">"
 	{
-	  c.member = new RJustName(t, image);
+	  c.member = new ExpRJustName(t, image);
 	}
 |
   character_list(c)
@@ -1480,31 +1480,31 @@ void complex_regular_expression_unit(Container c) :
   "(" complex_regular_expression_choices(c) ")"
   (  "+"
 	{
-	  c.member = new ROneOrMore(t, (RegularExpression)c.member);
+	  c.member = new ExpROneOrMore(t, (AbstractExpRegularExpression)c.member);
 	}
    | "*"
 	{
-	  c.member = new RZeroOrMore(t, (RegularExpression)c.member);
+	  c.member = new ExpRZeroOrMore(t, (AbstractExpRegularExpression)c.member);
 	}
    | "?"
 	{
-	  RZeroOrOne zorexp = new RZeroOrOne();
+	  ExpRZeroOrOne zorexp = new ExpRZeroOrOne();
 	  zorexp.setLine(t.beginLine);
 	  zorexp.setColumn(t.beginColumn);
-	  zorexp.regexpr = (RegularExpression)c.member;
+	  zorexp.m_regexpr = (AbstractExpRegularExpression)c.member;
 	  c.member = zorexp;
 	}
    | "{" r1 = IntegerLiteral()
          [ "," { hasMax = true; } [ r2 = IntegerLiteral() ] ]
      "}"
 	{
-	  RRepetitionRange rrrexp = new RRepetitionRange();
+	  ExpRRepetitionRange rrrexp = new ExpRRepetitionRange();
 	  rrrexp.setLine(t.beginLine);
 	  rrrexp.setColumn(t.beginColumn);
-	  rrrexp.min = r1;
-	  rrrexp.max = r2;
-        rrrexp.hasMax = hasMax;
-	  rrrexp.regexpr = (RegularExpression)c.member;
+	  rrrexp.m_min = r1;
+	  rrrexp.m_max = r2;
+    rrrexp.m_hasMax = hasMax;
+	  rrrexp.m_regexpr = (AbstractExpRegularExpression)c.member;
 	  c.member = rrrexp;
 	}
   )?
@@ -1512,7 +1512,7 @@ void complex_regular_expression_unit(Container c) :
 
 void character_list(Container c1) :
 	{
-	  RCharacterList chlist = new RCharacterList();
+	  ExpRCharacterList chlist = new ExpRCharacterList();
 	  Token t = getToken(1);
 	  chlist.setLine(t.beginLine);
 	  chlist.setColumn(t.beginColumn);
@@ -1521,7 +1521,7 @@ void character_list(Container c1) :
 {
   ["~"
 	{
-	  chlist.negated_list = true;
+	  chlist.m_negated_list = true;
 	}
   ]
   "[" [ character_descriptor(c2)

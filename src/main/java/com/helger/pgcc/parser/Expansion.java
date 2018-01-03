@@ -43,17 +43,15 @@ import com.helger.commons.string.StringHelper;
  * productions. This is the base class of a bunch of other more specific
  * classes.
  */
-
 public class Expansion
 {
-  protected static final String eol = System.getProperty ("line.separator", "\n");
+  protected static final String EOL = System.getProperty ("line.separator", "\n");
 
   /**
    * The line and column number of the construct that corresponds most closely
    * to this node.
    */
   private int m_line;
-
   private int m_column;
 
   /**
@@ -62,32 +60,6 @@ public class Expansion
    */
   private String m_internal_name = "";
   private int m_internal_index = -1;
-
-  void setInternalName (final String sPrefix, final int nIndex)
-  {
-    m_internal_name = sPrefix + nIndex;
-    m_internal_index = nIndex;
-  }
-
-  void setInternalNameOnly (final String sName)
-  {
-    m_internal_name = sName;
-  }
-
-  boolean hasNoInternalName ()
-  {
-    return StringHelper.hasNoText (m_internal_name);
-  }
-
-  String getInternalName ()
-  {
-    return m_internal_name;
-  }
-
-  int getInternalIndex ()
-  {
-    return m_internal_index;
-  }
 
   /**
    * The parser routines are generated in three phases. The generation of the
@@ -135,6 +107,32 @@ public class Expansion
   public static long getNextGenerationIndex ()
   {
     return s_nextGenerationIndex++;
+  }
+
+  void setInternalName (final String sPrefix, final int nIndex)
+  {
+    m_internal_name = sPrefix + nIndex;
+    m_internal_index = nIndex;
+  }
+
+  void setInternalNameOnly (final String sName)
+  {
+    m_internal_name = sName;
+  }
+
+  boolean hasNoInternalName ()
+  {
+    return StringHelper.hasNoText (m_internal_name);
+  }
+
+  String getInternalName ()
+  {
+    return m_internal_name;
+  }
+
+  int getInternalIndex ()
+  {
+    return m_internal_index;
   }
 
   private String _getSimpleName ()

@@ -33,43 +33,35 @@
  */
 package com.helger.pgcc.parser;
 
+import java.util.Set;
+
 /**
- * Describes zero-or-more regular expressions (<foo*>).
+ * Describes zero-or-more expansions (e.g., foo*).
  */
 
-public class RZeroOrMore extends RegularExpression
+public class ExpZeroOrMore extends Expansion
 {
-
   /**
-   * The regular expression which is repeated zero or more times.
+   * The expansion which is repeated zero or more times.
    */
-  public RegularExpression regexpr;
+  public final Expansion m_expansion;
+
+  public ExpZeroOrMore (final Token token, final Expansion expansion)
+  {
+    this.setLine (token.beginLine);
+    this.setColumn (token.beginColumn);
+    this.m_expansion = expansion;
+    this.m_expansion.m_parent = this;
+  }
 
   @Override
-  public Nfa generateNfa (final boolean ignoreCase)
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final Nfa retVal = new Nfa ();
-    final NfaState startState = retVal.start;
-    final NfaState finalState = retVal.end;
-
-    final Nfa temp = regexpr.generateNfa (ignoreCase);
-
-    startState.addMove (temp.start);
-    startState.addMove (finalState);
-    temp.end.addMove (finalState);
-    temp.end.addMove (temp.start);
-
-    return retVal;
+    final StringBuilder sb = super.dump (indent, alreadyDumped);
+    if (alreadyDumped.add (this))
+    {
+      sb.append (EOL).append (m_expansion.dump (indent + 1, alreadyDumped));
+    }
+    return sb;
   }
-
-  public RZeroOrMore ()
-  {}
-
-  public RZeroOrMore (final Token t, final RegularExpression r)
-  {
-    this.setLine (t.beginLine);
-    this.setColumn (t.beginColumn);
-    this.regexpr = r;
-  }
-
 }

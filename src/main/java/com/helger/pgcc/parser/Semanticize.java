@@ -140,7 +140,7 @@ public class Semanticize
             JavaCCErrors.semantic_error (res.nsTok, "Lexical state \"" + res.nextState + "\" has not been defined.");
           }
         }
-        if (res.rexp instanceof REndOfFile)
+        if (res.rexp instanceof ExpREndOfFile)
         {
           // JavaCCErrors.semantic_error(res.rexp, "Badly placed <EOF>.");
           if (tp.m_lexStates != null)
@@ -165,7 +165,7 @@ public class Semanticize
                                             "option USER_TOKEN_MANAGER has been set to true.");
           }
           else
-            if (tp.m_isExplicit && !Options.isUserTokenManager () && res.rexp instanceof RJustName)
+            if (tp.m_isExplicit && !Options.isUserTokenManager () && res.rexp instanceof ExpRJustName)
             {
               JavaCCErrors.warning (res.rexp,
                                     "Ignoring free-standing regular expression reference.  " +
@@ -175,7 +175,7 @@ public class Semanticize
               prepareToRemove (respecs, res);
             }
             else
-              if (!tp.m_isExplicit && res.rexp.private_rexp)
+              if (!tp.m_isExplicit && res.rexp.m_private_rexp)
               {
                 JavaCCErrors.semantic_error (res.rexp,
                                              "Private (#) regular expression cannot be defined within " +
@@ -198,10 +198,10 @@ public class Semanticize
       for (final RegExprSpec aRegExprSpec : respecs)
       {
         final RegExprSpec res = (aRegExprSpec);
-        if (!(res.rexp instanceof RJustName) && res.rexp.m_label.length () > 0)
+        if (!(res.rexp instanceof ExpRJustName) && res.rexp.m_label.length () > 0)
         {
           final String s = res.rexp.m_label;
-          final RegularExpression obj = s_named_tokens_table.put (s, res.rexp);
+          final AbstractExpRegularExpression obj = s_named_tokens_table.put (s, res.rexp);
           if (obj != null)
           {
             JavaCCErrors.semantic_error (res.rexp, "Multiply defined lexical token name \"" + s + "\".");
@@ -243,7 +243,7 @@ public class Semanticize
         s_lexstate_I2S.values ().toArray (tp.m_lexStates);
       }
 
-      final Map <String, Map <String, RegularExpression>> table[] = new Map [tp.m_lexStates.length];
+      final Map <String, Map <String, AbstractExpRegularExpression>> table[] = new Map [tp.m_lexStates.length];
       for (int i = 0; i < tp.m_lexStates.length; i++)
       {
         table[i] = s_simple_tokens_table.get (tp.m_lexStates[i]);
@@ -252,15 +252,15 @@ public class Semanticize
       for (final RegExprSpec aRegExprSpec : respecs)
       {
         final RegExprSpec res = (aRegExprSpec);
-        if (res.rexp instanceof RStringLiteral)
+        if (res.rexp instanceof ExpRStringLiteral)
         {
-          final RStringLiteral sl = (RStringLiteral) res.rexp;
+          final ExpRStringLiteral sl = (ExpRStringLiteral) res.rexp;
           // This loop performs the checks and actions with respect to each
           // lexical state.
           for (int i = 0; i < table.length; i++)
           {
             // Get table of all case variants of "sl.image" into table2.
-            Map <String, RegularExpression> table2 = table[i].get (sl.m_image.toUpperCase ());
+            Map <String, AbstractExpRegularExpression> table2 = table[i].get (sl.m_image.toUpperCase ());
             if (table2 == null)
             {
               // There are no case variants of "sl.image" earlier than the
@@ -279,7 +279,7 @@ public class Semanticize
               { // hasIgnoreCase sets "other" if it is found.
                 // Since IGNORE_CASE version exists, current one is useless and
                 // bad.
-                if (!sl.tpContext.m_isExplicit)
+                if (!sl.m_tpContext.m_isExplicit)
                 {
                   // inline BNF string is used earlier with an IGNORE_CASE.
                   JavaCCErrors.semantic_error (sl,
@@ -304,14 +304,14 @@ public class Semanticize
                 }
               }
               else
-                if (sl.tpContext.m_ignoreCase)
+                if (sl.m_tpContext.m_ignoreCase)
                 {
                   // This has to be explicit. A warning needs to be given with
                   // respect
                   // to all previous strings.
                   final StringBuilder pos = new StringBuilder ();
                   int count = 0;
-                  for (final RegularExpression rexp : table2.values ())
+                  for (final AbstractExpRegularExpression rexp : table2.values ())
                   {
                     if (count != 0)
                       pos.append (",");
@@ -341,7 +341,7 @@ public class Semanticize
                 else
                 {
                   // The rest of the cases do not involve IGNORE_CASE.
-                  final RegularExpression re = table2.get (sl.m_image);
+                  final AbstractExpRegularExpression re = table2.get (sl.m_image);
                   if (re == null)
                   {
                     if (sl.m_ordinal == 0)
@@ -371,17 +371,17 @@ public class Semanticize
                       }
                     }
                     else
-                      if (re.tpContext.m_kind != TokenProduction.TOKEN)
+                      if (re.m_tpContext.m_kind != TokenProduction.TOKEN)
                       {
                         JavaCCErrors.semantic_error (sl,
                                                      "String token \"" +
                                                          sl.m_image +
                                                          "\" has been defined as a \"" +
-                                                         TokenProduction.kindImage[re.tpContext.m_kind] +
+                                                         TokenProduction.kindImage[re.m_tpContext.m_kind] +
                                                          "\" token.");
                       }
                       else
-                        if (re.private_rexp)
+                        if (re.m_private_rexp)
                         {
                           JavaCCErrors.semantic_error (sl,
                                                        "String token \"" +
@@ -409,15 +409,15 @@ public class Semanticize
           }
         }
         else
-          if (!(res.rexp instanceof RJustName))
+          if (!(res.rexp instanceof ExpRJustName))
           {
             res.rexp.m_ordinal = s_tokenCount++;
           }
-        if (!(res.rexp instanceof RJustName) && res.rexp.m_label.length () > 0)
+        if (!(res.rexp instanceof ExpRJustName) && res.rexp.m_label.length () > 0)
         {
           s_names_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp.m_label);
         }
-        if (!(res.rexp instanceof RJustName))
+        if (!(res.rexp instanceof ExpRJustName))
         {
           rexps_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp);
         }
@@ -448,7 +448,7 @@ public class Semanticize
           final RegExprSpec res = (aRegExprSpec);
           frjn.m_root = res.rexp;
           ExpansionTreeWalker.preOrderWalk (res.rexp, frjn);
-          if (res.rexp instanceof RJustName)
+          if (res.rexp instanceof ExpRJustName)
           {
             prepareToRemove (respecs, res);
           }
@@ -478,10 +478,10 @@ public class Semanticize
         for (final RegExprSpec aRegExprSpec : respecs)
         {
           final RegExprSpec res = (aRegExprSpec);
-          if (res.rexp instanceof RJustName)
+          if (res.rexp instanceof ExpRJustName)
           {
-            final RJustName jn = (RJustName) res.rexp;
-            final RegularExpression rexp = s_named_tokens_table.get (jn.m_label);
+            final ExpRJustName jn = (ExpRJustName) res.rexp;
+            final AbstractExpRegularExpression rexp = s_named_tokens_table.get (jn.m_label);
             if (rexp == null)
             {
               jn.m_ordinal = s_tokenCount++;
@@ -602,16 +602,16 @@ public class Semanticize
           for (final RegExprSpec aRegExprSpec : respecs)
           {
             final RegExprSpec res = (aRegExprSpec);
-            final RegularExpression rexp = res.rexp;
-            if (rexp.walkStatus == 0)
+            final AbstractExpRegularExpression rexp = res.rexp;
+            if (rexp.m_walkStatus == 0)
             {
-              rexp.walkStatus = -1;
+              rexp.m_walkStatus = -1;
               if (rexpWalk (rexp))
               {
                 loopString = "..." + rexp.m_label + "... --> " + loopString;
                 JavaCCErrors.semantic_error (rexp, "Loop in regular expression detected: \"" + loopString + "\"");
               }
-              rexp.walkStatus = 1;
+              rexp.m_walkStatus = 1;
             }
           }
         }
@@ -635,22 +635,22 @@ public class Semanticize
 
   }
 
-  public static RegularExpression other;
+  public static AbstractExpRegularExpression other;
 
   // Checks to see if the "str" is superceded by another equal (except case)
   // string
   // in table.
-  public static boolean hasIgnoreCase (final Map <String, RegularExpression> table, final String str)
+  public static boolean hasIgnoreCase (final Map <String, AbstractExpRegularExpression> table, final String str)
   {
-    final RegularExpression rexp = table.get (str);
-    if (rexp != null && !rexp.tpContext.m_ignoreCase)
+    final AbstractExpRegularExpression rexp = table.get (str);
+    if (rexp != null && !rexp.m_tpContext.m_ignoreCase)
     {
       return false;
     }
 
-    for (final RegularExpression aRegEx : table.values ())
+    for (final AbstractExpRegularExpression aRegEx : table.values ())
     {
-      if (aRegEx.tpContext.m_ignoreCase)
+      if (aRegEx.m_tpContext.m_ignoreCase)
       {
         other = aRegEx;
         return true;
@@ -663,39 +663,39 @@ public class Semanticize
   // otherwise.
   public static boolean emptyExpansionExists (final Expansion exp)
   {
-    if (exp instanceof NonTerminal)
+    if (exp instanceof ExpNonTerminal)
     {
-      return ((NonTerminal) exp).getProd ().isEmptyPossible ();
+      return ((ExpNonTerminal) exp).getProd ().isEmptyPossible ();
     }
     else
-      if (exp instanceof Action)
+      if (exp instanceof ExpAction)
       {
         return true;
       }
       else
-        if (exp instanceof RegularExpression)
+        if (exp instanceof AbstractExpRegularExpression)
         {
           return false;
         }
         else
-          if (exp instanceof OneOrMore)
+          if (exp instanceof ExpOneOrMore)
           {
-            return emptyExpansionExists (((OneOrMore) exp).expansion);
+            return emptyExpansionExists (((ExpOneOrMore) exp).m_expansion);
           }
           else
-            if (exp instanceof ZeroOrMore || exp instanceof ZeroOrOne)
+            if (exp instanceof ExpZeroOrMore || exp instanceof ExpZeroOrOne)
             {
               return true;
             }
             else
-              if (exp instanceof Lookahead)
+              if (exp instanceof ExpLookahead)
               {
                 return true;
               }
               else
-                if (exp instanceof Choice)
+                if (exp instanceof ExpChoice)
                 {
-                  for (final Object aElement : ((Choice) exp).getChoices ())
+                  for (final Object aElement : ((ExpChoice) exp).getChoices ())
                   {
                     if (emptyExpansionExists ((Expansion) aElement))
                     {
@@ -705,9 +705,9 @@ public class Semanticize
                   return false;
                 }
                 else
-                  if (exp instanceof Sequence)
+                  if (exp instanceof ExpSequence)
                   {
-                    for (final Object aElement : ((Sequence) exp).m_units)
+                    for (final Object aElement : ((ExpSequence) exp).m_units)
                     {
                       if (!emptyExpansionExists ((Expansion) aElement))
                       {
@@ -717,9 +717,9 @@ public class Semanticize
                     return true;
                   }
                   else
-                    if (exp instanceof TryBlock)
+                    if (exp instanceof ExpTryBlock)
                     {
-                      return emptyExpansionExists (((TryBlock) exp).exp);
+                      return emptyExpansionExists (((ExpTryBlock) exp).m_exp);
                     }
                     else
                     {
@@ -730,11 +730,11 @@ public class Semanticize
   // Updates prod.leftExpansions based on a walk of exp.
   static private void addLeftMost (final NormalProduction prod, final Expansion exp)
   {
-    if (exp instanceof NonTerminal)
+    if (exp instanceof ExpNonTerminal)
     {
       for (int i = 0; i < prod.m_leIndex; i++)
       {
-        if (prod.getLeftExpansions ()[i] == ((NonTerminal) exp).getProd ())
+        if (prod.getLeftExpansions ()[i] == ((ExpNonTerminal) exp).getProd ())
         {
           return;
         }
@@ -745,35 +745,35 @@ public class Semanticize
         System.arraycopy (prod.getLeftExpansions (), 0, newle, 0, prod.m_leIndex);
         prod.setLeftExpansions (newle);
       }
-      prod.getLeftExpansions ()[prod.m_leIndex++] = ((NonTerminal) exp).getProd ();
+      prod.getLeftExpansions ()[prod.m_leIndex++] = ((ExpNonTerminal) exp).getProd ();
     }
     else
-      if (exp instanceof OneOrMore)
+      if (exp instanceof ExpOneOrMore)
       {
-        addLeftMost (prod, ((OneOrMore) exp).expansion);
+        addLeftMost (prod, ((ExpOneOrMore) exp).m_expansion);
       }
       else
-        if (exp instanceof ZeroOrMore)
+        if (exp instanceof ExpZeroOrMore)
         {
-          addLeftMost (prod, ((ZeroOrMore) exp).m_expansion);
+          addLeftMost (prod, ((ExpZeroOrMore) exp).m_expansion);
         }
         else
-          if (exp instanceof ZeroOrOne)
+          if (exp instanceof ExpZeroOrOne)
           {
-            addLeftMost (prod, ((ZeroOrOne) exp).expansion);
+            addLeftMost (prod, ((ExpZeroOrOne) exp).m_expansion);
           }
           else
-            if (exp instanceof Choice)
+            if (exp instanceof ExpChoice)
             {
-              for (final Object aObject : ((Choice) exp).getChoices ())
+              for (final Object aObject : ((ExpChoice) exp).getChoices ())
               {
                 addLeftMost (prod, (Expansion) aObject);
               }
             }
             else
-              if (exp instanceof Sequence)
+              if (exp instanceof ExpSequence)
               {
-                for (final Object aObject : ((Sequence) exp).m_units)
+                for (final Object aObject : ((ExpSequence) exp).m_units)
                 {
                   final Expansion e = (Expansion) aObject;
                   addLeftMost (prod, e);
@@ -784,9 +784,9 @@ public class Semanticize
                 }
               }
               else
-                if (exp instanceof TryBlock)
+                if (exp instanceof ExpTryBlock)
                 {
-                  addLeftMost (prod, ((TryBlock) exp).exp);
+                  addLeftMost (prod, ((ExpTryBlock) exp).m_exp);
                 }
   }
 
@@ -836,14 +836,14 @@ public class Semanticize
 
   // Returns true to indicate an unraveling of a detected loop,
   // and returns false otherwise.
-  static private boolean rexpWalk (final RegularExpression rexp)
+  static private boolean rexpWalk (final AbstractExpRegularExpression rexp)
   {
-    if (rexp instanceof RJustName)
+    if (rexp instanceof ExpRJustName)
     {
-      final RJustName jn = (RJustName) rexp;
-      if (jn.m_regexpr.walkStatus == -1)
+      final ExpRJustName jn = (ExpRJustName) rexp;
+      if (jn.m_regexpr.m_walkStatus == -1)
       {
-        jn.m_regexpr.walkStatus = -2;
+        jn.m_regexpr.m_walkStatus = -2;
         loopString = "..." + jn.m_regexpr.m_label + "...";
         // Note: Only the regexpr's of RJustName nodes and the top leve
         // regexpr's can have labels. Hence it is only in these cases that
@@ -851,29 +851,29 @@ public class Semanticize
         return true;
       }
       else
-        if (jn.m_regexpr.walkStatus == 0)
+        if (jn.m_regexpr.m_walkStatus == 0)
         {
-          jn.m_regexpr.walkStatus = -1;
+          jn.m_regexpr.m_walkStatus = -1;
           if (rexpWalk (jn.m_regexpr))
           {
             loopString = "..." + jn.m_regexpr.m_label + "... --> " + loopString;
-            if (jn.m_regexpr.walkStatus == -2)
+            if (jn.m_regexpr.m_walkStatus == -2)
             {
-              jn.m_regexpr.walkStatus = 1;
+              jn.m_regexpr.m_walkStatus = 1;
               JavaCCErrors.semantic_error (jn.m_regexpr, "Loop in regular expression detected: \"" + loopString + "\"");
               return false;
             }
-            jn.m_regexpr.walkStatus = 1;
+            jn.m_regexpr.m_walkStatus = 1;
             return true;
           }
-          jn.m_regexpr.walkStatus = 1;
+          jn.m_regexpr.m_walkStatus = 1;
           return false;
         }
     }
     else
-      if (rexp instanceof RChoice)
+      if (rexp instanceof ExpRChoice)
       {
-        for (final RegularExpression aElement : ((RChoice) rexp).getChoices ())
+        for (final AbstractExpRegularExpression aElement : ((ExpRChoice) rexp).getChoices ())
         {
           if (rexpWalk (aElement))
           {
@@ -883,11 +883,11 @@ public class Semanticize
         return false;
       }
       else
-        if (rexp instanceof RSequence)
+        if (rexp instanceof ExpRSequence)
         {
-          for (final Object aElement : ((RSequence) rexp).m_units)
+          for (final Object aElement : ((ExpRSequence) rexp).m_units)
           {
-            if (rexpWalk ((RegularExpression) aElement))
+            if (rexpWalk ((AbstractExpRegularExpression) aElement))
             {
               return true;
             }
@@ -895,24 +895,24 @@ public class Semanticize
           return false;
         }
         else
-          if (rexp instanceof ROneOrMore)
+          if (rexp instanceof ExpROneOrMore)
           {
-            return rexpWalk (((ROneOrMore) rexp).regexpr);
+            return rexpWalk (((ExpROneOrMore) rexp).m_regexpr);
           }
           else
-            if (rexp instanceof RZeroOrMore)
+            if (rexp instanceof ExpRZeroOrMore)
             {
-              return rexpWalk (((RZeroOrMore) rexp).regexpr);
+              return rexpWalk (((ExpRZeroOrMore) rexp).m_regexpr);
             }
             else
-              if (rexp instanceof RZeroOrOne)
+              if (rexp instanceof ExpRZeroOrOne)
               {
-                return rexpWalk (((RZeroOrOne) rexp).regexpr);
+                return rexpWalk (((ExpRZeroOrOne) rexp).m_regexpr);
               }
               else
-                if (rexp instanceof RRepetitionRange)
+                if (rexp instanceof ExpRRepetitionRange)
                 {
-                  return rexpWalk (((RRepetitionRange) rexp).regexpr);
+                  return rexpWalk (((ExpRRepetitionRange) rexp).m_regexpr);
                 }
     return false;
   }
@@ -923,7 +923,7 @@ public class Semanticize
    */
   static final class FixRJustNames implements ITreeWalkerOperation
   {
-    public RegularExpression m_root;
+    public AbstractExpRegularExpression m_root;
 
     public boolean goDeeper (final Expansion e)
     {
@@ -932,16 +932,16 @@ public class Semanticize
 
     public void action (final Expansion e)
     {
-      if (e instanceof RJustName)
+      if (e instanceof ExpRJustName)
       {
-        final RJustName jn = (RJustName) e;
-        final RegularExpression rexp = s_named_tokens_table.get (jn.m_label);
+        final ExpRJustName jn = (ExpRJustName) e;
+        final AbstractExpRegularExpression rexp = s_named_tokens_table.get (jn.m_label);
         if (rexp == null)
         {
           JavaCCErrors.semantic_error (e, "Undefined lexical token name \"" + jn.m_label + "\".");
         }
         else
-          if (jn == m_root && !jn.tpContext.m_isExplicit && rexp.private_rexp)
+          if (jn == m_root && !jn.m_tpContext.m_isExplicit && rexp.m_private_rexp)
           {
             JavaCCErrors.semantic_error (e,
                                          "Token name \"" +
@@ -950,7 +950,7 @@ public class Semanticize
                                             "(with a #) regular expression.");
           }
           else
-            if (jn == m_root && !jn.tpContext.m_isExplicit && rexp.tpContext.m_kind != TokenProduction.TOKEN)
+            if (jn == m_root && !jn.m_tpContext.m_isExplicit && rexp.m_tpContext.m_kind != TokenProduction.TOKEN)
             {
               JavaCCErrors.semantic_error (e,
                                            "Token name \"" +
@@ -972,40 +972,40 @@ public class Semanticize
   {
     public boolean goDeeper (final Expansion e)
     {
-      if (e instanceof RegularExpression)
+      if (e instanceof AbstractExpRegularExpression)
         return false;
       return true;
     }
 
     public void action (final Expansion e)
     {
-      if (e instanceof Sequence)
+      if (e instanceof ExpSequence)
       {
-        if (e.m_parent instanceof Choice ||
-            e.m_parent instanceof ZeroOrMore ||
-            e.m_parent instanceof OneOrMore ||
-            e.m_parent instanceof ZeroOrOne)
+        if (e.m_parent instanceof ExpChoice ||
+            e.m_parent instanceof ExpZeroOrMore ||
+            e.m_parent instanceof ExpOneOrMore ||
+            e.m_parent instanceof ExpZeroOrOne)
         {
           return;
         }
-        final Sequence seq = (Sequence) e;
-        final Lookahead la = (Lookahead) (seq.m_units.get (0));
+        final ExpSequence seq = (ExpSequence) e;
+        final ExpLookahead la = (ExpLookahead) (seq.m_units.get (0));
         if (!la.isExplicit ())
         {
           return;
         }
         // Create a singleton choice with an empty action.
-        final Choice ch = new Choice ();
+        final ExpChoice ch = new ExpChoice ();
         ch.setLine (la.getLine ());
         ch.setColumn (la.getColumn ());
         ch.m_parent = seq;
-        final Sequence seq1 = new Sequence ();
+        final ExpSequence seq1 = new ExpSequence ();
         seq1.setLine (la.getLine ());
         seq1.setColumn (la.getColumn ());
         seq1.m_parent = ch;
         seq1.m_units.add (la);
         la.m_parent = seq1;
-        final Action act = new Action ();
+        final ExpAction act = new ExpAction ();
         act.setLine (la.getLine ());
         act.setColumn (la.getColumn ());
         act.m_parent = seq1;
@@ -1027,15 +1027,15 @@ public class Semanticize
         // Now we have moved the lookahead into the singleton choice. Now create
         // a new dummy lookahead node to replace this one at its original
         // location.
-        final Lookahead la1 = new Lookahead ();
+        final ExpLookahead la1 = new ExpLookahead ();
         la1.setExplicit (false);
         la1.setLine (la.getLine ());
         la1.setColumn (la.getColumn ());
         la1.m_parent = seq;
         // Now set the la_expansion field of la and la1 with a dummy expansion
         // (we use EOF).
-        la.setLaExpansion (new REndOfFile ());
-        la1.setLaExpansion (new REndOfFile ());
+        la.setLaExpansion (new ExpREndOfFile ());
+        la1.setLaExpansion (new ExpREndOfFile ());
         seq.m_units.set (0, la1);
         seq.m_units.add (1, ch);
       }
@@ -1047,16 +1047,16 @@ public class Semanticize
   {
     public boolean goDeeper (final Expansion e)
     {
-      if (e instanceof RegularExpression)
+      if (e instanceof AbstractExpRegularExpression)
         return false;
       return true;
     }
 
     public void action (final Expansion e)
     {
-      if (e instanceof NonTerminal)
+      if (e instanceof ExpNonTerminal)
       {
-        final NonTerminal nt = (NonTerminal) e;
+        final ExpNonTerminal nt = (ExpNonTerminal) e;
         final NormalProduction np = s_production_table.get (nt.getName ());
         if (np == null)
         {
@@ -1076,32 +1076,32 @@ public class Semanticize
   {
     public boolean goDeeper (final Expansion e)
     {
-      if (e instanceof RegularExpression)
+      if (e instanceof AbstractExpRegularExpression)
         return false;
       return true;
     }
 
     public void action (final Expansion e)
     {
-      if (e instanceof OneOrMore)
+      if (e instanceof ExpOneOrMore)
       {
-        if (Semanticize.emptyExpansionExists (((OneOrMore) e).expansion))
+        if (Semanticize.emptyExpansionExists (((ExpOneOrMore) e).m_expansion))
         {
           JavaCCErrors.semantic_error (e, "Expansion within \"(...)+\" can be matched by empty string.");
         }
       }
       else
-        if (e instanceof ZeroOrMore)
+        if (e instanceof ExpZeroOrMore)
         {
-          if (Semanticize.emptyExpansionExists (((ZeroOrMore) e).m_expansion))
+          if (Semanticize.emptyExpansionExists (((ExpZeroOrMore) e).m_expansion))
           {
             JavaCCErrors.semantic_error (e, "Expansion within \"(...)*\" can be matched by empty string.");
           }
         }
         else
-          if (e instanceof ZeroOrOne)
+          if (e instanceof ExpZeroOrOne)
           {
-            if (Semanticize.emptyExpansionExists (((ZeroOrOne) e).expansion))
+            if (Semanticize.emptyExpansionExists (((ExpZeroOrOne) e).m_expansion))
             {
               JavaCCErrors.semantic_error (e, "Expansion within \"(...)?\" can be matched by empty string.");
             }
@@ -1115,64 +1115,64 @@ public class Semanticize
 
     public boolean goDeeper (final Expansion e)
     {
-      if (e instanceof RegularExpression)
+      if (e instanceof AbstractExpRegularExpression)
         return false;
-      if (e instanceof Lookahead)
+      if (e instanceof ExpLookahead)
         return false;
       return true;
     }
 
     public void action (final Expansion e)
     {
-      if (e instanceof Choice)
+      if (e instanceof ExpChoice)
       {
         if (Options.getLookahead () == 1 || Options.isForceLaCheck ())
         {
-          LookaheadCalc.choiceCalc ((Choice) e);
+          LookaheadCalc.choiceCalc ((ExpChoice) e);
         }
       }
       else
-        if (e instanceof OneOrMore)
+        if (e instanceof ExpOneOrMore)
         {
-          final OneOrMore exp = (OneOrMore) e;
-          if (Options.isForceLaCheck () || (implicitLA (exp.expansion) && Options.getLookahead () == 1))
+          final ExpOneOrMore exp = (ExpOneOrMore) e;
+          if (Options.isForceLaCheck () || (implicitLA (exp.m_expansion) && Options.getLookahead () == 1))
           {
-            LookaheadCalc.ebnfCalc (exp, exp.expansion);
+            LookaheadCalc.ebnfCalc (exp, exp.m_expansion);
           }
         }
         else
-          if (e instanceof ZeroOrMore)
+          if (e instanceof ExpZeroOrMore)
           {
-            final ZeroOrMore exp = (ZeroOrMore) e;
+            final ExpZeroOrMore exp = (ExpZeroOrMore) e;
             if (Options.isForceLaCheck () || (implicitLA (exp.m_expansion) && Options.getLookahead () == 1))
             {
               LookaheadCalc.ebnfCalc (exp, exp.m_expansion);
             }
           }
           else
-            if (e instanceof ZeroOrOne)
+            if (e instanceof ExpZeroOrOne)
             {
-              final ZeroOrOne exp = (ZeroOrOne) e;
-              if (Options.isForceLaCheck () || (implicitLA (exp.expansion) && Options.getLookahead () == 1))
+              final ExpZeroOrOne exp = (ExpZeroOrOne) e;
+              if (Options.isForceLaCheck () || (implicitLA (exp.m_expansion) && Options.getLookahead () == 1))
               {
-                LookaheadCalc.ebnfCalc (exp, exp.expansion);
+                LookaheadCalc.ebnfCalc (exp, exp.m_expansion);
               }
             }
     }
 
     static boolean implicitLA (final Expansion exp)
     {
-      if (!(exp instanceof Sequence))
+      if (!(exp instanceof ExpSequence))
       {
         return true;
       }
-      final Sequence seq = (Sequence) exp;
+      final ExpSequence seq = (ExpSequence) exp;
       final Object obj = seq.m_units.get (0);
-      if (!(obj instanceof Lookahead))
+      if (!(obj instanceof ExpLookahead))
       {
         return true;
       }
-      final Lookahead la = (Lookahead) obj;
+      final ExpLookahead la = (ExpLookahead) obj;
       return !la.isExplicit ();
     }
 
