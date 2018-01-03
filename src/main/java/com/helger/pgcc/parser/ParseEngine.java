@@ -114,6 +114,9 @@ public class ParseEngine
   private final List <Phase3Data> m_phase3list = new ArrayList <> ();
   private final Map <Expansion, Phase3Data> m_phase3table = new HashMap <> ();
 
+  public ParseEngine ()
+  {}
+
   /**
    * The phase 1 routines generates their output into String's and dumps these
    * String's once for each method. These String's contain the special
@@ -934,12 +937,11 @@ public class ParseEngine
 
     if (p.isJumpPatched () && !voidReturn)
     {
+      final String sMsg = "Missing return statement in function";
       if (m_isJavaDialect)
       {
         // This line is required for Java!
-        m_codeGenerator.genCodeLine ("    throw new " +
-                                     (Options.isLegacyExceptionHandling () ? "Error" : "RuntimeException") +
-                                     "(\"Missing return statement in function\");");
+        m_codeGenerator.genCodeLine ("    throw new IllegalStateException (\"Missing return statement in function\");");
       }
       else
       {
@@ -952,19 +954,19 @@ public class ParseEngine
       {
         m_codeGenerator.genCodeLine ("    } finally {");
         m_codeGenerator.genCodeLine ("      trace_return(\"" + JavaCCGlobals.addUnicodeEscapes (p.getLhs ()) + "\");");
+        m_codeGenerator.genCodeLine ("    }");
       }
       else
       {
         m_codeGenerator.genCodeLine ("    } catch(...) { }");
       }
-      if (m_isJavaDialect)
-      {
-        m_codeGenerator.genCodeLine ("    }");
-      }
     }
-    if (!m_isJavaDialect && !voidReturn)
+    if (!voidReturn)
     {
-      m_codeGenerator.genCodeLine ("assert(false);");
+      if (!m_isJavaDialect)
+      {
+        m_codeGenerator.genCodeLine ("assert(false);");
+      }
     }
 
     if (error_ret != null)

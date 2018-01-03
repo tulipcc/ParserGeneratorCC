@@ -80,7 +80,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.system.EJavaVersion;
 import com.helger.commons.system.SystemHelper;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
@@ -106,7 +108,6 @@ public class Options
   public static final String NONUSER_OPTION__HAS_NAMESPACE = "HAS_NAMESPACE";
   public static final String NONUSER_OPTION__NAMESPACE_OPEN = "NAMESPACE_OPEN";
   public static final String NONUSER_OPTION__PARSER_NAME = "PARSER_NAME";
-  public static final String NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING = "LEGACY_EXCEPTION_HANDLING";
 
   /**
    * Options that the user can specify from .javacc file
@@ -142,9 +143,6 @@ public class Options
   public static final String USEROPTION__USER_TOKEN_MANAGER = "USER_TOKEN_MANAGER";
   public static final String USEROPTION__JDK_VERSION = "JDK_VERSION";
   public static final String USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC = "SUPPORT_CLASS_VISIBILITY_PUBLIC";
-  public static final String USEROPTION__GENERATE_ANNOTATIONS = "GENERATE_ANNOTATIONS";
-  public static final String USEROPTION__GENERATE_GENERICS = "GENERATE_GENERICS";
-  public static final String USEROPTION__GENERATE_CHAINED_EXCEPTION = "GENERATE_CHAINED_EXCEPTION";
   public static final String USEROPTION__OUTPUT_DIRECTORY = "OUTPUT_DIRECTORY";
   public static final String USEROPTION__KEEP_LINE_COLUMN = "KEEP_LINE_COLUMN";
   public static final String USEROPTION__GRAMMAR_ENCODING = "GRAMMAR_ENCODING";
@@ -217,14 +215,11 @@ public class Options
     temp.add (new OptionInfo (USEROPTION__CACHE_TOKENS, EOptionType.BOOLEAN, Boolean.FALSE));
     temp.add (new OptionInfo (USEROPTION__KEEP_LINE_COLUMN, EOptionType.BOOLEAN, Boolean.TRUE));
 
-    temp.add (new OptionInfo (USEROPTION__GENERATE_CHAINED_EXCEPTION, EOptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__GENERATE_GENERICS, EOptionType.BOOLEAN, Boolean.FALSE));
     temp.add (new OptionInfo (USEROPTION__GENERATE_BOILERPLATE, EOptionType.BOOLEAN, Boolean.TRUE));
 
-    temp.add (new OptionInfo (USEROPTION__GENERATE_ANNOTATIONS, EOptionType.BOOLEAN, Boolean.FALSE));
     temp.add (new OptionInfo (USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC, EOptionType.BOOLEAN, Boolean.TRUE));
     temp.add (new OptionInfo (USEROPTION__OUTPUT_DIRECTORY, EOptionType.STRING, "."));
-    temp.add (new OptionInfo (USEROPTION__JDK_VERSION, EOptionType.STRING, "1.5"));
+    temp.add (new OptionInfo (USEROPTION__JDK_VERSION, EOptionType.OTHER, EJavaVersion.JDK_15));
 
     temp.add (new OptionInfo (USEROPTION__TOKEN_EXTENDS, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__TOKEN_FACTORY, EOptionType.STRING, ""));
@@ -254,28 +249,25 @@ public class Options
    * of legal options. Its initial values define the default option values, and
    * the option types can be determined from these values too.
    */
-  protected static Map <String, Object> s_optionValues = null;
+  protected static final Map <String, Object> s_optionValues = new HashMap <> ();
 
   /**
    * Initialize for JavaCC
    */
   public static void init ()
   {
-    s_optionValues = new HashMap <> ();
-    s_cmdLineSetting = new HashSet <> ();
-    s_inputFileSetting = new HashSet <> ();
+    s_optionValues.clear ();
+    s_cmdLineSetting.clear ();
+    s_inputFileSetting.clear ();
 
     for (final OptionInfo t : userOptions)
-    {
       s_optionValues.put (t.getName (), t.getDefault ());
-    }
+  }
 
-    {
-      final Object object = s_optionValues.get (USEROPTION__JAVA_TEMPLATE_TYPE);
-      final boolean isLegacy = JAVA_TEMPLATE_TYPE_CLASSIC.equals (object);
-      s_optionValues.put (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING, isLegacy);
-    }
-
+  @Nullable
+  public static Object objectValue (final String option)
+  {
+    return s_optionValues.get (option);
   }
 
   /**
@@ -283,7 +275,7 @@ public class Options
    */
   public static int intValue (final String option)
   {
-    return ((Integer) s_optionValues.get (option)).intValue ();
+    return ((Integer) objectValue (option)).intValue ();
   }
 
   /**
@@ -291,7 +283,7 @@ public class Options
    */
   public static boolean booleanValue (final String option)
   {
-    return ((Boolean) s_optionValues.get (option)).booleanValue ();
+    return ((Boolean) objectValue (option)).booleanValue ();
   }
 
   /**
@@ -300,14 +292,11 @@ public class Options
   @Nullable
   public static String stringValue (final String option)
   {
-    return (String) s_optionValues.get (option);
+    return (String) objectValue (option);
   }
 
-  public static Object objectValue (final String option)
-  {
-    return s_optionValues.get (option);
-  }
-
+  @Nonnull
+  @ReturnsMutableCopy
   public static Map <String, Object> getOptions ()
   {
     return new HashMap <> (s_optionValues);
@@ -318,14 +307,14 @@ public class Options
    * to see if the options set from the command line and the ones set in the
    * input files clash in any way.
    */
-  private static Set <String> s_cmdLineSetting = null;
+  private static final Set <String> s_cmdLineSetting = new HashSet <> ();
 
   /**
    * Keep track of what options were set from the grammar file. We use this to
    * see if the options set from the command line and the ones set in the input
    * files clash in any way.
    */
-  private static Set <String> s_inputFileSetting = null;
+  private static final Set <String> s_inputFileSetting = new HashSet <> ();
 
   /**
    * Returns a string representation of the specified options of interest. Used
@@ -338,6 +327,7 @@ public class Options
    * @return the string representation of the options, eg
    *         "STATIC=true,CACHE_TOKENS=false"
    */
+  @Nonnull
   public static String getOptionsString (final String [] interestingOptions)
   {
     final StringBuilder sb = new StringBuilder ();
@@ -358,7 +348,7 @@ public class Options
     switch (s_language)
     {
       case JAVA:
-        return isLegacyExceptionHandling () ? "TokenMgrError" : "TokenMgrException";
+        return "TokenMgrException";
       case CPP:
         return "TokenMgrError";
       default:
@@ -418,8 +408,6 @@ public class Options
 
     if (existingValue != null)
     {
-      final boolean isIndirectProperty = nameUpperCase.equalsIgnoreCase (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING);
-
       Object object = null;
       if (value instanceof List)
       {
@@ -429,8 +417,8 @@ public class Options
       {
         object = value;
       }
-      final boolean isValidInteger = (object instanceof Integer && ((Integer) value).intValue () <= 0);
-      if (isIndirectProperty || (existingValue.getClass () != object.getClass ()) || (isValidInteger))
+      final boolean isValidInteger = object instanceof Integer && ((Integer) value).intValue () <= 0;
+      if (existingValue.getClass () != object.getClass () || isValidInteger)
       {
         JavaCCErrors.warning (valueloc,
                               "Bad option value \"" +
@@ -476,9 +464,6 @@ public class Options
                                         _getAllValidJavaTemplateTypes ());
         return;
       }
-
-      final boolean isLegacy = JAVA_TEMPLATE_TYPE_CLASSIC.equals (templateType);
-      s_optionValues.put (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING, isLegacy);
     }
     else
       if (nameUpperCase.equalsIgnoreCase (USEROPTION__OUTPUT_LANGUAGE))
@@ -523,19 +508,19 @@ public class Options
    */
   public static void setCmdLineOption (final String arg)
   {
-    final String s;
+    final String sValue;
     if (arg.charAt (0) == '-')
-      s = arg.substring (1);
+      sValue = arg.substring (1);
     else
-      s = arg;
+      sValue = arg;
 
     String name;
     Object val;
 
     // Look for the first ":" or "=", which will separate the option name
     // from its value (if any).
-    final int index1 = s.indexOf ('=');
-    final int index2 = s.indexOf (':');
+    final int index1 = sValue.indexOf ('=');
+    final int index2 = sValue.indexOf (':');
     final int index;
 
     if (index1 < 0)
@@ -544,14 +529,11 @@ public class Options
       if (index2 < 0)
         index = index1;
       else
-        if (index1 < index2)
-          index = index1;
-        else
-          index = index2;
+        index = Math.min (index1, index2);
 
     if (index < 0)
     {
-      name = s.toUpperCase (Locale.US);
+      name = sValue.toUpperCase (Locale.US);
       if (s_optionValues.containsKey (name))
       {
         val = Boolean.TRUE;
@@ -570,13 +552,13 @@ public class Options
     }
     else
     {
-      name = s.substring (0, index).toUpperCase (Locale.US);
-      if (s.substring (index + 1).equalsIgnoreCase ("TRUE"))
+      name = sValue.substring (0, index).toUpperCase (Locale.US);
+      if (sValue.substring (index + 1).equalsIgnoreCase ("TRUE"))
       {
         val = Boolean.TRUE;
       }
       else
-        if (s.substring (index + 1).equalsIgnoreCase ("FALSE"))
+        if (sValue.substring (index + 1).equalsIgnoreCase ("FALSE"))
         {
           val = Boolean.FALSE;
         }
@@ -584,7 +566,7 @@ public class Options
         {
           try
           {
-            final int i = Integer.parseInt (s.substring (index + 1));
+            final int i = Integer.parseInt (sValue.substring (index + 1));
             if (i <= 0)
             {
               System.out.println ("Warning: Bad option value in \"" + arg + "\" will be ignored.");
@@ -594,14 +576,14 @@ public class Options
           }
           catch (final NumberFormatException e)
           {
-            val = s.substring (index + 1);
-            if (s.length () > index + 2)
+            val = sValue.substring (index + 1);
+            if (sValue.length () > index + 2)
             {
               // i.e., there is space for two '"'s in value
-              if (s.charAt (index + 1) == '"' && s.charAt (s.length () - 1) == '"')
+              if (sValue.charAt (index + 1) == '"' && sValue.charAt (sValue.length () - 1) == '"')
               {
                 // remove the two '"'s.
-                val = s.substring (index + 2, s.length () - 1);
+                val = sValue.substring (index + 2, sValue.length () - 1);
               }
             }
           }
@@ -647,13 +629,6 @@ public class Options
       }
       s_optionValues.put (USEROPTION__DEBUG_PARSER, Boolean.TRUE);
     }
-
-    // Now set the "GENERATE" options from the supplied (or default) JDK
-    // version.
-
-    s_optionValues.put (USEROPTION__GENERATE_CHAINED_EXCEPTION, Boolean.valueOf (_isJdkVersionAtLeast (1.4)));
-    s_optionValues.put (USEROPTION__GENERATE_GENERICS, Boolean.valueOf (_isJdkVersionAtLeast (1.5)));
-    s_optionValues.put (USEROPTION__GENERATE_ANNOTATIONS, Boolean.valueOf (_isJdkVersionAtLeast (1.5)));
   }
 
   /**
@@ -891,9 +866,21 @@ public class Options
    *
    * @return The requested jdk version.
    */
-  public static String getJdkVersion ()
+  public static EJavaVersion getJdkVersion ()
   {
-    return stringValue (USEROPTION__JDK_VERSION);
+    return (EJavaVersion) objectValue (USEROPTION__JDK_VERSION);
+  }
+
+  /**
+   * Determine if the output language is at least the specified version.
+   *
+   * @param version
+   *        the version to check against. E.g. <code>1.5</code>
+   * @return true if the output version is at least the specified version.
+   */
+  private static boolean _isJdkVersionAtLeast (@Nonnull final EJavaVersion version)
+  {
+    return getJdkVersion ().isNewerOrEqualsThan (version);
   }
 
   /**
@@ -904,28 +891,12 @@ public class Options
    */
   public static boolean isGenerateChainedException ()
   {
-    return booleanValue (USEROPTION__GENERATE_CHAINED_EXCEPTION);
+    return _isJdkVersionAtLeast (EJavaVersion.JDK_14);
   }
 
   public static boolean isGenerateBoilerplateCode ()
   {
     return booleanValue (USEROPTION__GENERATE_BOILERPLATE);
-  }
-
-  /**
-   * As of 6.1 JavaCC now throws subclasses of {@link RuntimeException} rather
-   * than {@link Error} s (by default), as {@link Error} s typically lead to the
-   * closing down of the parent VM and are only to be used in extreme
-   * circumstances (failure of parsing is generally not regarded as such). If
-   * this value is set to true, then then {@link Error}s will be thrown (for
-   * compatibility with older .jj files)
-   *
-   * @return true if throws errors (legacy), false if use
-   *         {@link RuntimeException} s (better approach)
-   */
-  public static boolean isLegacyExceptionHandling ()
-  {
-    return booleanValue (NONUSER_OPTION__LEGACY_EXCEPTION_HANDLING);
   }
 
   /**
@@ -935,7 +906,7 @@ public class Options
    */
   public static boolean isGenerateGenerics ()
   {
-    return booleanValue (USEROPTION__GENERATE_GENERICS);
+    return _isJdkVersionAtLeast (EJavaVersion.JDK_15);
   }
 
   /**
@@ -945,7 +916,7 @@ public class Options
    */
   public static boolean isGenerateAnnotations ()
   {
-    return booleanValue (USEROPTION__GENERATE_ANNOTATIONS);
+    return _isJdkVersionAtLeast (EJavaVersion.JDK_15);
   }
 
   /**
@@ -956,21 +927,6 @@ public class Options
   public static boolean isSupportClassVisibilityPublic ()
   {
     return booleanValue (USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC);
-  }
-
-  /**
-   * Determine if the output language is at least the specified version.
-   *
-   * @param version
-   *        the version to check against. E.g. <code>1.5</code>
-   * @return true if the output version is at least the specified version.
-   */
-  private static boolean _isJdkVersionAtLeast (final double version)
-  {
-    final double jdkVersion = Double.parseDouble (getJdkVersion ());
-
-    // Comparing doubles is safe here, as it is two simple assignments.
-    return jdkVersion >= version;
   }
 
   /**

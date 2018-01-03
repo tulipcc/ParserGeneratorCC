@@ -1083,7 +1083,7 @@ void expansion(Container c1) :
 	{
 	  seq.addUnit((Expansion) c2.member);
 	  ((Expansion)c2.member).m_parent = seq;
-	  ((Expansion)c2.member).m_ordinal = seq.getUnitCount()-1;
+	  ((Expansion)c2.member).m_ordinalBase = seq.getUnitCount()-1;
 	}
   )+
 	{
@@ -1192,16 +1192,16 @@ void expansion_unit(Container c) :
 	  Choice ch = new Choice(t);
 	  Sequence seq = new Sequence(t, la);
 	  la.m_parent = seq;
-	  la.m_ordinal = 0;
+	  la.m_ordinalBase = 0;
 	  act = new Action();
 	  act.setLine(t.beginLine);
 	  act.setColumn(t.beginColumn);
 	  seq.addUnit(act);
 	  act.m_parent = seq;
-	  act.m_ordinal = 1;
+	  act.m_ordinalBase = 1;
 	  ch.getChoices().add(seq);
 	  seq.m_parent = ch;
-	  seq.m_ordinal = 0;
+	  seq.m_ordinalBase = 0;
 	  if (la.getAmount() != 0) {
 	    if (la.getActionTokens().size() != 0) {
 	      JavaCCErrors.warning(t, "Encountered LOOKAHEAD(...) at a non-choice location.  Only semantic lookahead will be considered here.");
@@ -1393,7 +1393,7 @@ void regular_expression(Container c) :
 	  ef = new REndOfFile();
 	  ef.setLine(t.beginLine);
 	  ef.setColumn(t.beginColumn);
-	  ef.m_ordinal = 0;
+	  ef.m_ordinalBase = 0;
 	  c.member = ef;
 	}
 }
@@ -2776,10 +2776,12 @@ void ReturnStatement() :
 	  // from being dead code.
 	  // NB: eclipse now detects 'if (true)' as dead code, so use the more complicated
 	  // 'if ("" != null)'
+	  /* [ph]
 	  if (inAction  && (Options.isLegacyExceptionHandling()) ) {
 	    t.image = "{if (\"\" != null) return";
 	    jumpPatched = true;
 	  }
+	  */
 	}
   [
     Expression(null)
@@ -2787,9 +2789,11 @@ void ReturnStatement() :
   t=";"
 	{
 	  // Add closing brace for above if statement.
+	  /* [ph]
 	  if (inAction && (Options.isLegacyExceptionHandling())) {
 	    t.image = ";}";
 	  }
+	  */
 	}
 }
 

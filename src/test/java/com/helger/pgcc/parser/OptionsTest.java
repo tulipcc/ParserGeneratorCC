@@ -35,6 +35,8 @@ package com.helger.pgcc.parser;
 
 import java.io.File;
 
+import com.helger.commons.system.EJavaVersion;
+
 import junit.framework.TestCase;
 
 /**
@@ -49,7 +51,7 @@ public final class OptionsTest extends TestCase
     Options.init ();
     JavaCCErrors.reInit ();
 
-    assertEquals (49, Options.s_optionValues.size ());
+    assertEquals (44, Options.s_optionValues.size ());
 
     assertEquals (true, Options.isBuildParser ());
     assertEquals (true, Options.isBuildTokenManager ());
@@ -74,7 +76,7 @@ public final class OptionsTest extends TestCase
     assertEquals (1, Options.getLookahead ());
     assertEquals (1, Options.getOtherAmbiguityCheck ());
 
-    assertEquals ("1.5", Options.getJdkVersion ());
+    assertEquals (EJavaVersion.JDK_15, Options.getJdkVersion ());
     assertEquals (new File ("."), Options.getOutputDirectory ());
     assertEquals ("", Options.getTokenExtends ());
     assertEquals ("", Options.getTokenFactory ());

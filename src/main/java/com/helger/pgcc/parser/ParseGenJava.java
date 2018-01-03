@@ -260,9 +260,7 @@ public class ParseGenJava extends CodeGenerator
             genCodeLine ("	   System.out.println(\"	   You must either use ReInit() " +
                          "or set the JavaCC option STATIC to false\");");
             genCodeLine ("	   System.out.println(\"	   during parser generation.\");");
-            genCodeLine ("	   throw new " +
-                         (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
-                         "();");
+            genCodeLine ("	   throw new IllegalStateException();");
             genCodeLine ("	 }");
             genCodeLine ("	 jj_initialized_once = true;");
           }
@@ -366,9 +364,7 @@ public class ParseGenJava extends CodeGenerator
               genCodeLine ("	   System.out.println(\"	   You must either use ReInit() or " +
                            "set the JavaCC option STATIC to false\");");
               genCodeLine ("	   System.out.println(\"	   during parser generation.\");");
-              genCodeLine ("	   throw new " +
-                           (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
-                           "();");
+              genCodeLine ("	   throw new IllegalStateException ();");
               genCodeLine ("	 }");
               genCodeLine ("	 jj_initialized_once = true;");
             }
@@ -508,9 +504,7 @@ public class ParseGenJava extends CodeGenerator
             genCodeLine ("	   System.out.println(\"	   You must either use ReInit() or " +
                          "set the JavaCC option STATIC to false\");");
             genCodeLine ("	   System.out.println(\"	   during parser generation.\");");
-            genCodeLine ("	   throw new " +
-                         (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
-                         "();");
+            genCodeLine ("	   throw new IllegalStateException ();");
             genCodeLine ("	 }");
             genCodeLine ("	 jj_initialized_once = true;");
           }
@@ -671,9 +665,7 @@ public class ParseGenJava extends CodeGenerator
         genCodeLine ("	   System.out.println(\"	   You must either use ReInit() or " +
                      "set the JavaCC option STATIC to false\");");
         genCodeLine ("	   System.out.println(\"	   during parser generation.\");");
-        genCodeLine ("	   throw new " +
-                     (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
-                     "();");
+        genCodeLine ("	   throw new IllegalStateException ();");
         genCodeLine ("	 }");
         genCodeLine ("	 jj_initialized_once = true;");
       }
@@ -799,10 +791,9 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("");
       if (s_jj2index != 0)
       {
-        genCodeLine ("  @SuppressWarnings(\"serial\")");
-        genCodeLine ("  static private final class LookaheadSuccess extends " +
-                     (Options.isLegacyExceptionHandling () ? "Error" : "IllegalStateException") +
-                     " { }");
+        if (Options.isGenerateAnnotations ())
+          genCodeLine ("  @SuppressWarnings(\"serial\")");
+        genCodeLine ("  static private final class LookaheadSuccess extends IllegalStateException { }");
         genCodeLine ("  " + staticOpt () + "final private LookaheadSuccess jj_ls = new LookaheadSuccess();");
         genCodeLine ("  " + staticOpt () + "private " + Options.getBooleanType () + " jj_scan_token(int kind) {");
         genCodeLine ("	 if (jj_scanpos == jj_lastpos) {");

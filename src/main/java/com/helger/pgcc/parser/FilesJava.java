@@ -512,9 +512,7 @@ public class FilesJava
 
   public static void gen_TokenMgrError (final IJavaResourceTemplateLocations locations)
   {
-
-    final boolean isLegacyExceptionHandling = Options.isLegacyExceptionHandling ();
-    final String filename = isLegacyExceptionHandling ? "TokenMgrError.java" : "TokenMgrException.java";
+    final String filename = Options.getTokenMgrErrorClass () + ".java";
     final File file = new File (Options.getOutputDirectory (), filename);
 
     try (final OutputFile outputFile = new OutputFile (file, tokenMgrErrorVersion, new String [0]))

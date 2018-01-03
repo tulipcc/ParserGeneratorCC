@@ -40,5 +40,6 @@ public enum EOptionType
 {
   BOOLEAN,
   INTEGER,
-  STRING;
+  STRING,
+  OTHER;
 }

@@ -12,3 +12,7 @@ The overall goal is to maintain compatibility to JavaCC but
 ## Incompatible changes
 
 * The JavaCC option `GENERATE_STRING_BUILDER` was removed - it was never evaluated
+* The JavaCC option `LEGACY_EXCEPTION_HANDLING` was removed - that was too much 1990 ;) - see issue #7
+* The JavaCC option `GENERATE_CHAINED_EXCEPTION` was replaced with deduction from the Java version (&ge; 1.4)
+* The JavaCC option `GENERATE_GENERICS` was replaced with deduction from the Java version (&ge; 1.5)
+* The JavaCC option `GENERATE_ANNOTATIONS` was replaced with deduction from the Java version (&ge; 1.5)
