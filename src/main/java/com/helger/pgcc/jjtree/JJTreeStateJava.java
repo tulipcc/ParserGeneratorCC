@@ -56,27 +56,26 @@ final class JJTreeStateJava
     io.println ();
     io.println ("  protected " +
                 (Options.isStatic () ? "static " : "") +
-                nameState () +
+                _nameState () +
                 " jjtree = new " +
-                nameState () +
+                _nameState () +
                 "();");
     io.println ();
   }
 
-  private static String nameState ()
+  private static String _nameState ()
   {
     return "JJT" + JJTreeGlobals.s_parserName + "State";
   }
 
   static void generateTreeState_java ()
   {
-    final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), nameState () + ".java");
+    final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), _nameState () + ".java");
 
-    try (final OutputFile outputFile = new OutputFile (file))
+    try (final OutputFile outputFile = new OutputFile (file); final PrintWriter ostr = outputFile.getPrintWriter ())
     {
-      final PrintWriter ostr = outputFile.getPrintWriter ();
       NodeFilesJava.generatePrologue (ostr);
-      insertState (ostr);
+      _insertState (ostr);
     }
     catch (final IOException e)
     {
@@ -84,14 +83,14 @@ final class JJTreeStateJava
     }
   }
 
-  private static void insertState (final PrintWriter ostr)
+  private static void _insertState (final PrintWriter ostr)
   {
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
     final boolean bGenerateAnnotations = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bEmptyImplType = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
 
-    ostr.println ("public class " + nameState () + " {");
+    ostr.println ("public class " + _nameState () + " {");
 
     if (bGenerateGenerics)
       ostr.println ("  private java.util.List<Node> nodes;");
@@ -110,7 +109,7 @@ final class JJTreeStateJava
     ostr.println ("  private int mk;");
     ostr.println ("  private boolean node_created;");
     ostr.println ();
-    ostr.println ("  public " + nameState () + "() {");
+    ostr.println ("  public " + _nameState () + "() {");
 
     if (bGenerateGenerics)
       ostr.println ("    nodes = new java.util.ArrayList<" + (bEmptyImplType ? "" : "Node") + ">();");
