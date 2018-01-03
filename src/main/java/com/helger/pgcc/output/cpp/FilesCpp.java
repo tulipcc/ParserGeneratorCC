@@ -164,7 +164,7 @@ public class FilesCpp
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
         final OutputFileGenerator generator = new OutputFileGenerator ("/templates/cpp/" + name + ".template",
-                                                                       Options.getOptions ());
+                                                                       Options.getAllOptions ());
         generator.generate (ostr);
       }
     }

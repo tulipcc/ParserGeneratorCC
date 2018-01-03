@@ -267,8 +267,7 @@ public class LexGenJava extends CodeGenerator
   @SuppressWarnings ("unchecked")
   protected void writeTemplate (final String name, final Object... additionalOptions) throws IOException
   {
-    final Map <String, Object> options = new HashMap <> (Options.getOptions ());
-
+    final Map <String, Object> options = Options.getAllOptions ();
     options.put ("maxOrdinal", Integer.valueOf (maxOrdinal));
     options.put ("maxLexStates", Integer.valueOf (maxLexStates));
     options.put ("hasEmptyMatch", Boolean.valueOf (hasEmptyMatch));

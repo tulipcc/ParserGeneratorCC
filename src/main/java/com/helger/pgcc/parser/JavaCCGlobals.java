@@ -190,7 +190,7 @@ public final class JavaCCGlobals
    * A mapping of ordinal values (represented as objects of type "Integer") to
    * the corresponding RegularExpression's.
    */
-  public static final Map <Integer, AbstractExpRegularExpression> rexps_of_tokens = new HashMap <> ();
+  public static final Map <Integer, AbstractExpRegularExpression> s_rexps_of_tokens = new HashMap <> ();
 
   /**
    * This is a three-level symbol table that contains all simple tokens (those
@@ -645,7 +645,7 @@ public final class JavaCCGlobals
     s_named_tokens_table.clear ();
     s_ordered_named_tokens.clear ();
     s_names_of_tokens.clear ();
-    rexps_of_tokens.clear ();
+    s_rexps_of_tokens.clear ();
     s_simple_tokens_table.clear ();
     s_maskindex = 0;
     s_jj2index = 0;

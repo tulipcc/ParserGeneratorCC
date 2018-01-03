@@ -73,46 +73,46 @@ public abstract class JavaCCParserInternals
     }
   }
 
-  private static List <Token> add_cu_token_here = s_cu_to_insertion_point_1;
-  private static Token first_cu_token;
-  private static boolean insertionpoint1set = false;
-  private static boolean insertionpoint2set = false;
+  private static List <Token> s_add_cu_token_here = s_cu_to_insertion_point_1;
+  private static Token s_first_cu_token;
+  private static boolean s_insertionpoint1set = false;
+  private static boolean s_insertionpoint2set = false;
 
   protected static void setinsertionpoint (final Token t, final int no)
   {
     do
     {
-      add_cu_token_here.add (first_cu_token);
-      first_cu_token = first_cu_token.next;
-    } while (first_cu_token != t);
+      s_add_cu_token_here.add (s_first_cu_token);
+      s_first_cu_token = s_first_cu_token.next;
+    } while (s_first_cu_token != t);
     if (no == 1)
     {
-      if (insertionpoint1set)
+      if (s_insertionpoint1set)
       {
         JavaCCErrors.parse_error (t, "Multiple declaration of parser class.");
       }
       else
       {
-        insertionpoint1set = true;
-        add_cu_token_here = s_cu_to_insertion_point_2;
+        s_insertionpoint1set = true;
+        s_add_cu_token_here = s_cu_to_insertion_point_2;
       }
     }
     else
     {
-      add_cu_token_here = s_cu_from_insertion_point_2;
-      insertionpoint2set = true;
+      s_add_cu_token_here = s_cu_from_insertion_point_2;
+      s_insertionpoint2set = true;
     }
-    first_cu_token = t;
+    s_first_cu_token = t;
   }
 
   protected static void insertionpointerrors (final Token t)
   {
-    while (first_cu_token != t)
+    while (s_first_cu_token != t)
     {
-      add_cu_token_here.add (first_cu_token);
-      first_cu_token = first_cu_token.next;
+      s_add_cu_token_here.add (s_first_cu_token);
+      s_first_cu_token = s_first_cu_token.next;
     }
-    if (!insertionpoint1set || !insertionpoint2set)
+    if (!s_insertionpoint1set || !s_insertionpoint2set)
     {
       JavaCCErrors.parse_error (t, "Parser class has not been defined between PARSER_BEGIN and PARSER_END.");
     }
@@ -120,7 +120,7 @@ public abstract class JavaCCParserInternals
 
   protected static void set_initial_cu_token (final Token t)
   {
-    first_cu_token = t;
+    s_first_cu_token = t;
   }
 
   protected static void addProduction (final NormalProduction p)
@@ -134,7 +134,7 @@ public abstract class JavaCCParserInternals
     p.setExpansion (e);
   }
 
-  private static int nextFreeLexState = 1;
+  private static int s_nextFreeLexState = 1;
 
   protected static void addregexpr (final TokenProduction p)
   {
@@ -163,7 +163,7 @@ public abstract class JavaCCParserInternals
       }
       if (s_lexstate_S2I.get (p.m_lexStates[i]) == null)
       {
-        final Integer ii = Integer.valueOf (nextFreeLexState++);
+        final Integer ii = Integer.valueOf (s_nextFreeLexState++);
         s_lexstate_S2I.put (p.m_lexStates[i], ii);
         s_lexstate_I2S.put (ii, p.m_lexStates[i]);
         s_simple_tokens_table.put (p.m_lexStates[i], new HashMap <> ());
@@ -208,7 +208,7 @@ public abstract class JavaCCParserInternals
     }
   }
 
-  protected static boolean hexchar (final char ch)
+  private static boolean _isHexchar (final char ch)
   {
     if (ch >= '0' && ch <= '9')
       return true;
@@ -219,7 +219,7 @@ public abstract class JavaCCParserInternals
     return false;
   }
 
-  protected static int hexval (final char ch)
+  private static int _getHexVal (final char ch)
   {
     if (ch >= '0' && ch <= '9')
       return (ch) - ('0');
@@ -315,24 +315,24 @@ public abstract class JavaCCParserInternals
       {
         index++;
         ch = str.charAt (index);
-        if (hexchar (ch))
+        if (_isHexchar (ch))
         {
-          ordinal = hexval (ch);
+          ordinal = _getHexVal (ch);
           index++;
           ch = str.charAt (index);
-          if (hexchar (ch))
+          if (_isHexchar (ch))
           {
-            ordinal = ordinal * 16 + hexval (ch);
+            ordinal = ordinal * 16 + _getHexVal (ch);
             index++;
             ch = str.charAt (index);
-            if (hexchar (ch))
+            if (_isHexchar (ch))
             {
-              ordinal = ordinal * 16 + hexval (ch);
+              ordinal = ordinal * 16 + _getHexVal (ch);
               index++;
               ch = str.charAt (index);
-              if (hexchar (ch))
+              if (_isHexchar (ch))
               {
-                ordinal = ordinal * 16 + hexval (ch);
+                ordinal = ordinal * 16 + _getHexVal (ch);
                 index++;
                 continue;
               }
@@ -412,10 +412,10 @@ public abstract class JavaCCParserInternals
 
   public static void reInit ()
   {
-    add_cu_token_here = s_cu_to_insertion_point_1;
-    first_cu_token = null;
-    insertionpoint1set = false;
-    insertionpoint2set = false;
-    nextFreeLexState = 1;
+    s_add_cu_token_here = s_cu_to_insertion_point_1;
+    s_first_cu_token = null;
+    s_insertionpoint1set = false;
+    s_insertionpoint2set = false;
+    s_nextFreeLexState = 1;
   }
 }

@@ -120,9 +120,6 @@ public abstract class NormalProduction
 
   private Token m_firstToken;
 
-  public NormalProduction ()
-  {}
-
   protected StringBuilder dumpPrefix (final int indent)
   {
     final StringBuilder sb = new StringBuilder (128);

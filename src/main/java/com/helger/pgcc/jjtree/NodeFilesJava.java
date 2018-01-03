@@ -68,7 +68,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -397,7 +396,7 @@ final class NodeFilesJava
     {
       generatePrologue (ostr);
 
-      final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+      final Map <String, Object> options = Options.getAllOptions ();
       options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
 
       final OutputFileGenerator generator = new OutputFileGenerator ("/templates/Node.template", options);
@@ -412,7 +411,7 @@ final class NodeFilesJava
     {
       generatePrologue (ostr);
 
-      final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+      final Map <String, Object> options = Options.getAllOptions ();
       options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
 
@@ -428,7 +427,7 @@ final class NodeFilesJava
     {
       generatePrologue (ostr);
 
-      final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+      final Map <String, Object> options = Options.getAllOptions ();
       options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       options.put ("NODE_TYPE", nodeType);
       options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));

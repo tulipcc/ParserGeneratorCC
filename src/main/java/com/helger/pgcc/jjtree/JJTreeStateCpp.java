@@ -38,7 +38,6 @@ package com.helger.pgcc.jjtree;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.helger.pgcc.PGVersion;
@@ -57,7 +56,7 @@ final class JJTreeStateCpp
 
   static void generateTreeState () throws IOException
   {
-    final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+    final Map <String, Object> options = Options.getAllOptions ();
     options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
 
     final String filePrefix = new File (JJTreeOptions.getJJTreeOutputDirectory (),

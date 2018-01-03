@@ -48,7 +48,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
@@ -197,7 +196,7 @@ public class FilesJava
           }
         }
         final String prefix = (Options.isStatic () ? "static " : "");
-        final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+        final Map <String, Object> options = Options.getAllOptions ();
         options.put ("PREFIX", prefix);
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getJavaCharStreamTemplateResourceUrl (),
@@ -235,11 +234,11 @@ public class FilesJava
           {
             if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
-              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
+              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
+                printToken (s_cu_to_insertion_point_1.get (j), ostr);
               }
               ostr.println ();
               ostr.println ();
@@ -248,7 +247,7 @@ public class FilesJava
           }
         }
         final String prefix = (Options.isStatic () ? "static " : "");
-        final Map <String, Object> options = new HashMap <> (Options.getOptions ());
+        final Map <String, Object> options = Options.getAllOptions ();
         options.put ("PREFIX", prefix);
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getSimpleCharStreamTemplateResourceUrl (),
@@ -286,11 +285,11 @@ public class FilesJava
           {
             if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
-              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
+              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
+                printToken (s_cu_to_insertion_point_1.get (j), ostr);
               }
               ostr.println ();
               ostr.println ();
@@ -300,7 +299,7 @@ public class FilesJava
         }
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (),
-                                                                       Options.getOptions ());
+                                                                       Options.getAllOptions ());
 
         generator.generate (ostr);
       }
@@ -342,11 +341,11 @@ public class FilesJava
           {
             if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
-              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
+              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
+                printToken (s_cu_to_insertion_point_1.get (j), ostr);
               }
               ostr.println ();
               ostr.println ();
@@ -355,7 +354,7 @@ public class FilesJava
           }
         }
 
-        final OutputFileGenerator generator = new OutputFileGenerator (templatePath, Options.getOptions ());
+        final OutputFileGenerator generator = new OutputFileGenerator (templatePath, Options.getAllOptions ());
 
         generator.generate (ostr);
       }
@@ -388,11 +387,11 @@ public class FilesJava
           {
             if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
-              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
+              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
+                printToken (s_cu_to_insertion_point_1.get (j), ostr);
               }
               ostr.println ();
               ostr.println ();
@@ -402,7 +401,7 @@ public class FilesJava
         }
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getParseExceptionTemplateResourceUrl (),
-                                                                       Options.getOptions ());
+                                                                       Options.getAllOptions ());
 
         generator.generate (ostr);
       }
@@ -435,11 +434,11 @@ public class FilesJava
           {
             if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
-              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
+              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
+                printToken (s_cu_to_insertion_point_1.get (j), ostr);
               }
               ostr.println ();
               ostr.println ();
@@ -449,7 +448,7 @@ public class FilesJava
         }
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenMgrErrorTemplateResourceUrl (),
-                                                                       Options.getOptions ());
+                                                                       Options.getAllOptions ());
 
         generator.generate (ostr);
       }
@@ -484,11 +483,11 @@ public class FilesJava
           {
             if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
             {
-              s_cline = (s_cu_to_insertion_point_1.get (0)).beginLine;
-              s_ccol = (s_cu_to_insertion_point_1.get (0)).beginColumn;
+              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
+              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
+                printToken (s_cu_to_insertion_point_1.get (j), ostr);
               }
               ostr.println ();
               ostr.println ();
@@ -498,7 +497,7 @@ public class FilesJava
         }
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenTemplateResourceUrl (),
-                                                                       Options.getOptions ());
+                                                                       Options.getAllOptions ());
 
         generator.generate (ostr);
       }
@@ -535,7 +534,7 @@ public class FilesJava
               s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
               for (int j = 0; j <= i; j++)
               {
-                printToken ((s_cu_to_insertion_point_1.get (j)), ostr);
+                printToken (s_cu_to_insertion_point_1.get (j), ostr);
               }
               ostr.println ();
               ostr.println ();
@@ -545,7 +544,7 @@ public class FilesJava
         }
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenManagerTemplateResourceUrl (),
-                                                                       Options.getOptions ());
+                                                                       Options.getAllOptions ());
         generator.generate (ostr);
       }
     }
@@ -558,5 +557,7 @@ public class FilesJava
   }
 
   public static void reInit ()
-  {}
+  {
+    // empty
+  }
 }

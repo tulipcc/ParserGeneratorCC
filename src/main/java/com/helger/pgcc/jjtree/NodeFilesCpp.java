@@ -69,7 +69,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -192,7 +191,7 @@ final class NodeFilesCpp
         return;
       }
 
-      final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
+      final Map <String, Object> optionMap = Options.getAllOptions ();
       optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
       optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
@@ -226,7 +225,7 @@ final class NodeFilesCpp
       if (file.exists () && !outputFile.needToWrite)
         return;
 
-      final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
+      final Map <String, Object> optionMap = Options.getAllOptions ();
       optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
       optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
@@ -260,7 +259,7 @@ final class NodeFilesCpp
       if (file.exists () && !outputFile.needToWrite)
         return;
 
-      final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
+      final Map <String, Object> optionMap = Options.getAllOptions ();
       optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
       optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
@@ -299,7 +298,7 @@ final class NodeFilesCpp
             return;
           }
 
-          final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
+          final Map <String, Object> optionMap = Options.getAllOptions ();
           optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
           optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
           optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
@@ -342,7 +341,7 @@ final class NodeFilesCpp
             return;
           }
 
-          final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
+          final Map <String, Object> optionMap = Options.getAllOptions ();
           optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
           optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
           optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
@@ -382,7 +381,7 @@ final class NodeFilesCpp
           return;
         }
 
-        final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
+        final Map <String, Object> optionMap = Options.getAllOptions ();
         optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
         optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
         optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());
@@ -431,7 +430,7 @@ final class NodeFilesCpp
         return;
       }
 
-      final Map <String, Object> optionMap = new HashMap <> (Options.getOptions ());
+      final Map <String, Object> optionMap = Options.getAllOptions ();
       optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       optionMap.put ("VISITOR_RETURN_TYPE", _getVisitorReturnType ());
       optionMap.put ("VISITOR_DATA_TYPE", _getVisitorArgumentType ());

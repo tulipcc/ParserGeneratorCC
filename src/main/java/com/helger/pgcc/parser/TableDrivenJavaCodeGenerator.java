@@ -54,8 +54,9 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
   @Override
   public void generateCode (final TokenizerData tokenizerData)
   {
-    final String superClass = (String) Options.getOptions ().get (Options.USEROPTION__TOKEN_MANAGER_SUPER_CLASS);
-    final Map <String, Object> options = Options.getOptions ();
+    final String superClass = (String) Options.getAllOptions ().get (Options.USEROPTION__TOKEN_MANAGER_SUPER_CLASS);
+
+    final Map <String, Object> options = Options.getAllOptions ();
     options.put ("maxOrdinal", tokenizerData.m_allMatches.size ());
     options.put ("maxLexStates", tokenizerData.m_lexStateNames.length);
     options.put ("stateSetSize", tokenizerData.m_nfa.size ());

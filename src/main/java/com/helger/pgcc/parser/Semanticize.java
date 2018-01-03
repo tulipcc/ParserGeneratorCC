@@ -33,7 +33,7 @@
  */
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.rexps_of_tokens;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_rexps_of_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_actForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_bnfproductions;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
@@ -419,7 +419,7 @@ public class Semanticize
         }
         if (!(res.rexp instanceof ExpRJustName))
         {
-          rexps_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp);
+          s_rexps_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp);
         }
       }
     }

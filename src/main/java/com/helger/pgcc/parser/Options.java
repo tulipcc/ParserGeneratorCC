@@ -298,7 +298,7 @@ public class Options
 
   @Nonnull
   @ReturnsMutableCopy
-  public static Map <String, Object> getOptions ()
+  public static Map <String, Object> getAllOptions ()
   {
     return new HashMap <> (s_optionValues);
   }
