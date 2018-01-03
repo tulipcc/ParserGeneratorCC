@@ -165,7 +165,7 @@ public class ExpRChoice extends AbstractExpRegularExpression
           // curRE instanceof RJustName &&
           curRE.m_ordinal > 0 &&
           curRE.m_ordinal < m_ordinal &&
-          LexGenJava.lexStates[curRE.m_ordinal] == LexGenJava.lexStates[m_ordinal])
+          LexGenJava.s_lexStates[curRE.m_ordinal] == LexGenJava.s_lexStates[m_ordinal])
       {
         if (m_label != null)
           JavaCCErrors.warning (this,

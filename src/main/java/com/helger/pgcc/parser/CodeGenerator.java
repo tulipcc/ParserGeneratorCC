@@ -346,7 +346,6 @@ public class CodeGenerator
    */
   public void genModifier (final String mod)
   {
-    final String origMod = mod.toLowerCase (Locale.US);
     switch (getOutputLanguage ())
     {
       case JAVA:
@@ -354,6 +353,7 @@ public class CodeGenerator
         break;
       case CPP:
         // For now, it's only C++ for now
+        final String origMod = mod.trim ().toLowerCase (Locale.US);
         if (origMod.equals ("public") || origMod.equals ("protected") || origMod.equals ("private"))
           genCode (origMod + ": ");
         break;

@@ -204,10 +204,10 @@ public class OtherFilesGenJava
       ostr.println ();
       if (!Options.isUserTokenManager () && Options.isBuildTokenManager ())
       {
-        for (int i = 0; i < LexGenJava.lexStateName.length; i++)
+        for (int i = 0; i < LexGenJava.s_lexStateName.length; i++)
         {
           ostr.println ("  /** Lexical state. */");
-          ostr.println ("  int " + LexGenJava.lexStateName[i] + " = " + i + ";");
+          ostr.println ("  int " + LexGenJava.s_lexStateName[i] + " = " + i + ";");
         }
         ostr.println ();
       }
