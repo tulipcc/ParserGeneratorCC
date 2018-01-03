@@ -63,6 +63,7 @@
  */
 package com.helger.pgcc.parser;
 
+import static com.helger.pgcc.parser.JavaCCGlobals.javaStaticOpt;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_bnfproductions;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ccol;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cline;
@@ -74,7 +75,6 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_names_of_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_production_table;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
-import static com.helger.pgcc.parser.JavaCCGlobals.javaStaticOpt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,6 +126,11 @@ public class ParseEngine
    * characters '\u0003' and '\u0004' are used to delineate portions of text
    * where '\n's should not be followed by an indentation.
    */
+
+  private static final char INDENT_INC = '\u0001';
+  private static final char INDENT_DEC = '\u0002';
+  private static final char INDENT_OFF = '\u0003';
+  private static final char INDENT_OFN = '\u0004';
 
   /**
    * Returns true if there is a JAVACODE production that the argument expansion
@@ -268,7 +273,8 @@ public class ParseEngine
               // for the preceding LOOKAHEAD (the semantic checks should have
               // made sure that
               // the LOOKAHEAD is suitable).
-              if (unit instanceof ExpNonTerminal && ((ExpNonTerminal) unit).getProd () instanceof AbstractCodeProduction)
+              if (unit instanceof ExpNonTerminal &&
+                  ((ExpNonTerminal) unit).getProd () instanceof AbstractCodeProduction)
               {
                 if (i > 0 && seq.m_units.get (i - 1) instanceof ExpLookahead)
                 {
@@ -346,7 +352,6 @@ public class ParseEngine
    */
   String buildLookaheadChecker (final ExpLookahead [] conds, final String [] actions)
   {
-
     // The state variables.
     EState state = EState.NOOPENSTM;
     int indentAmt = 0;
@@ -397,10 +402,10 @@ public class ParseEngine
             indentAmt++;
             break;
           case OPENIF:
-            retval += "\u0002\n" + "} else if (";
+            retval += INDENT_DEC + "\n" + "} else if (";
             break;
           case OPENSWITCH:
-            retval += "\u0002\n" + "default:" + "\u0001";
+            retval += INDENT_DEC + "\n" + "default:" + INDENT_INC;
             if (Options.isErrorReporting ())
             {
               retval += "\njj_la1[" + s_maskindex + "] = jj_gen;";
@@ -420,16 +425,16 @@ public class ParseEngine
           retval += m_codeGenerator.getStringToPrint (t);
         }
         retval += m_codeGenerator.getTrailingComments (t);
-        retval += ") {\u0001" + actions[index];
+        retval += ") {" + INDENT_INC + actions[index];
         state = EState.OPENIF;
       }
       else
         if (la.getAmount () == 1 && la.getActionTokens ().size () == 0)
         {
-          // Special optimal processing when the lookahead is exactly 1, and
-          // there
-          // is no semantic lookahead.
-
+          /*
+           * Special optimal processing when the lookahead is exactly 1, and
+           * there is no semantic lookahead.
+           */
           if (m_firstSet == null)
           {
             m_firstSet = new boolean [s_tokenCount];
@@ -438,37 +443,37 @@ public class ParseEngine
           {
             m_firstSet[i] = false;
           }
-          // jj2LA is set to false at the beginning of the containing "if"
-          // statement.
-          // It is checked immediately after the end of the same statement to
-          // determine
-          // if lookaheads are to be performed using calls to the jj2 methods.
+          /*
+           * jj2LA is set to false at the beginning of the containing "if"
+           * statement. It is checked immediately after the end of the same
+           * statement to determine if lookaheads are to be performed using
+           * calls to the jj2 methods.
+           */
           _genFirstSet (la.getLaExpansion ());
-          // genFirstSet may find that semantic attributes are appropriate for
-          // the next
-          // token. In which case, it sets jj2LA to true.
+          /*
+           * genFirstSet may find that semantic attributes are appropriate for
+           * the next token. In which case, it sets jj2LA to true.
+           */
           if (!m_bJJ2LA)
           {
-
-            // This case is if there is no applicable semantic lookahead and the
-            // lookahead
-            // is one (excluding the earlier cases such as JAVACODE, etc.).
+            /*
+             * This case is if there is no applicable semantic lookahead and the
+             * lookahead is one (excluding the earlier cases such as JAVACODE,
+             * etc.).
+             */
             switch (state)
             {
               case OPENIF:
-                retval += "\u0002\n" + "} else {\u0001";
+                retval += INDENT_DEC + "\n" + "} else {" + INDENT_INC;
                 // Control flows through to next case.
                 // $FALL-THROUGH$
               case NOOPENSTM:
                 retval += "\n" + "switch (";
                 if (Options.isCacheTokens ())
-                {
-                  retval += "jj_nt.kind) {\u0001";
-                }
+                  retval += "jj_nt.kind";
                 else
-                {
-                  retval += "(jj_ntk==-1)?jj_ntk_f():jj_ntk) {\u0001";
-                }
+                  retval += "jj_ntk == -1 ? jj_ntk_f() : jj_ntk";
+                retval += ") {" + INDENT_INC;
                 for (int i = 0; i < s_tokenCount; i++)
                 {
                   casedValues[i] = false;
@@ -488,26 +493,20 @@ public class ParseEngine
             }
             for (int i = 0; i < s_tokenCount; i++)
             {
-              if (m_firstSet[i])
+              if (m_firstSet[i] && !casedValues[i])
               {
-                if (!casedValues[i])
-                {
-                  casedValues[i] = true;
-                  retval += "\u0002\ncase ";
-                  final int j1 = i / 32;
-                  final int j2 = i % 32;
-                  tokenMask[j1] |= 1 << j2;
-                  final String s = s_names_of_tokens.get (Integer.valueOf (i));
-                  if (s == null)
-                  {
-                    retval += i;
-                  }
-                  else
-                  {
-                    retval += s;
-                  }
-                  retval += ":\u0001";
-                }
+                casedValues[i] = true;
+                retval += INDENT_DEC + "\ncase ";
+
+                final int j1 = i / 32;
+                final int j2 = i % 32;
+                tokenMask[j1] |= 1 << j2;
+                final String s = s_names_of_tokens.get (Integer.valueOf (i));
+                if (s == null)
+                  retval += i;
+                else
+                  retval += s;
+                retval += ":" + INDENT_INC;
               }
             }
             retval += "{";
@@ -528,25 +527,24 @@ public class ParseEngine
       if (m_bJJ2LA)
       {
         // In this case lookahead is determined by the jj2 methods.
-
         switch (state)
         {
           case NOOPENSTM:
-            retval += "\n" + "if (";
+            retval += "\nif (";
             indentAmt++;
             break;
           case OPENIF:
-            retval += "\u0002\n" + "} else if (";
+            retval += INDENT_DEC + "\n} else if (";
             break;
           case OPENSWITCH:
-            retval += "\u0002\n" + "default:" + "\u0001";
+            retval += INDENT_DEC + "\ndefault:" + INDENT_INC;
             if (Options.isErrorReporting ())
             {
               retval += "\njj_la1[" + s_maskindex + "] = jj_gen;";
               s_maskindex++;
             }
             s_maskVals.add (tokenMask);
-            retval += "\n" + "if (";
+            retval += "\nif (";
             indentAmt++;
             break;
           default:
@@ -554,6 +552,7 @@ public class ParseEngine
         }
         s_jj2index++;
         // At this point, la.la_expansion.internal_name must be "".
+        assert la.getLaExpansion ().getInternalName ().equals ("");
         la.getLaExpansion ().setInternalName ("_", s_jj2index);
         m_phase2list.add (la);
         retval += "jj_2" + la.getLaExpansion ().getInternalName () + "(" + la.getAmount () + ")";
@@ -571,7 +570,7 @@ public class ParseEngine
           retval += m_codeGenerator.getTrailingComments (t);
           retval += ")";
         }
-        retval += ") {\u0001" + actions[index];
+        retval += ") {" + INDENT_INC + actions[index];
         state = EState.OPENIF;
       }
 
@@ -588,10 +587,10 @@ public class ParseEngine
         retval += actions[index];
         break;
       case OPENIF:
-        retval += "\u0002\n" + "} else {\u0001" + actions[index];
+        retval += INDENT_DEC + "\n" + "} else {" + INDENT_INC + actions[index];
         break;
       case OPENSWITCH:
-        retval += "\u0002\n" + "default:" + "\u0001";
+        retval += INDENT_DEC + "\n" + "default:" + INDENT_INC;
         if (Options.isErrorReporting ())
         {
           retval += "\njj_la1[" + s_maskindex + "] = jj_gen;";
@@ -605,7 +604,7 @@ public class ParseEngine
     }
     for (int i = 0; i < indentAmt; i++)
     {
-      retval += "\u0002\n}";
+      retval += INDENT_DEC + "\n}";
     }
 
     return retval;
@@ -639,12 +638,12 @@ public class ParseEngine
           }
         }
         else
-          if (ch == '\u0001')
+          if (ch == INDENT_INC)
           {
             m_indentamt += 2;
           }
           else
-            if (ch == '\u0002')
+            if (ch == INDENT_DEC)
             {
               m_indentamt -= 2;
             }
@@ -1264,11 +1263,11 @@ public class ParseEngine
                 {
                   case JAVA:
                     retval += "label_" + labelIndex + ":\n";
-                    retval += "while (true) {\u0001";
+                    retval += "while (true) {" + INDENT_INC;
                     break;
                   case CPP:
                     // nothing
-                    retval += "while (!hasError) {\u0001";
+                    retval += "while (!hasError) {" + INDENT_INC;
                     break;
                   default:
                     throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
@@ -1292,7 +1291,7 @@ public class ParseEngine
                 }
 
                 retval += buildLookaheadChecker (conds, actions);
-                retval += "\u0002\n" + "}";
+                retval += INDENT_DEC + "\n" + "}";
 
                 switch (m_codeGenerator.getOutputLanguage ())
                 {
@@ -1328,11 +1327,11 @@ public class ParseEngine
                   {
                     case JAVA:
                       retval += "label_" + labelIndex + ":\n";
-                      retval += "while (true) {\u0001";
+                      retval += "while (true) {" + INDENT_INC;
                       break;
                     case CPP:
                       // nothing
-                      retval += "while (!hasError) {\u0001";
+                      retval += "while (!hasError) {" + INDENT_INC;
                       break;
                     default:
                       throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
@@ -1357,7 +1356,7 @@ public class ParseEngine
 
                   retval += buildLookaheadChecker (conds, actions);
                   retval += phase1ExpansionGen (nested_e);
-                  retval += "\u0002\n" + "}";
+                  retval += INDENT_DEC + "\n" + "}";
 
                   switch (m_codeGenerator.getOutputLanguage ())
                   {
@@ -1401,9 +1400,9 @@ public class ParseEngine
                       final Expansion nested_e = e_nrw.m_exp;
                       List <Token> list;
                       retval += "\n";
-                      retval += "try {\u0001";
+                      retval += "try {" + INDENT_INC;
                       retval += phase1ExpansionGen (nested_e);
-                      retval += "\u0002\n" + "}";
+                      retval += INDENT_DEC + "\n" + "}";
                       for (int i = 0; i < e_nrw.m_catchblks.size (); i++)
                       {
                         retval += " catch (";
@@ -1475,7 +1474,11 @@ public class ParseEngine
     switch (m_codeGenerator.getOutputLanguage ())
     {
       case JAVA:
-        m_codeGenerator.genCodeLine ("  " + javaStaticOpt () + "private boolean jj_2" + e.getInternalName () + "(int xla)");
+        m_codeGenerator.genCodeLine ("  " +
+                                     javaStaticOpt () +
+                                     "private boolean jj_2" +
+                                     e.getInternalName () +
+                                     "(int xla)");
         break;
       case CPP:
         m_codeGenerator.genCodeLine (" inline bool jj_2" + e.getInternalName () + "(int xla)");

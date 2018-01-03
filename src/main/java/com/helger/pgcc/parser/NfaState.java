@@ -155,7 +155,7 @@ public class NfaState
   {
     m_id = s_idCnt++;
     s_allStates.add (this);
-    m_lexState = LexGenJava.lexStateIndex;
+    m_lexState = LexGenJava.s_lexStateIndex;
     m_lookingFor = LexGenJava.curKind;
   }
 
@@ -2294,7 +2294,7 @@ public class NfaState
       final NfaState temp = s_allStates.get (i);
 
       if (dumped[temp.stateName] ||
-          temp.m_lexState != LexGenJava.lexStateIndex ||
+          temp.m_lexState != LexGenJava.s_lexStateIndex ||
           !temp.hasTransitions () ||
           temp.dummy ||
           temp.stateName == -1)
@@ -2690,7 +2690,7 @@ public class NfaState
     {
       if (temp.stateName == -1 ||
           dumped[temp.stateName] ||
-          temp.m_lexState != LexGenJava.lexStateIndex ||
+          temp.m_lexState != LexGenJava.s_lexStateIndex ||
           !temp.hasTransitions () ||
           temp.dummy)
         continue;
@@ -3073,17 +3073,17 @@ public class NfaState
     {
       final NfaState temp = s_allStates.get (i);
 
-      if (temp.m_lexState != LexGenJava.lexStateIndex || !temp.hasTransitions () || temp.dummy || temp.stateName == -1)
+      if (temp.m_lexState != LexGenJava.s_lexStateIndex || !temp.hasTransitions () || temp.dummy || temp.stateName == -1)
         continue;
 
       if (kindsForStates == null)
       {
         kindsForStates = new int [s_generatedStates];
-        s_statesForState[LexGenJava.lexStateIndex] = new int [Math.max (s_generatedStates, s_dummyStateIndex + 1)] [];
+        s_statesForState[LexGenJava.s_lexStateIndex] = new int [Math.max (s_generatedStates, s_dummyStateIndex + 1)] [];
       }
 
       kindsForStates[temp.stateName] = temp.m_lookingFor;
-      s_statesForState[LexGenJava.lexStateIndex][temp.stateName] = temp.m_compositeStates;
+      s_statesForState[LexGenJava.s_lexStateIndex][temp.stateName] = temp.m_compositeStates;
 
       temp.generateNonAsciiMoves (codeGenerator);
     }
@@ -3094,13 +3094,13 @@ public class NfaState
       final int state = aEntry.getValue ().intValue ();
 
       if (state >= s_generatedStates)
-        s_statesForState[LexGenJava.lexStateIndex][state] = s_allNextStates.get (s);
+        s_statesForState[LexGenJava.s_lexStateIndex][state] = s_allNextStates.get (s);
     }
 
     if (s_stateSetsToFix.size () != 0)
       _fixStateSets ();
 
-    s_kinds[LexGenJava.lexStateIndex] = kindsForStates;
+    s_kinds[LexGenJava.s_lexStateIndex] = kindsForStates;
 
     switch (codeGenerator.getOutputLanguage ())
     {
@@ -3129,7 +3129,7 @@ public class NfaState
       return;
     }
 
-    if (LexGenJava.mixed[LexGenJava.lexStateIndex])
+    if (LexGenJava.mixed[LexGenJava.s_lexStateIndex])
     {
       codeGenerator.genCodeLine ("   int strKind = jjmatchedKind;");
       codeGenerator.genCodeLine ("   int strPos = jjmatchedPos;");
@@ -3271,7 +3271,7 @@ public class NfaState
       default:
         throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
     }
-    if (LexGenJava.mixed[LexGenJava.lexStateIndex])
+    if (LexGenJava.mixed[LexGenJava.s_lexStateIndex])
       codeGenerator.genCodeLine ("         break;");
     else
       codeGenerator.genCodeLine ("         return curPos;");
@@ -3296,13 +3296,13 @@ public class NfaState
     {
       case JAVA:
         codeGenerator.genCodeLine ("      try { curChar = input_stream.readChar(); }");
-        if (LexGenJava.mixed[LexGenJava.lexStateIndex])
+        if (LexGenJava.mixed[LexGenJava.s_lexStateIndex])
           codeGenerator.genCodeLine ("      catch(java.io.IOException e) { break; }");
         else
           codeGenerator.genCodeLine ("      catch(java.io.IOException e) { return curPos; }");
         break;
       case CPP:
-        if (LexGenJava.mixed[LexGenJava.lexStateIndex])
+        if (LexGenJava.mixed[LexGenJava.s_lexStateIndex])
           codeGenerator.genCodeLine ("      if (input_stream->endOfInput()) { break; }");
         else
           codeGenerator.genCodeLine ("      if (input_stream->endOfInput()) { return curPos; }");
@@ -3338,7 +3338,7 @@ public class NfaState
 
     codeGenerator.genCodeLine ("   }");
 
-    if (LexGenJava.mixed[LexGenJava.lexStateIndex])
+    if (LexGenJava.mixed[LexGenJava.s_lexStateIndex])
     {
       codeGenerator.genCodeLine ("   if (jjmatchedPos > strPos)");
       codeGenerator.genCodeLine ("      return curPos;");

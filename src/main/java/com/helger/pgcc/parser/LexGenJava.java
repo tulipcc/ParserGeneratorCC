@@ -105,9 +105,9 @@ public class LexGenJava extends CodeGenerator
 
   // Order is important!
   static final Map <String, List <TokenProduction>> s_allTpsForState = new LinkedHashMap <> ();
-  public static int lexStateIndex = 0;
-  static int [] kinds;
-  public static int maxOrdinal = 1;
+  public static int s_lexStateIndex = 0;
+  static int [] s_kinds;
+  public static int s_maxOrdinal = 1;
   public static String lexStateSuffix;
   static String [] newLexState;
   public static int [] lexStates;
@@ -268,7 +268,7 @@ public class LexGenJava extends CodeGenerator
   protected void writeTemplate (final String name, final Object... additionalOptions) throws IOException
   {
     final Map <String, Object> options = Options.getAllOptions ();
-    options.put ("maxOrdinal", Integer.valueOf (maxOrdinal));
+    options.put ("maxOrdinal", Integer.valueOf (s_maxOrdinal));
     options.put ("maxLexStates", Integer.valueOf (maxLexStates));
     options.put ("hasEmptyMatch", Boolean.valueOf (hasEmptyMatch));
     options.put ("hasSkip", Boolean.valueOf (hasSkip));
@@ -350,17 +350,17 @@ public class LexGenJava extends CodeGenerator
 
       AbstractExpRegularExpression re;
       for (i = 0; i < respecs.size (); i++)
-        if (maxOrdinal <= (re = respecs.get (i).rexp).m_ordinal)
-          maxOrdinal = re.m_ordinal + 1;
+        if (s_maxOrdinal <= (re = respecs.get (i).rexp).m_ordinal)
+          s_maxOrdinal = re.m_ordinal + 1;
     }
 
-    kinds = new int [maxOrdinal];
-    toSkip = new long [maxOrdinal / 64 + 1];
-    toSpecial = new long [maxOrdinal / 64 + 1];
-    toMore = new long [maxOrdinal / 64 + 1];
-    toToken = new long [maxOrdinal / 64 + 1];
+    s_kinds = new int [s_maxOrdinal];
+    toSkip = new long [s_maxOrdinal / 64 + 1];
+    toSpecial = new long [s_maxOrdinal / 64 + 1];
+    toMore = new long [s_maxOrdinal / 64 + 1];
+    toToken = new long [s_maxOrdinal / 64 + 1];
     toToken[0] = 1L;
-    actions = new ExpAction [maxOrdinal];
+    actions = new ExpAction [s_maxOrdinal];
     actions[0] = s_actForEof;
     hasTokenActions = s_actForEof != null;
     initStates.clear ();
@@ -378,13 +378,13 @@ public class LexGenJava extends CodeGenerator
     mixed = new boolean [maxLexStates];
     maxLongsReqd = new int [maxLexStates];
     initMatch = new int [maxLexStates];
-    newLexState = new String [maxOrdinal];
+    newLexState = new String [s_maxOrdinal];
     newLexState[0] = s_nextStateForEof;
     hasEmptyMatch = false;
-    lexStates = new int [maxOrdinal];
-    ignoreCase = new boolean [maxOrdinal];
-    rexprs = new AbstractExpRegularExpression [maxOrdinal];
-    ExpRStringLiteral.s_allImages = new String [maxOrdinal];
+    lexStates = new int [s_maxOrdinal];
+    ignoreCase = new boolean [s_maxOrdinal];
+    rexprs = new AbstractExpRegularExpression [s_maxOrdinal];
+    ExpRStringLiteral.s_allImages = new String [s_maxOrdinal];
     canReachOnMore = new boolean [maxLexStates];
   }
 
@@ -399,8 +399,8 @@ public class LexGenJava extends CodeGenerator
 
   public static void addCharToSkip (final char c, final int kind)
   {
-    singlesToSkip[lexStateIndex].addChar (c);
-    singlesToSkip[lexStateIndex].kind = kind;
+    singlesToSkip[s_lexStateIndex].addChar (c);
+    singlesToSkip[s_lexStateIndex].kind = kind;
   }
 
   public void start () throws IOException
@@ -431,18 +431,18 @@ public class LexGenJava extends CodeGenerator
 
       final String key = aEntry.getKey ();
 
-      lexStateIndex = _getIndex (key);
-      lexStateSuffix = "_" + lexStateIndex;
+      s_lexStateIndex = _getIndex (key);
+      lexStateSuffix = "_" + s_lexStateIndex;
       final List <TokenProduction> allTps = aEntry.getValue ();
       initialState = new NfaState ();
       initStates.put (key, initialState);
       ignoring = false;
 
-      singlesToSkip[lexStateIndex] = new NfaState ();
-      singlesToSkip[lexStateIndex].dummy = true;
+      singlesToSkip[s_lexStateIndex] = new NfaState ();
+      singlesToSkip[s_lexStateIndex].dummy = true;
 
       if (key.equals ("DEFAULT"))
-        defaultLexState = lexStateIndex;
+        defaultLexState = s_lexStateIndex;
 
       for (int i = 0; i < allTps.size (); i++)
       {
@@ -460,12 +460,12 @@ public class LexGenJava extends CodeGenerator
           curRE = respec.rexp;
 
           rexprs[curKind = curRE.m_ordinal] = curRE;
-          lexStates[curRE.m_ordinal] = lexStateIndex;
+          lexStates[curRE.m_ordinal] = s_lexStateIndex;
           ignoreCase[curRE.m_ordinal] = ignore;
 
           if (curRE.m_private_rexp)
           {
-            kinds[curRE.m_ordinal] = -1;
+            s_kinds[curRE.m_ordinal] = -1;
             continue;
           }
 
@@ -474,16 +474,16 @@ public class LexGenJava extends CodeGenerator
               StringHelper.hasText (((ExpRStringLiteral) curRE).m_image))
           {
             ((ExpRStringLiteral) curRE).generateDfa ();
-            if (i != 0 && !mixed[lexStateIndex] && ignoring != ignore)
+            if (i != 0 && !mixed[s_lexStateIndex] && ignoring != ignore)
             {
-              mixed[lexStateIndex] = true;
+              mixed[s_lexStateIndex] = true;
             }
           }
           else
             if (curRE.canMatchAnyChar ())
             {
-              if (canMatchAnyChar[lexStateIndex] == -1 || canMatchAnyChar[lexStateIndex] > curRE.m_ordinal)
-                canMatchAnyChar[lexStateIndex] = curRE.m_ordinal;
+              if (canMatchAnyChar[s_lexStateIndex] == -1 || canMatchAnyChar[s_lexStateIndex] > curRE.m_ordinal)
+                canMatchAnyChar[s_lexStateIndex] = curRE.m_ordinal;
             }
             else
             {
@@ -498,18 +498,18 @@ public class LexGenJava extends CodeGenerator
               initialState.addMove (temp.start);
             }
 
-          if (kinds.length < curRE.m_ordinal)
+          if (s_kinds.length < curRE.m_ordinal)
           {
             final int [] tmp = new int [curRE.m_ordinal + 1];
 
-            System.arraycopy (kinds, 0, tmp, 0, kinds.length);
-            kinds = tmp;
+            System.arraycopy (s_kinds, 0, tmp, 0, s_kinds.length);
+            s_kinds = tmp;
           }
           // System.out.println(" ordina : " + curRE.ordinal);
 
-          kinds[curRE.m_ordinal] = kind;
+          s_kinds[curRE.m_ordinal] = kind;
 
-          if (respec.nextState != null && !respec.nextState.equals (lexStateName[lexStateIndex]))
+          if (respec.nextState != null && !respec.nextState.equals (lexStateName[s_lexStateIndex]))
             newLexState[curRE.m_ordinal] = respec.nextState;
 
           if (respec.act != null && respec.act.getActionTokens () != null && respec.act.getActionTokens ().size () > 0)
@@ -536,7 +536,7 @@ public class LexGenJava extends CodeGenerator
               if (newLexState[curRE.m_ordinal] != null)
                 canReachOnMore[_getIndex (newLexState[curRE.m_ordinal])] = true;
               else
-                canReachOnMore[lexStateIndex] = true;
+                canReachOnMore[s_lexStateIndex] = true;
 
               break;
             case TokenProduction.TOKEN:
@@ -555,8 +555,8 @@ public class LexGenJava extends CodeGenerator
       for (final NfaState aItem : initialState.epsilonMoves)
         aItem.generateCode ();
 
-      hasNfa[lexStateIndex] = (NfaState.s_generatedStates != 0);
-      if (hasNfa[lexStateIndex])
+      hasNfa[s_lexStateIndex] = (NfaState.s_generatedStates != 0);
+      if (hasNfa[s_lexStateIndex])
       {
         initialState.generateCode ();
         startState = initialState.generateInitMoves ();
@@ -573,30 +573,30 @@ public class LexGenJava extends CodeGenerator
           else
             hasTokenActions = true;
 
-        if (initMatch[lexStateIndex] == 0 || initMatch[lexStateIndex] > initialState.kind)
+        if (initMatch[s_lexStateIndex] == 0 || initMatch[s_lexStateIndex] > initialState.kind)
         {
-          initMatch[lexStateIndex] = initialState.kind;
+          initMatch[s_lexStateIndex] = initialState.kind;
           hasEmptyMatch = true;
         }
       }
       else
-        if (initMatch[lexStateIndex] == 0)
-          initMatch[lexStateIndex] = Integer.MAX_VALUE;
+        if (initMatch[s_lexStateIndex] == 0)
+          initMatch[s_lexStateIndex] = Integer.MAX_VALUE;
 
       ExpRStringLiteral.fillSubString ();
 
-      if (hasNfa[lexStateIndex] && !mixed[lexStateIndex])
+      if (hasNfa[s_lexStateIndex] && !mixed[s_lexStateIndex])
         ExpRStringLiteral.generateNfaStartStates (this, initialState);
 
       if (generateDataOnly || codeGeneratorClass != null)
       {
-        ExpRStringLiteral.updateStringLiteralData (lexStateIndex);
-        NfaState.updateNfaData (totalNumStates, startState, lexStateIndex, canMatchAnyChar[lexStateIndex]);
+        ExpRStringLiteral.updateStringLiteralData (s_lexStateIndex);
+        NfaState.updateNfaData (totalNumStates, startState, s_lexStateIndex, canMatchAnyChar[s_lexStateIndex]);
       }
       else
       {
         ExpRStringLiteral.dumpDfaCode (this);
-        if (hasNfa[lexStateIndex])
+        if (hasNfa[s_lexStateIndex])
         {
           NfaState.dumpMoveNfa (this);
         }
@@ -616,7 +616,7 @@ public class LexGenJava extends CodeGenerator
       tokenizerData.setParserName (s_cu_name);
       NfaState.buildTokenizerData (tokenizerData);
       ExpRStringLiteral.BuildTokenizerData (tokenizerData);
-      final int [] newLexStateIndices = new int [maxOrdinal];
+      final int [] newLexStateIndices = new int [s_maxOrdinal];
       final StringBuilder tokenMgrDecls = new StringBuilder ();
       if (s_token_mgr_decls != null && s_token_mgr_decls.size () > 0)
       {
@@ -627,7 +627,7 @@ public class LexGenJava extends CodeGenerator
       }
       tokenizerData.setDecls (tokenMgrDecls.toString ());
       final Map <Integer, String> actionStrings = new HashMap <> ();
-      for (int i = 0; i < maxOrdinal; i++)
+      for (int i = 0; i < s_maxOrdinal; i++)
       {
         if (newLexState[i] == null)
         {
@@ -835,7 +835,7 @@ public class LexGenJava extends CodeGenerator
       genCodeLine ("/** Lex State array. */");
       genCode ("public static final int[] jjnewLexState = {");
 
-      for (i = 0; i < maxOrdinal; i++)
+      for (i = 0; i < s_maxOrdinal; i++)
       {
         if (i % 25 == 0)
           genCode ("\n   ");
@@ -851,7 +851,7 @@ public class LexGenJava extends CodeGenerator
     {
       // Bit vector for TOKEN
       genCode ("static final long[] jjtoToken = {");
-      for (i = 0; i < maxOrdinal / 64 + 1; i++)
+      for (i = 0; i < s_maxOrdinal / 64 + 1; i++)
       {
         if (i % 4 == 0)
           genCode ("\n   ");
@@ -863,7 +863,7 @@ public class LexGenJava extends CodeGenerator
     {
       // Bit vector for SKIP
       genCode ("static final long[] jjtoSkip = {");
-      for (i = 0; i < maxOrdinal / 64 + 1; i++)
+      for (i = 0; i < s_maxOrdinal / 64 + 1; i++)
       {
         if (i % 4 == 0)
           genCode ("\n   ");
@@ -875,7 +875,7 @@ public class LexGenJava extends CodeGenerator
     {
       // Bit vector for SPECIAL
       genCode ("static final long[] jjtoSpecial = {");
-      for (i = 0; i < maxOrdinal / 64 + 1; i++)
+      for (i = 0; i < s_maxOrdinal / 64 + 1; i++)
       {
         if (i % 4 == 0)
           genCode ("\n   ");
@@ -887,7 +887,7 @@ public class LexGenJava extends CodeGenerator
     {
       // Bit vector for MORE
       genCode ("static final long[] jjtoMore = {");
-      for (i = 0; i < maxOrdinal / 64 + 1; i++)
+      for (i = 0; i < s_maxOrdinal / 64 + 1; i++)
       {
         if (i % 4 == 0)
           genCode ("\n   ");
@@ -1415,7 +1415,7 @@ public class LexGenJava extends CodeGenerator
     genCodeLine ("   switch(jjmatchedKind)");
     genCodeLine ("   {");
 
-    Outer: for (int i = 0; i < maxOrdinal; i++)
+    Outer: for (int i = 0; i < s_maxOrdinal; i++)
     {
       if ((toSkip[i / 64] & (1L << (i % 64))) == 0L)
         continue;
@@ -1492,7 +1492,7 @@ public class LexGenJava extends CodeGenerator
     genCodeLine ("   switch(jjmatchedKind)");
     genCodeLine ("   {");
 
-    Outer: for (int i = 0; i < maxOrdinal; i++)
+    Outer: for (int i = 0; i < s_maxOrdinal; i++)
     {
       if ((toMore[i / 64] & (1L << (i % 64))) == 0L)
         continue;
@@ -1569,7 +1569,7 @@ public class LexGenJava extends CodeGenerator
     genCodeLine ("   switch(jjmatchedKind)");
     genCodeLine ("   {");
 
-    Outer: for (i = 0; i < maxOrdinal; i++)
+    Outer: for (i = 0; i < s_maxOrdinal; i++)
     {
       if ((toToken[i / 64] & (1L << (i % 64))) == 0L)
         continue;
@@ -1670,14 +1670,14 @@ public class LexGenJava extends CodeGenerator
     initStates.clear ();
     initialState = null;
     keepLineCol = false;
-    kinds = null;
-    lexStateIndex = 0;
+    s_kinds = null;
+    s_lexStateIndex = 0;
     lexStateName = null;
     lexStateSuffix = null;
     lexStates = null;
     maxLexStates = 0;
     maxLongsReqd = null;
-    maxOrdinal = 1;
+    s_maxOrdinal = 1;
     mixed = null;
     newLexState = null;
     rexprs = null;
