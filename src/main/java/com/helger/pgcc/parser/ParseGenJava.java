@@ -717,69 +717,78 @@ public class ParseGenJava extends CodeGenerator
     }
     genCodeLine ("  }");
     genCodeLine ();
-    genCodeLine ("  " + javaStaticOpt () + "private Token jj_consume_token(int kind) throws ParseException {");
+    genCodeLine ("  " + javaStaticOpt () + "private Token jj_consume_token(final int kind) throws ParseException {");
+    genCodeLine ("    final Token oldToken = token;");
     if (Options.isCacheTokens ())
     {
-      genCodeLine ("	 Token oldToken = token;");
-      genCodeLine ("	 if ((token = jj_nt).next != null) jj_nt = jj_nt.next;");
-      genCodeLine ("	 else jj_nt = jj_nt.next = token_source.getNextToken();");
+      genCodeLine ("    token = jj_nt;");
+      genCodeLine ("    if (token.next != null)");
+      genCodeLine ("      jj_nt = jj_nt.next;");
+      genCodeLine ("    else {");
+      genCodeLine ("      jj_nt.next = token_source.getNextToken();");
+      genCodeLine ("      jj_nt = jj_nt.next;");
+      genCodeLine ("    }");
     }
     else
     {
-      genCodeLine ("	 Token oldToken;");
-      genCodeLine ("	 if ((oldToken = token).next != null) token = token.next;");
-      genCodeLine ("	 else token = token.next = token_source.getNextToken();");
-      genCodeLine ("	 jj_ntk = -1;");
+      genCodeLine ("    if (token.next != null)");
+      genCodeLine ("      token = token.next;");
+      genCodeLine ("    else {");
+      genCodeLine ("      token.next = token_source.getNextToken();");
+      genCodeLine ("      token = token.next;");
+      genCodeLine ("    }");
+      genCodeLine ("    jj_ntk = -1;");
     }
-    genCodeLine ("	 if (token.kind == kind) {");
+    genCodeLine ("    if (token.kind == kind) {");
     if (Options.isErrorReporting ())
     {
-      genCodeLine ("	   jj_gen++;");
+      genCodeLine ("      jj_gen++;");
       if (s_jj2index != 0)
       {
-        genCodeLine ("	   if (++jj_gc > 100) {");
-        genCodeLine ("		 jj_gc = 0;");
-        genCodeLine ("		 for (int i = 0; i < jj_2_rtns.length; i++) {");
-        genCodeLine ("		   JJCalls c = jj_2_rtns[i];");
-        genCodeLine ("		   while (c != null) {");
-        genCodeLine ("			 if (c.gen < jj_gen) c.first = null;");
-        genCodeLine ("			 c = c.next;");
-        genCodeLine ("		   }");
-        genCodeLine ("		 }");
-        genCodeLine ("	   }");
+        genCodeLine ("      if (++jj_gc > 100) {");
+        genCodeLine ("        jj_gc = 0;");
+        genCodeLine ("        for (int i = 0; i < jj_2_rtns.length; i++) {");
+        genCodeLine ("          JJCalls c = jj_2_rtns[i];");
+        genCodeLine ("          while (c != null) {");
+        genCodeLine ("            if (c.gen < jj_gen)");
+        genCodeLine ("              c.first = null;");
+        genCodeLine ("            c = c.next;");
+        genCodeLine ("          }");
+        genCodeLine ("        }");
+        genCodeLine ("      }");
       }
     }
     if (Options.isDebugParser ())
     {
-      genCodeLine ("	   trace_token(token, \"\");");
+      genCodeLine ("      trace_token(token, \"\");");
     }
-    genCodeLine ("	   return token;");
-    genCodeLine ("	 }");
+    genCodeLine ("      return token;");
+    genCodeLine ("    }");
     if (Options.isCacheTokens ())
     {
-      genCodeLine ("	 jj_nt = token;");
+      genCodeLine ("    jj_nt = token;");
     }
-    genCodeLine ("	 token = oldToken;");
+    genCodeLine ("    token = oldToken;");
     if (Options.isErrorReporting ())
     {
-      genCodeLine ("	 jj_kind = kind;");
+      genCodeLine ("    jj_kind = kind;");
     }
-    genCodeLine ("	 throw generateParseException();");
+    genCodeLine ("    throw generateParseException();");
     genCodeLine ("  }");
     genCodeLine ();
     if (s_jj2index != 0)
     {
       if (bGenerateAnnotations)
         genCodeLine ("  @SuppressWarnings(\"serial\")");
-      genCodeLine ("  static private final class LookaheadSuccess extends IllegalStateException { }");
-      genCodeLine ("  " + javaStaticOpt () + "final private LookaheadSuccess jj_ls = new LookaheadSuccess();");
+      genCodeLine ("  private static final class LookaheadSuccess extends IllegalStateException { }");
+      genCodeLine ("  " + javaStaticOpt () + "private final LookaheadSuccess jj_ls = new LookaheadSuccess();");
       genCodeLine ("  " + javaStaticOpt () + "private " + Options.getBooleanType () + " jj_scan_token(int kind) {");
       genCodeLine ("	 if (jj_scanpos == jj_lastpos) {");
       genCodeLine ("	   jj_la--;");
       genCodeLine ("	   if (jj_scanpos.next == null) {");
-      genCodeLine ("		 jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();");
+      genCodeLine ("		   jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();");
       genCodeLine ("	   } else {");
-      genCodeLine ("		 jj_lastpos = jj_scanpos = jj_scanpos.next;");
+      genCodeLine ("		   jj_lastpos = jj_scanpos = jj_scanpos.next;");
       genCodeLine ("	   }");
       genCodeLine ("	 } else {");
       genCodeLine ("	   jj_scanpos = jj_scanpos.next;");
@@ -809,7 +818,7 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ();
     }
     genCodeLine ();
-    genCodeLine ("/** Get the next Token. */");
+    genCodeLine ("  /** Get the next Token. */");
     genCodeLine ("  " + javaStaticOpt () + "public final Token getNextToken() {");
     if (Options.isCacheTokens ())
     {
