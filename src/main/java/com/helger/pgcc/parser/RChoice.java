@@ -47,7 +47,7 @@ public class RChoice extends RegularExpression
    * The list of choices of this regular expression. Each list component will
    * narrow to RegularExpression.
    */
-  private List <RegularExpression> choices = new ArrayList <> ();
+  private List <RegularExpression> m_choices = new ArrayList <> ();
 
   /**
    * @param choices
@@ -55,7 +55,7 @@ public class RChoice extends RegularExpression
    */
   public void setChoices (final List <RegularExpression> choices)
   {
-    this.choices = choices;
+    this.m_choices = choices;
   }
 
   /**
@@ -63,7 +63,7 @@ public class RChoice extends RegularExpression
    */
   public List <RegularExpression> getChoices ()
   {
-    return choices;
+    return m_choices;
   }
 
   @Override

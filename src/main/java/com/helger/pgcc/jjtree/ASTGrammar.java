@@ -87,6 +87,7 @@ public class ASTGrammar extends JJTreeNode
       case CPP:
         new CodeGeneratorCpp ().visit (this, io);
         NodeFilesCpp.generateTreeClasses ();
+        break;
       default:
         // Catch all to ensure we don't accidently do nothing
         throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());

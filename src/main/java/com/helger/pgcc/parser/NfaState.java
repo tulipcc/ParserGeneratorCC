@@ -1752,9 +1752,14 @@ public class NfaState
       codeGenerator.genCodeLine ("         " + Options.getLongType () + " l = 1L << curChar;");
       switch (codeGenerator.getOutputLanguage ())
       {
+        case JAVA:
+          // Nothing
+          break;
         case CPP:
           codeGenerator.genCodeLine ("         (void)l;");
           break;
+        default:
+          throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
       }
     }
     else
@@ -1763,9 +1768,14 @@ public class NfaState
         codeGenerator.genCodeLine ("         " + Options.getLongType () + " l = 1L << (curChar & 077);");
         switch (codeGenerator.getOutputLanguage ())
         {
+          case JAVA:
+            // Nothing
+            break;
           case CPP:
             codeGenerator.genCodeLine ("         (void)l;");
             break;
+          default:
+            throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
         }
       }
       else

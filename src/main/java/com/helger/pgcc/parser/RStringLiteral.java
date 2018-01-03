@@ -160,8 +160,6 @@ public class RStringLiteral extends RegularExpression
 
   public static void dumpStrLiteralImages (final CodeGenerator codeGenerator)
   {
-    // TODO :: CBA -- Require Unification of output language specific processing
-    // into a single Enum class
     switch (codeGenerator.getOutputLanguage ())
     {
       case JAVA:
@@ -658,8 +656,6 @@ public class RStringLiteral extends RegularExpression
       }
     }
 
-    // TODO :: CBA -- Require Unification of output language specific processing
-    // into a single Enum class
     switch (codeGenerator.getOutputLanguage ())
     {
       case JAVA:
@@ -705,8 +701,6 @@ public class RStringLiteral extends RegularExpression
 
   static void dumpBoilerPlate (final CodeGenerator codeGenerator)
   {
-    // TODO :: CBA -- Require Unification of output language specific processing
-    // into a single Enum class
     switch (codeGenerator.getOutputLanguage ())
     {
       case JAVA:
@@ -726,8 +720,6 @@ public class RStringLiteral extends RegularExpression
 
     if (Options.isDebugTokenManager ())
     {
-      // TODO :: CBA -- Require Unification of output language specific
-      // processing into a single Enum class
       switch (codeGenerator.getOutputLanguage ())
       {
         case JAVA:
@@ -783,8 +775,6 @@ public class RStringLiteral extends RegularExpression
 
     if (s_maxLen == 0)
     {
-      // TODO :: CBA -- Require Unification of output language specific
-      // processing into a single Enum class
       switch (codeGenerator.getOutputLanguage ())
       {
         case JAVA:
@@ -867,8 +857,6 @@ public class RStringLiteral extends RegularExpression
       }
       params.append (")");
 
-      // TODO :: CBA -- Require Unification of output language specific
-      // processing into a single Enum class
       switch (codeGenerator.getOutputLanguage ())
       {
         case JAVA:
@@ -994,8 +982,6 @@ public class RStringLiteral extends RegularExpression
             }
           }
 
-          // TODO :: CBA -- Require Unification of output language specific
-          // processing into a single Enum class
           switch (codeGenerator.getOutputLanguage ())
           {
             case JAVA:
@@ -1010,8 +996,6 @@ public class RStringLiteral extends RegularExpression
           }
         }
 
-        // TODO :: CBA -- Require Unification of output language specific
-        // processing into a single Enum class
         switch (codeGenerator.getOutputLanguage ())
         {
           case JAVA:
@@ -1092,19 +1076,20 @@ public class RStringLiteral extends RegularExpression
 
       if (i != 0)
       {
-        // TODO :: CBA -- Require Unification of output language specific
-        // processing into a single Enum class
         switch (codeGenerator.getOutputLanguage ())
         {
+          case JAVA:
+            // Nothing
+            break;
           case CPP:
             codeGenerator.genCodeLine ("   curChar = input_stream->readChar();");
             break;
+          default:
+            throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
         }
 
         if (Options.isDebugTokenManager ())
         {
-          // TODO :: CBA -- Require Unification of output language specific
-          // processing into a single Enum class
           switch (codeGenerator.getOutputLanguage ())
           {
             case JAVA:
@@ -1653,8 +1638,6 @@ public class RStringLiteral extends RegularExpression
       params.append (Options.getLongType () + " active" + i + ", ");
     params.append (Options.getLongType () + " active" + i + ")");
 
-    // TODO :: CBA -- Require Unification of output language specific processing
-    // into a single Enum class
     switch (codeGenerator.getOutputLanguage ())
     {
       case JAVA:
@@ -1681,8 +1664,6 @@ public class RStringLiteral extends RegularExpression
 
     if (Options.isDebugTokenManager ())
     {
-      // TODO :: CBA -- Require Unification of output language specific
-      // processing into a single Enum class
       switch (codeGenerator.getOutputLanguage ())
       {
         case JAVA:

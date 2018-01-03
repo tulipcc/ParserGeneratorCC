@@ -36,6 +36,7 @@ package com.helger.pgcc.parser;
 import java.util.Set;
 
 import com.helger.commons.annotation.OverrideOnDemand;
+import com.helger.commons.string.StringHelper;
 
 /**
  * Describes expansions - entities that may occur on the right hand sides of
@@ -59,8 +60,34 @@ public class Expansion
    * An internal name for this expansion. This is used to generate parser
    * routines.
    */
-  String m_internal_name = "";
-  int m_internal_index = -1;
+  private String m_internal_name = "";
+  private int m_internal_index = -1;
+
+  void setInternalName (final String sPrefix, final int nIndex)
+  {
+    m_internal_name = sPrefix + nIndex;
+    m_internal_index = nIndex;
+  }
+
+  void setInternalNameOnly (final String sName)
+  {
+    m_internal_name = sName;
+  }
+
+  boolean hasNoInternalName ()
+  {
+    return StringHelper.hasNoText (m_internal_name);
+  }
+
+  String getInternalName ()
+  {
+    return m_internal_name;
+  }
+
+  int getInternalIndex ()
+  {
+    return m_internal_index;
+  }
 
   /**
    * The parser routines are generated in three phases. The generation of the

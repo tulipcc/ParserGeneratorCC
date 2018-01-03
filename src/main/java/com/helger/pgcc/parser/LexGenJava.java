@@ -543,6 +543,8 @@ public class LexGenJava extends CodeGenerator
               hasTokenActions |= (actions[curRE.m_ordinal] != null);
               toToken[curRE.m_ordinal / 64] |= 1L << (curRE.m_ordinal % 64);
               break;
+            default:
+              throw new IllegalStateException ();
           }
         }
       }

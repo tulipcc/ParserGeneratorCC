@@ -297,9 +297,10 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     codeGenerator.genCodeLine ("public static final String[] jjstrLiteralImages = {");
 
     int k = 0;
-    for (final int i : allMatches.keySet ())
+    for (final Map.Entry <Integer, TokenizerData.MatchInfo> aEntry : allMatches.entrySet ())
     {
-      final TokenizerData.MatchInfo matchInfo = allMatches.get (i);
+      final int i = aEntry.getKey ().intValue ();
+      final TokenizerData.MatchInfo matchInfo = aEntry.getValue ();
       switch (matchInfo.m_matchType)
       {
         case SKIP:
@@ -314,6 +315,8 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
         case TOKEN:
           toToken.set (i);
           break;
+        default:
+          throw new IllegalStateException ();
       }
       newStates[i] = matchInfo.m_newLexState;
       final String image = matchInfo.m_image;

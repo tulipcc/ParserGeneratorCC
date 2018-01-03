@@ -41,8 +41,7 @@ import java.util.Set;
 /**
  * Describes JavaCC productions.
  */
-
-public class NormalProduction
+public abstract class NormalProduction
 {
   protected static final String eol = System.getProperty ("line.separator", "\n");
 
@@ -120,6 +119,9 @@ public class NormalProduction
   private Token m_lastToken;
 
   private Token m_firstToken;
+
+  public NormalProduction ()
+  {}
 
   protected StringBuilder dumpPrefix (final int indent)
   {

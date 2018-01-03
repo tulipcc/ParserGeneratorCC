@@ -129,11 +129,6 @@ public enum EOutputLanguage implements IHasID <String>
     return this == JAVA;
   }
 
-  public boolean isCpp ()
-  {
-    return this == CPP;
-  }
-
   public boolean hasStaticsFile ()
   {
     return this == CPP;
