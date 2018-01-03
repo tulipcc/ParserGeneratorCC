@@ -93,13 +93,13 @@ public class HTMLGenerator extends TextGenerator
   @Override
   public void print (final String s)
   {
-    ostr.print (s);
+    m_ostr.print (s);
   }
 
   @Override
   public void documentStart ()
   {
-    ostr = create_output_stream ();
+    m_ostr = create_output_stream ();
     println ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">");
     println ("<HTML>");
     println ("<HEAD>");
@@ -125,7 +125,7 @@ public class HTMLGenerator extends TextGenerator
   {
     println ("</BODY>");
     println ("</HTML>");
-    ostr.close ();
+    m_ostr.close ();
   }
 
   /**

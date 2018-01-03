@@ -146,7 +146,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     {
       Token t = s_token_mgr_decls.get (0);
       boolean commonTokenActionSeen = false;
-      final boolean commonTokenActionNeeded = Options.getCommonTokenAction ();
+      final boolean commonTokenActionNeeded = Options.isCommonTokenAction ();
 
       printTokenSetup (s_token_mgr_decls.get (0));
       m_ccol = 1;
@@ -186,7 +186,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
 
     }
     else
-      if (Options.getCommonTokenAction ())
+      if (Options.isCommonTokenAction ())
       {
         JavaCCErrors.warning ("You have the COMMON_TOKEN_ACTION option set. " +
                               "But you have not defined the method :\n" +
@@ -310,7 +310,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     if (!Options.isBuildTokenManager () || Options.isUserTokenManager () || JavaCCErrors.getErrorCount () > 0)
       return;
 
-    keepLineCol = Options.getKeepLineColumn ();
+    keepLineCol = Options.isKeepLineColumn ();
     final List <RChoice> choices = new ArrayList <> ();
     TokenProduction tp;
 
@@ -801,7 +801,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
     if (s_nextStateForEof != null || s_actForEof != null)
       genCodeLine ("      TokenLexicalActions(matchedToken);");
 
-    if (Options.getCommonTokenAction ())
+    if (Options.isCommonTokenAction ())
       genCodeLine ("      CommonTokenAction(matchedToken);");
 
     genCodeLine ("      return matchedToken;");
@@ -1012,7 +1012,7 @@ public class LexGenCpp extends LexGenJava // CodeGenerator implements
         genCodeLine (prefix + "       curLexState = jjnewLexState[jjmatchedKind];");
       }
 
-      if (Options.getCommonTokenAction ())
+      if (Options.isCommonTokenAction ())
         genCodeLine (prefix + "         CommonTokenAction(matchedToken);");
 
       genCodeLine (prefix + "         return matchedToken;");

@@ -199,7 +199,7 @@ public class LexGenJava extends CodeGenerator
 
     genCodeLine ("");
     genCodeLine ("/** Token Manager. */");
-    if (Options.getSupportClassVisibilityPublic ())
+    if (Options.isSupportClassVisibilityPublic ())
     {
       // genModifier("public ");
       genModifier ("public ");
@@ -215,7 +215,7 @@ public class LexGenJava extends CodeGenerator
     {
       Token t = s_token_mgr_decls.get (0);
       boolean commonTokenActionSeen = false;
-      final boolean commonTokenActionNeeded = Options.getCommonTokenAction ();
+      final boolean commonTokenActionNeeded = Options.isCommonTokenAction ();
 
       printTokenSetup (s_token_mgr_decls.get (0));
       m_ccol = 1;
@@ -240,7 +240,7 @@ public class LexGenJava extends CodeGenerator
 
     }
     else
-      if (Options.getCommonTokenAction ())
+      if (Options.isCommonTokenAction ())
       {
         JavaCCErrors.warning ("You have the COMMON_TOKEN_ACTION option set. " +
                               "But you have not defined the method :\n" +
@@ -409,7 +409,7 @@ public class LexGenJava extends CodeGenerator
       return;
 
     final String codeGeneratorClass = Options.getTokenManagerCodeGenerator ();
-    keepLineCol = Options.getKeepLineColumn ();
+    keepLineCol = Options.isKeepLineColumn ();
     errorHandlingClass = Options.getTokenMgrErrorClass ();
     final List <RChoice> choices = new ArrayList <> ();
     TokenProduction tp;
@@ -469,7 +469,7 @@ public class LexGenJava extends CodeGenerator
             continue;
           }
 
-          if (!Options.getNoDfa () &&
+          if (!Options.isNoDfa () &&
               curRE instanceof RStringLiteral &&
               StringHelper.hasText (((RStringLiteral) curRE).m_image))
           {
@@ -723,7 +723,7 @@ public class LexGenJava extends CodeGenerator
                    "defaultLexState",
                    defaultLexState,
                    "noDfa",
-                   Options.getNoDfa (),
+                   Options.isNoDfa (),
                    "generatedStates",
                    totalNumStates);
 
@@ -1052,7 +1052,7 @@ public class LexGenJava extends CodeGenerator
     if (s_nextStateForEof != null || s_actForEof != null)
       genCodeLine ("      TokenLexicalActions(matchedToken);");
 
-    if (Options.getCommonTokenAction ())
+    if (Options.isCommonTokenAction ())
       genCodeLine ("      CommonTokenAction(matchedToken);");
 
     genCodeLine ("      return matchedToken;");
@@ -1270,7 +1270,7 @@ public class LexGenJava extends CodeGenerator
         genCodeLine (prefix + "       curLexState = jjnewLexState[jjmatchedKind];");
       }
 
-      if (Options.getCommonTokenAction ())
+      if (Options.isCommonTokenAction ())
         genCodeLine (prefix + "         CommonTokenAction(matchedToken);");
 
       genCodeLine (prefix + "         return matchedToken;");

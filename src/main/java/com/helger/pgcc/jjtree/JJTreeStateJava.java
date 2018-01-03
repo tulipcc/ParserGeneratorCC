@@ -91,7 +91,7 @@ final class JJTreeStateJava
 
   private static void insertState (final PrintWriter ostr)
   {
-    final boolean bGenerateGenerics = Options.getGenerateGenerics ();
+    final boolean bGenerateGenerics = Options.isGenerateGenerics ();
     ostr.println ("public class " + nameState () + " {");
 
     if (bGenerateGenerics)

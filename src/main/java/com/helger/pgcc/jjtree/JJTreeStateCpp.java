@@ -50,7 +50,7 @@ import com.helger.pgcc.parser.OutputFile;
  */
 final class JJTreeStateCpp
 {
-  static final String JJTStateVersion = PGVersion.majorDotMinor;
+  static final String JJTStateVersion = PGVersion.MAJOR_DOT_MINOR;
 
   private JJTreeStateCpp ()
   {}

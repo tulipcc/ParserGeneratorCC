@@ -143,7 +143,6 @@ public class Options
   public static final String USEROPTION__JDK_VERSION = "JDK_VERSION";
   public static final String USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC = "SUPPORT_CLASS_VISIBILITY_PUBLIC";
   public static final String USEROPTION__GENERATE_ANNOTATIONS = "GENERATE_ANNOTATIONS";
-  public static final String USEROPTION__GENERATE_STRING_BUILDER = "GENERATE_STRING_BUILDER";
   public static final String USEROPTION__GENERATE_GENERICS = "GENERATE_GENERICS";
   public static final String USEROPTION__GENERATE_CHAINED_EXCEPTION = "GENERATE_CHAINED_EXCEPTION";
   public static final String USEROPTION__OUTPUT_DIRECTORY = "OUTPUT_DIRECTORY";
@@ -221,7 +220,6 @@ public class Options
     temp.add (new OptionInfo (USEROPTION__GENERATE_CHAINED_EXCEPTION, EOptionType.BOOLEAN, Boolean.FALSE));
     temp.add (new OptionInfo (USEROPTION__GENERATE_GENERICS, EOptionType.BOOLEAN, Boolean.FALSE));
     temp.add (new OptionInfo (USEROPTION__GENERATE_BOILERPLATE, EOptionType.BOOLEAN, Boolean.TRUE));
-    temp.add (new OptionInfo (USEROPTION__GENERATE_STRING_BUILDER, EOptionType.BOOLEAN, Boolean.FALSE));
 
     temp.add (new OptionInfo (USEROPTION__GENERATE_ANNOTATIONS, EOptionType.BOOLEAN, Boolean.FALSE));
     temp.add (new OptionInfo (USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC, EOptionType.BOOLEAN, Boolean.TRUE));
@@ -639,7 +637,7 @@ public class Options
 
   public static void normalize ()
   {
-    if (getDebugLookahead () && !getDebugParser ())
+    if (isDebugLookahead () && !isDebugParser ())
     {
       if (s_cmdLineSetting.contains (USEROPTION__DEBUG_PARSER) ||
           s_inputFileSetting.contains (USEROPTION__DEBUG_PARSER))
@@ -653,10 +651,9 @@ public class Options
     // Now set the "GENERATE" options from the supplied (or default) JDK
     // version.
 
-    s_optionValues.put (USEROPTION__GENERATE_CHAINED_EXCEPTION, Boolean.valueOf (jdkVersionAtLeast (1.4)));
-    s_optionValues.put (USEROPTION__GENERATE_GENERICS, Boolean.valueOf (jdkVersionAtLeast (1.5)));
-    s_optionValues.put (USEROPTION__GENERATE_STRING_BUILDER, Boolean.valueOf (jdkVersionAtLeast (1.5)));
-    s_optionValues.put (USEROPTION__GENERATE_ANNOTATIONS, Boolean.valueOf (jdkVersionAtLeast (1.5)));
+    s_optionValues.put (USEROPTION__GENERATE_CHAINED_EXCEPTION, Boolean.valueOf (_isJdkVersionAtLeast (1.4)));
+    s_optionValues.put (USEROPTION__GENERATE_GENERICS, Boolean.valueOf (_isJdkVersionAtLeast (1.5)));
+    s_optionValues.put (USEROPTION__GENERATE_ANNOTATIONS, Boolean.valueOf (_isJdkVersionAtLeast (1.5)));
   }
 
   /**
@@ -713,7 +710,7 @@ public class Options
     return StringHelper.hasNoText (retVal) ? null : retVal;
   }
 
-  public static boolean getNoDfa ()
+  public static boolean isNoDfa ()
   {
     return booleanValue (USEROPTION__NO_DFA);
   }
@@ -723,7 +720,7 @@ public class Options
    *
    * @return The requested debug parser value.
    */
-  public static boolean getDebugParser ()
+  public static boolean isDebugParser ()
   {
     return booleanValue (USEROPTION__DEBUG_PARSER);
   }
@@ -733,7 +730,7 @@ public class Options
    *
    * @return The requested debug lookahead value.
    */
-  public static boolean getDebugLookahead ()
+  public static boolean isDebugLookahead ()
   {
     return booleanValue (USEROPTION__DEBUG_LOOKAHEAD);
   }
@@ -853,7 +850,7 @@ public class Options
    *
    * @return The requested force lookahead value.
    */
-  public static boolean getForceLaCheck ()
+  public static boolean isForceLaCheck ()
   {
     return booleanValue (USEROPTION__FORCE_LA_CHECK);
   }
@@ -864,7 +861,7 @@ public class Options
    * @return The requested common token action value.
    */
 
-  public static boolean getCommonTokenAction ()
+  public static boolean isCommonTokenAction ()
   {
     return booleanValue (USEROPTION__COMMON_TOKEN_ACTION);
   }
@@ -874,7 +871,7 @@ public class Options
    *
    * @return The requested cache tokens value.
    */
-  public static boolean getCacheTokens ()
+  public static boolean isCacheTokens ()
   {
     return booleanValue (USEROPTION__CACHE_TOKENS);
   }
@@ -884,7 +881,7 @@ public class Options
    *
    * @return The requested keep line column value.
    */
-  public static boolean getKeepLineColumn ()
+  public static boolean isKeepLineColumn ()
   {
     return booleanValue (USEROPTION__KEEP_LINE_COLUMN);
   }
@@ -936,19 +933,9 @@ public class Options
    *
    * @return
    */
-  public static boolean getGenerateGenerics ()
+  public static boolean isGenerateGenerics ()
   {
     return booleanValue (USEROPTION__GENERATE_GENERICS);
-  }
-
-  /**
-   * Should the generated code use StringBuilder rather than StringBuilder?
-   *
-   * @return
-   */
-  public static boolean getGenerateStringBuilder ()
-  {
-    return booleanValue (USEROPTION__GENERATE_STRING_BUILDER);
   }
 
   /**
@@ -956,7 +943,7 @@ public class Options
    *
    * @return
    */
-  public static boolean getGenerateAnnotations ()
+  public static boolean isGenerateAnnotations ()
   {
     return booleanValue (USEROPTION__GENERATE_ANNOTATIONS);
   }
@@ -966,7 +953,7 @@ public class Options
    *
    * @return
    */
-  public static boolean getSupportClassVisibilityPublic ()
+  public static boolean isSupportClassVisibilityPublic ()
   {
     return booleanValue (USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC);
   }
@@ -978,7 +965,7 @@ public class Options
    *        the version to check against. E.g. <code>1.5</code>
    * @return true if the output version is at least the specified version.
    */
-  public static boolean jdkVersionAtLeast (final double version)
+  private static boolean _isJdkVersionAtLeast (final double version)
   {
     final double jdkVersion = Double.parseDouble (getJdkVersion ());
 

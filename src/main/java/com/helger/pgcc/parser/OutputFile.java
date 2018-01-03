@@ -283,7 +283,7 @@ public class OutputFile implements AutoCloseable
       m_pw = new TrapClosePrintWriter (dos);
 
       // Write the headers....
-      final String version = m_compatibleVersion == null ? PGVersion.versionNumber : m_compatibleVersion;
+      final String version = m_compatibleVersion == null ? PGVersion.s_versionNumber : m_compatibleVersion;
       m_pw.println ("/* " + JavaCCGlobals.getIdString (m_toolName, m_file.getName ()) + " Version " + version + " */");
       if (m_options != null)
       {

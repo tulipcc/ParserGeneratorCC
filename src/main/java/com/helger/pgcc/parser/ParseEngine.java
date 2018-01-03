@@ -455,7 +455,7 @@ public class ParseEngine
                 // Control flows through to next case.
               case NOOPENSTM:
                 retval += "\n" + "switch (";
-                if (Options.getCacheTokens ())
+                if (Options.isCacheTokens ())
                 {
                   retval += "jj_nt.kind) {\u0001";
                 }
@@ -896,7 +896,7 @@ public class ParseEngine
     genStackCheck (voidReturn);
 
     m_indentamt = 4;
-    if (Options.getDebugParser ())
+    if (Options.isDebugParser ())
     {
       m_codeGenerator.genCodeLine ("");
       if (m_isJavaDialect)
@@ -946,7 +946,7 @@ public class ParseEngine
         m_codeGenerator.genCodeLine ("    throw \"Missing return statement in function\";");
       }
     }
-    if (Options.getDebugParser ())
+    if (Options.isDebugParser ())
     {
       if (m_isJavaDialect)
       {
@@ -1383,7 +1383,7 @@ public class ParseEngine
   String genReturn (final boolean value)
   {
     final String retval = (value ? "true" : "false");
-    if (Options.getDebugLookahead () && jj3_expansion != null)
+    if (Options.isDebugLookahead () && jj3_expansion != null)
     {
       String tracecode = "trace_return(\"" +
                          JavaCCGlobals.addUnicodeEscapes (((NormalProduction) jj3_expansion.m_parent).getLhs ()) +
@@ -1574,7 +1574,7 @@ public class ParseEngine
       }
       genStackCheck (false);
       xsp_declared = false;
-      if (Options.getDebugLookahead () && e.m_parent instanceof NormalProduction)
+      if (Options.isDebugLookahead () && e.m_parent instanceof NormalProduction)
       {
         m_codeGenerator.genCode ("    ");
         if (Options.isErrorReporting ())
@@ -1969,7 +1969,7 @@ public class ParseEngine
         // }
         // }
         codeGenerator.genCodeLine (" {");
-        if (Options.getDebugParser ())
+        if (Options.isDebugParser ())
         {
           codeGenerator.genCodeLine ("");
           if (m_isJavaDialect)
@@ -1994,7 +1994,7 @@ public class ParseEngine
           codeGenerator.printTokenList (cp.getCodeTokens ());
         }
         codeGenerator.genCodeLine ("");
-        if (Options.getDebugParser ())
+        if (Options.isDebugParser ())
         {
           codeGenerator.genCodeLine ("    } catch(...) { }");
         }
@@ -2050,7 +2050,7 @@ public class ParseEngine
             }
           }
           codeGenerator.genCode (" {");
-          if (Options.getDebugParser ())
+          if (Options.isDebugParser ())
           {
             codeGenerator.genCodeLine ("");
             codeGenerator.genCodeLine ("    trace_call(\"" + JavaCCGlobals.addUnicodeEscapes (jp.getLhs ()) + "\");");
@@ -2063,7 +2063,7 @@ public class ParseEngine
             codeGenerator.printTokenList (jp.getCodeTokens ());
           }
           codeGenerator.genCodeLine ("");
-          if (Options.getDebugParser ())
+          if (Options.isDebugParser ())
           {
             codeGenerator.genCodeLine ("    } finally {");
             codeGenerator.genCodeLine ("      trace_return(\"" +

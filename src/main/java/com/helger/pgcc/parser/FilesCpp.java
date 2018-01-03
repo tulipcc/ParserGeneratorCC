@@ -59,30 +59,30 @@ public class FilesCpp
    * ID of the latest version (of JavaCC) in which one of the CharStream classes
    * or the CharStream interface is modified.
    */
-  static final String charStreamVersion = PGVersion.majorDotMinor;
+  static final String charStreamVersion = PGVersion.MAJOR_DOT_MINOR;
 
   /**
    * ID of the latest version (of JavaCC) in which the TokenManager interface is
    * modified.
    */
-  static final String tokenManagerVersion = PGVersion.majorDotMinor;
+  static final String tokenManagerVersion = PGVersion.MAJOR_DOT_MINOR;
 
   /**
    * ID of the latest version (of JavaCC) in which the Token class is modified.
    */
-  static final String tokenVersion = PGVersion.majorDotMinor;
+  static final String tokenVersion = PGVersion.MAJOR_DOT_MINOR;
 
   /**
    * ID of the latest version (of JavaCC) in which the ParseException class is
    * modified.
    */
-  static final String parseExceptionVersion = PGVersion.majorDotMinor;
+  static final String parseExceptionVersion = PGVersion.MAJOR_DOT_MINOR;
 
   /**
    * ID of the latest version (of JavaCC) in which the TokenMgrError class is
    * modified.
    */
-  static final String tokenMgrErrorVersion = PGVersion.majorDotMinor;
+  static final String tokenMgrErrorVersion = PGVersion.MAJOR_DOT_MINOR;
 
   /**
    * Read the version from the comment in the specified file. This method does
@@ -104,7 +104,7 @@ public class FilesCpp
       // Has not yet been created, so it must be up to date.
       try
       {
-        final String majorVersion = PGVersion.versionNumber.replaceAll ("[^0-9.]+.*", "");
+        final String majorVersion = PGVersion.s_versionNumber.replaceAll ("[^0-9.]+.*", "");
         return Double.parseDouble (majorVersion);
       }
       catch (final NumberFormatException e)

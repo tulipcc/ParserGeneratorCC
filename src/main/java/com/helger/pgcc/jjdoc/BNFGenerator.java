@@ -206,26 +206,6 @@ public class BNFGenerator implements IDocGenerator
     m_bPrinting = true;
   }
 
-  public void debug (final String message)
-  {
-    System.err.println (message);
-  }
-
-  public void info (final String message)
-  {
-    System.err.println (message);
-  }
-
-  public void warn (final String message)
-  {
-    System.err.println (message);
-  }
-
-  public void error (final String message)
-  {
-    System.err.println (message);
-  }
-
   @Override
   public void handleTokenProduction (final TokenProduction tp)
   {
@@ -234,5 +214,4 @@ public class BNFGenerator implements IDocGenerator
     text (text);
     m_bPrinting = true;
   }
-
 }

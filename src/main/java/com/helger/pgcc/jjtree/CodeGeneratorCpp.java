@@ -347,7 +347,7 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
 
     io.print (indent + nodeClass + " *" + ns.m_nodeVar + " = ");
     final String p = Options.isStatic () ? "null" : "this";
-    final String parserArg = JJTreeOptions.getNodeUsesParser () ? (p + ", ") : "";
+    final String parserArg = JJTreeOptions.isNodeUsesParser () ? (p + ", ") : "";
 
     if (JJTreeOptions.getNodeFactory ().equals ("*"))
     {
@@ -376,12 +376,12 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
       io.println (indent + "bool " + ns.m_closedVar + " = true;");
     }
     io.println (indent + ns.m_node_descriptor.openNode (ns.m_nodeVar));
-    if (JJTreeOptions.getNodeScopeHook ())
+    if (JJTreeOptions.isNodeScopeHook ())
     {
       io.println (indent + "jjtreeOpenNodeScope(" + ns.m_nodeVar + ");");
     }
 
-    if (JJTreeOptions.getTrackTokens ())
+    if (JJTreeOptions.isTrackTokens ())
     {
       io.println (indent + ns.m_nodeVar + "->jjtSetFirstToken(getToken(1));");
     }
@@ -395,14 +395,14 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
     {
       io.println (indent + ns.m_closedVar + " = false;");
     }
-    if (JJTreeOptions.getNodeScopeHook ())
+    if (JJTreeOptions.isNodeScopeHook ())
     {
       io.println (indent + "if (jjtree.nodeCreated()) {");
       io.println (indent + " jjtreeCloseNodeScope(" + ns.m_nodeVar + ");");
       io.println (indent + "}");
     }
 
-    if (JJTreeOptions.getTrackTokens ())
+    if (JJTreeOptions.isTrackTokens ())
     {
       io.println (indent + ns.m_nodeVar + "->jjtSetLastToken(getToken(0));");
     }

@@ -53,16 +53,16 @@ public final class OptionsTest extends TestCase
 
     assertEquals (true, Options.isBuildParser ());
     assertEquals (true, Options.isBuildTokenManager ());
-    assertEquals (false, Options.getCacheTokens ());
-    assertEquals (false, Options.getCommonTokenAction ());
-    assertEquals (false, Options.getDebugLookahead ());
-    assertEquals (false, Options.getDebugParser ());
+    assertEquals (false, Options.isCacheTokens ());
+    assertEquals (false, Options.isCommonTokenAction ());
+    assertEquals (false, Options.isDebugLookahead ());
+    assertEquals (false, Options.isDebugParser ());
     assertEquals (false, Options.isDebugTokenManager ());
     assertEquals (true, Options.isErrorReporting ());
-    assertEquals (false, Options.getForceLaCheck ());
+    assertEquals (false, Options.isForceLaCheck ());
     assertEquals (false, Options.isIgnoreCase ());
     assertEquals (false, Options.isJavaUnicodeEscape ());
-    assertEquals (true, Options.getKeepLineColumn ());
+    assertEquals (true, Options.isKeepLineColumn ());
     assertEquals (true, Options.isSanityCheck ());
     assertEquals (true, Options.isStatic ());
     assertEquals (false, Options.isUnicodeInput ());
@@ -185,14 +185,14 @@ public final class OptionsTest extends TestCase
     Options.init ();
     JavaCCErrors.reInit ();
 
-    assertEquals (false, Options.getDebugLookahead ());
-    assertEquals (false, Options.getDebugParser ());
+    assertEquals (false, Options.isDebugLookahead ());
+    assertEquals (false, Options.isDebugParser ());
 
     Options.setCmdLineOption ("-DEBUG_LOOKAHEAD=TRUE");
     Options.normalize ();
 
-    assertEquals (true, Options.getDebugLookahead ());
-    assertEquals (true, Options.getDebugParser ());
+    assertEquals (true, Options.isDebugLookahead ());
+    assertEquals (true, Options.isDebugParser ());
 
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());

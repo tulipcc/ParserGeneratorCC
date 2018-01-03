@@ -101,13 +101,13 @@ public class XTextGenerator extends TextGenerator
   @Override
   public void print (final String s)
   {
-    ostr.print (s);
+    m_ostr.print (s);
   }
 
   @Override
   public void documentStart ()
   {
-    ostr = create_output_stream ();
+    m_ostr = create_output_stream ();
     println ("grammar " + JJDocGlobals.s_input_file + " with org.eclipse.xtext.common.Terminals");
     println ("import \"http://www.eclipse.org/emf/2002/Ecore\" as ecore");
     println ("");
@@ -134,7 +134,7 @@ public class XTextGenerator extends TextGenerator
   {
     // println("</BODY>");
     // println("</HTML>");
-    ostr.close ();
+    m_ostr.close ();
   }
 
   /**

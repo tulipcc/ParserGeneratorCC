@@ -185,7 +185,7 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("  " + staticOpt () + "public Token token;");
       genCodeLine ("  /** Next token. */");
       genCodeLine ("  " + staticOpt () + "public Token jj_nt;");
-      if (!Options.getCacheTokens ())
+      if (!Options.isCacheTokens ())
       {
         genCodeLine ("  " + staticOpt () + "private int jj_ntk;");
       }
@@ -240,7 +240,7 @@ public class ParseGenJava extends CodeGenerator
       }
       genCodeLine ("");
 
-      if (Options.getDebugParser ())
+      if (Options.isDebugParser ())
       {
         genCodeLine ("  {");
         genCodeLine ("      enable_tracing();");
@@ -275,7 +275,7 @@ public class ParseGenJava extends CodeGenerator
             genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(stream);");
           }
           genCodeLine ("	 token = new Token();");
-          if (Options.getCacheTokens ())
+          if (Options.isCacheTokens ())
           {
             genCodeLine ("	 token.next = jj_nt = token_source.getNextToken();");
           }
@@ -314,7 +314,7 @@ public class ParseGenJava extends CodeGenerator
           }
 
           genCodeLine ("	 token = new Token();");
-          if (Options.getCacheTokens ())
+          if (Options.isCacheTokens ())
           {
             genCodeLine ("	 token.next = jj_nt = token_source.getNextToken();");
           }
@@ -410,7 +410,7 @@ public class ParseGenJava extends CodeGenerator
               genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(jj_input_stream);");
             }
             genCodeLine ("	 token = new Token();");
-            if (Options.getCacheTokens ())
+            if (Options.isCacheTokens ())
             {
               genCodeLine ("	 token.next = jj_nt = token_source.getNextToken();");
             }
@@ -466,7 +466,7 @@ public class ParseGenJava extends CodeGenerator
             }
 
             genCodeLine ("	 token = new Token();");
-            if (Options.getCacheTokens ())
+            if (Options.isCacheTokens ())
             {
               genCodeLine ("	 token.next = jj_nt = token_source.getNextToken();");
             }
@@ -531,7 +531,7 @@ public class ParseGenJava extends CodeGenerator
             genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(jj_input_stream);");
           }
           genCodeLine ("	 token = new Token();");
-          if (Options.getCacheTokens ())
+          if (Options.isCacheTokens ())
           {
             genCodeLine ("	 token.next = jj_nt = token_source.getNextToken();");
           }
@@ -621,7 +621,7 @@ public class ParseGenJava extends CodeGenerator
           }
 
           genCodeLine ("	 token = new Token();");
-          if (Options.getCacheTokens ())
+          if (Options.isCacheTokens ())
           {
             genCodeLine ("	 token.next = jj_nt = token_source.getNextToken();");
           }
@@ -679,7 +679,7 @@ public class ParseGenJava extends CodeGenerator
       }
       genCodeLine ("	 token_source = tm;");
       genCodeLine ("	 token = new Token();");
-      if (Options.getCacheTokens ())
+      if (Options.isCacheTokens ())
       {
         genCodeLine ("	 token.next = jj_nt = token_source.getNextToken();");
       }
@@ -717,7 +717,7 @@ public class ParseGenJava extends CodeGenerator
       }
       genCodeLine ("	 token_source = tm;");
       genCodeLine ("	 token = new Token();");
-      if (Options.getCacheTokens ())
+      if (Options.isCacheTokens ())
       {
         genCodeLine ("	 token.next = jj_nt = token_source.getNextToken();");
       }
@@ -748,7 +748,7 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("  }");
       genCodeLine ("");
       genCodeLine ("  " + staticOpt () + "private Token jj_consume_token(int kind) throws ParseException {");
-      if (Options.getCacheTokens ())
+      if (Options.isCacheTokens ())
       {
         genCodeLine ("	 Token oldToken = token;");
         genCodeLine ("	 if ((token = jj_nt).next != null) jj_nt = jj_nt.next;");
@@ -779,13 +779,13 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("	   }");
         }
       }
-      if (Options.getDebugParser ())
+      if (Options.isDebugParser ())
       {
         genCodeLine ("	   trace_token(token, \"\");");
       }
       genCodeLine ("	   return token;");
       genCodeLine ("	 }");
-      if (Options.getCacheTokens ())
+      if (Options.isCacheTokens ())
       {
         genCodeLine ("	 jj_nt = token;");
       }
@@ -821,7 +821,7 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("	   int i = 0; Token tok = token;");
           genCodeLine ("	   while (tok != null && tok != jj_scanpos) { i++; tok = tok.next; }");
           genCodeLine ("	   if (tok != null) jj_add_error_token(kind, i);");
-          if (Options.getDebugLookahead ())
+          if (Options.isDebugLookahead ())
           {
             genCodeLine ("	 } else {");
             genCodeLine ("	   trace_scan(jj_scanpos, kind);");
@@ -829,7 +829,7 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("	 }");
         }
         else
-          if (Options.getDebugLookahead ())
+          if (Options.isDebugLookahead ())
           {
             genCodeLine ("	 trace_scan(jj_scanpos, kind);");
           }
@@ -842,7 +842,7 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("");
       genCodeLine ("/** Get the next Token. */");
       genCodeLine ("  " + staticOpt () + "final public Token getNextToken() {");
-      if (Options.getCacheTokens ())
+      if (Options.isCacheTokens ())
       {
         genCodeLine ("	 if ((token = jj_nt).next != null) jj_nt = jj_nt.next;");
         genCodeLine ("	 else jj_nt = jj_nt.next = token_source.getNextToken();");
@@ -857,7 +857,7 @@ public class ParseGenJava extends CodeGenerator
       {
         genCodeLine ("	 jj_gen++;");
       }
-      if (Options.getDebugParser ())
+      if (Options.isDebugParser ())
       {
         genCodeLine ("	   trace_token(token, \" (in getNextToken)\");");
       }
@@ -881,7 +881,7 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("	 return t;");
       genCodeLine ("  }");
       genCodeLine ("");
-      if (!Options.getCacheTokens ())
+      if (!Options.isCacheTokens ())
       {
         genCodeLine ("  " + staticOpt () + "private int jj_ntk_f() {");
         genCodeLine ("	 if ((jj_nt=token.next) == null)");
@@ -893,7 +893,7 @@ public class ParseGenJava extends CodeGenerator
       }
       if (Options.isErrorReporting ())
       {
-        if (Options.getGenerateGenerics ())
+        if (Options.isGenerateGenerics ())
         {
           genCodeLine ("  " +
                        staticOpt () +
@@ -924,7 +924,7 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("		 jj_expentry[i] = jj_lasttokens[i];");
           genCodeLine ("	   }");
           genCodeLine ("");
-          if (Options.getGenerateGenerics ())
+          if (Options.isGenerateGenerics ())
           {
             genCodeLine ("     for (final int[] oldentry : jj_expentries) {");
           }
@@ -1005,7 +1005,7 @@ public class ParseGenJava extends CodeGenerator
         }
         genCodeLine ("	 int[][] exptokseq = new int[jj_expentries.size()][];");
         genCodeLine ("	 for (int i = 0; i < jj_expentries.size(); i++) {");
-        if (Options.getGenerateGenerics ())
+        if (Options.isGenerateGenerics ())
         {
           genCodeLine ("     exptokseq[i] = jj_expentries.get(i);");
         }
@@ -1034,12 +1034,12 @@ public class ParseGenJava extends CodeGenerator
         genCodeLine ("  /** Generate ParseException. */");
         genCodeLine ("  " + staticOpt () + "public ParseException generateParseException() {");
         genCodeLine ("	 Token errortok = token.next;");
-        if (Options.getKeepLineColumn ())
+        if (Options.isKeepLineColumn ())
         {
           genCodeLine ("	 int line = errortok.beginLine, column = errortok.beginColumn;");
         }
         genCodeLine ("	 String mess = (errortok.kind == 0) ? tokenImage[0] : errortok.image;");
-        if (Options.getKeepLineColumn ())
+        if (Options.isKeepLineColumn ())
         {
           genCodeLine ("	 return new ParseException(" +
                        "\"Parse error at line \" + line + \", column \" + column + \".  " +
@@ -1063,7 +1063,7 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("  }");
       genCodeLine ("");
 
-      if (Options.getDebugParser ())
+      if (Options.isDebugParser ())
       {
         genCodeLine ("/** Enable tracing. */");
         genCodeLine ("  " + staticOpt () + "final public void enable_tracing() {");

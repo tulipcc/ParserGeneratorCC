@@ -39,6 +39,7 @@ package com.helger.pgcc.jjdoc;
 public final class JJDocGlobals
 {
   public static final String STANDARD_INPUT = "standard input";
+  public static final String STANDARD_OUTPUT = "standard output";
 
   /**
    * The name of the input file.
@@ -52,7 +53,7 @@ public final class JJDocGlobals
   /**
    * The Generator to create output with.
    */
-  public static IDocGenerator s_generator;
+  static IDocGenerator s_generator;
 
   /**
    * @param generator

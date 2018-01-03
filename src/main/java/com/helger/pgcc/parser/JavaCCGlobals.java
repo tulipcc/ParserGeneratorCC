@@ -90,7 +90,7 @@ public final class JavaCCGlobals
    */
   public static void bannerLine (final String fullName, final String ver)
   {
-    System.out.print ("ParserGenerator Version " + PGVersion.versionNumber + " (" + fullName);
+    System.out.print ("ParserGenerator Version " + PGVersion.s_versionNumber + " (" + fullName);
     if (StringHelper.hasText (ver))
       System.out.print (" Version " + ver);
     System.out.println (")");

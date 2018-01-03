@@ -42,9 +42,8 @@ import com.helger.pgcc.parser.*;
 /**
  * The main entry point for JJDoc.
  */
-public class JJDoc
+public final class JJDoc
 {
-
   static void start ()
   {
     JJDocGlobals.s_generator = JJDocGlobals.getGenerator ();

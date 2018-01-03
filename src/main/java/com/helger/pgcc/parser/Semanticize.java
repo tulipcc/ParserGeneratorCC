@@ -80,7 +80,7 @@ public class Semanticize
     if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ();
 
-    if (Options.getLookahead () > 1 && !Options.getForceLaCheck () && Options.isSanityCheck ())
+    if (Options.getLookahead () > 1 && !Options.isForceLaCheck () && Options.isSanityCheck ())
     {
       JavaCCErrors.warning ("Lookahead adequacy checking not being performed since option LOOKAHEAD " +
                             "is more than 1.  Set option FORCE_LA_CHECK to true to force checking.");
@@ -1126,7 +1126,7 @@ public class Semanticize
     {
       if (e instanceof Choice)
       {
-        if (Options.getLookahead () == 1 || Options.getForceLaCheck ())
+        if (Options.getLookahead () == 1 || Options.isForceLaCheck ())
         {
           LookaheadCalc.choiceCalc ((Choice) e);
         }
@@ -1135,7 +1135,7 @@ public class Semanticize
         if (e instanceof OneOrMore)
         {
           final OneOrMore exp = (OneOrMore) e;
-          if (Options.getForceLaCheck () || (implicitLA (exp.expansion) && Options.getLookahead () == 1))
+          if (Options.isForceLaCheck () || (implicitLA (exp.expansion) && Options.getLookahead () == 1))
           {
             LookaheadCalc.ebnfCalc (exp, exp.expansion);
           }
@@ -1144,7 +1144,7 @@ public class Semanticize
           if (e instanceof ZeroOrMore)
           {
             final ZeroOrMore exp = (ZeroOrMore) e;
-            if (Options.getForceLaCheck () || (implicitLA (exp.m_expansion) && Options.getLookahead () == 1))
+            if (Options.isForceLaCheck () || (implicitLA (exp.m_expansion) && Options.getLookahead () == 1))
             {
               LookaheadCalc.ebnfCalc (exp, exp.m_expansion);
             }
@@ -1153,7 +1153,7 @@ public class Semanticize
             if (e instanceof ZeroOrOne)
             {
               final ZeroOrOne exp = (ZeroOrOne) e;
-              if (Options.getForceLaCheck () || (implicitLA (exp.expansion) && Options.getLookahead () == 1))
+              if (Options.isForceLaCheck () || (implicitLA (exp.expansion) && Options.getLookahead () == 1))
               {
                 LookaheadCalc.ebnfCalc (exp, exp.expansion);
               }

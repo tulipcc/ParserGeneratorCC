@@ -35,8 +35,8 @@ package com.helger.pgcc.jjdoc;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.pgcc.parser.CodeProductionCpp;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.CodeProductionJava;
+import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NonTerminal;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.RegularExpression;
@@ -208,7 +208,10 @@ public interface IDocGenerator
    * @param message
    *        the string to log
    */
-  void debug (String message);
+  default void debug (final String message)
+  {
+    System.err.println (message);
+  }
 
   /**
    * Log informational messages.
@@ -216,7 +219,10 @@ public interface IDocGenerator
    * @param message
    *        the string to log
    */
-  void info (String message);
+  default void info (final String message)
+  {
+    System.err.println (message);
+  }
 
   /**
    * Log warning messages.
@@ -224,7 +230,10 @@ public interface IDocGenerator
    * @param message
    *        the string to log
    */
-  void warn (String message);
+  default void warn (final String message)
+  {
+    System.err.println (message);
+  }
 
   /**
    * Log error messages.
@@ -232,7 +241,10 @@ public interface IDocGenerator
    * @param message
    *        the string to log
    */
-  void error (String message);
+  default void error (final String message)
+  {
+    System.err.println (message);
+  }
 
   /**
    * Dummy method to ensure parameters are used...

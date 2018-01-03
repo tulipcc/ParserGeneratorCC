@@ -278,14 +278,14 @@ public class ParseGenCPP extends ParseGenJava
     genCodeLine ("    jj_gc = 0;");
     genCodeLine ("    jj_kind = -1;");
     genCodeLine ("    indent = 0;");
-    genCodeLine ("    trace = " + Options.getDebugParser () + ";");
+    genCodeLine ("    trace = " + Options.isDebugParser () + ";");
     if (Options.hasCPPStackLimit ())
     {
       genCodeLine ("    jj_stack_limit = " + Options.getCPPStackLimit () + ";");
       genCodeLine ("    jj_stack_error = jj_stack_check(true);");
     }
 
-    if (Options.getCacheTokens ())
+    if (Options.isCacheTokens ())
     {
       genCodeLine ("    token->next = jj_nt = token_source->getNextToken();");
     }
@@ -373,7 +373,7 @@ public class ParseGenCPP extends ParseGenJava
       genCodeLine ("      return jj_consume_token(-1);");
       genCodeLine ("    }");
     }
-    if (Options.getCacheTokens ())
+    if (Options.isCacheTokens ())
     {
       genCodeLine ("    Token *oldToken = token;");
       genCodeLine ("    if ((token = jj_nt)->next != nullptr) jj_nt = jj_nt->next;");
@@ -404,13 +404,13 @@ public class ParseGenCPP extends ParseGenJava
         genCodeLine ("      }");
       }
     }
-    if (Options.getDebugParser ())
+    if (Options.isDebugParser ())
     {
       genCodeLine ("      trace_token(token, \"\");");
     }
     genCodeLine ("      return token;");
     genCodeLine ("    }");
-    if (Options.getCacheTokens ())
+    if (Options.isCacheTokens ())
     {
       genCodeLine ("    jj_nt = token;");
     }
@@ -466,7 +466,7 @@ public class ParseGenCPP extends ParseGenJava
         genCodeLine ("      int i = 0; Token *tok = token;");
         genCodeLine ("      while (tok != nullptr && tok != jj_scanpos) { i++; tok = tok->next; }");
         genCodeLine ("      if (tok != nullptr) jj_add_error_token(kind, i);");
-        if (Options.getDebugLookahead ())
+        if (Options.isDebugLookahead ())
         {
           genCodeLine ("    } else {");
           genCodeLine ("      trace_scan(jj_scanpos, kind);");
@@ -474,7 +474,7 @@ public class ParseGenCPP extends ParseGenJava
         genCodeLine ("    }");
       }
       else
-        if (Options.getDebugLookahead ())
+        if (Options.isDebugLookahead ())
         {
           genCodeLine ("    trace_scan(jj_scanpos, kind);");
         }
@@ -490,7 +490,7 @@ public class ParseGenCPP extends ParseGenJava
     genCodeLine ("/** Get the next Token. */");
     generateMethodDefHeader ("Token *", s_cu_name, "getNextToken()");
     genCodeLine ("{");
-    if (Options.getCacheTokens ())
+    if (Options.isCacheTokens ())
     {
       genCodeLine ("    if ((token = jj_nt)->next != nullptr) jj_nt = jj_nt->next;");
       genCodeLine ("    else jj_nt = jj_nt->next = token_source->getNextToken();");
@@ -505,7 +505,7 @@ public class ParseGenCPP extends ParseGenJava
     {
       genCodeLine ("    jj_gen++;");
     }
-    if (Options.getDebugParser ())
+    if (Options.isDebugParser ())
     {
       genCodeLine ("      trace_token(token, \" (in getNextToken)\");");
     }
@@ -530,7 +530,7 @@ public class ParseGenCPP extends ParseGenJava
     genCodeLine ("    return t;");
     genCodeLine ("  }");
     genCodeLine ("");
-    if (!Options.getCacheTokens ())
+    if (!Options.isCacheTokens ())
     {
       generateMethodDefHeader ("int", s_cu_name, "jj_ntk_f()");
       genCodeLine ("{");
@@ -668,7 +668,7 @@ public class ParseGenCPP extends ParseGenJava
     switchToIncludeFile ();
     genCodeLine ("private:");
     genCodeLine ("  int  indent;	// trace indentation");
-    genCodeLine ("  bool trace = " + Options.getDebugParser () + "; // trace enabled if true");
+    genCodeLine ("  bool trace = " + Options.isDebugParser () + "; // trace enabled if true");
     genCodeLine ("");
     genCodeLine ("public:");
     generateMethodDefHeader ("  bool", s_cu_name, "trace_enabled()");
@@ -676,7 +676,7 @@ public class ParseGenCPP extends ParseGenJava
     genCodeLine ("    return trace;");
     genCodeLine ("  }");
     genCodeLine ("");
-    if (Options.getDebugParser ())
+    if (Options.isDebugParser ())
     {
       switchToIncludeFile ();
       generateMethodDefHeader ("  void", s_cu_name, "enable_tracing()");

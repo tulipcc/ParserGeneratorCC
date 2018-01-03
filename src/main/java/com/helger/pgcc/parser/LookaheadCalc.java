@@ -142,7 +142,7 @@ public final class LookaheadCalc
     for (int la = 1; la <= Options.getChoiceAmbiguityCheck (); la++)
     {
       MatchInfo.s_laLimit = la;
-      LookaheadWalk.s_considerSemanticLA = !Options.getForceLaCheck ();
+      LookaheadWalk.s_considerSemanticLA = !Options.isForceLaCheck ();
       for (int i = first; i < ch.getChoices ().size () - 1; i++)
       {
         LookaheadWalk.s_sizeLimitedMatches = new ArrayList <> ();
@@ -208,7 +208,7 @@ public final class LookaheadCalc
     }
     for (int i = first; i < ch.getChoices ().size () - 1; i++)
     {
-      if (explicitLA (ch.getChoices ().get (i)) && !Options.getForceLaCheck ())
+      if (explicitLA (ch.getChoices ().get (i)) && !Options.isForceLaCheck ())
       {
         continue;
       }
@@ -256,7 +256,7 @@ public final class LookaheadCalc
 
   static int firstChoice (final Choice ch)
   {
-    if (Options.getForceLaCheck ())
+    if (Options.isForceLaCheck ())
     {
       return 0;
     }
@@ -302,7 +302,7 @@ public final class LookaheadCalc
       m.m_firstFreeLoc = 0;
       v = new ArrayList <> ();
       v.add (m);
-      LookaheadWalk.s_considerSemanticLA = !Options.getForceLaCheck ();
+      LookaheadWalk.s_considerSemanticLA = !Options.isForceLaCheck ();
       LookaheadWalk.genFirstSet (v, nested);
       first = LookaheadWalk.s_sizeLimitedMatches;
       LookaheadWalk.s_sizeLimitedMatches = new ArrayList <> ();

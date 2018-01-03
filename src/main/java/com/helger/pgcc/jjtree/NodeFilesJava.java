@@ -89,7 +89,7 @@ final class NodeFilesJava
    * ID of the latest version (of JJTree) in which one of the Node classes was
    * modified.
    */
-  static final String nodeVersion = PGVersion.majorDotMinor;
+  static final String nodeVersion = PGVersion.MAJOR_DOT_MINOR;
 
   static Set <String> nodesGenerated = new HashSet <> ();
 
@@ -113,7 +113,7 @@ final class NodeFilesJava
      * Only build the node file if we're dealing with Node.java, or the
      * NODE_BUILD_FILES option is set.
      */
-    if (!(nodeType.equals ("Node") || JJTreeOptions.getBuildNodeFiles ()))
+    if (!(nodeType.equals ("Node") || JJTreeOptions.isBuildNodeFiles ()))
     {
       return;
     }
@@ -233,7 +233,7 @@ final class NodeFilesJava
 
   static void generateVisitor_java ()
   {
-    if (!JJTreeOptions.getVisitor ())
+    if (!JJTreeOptions.isVisitor ())
     {
       return;
     }
@@ -317,7 +317,7 @@ final class NodeFilesJava
 
   static void generateDefaultVisitor_java ()
   {
-    if (!JJTreeOptions.getVisitor ())
+    if (!JJTreeOptions.isVisitor ())
     {
       return;
     }

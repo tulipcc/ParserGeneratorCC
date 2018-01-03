@@ -52,7 +52,7 @@ import com.helger.pgcc.parser.TokenProduction;
  */
 public class TextGenerator implements IDocGenerator
 {
-  protected PrintWriter ostr;
+  protected PrintWriter m_ostr;
 
   public TextGenerator ()
   {}
@@ -64,24 +64,24 @@ public class TextGenerator implements IDocGenerator
 
   public void print (final String s)
   {
-    ostr.print (s);
+    m_ostr.print (s);
   }
 
   public void documentStart ()
   {
-    ostr = create_output_stream ();
-    ostr.print ("\nDOCUMENT START\n");
+    m_ostr = create_output_stream ();
+    m_ostr.print ("\nDOCUMENT START\n");
   }
 
   public void documentEnd ()
   {
-    ostr.print ("\nDOCUMENT END\n");
-    ostr.close ();
+    m_ostr.print ("\nDOCUMENT END\n");
+    m_ostr.close ();
   }
 
   public void specialTokens (final String s)
   {
-    ostr.print (s);
+    m_ostr.print (s);
   }
 
   public void nonterminalsStart ()
@@ -123,18 +123,18 @@ public class TextGenerator implements IDocGenerator
 
   public void productionStart (final NormalProduction np)
   {
-    ostr.print ("\t" + np.getLhs () + "\t:=\t");
+    m_ostr.print ("\t" + np.getLhs () + "\t:=\t");
   }
 
   public void productionEnd (final NormalProduction np)
   {
-    ostr.print ("\n");
+    m_ostr.print ("\n");
   }
 
   public void expansionStart (final Expansion e, final boolean first)
   {
     if (!first)
-      ostr.print ("\n\t\t|\t");
+      m_ostr.print ("\n\t\t|\t");
   }
 
   public void expansionEnd (final Expansion e, final boolean first)
@@ -202,34 +202,15 @@ public class TextGenerator implements IDocGenerator
 
     try
     {
-      ostr = new PrintWriter (new FileWriter (JJDocGlobals.s_output_file));
+      m_ostr = new PrintWriter (new FileWriter (JJDocGlobals.s_output_file));
     }
     catch (final IOException e)
     {
       error ("JJDoc: can't open output stream on file " + JJDocGlobals.s_output_file + ".  Using standard output.");
-      ostr = new PrintWriter (new OutputStreamWriter (System.out));
+      m_ostr = new PrintWriter (new OutputStreamWriter (System.out));
     }
 
-    return ostr;
+    return m_ostr;
   }
 
-  public void debug (final String message)
-  {
-    System.err.println (message);
-  }
-
-  public void info (final String message)
-  {
-    System.err.println (message);
-  }
-
-  public void warn (final String message)
-  {
-    System.err.println (message);
-  }
-
-  public void error (final String message)
-  {
-    System.err.println (message);
-  }
 }

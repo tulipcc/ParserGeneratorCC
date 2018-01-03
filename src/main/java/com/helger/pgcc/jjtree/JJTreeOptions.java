@@ -77,14 +77,11 @@ import com.helger.pgcc.parser.Options;
  */
 class JJTreeOptions extends Options
 {
-
   /**
    * Limit subclassing to derived classes.
    */
   protected JJTreeOptions ()
-  {
-    super ();
-  }
+  {}
 
   /**
    * Initialize the JJTree-specific options.
@@ -131,7 +128,7 @@ class JJTreeOptions extends Options
    */
   public static void validate ()
   {
-    if (!getVisitor ())
+    if (!isVisitor ())
     {
       if (getVisitorDataType ().length () > 0)
       {
@@ -173,7 +170,7 @@ class JJTreeOptions extends Options
    *
    * @return The requested node scope hook value.
    */
-  public static boolean getNodeScopeHook ()
+  public static boolean isNodeScopeHook ()
   {
     return booleanValue ("NODE_SCOPE_HOOK");
   }
@@ -193,7 +190,7 @@ class JJTreeOptions extends Options
    *
    * @return The requested node uses parser value.
    */
-  public static boolean getNodeUsesParser ()
+  public static boolean isNodeUsesParser ()
   {
     return booleanValue ("NODE_USES_PARSER");
   }
@@ -203,7 +200,7 @@ class JJTreeOptions extends Options
    *
    * @return The requested build node files value.
    */
-  public static boolean getBuildNodeFiles ()
+  public static boolean isBuildNodeFiles ()
   {
     return booleanValue ("BUILD_NODE_FILES");
   }
@@ -213,7 +210,7 @@ class JJTreeOptions extends Options
    *
    * @return The requested visitor value.
    */
-  public static boolean getVisitor ()
+  public static boolean isVisitor ()
   {
     return booleanValue ("VISITOR");
   }
@@ -223,7 +220,7 @@ class JJTreeOptions extends Options
    *
    * @return The requested trackTokens value.
    */
-  public static boolean getTrackTokens ()
+  public static boolean isTrackTokens ()
   {
     return booleanValue ("TRACK_TOKENS");
   }
@@ -318,7 +315,6 @@ class JJTreeOptions extends Options
   public static File getJJTreeOutputDirectory ()
   {
     final String dirName = stringValue ("JJTREE_OUTPUT_DIRECTORY");
-
     if (StringHelper.hasNoText (dirName))
       return getOutputDirectory ();
     return new File (dirName);

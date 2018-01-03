@@ -93,7 +93,7 @@ final class NodeFilesCpp
    * ID of the latest version (of JJTree) in which one of the Node classes was
    * modified.
    */
-  static final String s_nodeVersion = PGVersion.majorDotMinor;
+  static final String s_nodeVersion = PGVersion.MAJOR_DOT_MINOR;
 
   static Set <String> s_nodesToGenerate = new HashSet <> ();
 
@@ -567,7 +567,7 @@ final class NodeFilesCpp
 
   static void generateVisitors ()
   {
-    if (!JJTreeOptions.getVisitor ())
+    if (!JJTreeOptions.isVisitor ())
       return;
 
     final File file = new File (_getVisitorIncludeFile ());

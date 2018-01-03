@@ -73,17 +73,16 @@ import com.helger.commons.string.StringHelper;
 /**
  * Supply the version number.
  */
-public class PGVersion
+public final class PGVersion
 {
-
-  public static final String majorVersion;
-  public static final String minorVersion;
-  public static final String patchVersion;
+  public static final String MAJOR_VERSION;
+  public static final String MINOR_VERSION;
+  public static final String PATCH_VERSION;
 
   /** e.g. 1.0 */
-  public static final String majorDotMinor;
+  public static final String MAJOR_DOT_MINOR;
   /** e.g. 1.0.0-SNAPSHOT */
-  public static final String versionNumber;
+  public static final String s_versionNumber;
 
   static
   {
@@ -99,11 +98,11 @@ public class PGVersion
 
     final String [] aParts = StringHelper.getExplodedArray ('.', sProjectVersion, 3);
 
-    majorVersion = aParts[0];
-    minorVersion = aParts.length > 1 ? aParts[1] : "";
-    patchVersion = aParts.length > 2 ? aParts[2] : "";
-    majorDotMinor = majorVersion + "." + minorVersion;
-    versionNumber = majorVersion + "." + minorVersion + "." + patchVersion;
+    MAJOR_VERSION = aParts[0];
+    MINOR_VERSION = aParts.length > 1 ? aParts[1] : "";
+    PATCH_VERSION = aParts.length > 2 ? aParts[2] : "";
+    MAJOR_DOT_MINOR = MAJOR_VERSION + "." + MINOR_VERSION;
+    s_versionNumber = MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION;
   }
 
   private PGVersion ()
