@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,11 +30,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.parser;
 
@@ -54,7 +54,6 @@ public abstract class RegularExpression extends Expansion
    * internal processing and passing information between the parser and the
    * lexical analyzer.
    */
-  // TODO hides the same field from parent class
   int m_ordinal;
 
   /**

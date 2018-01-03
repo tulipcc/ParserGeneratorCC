@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,11 +30,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 // Copyright 2011 Google Inc. All Rights Reserved.
 // Author: sreeni@google.com (Sreeni Viswanadha)
@@ -63,6 +63,18 @@
  */
 package com.helger.pgcc.parser;
 
+import static com.helger.pgcc.parser.JavaCCGlobals.addEscapes;
+import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
+import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
+import static com.helger.pgcc.parser.JavaCCGlobals.printTokenSetup;
+import static com.helger.pgcc.parser.JavaCCGlobals.printTrailingComments;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_ordered_named_tokens;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -76,7 +88,7 @@ import com.helger.pgcc.parser.FilesJava.IJavaResourceTemplateLocations;
 /**
  * Generates the Constants file.
  */
-public class OtherFilesGen extends JavaCCGlobals
+public class OtherFilesGen
 {
   private static final String CONSTANTS_FILENAME_SUFFIX = "Constants.java";
 

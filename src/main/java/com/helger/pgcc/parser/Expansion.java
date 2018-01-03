@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,11 +30,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.parser;
 
@@ -82,7 +82,7 @@ public class Expansion
   /**
    * The ordinal of this node with respect to its parent.
    */
-  int m_ordinal;
+  int m_ordinalBase;
 
   /**
    * To avoid right-recursive loops when calculating follow sets, we use a
@@ -91,7 +91,7 @@ public class Expansion
    * obtained by incrementing the static counter below, and the current
    * generation is stored in the non-static variable below.
    */
-  public static long s_nextGenerationIndex = 1;
+  private static long s_nextGenerationIndex = 1;
   public long m_myGeneration = 0;
 
   /**
@@ -103,6 +103,11 @@ public class Expansion
   public static void reInit ()
   {
     s_nextGenerationIndex = 1;
+  }
+
+  public static long getNextGenerationIndex ()
+  {
+    return s_nextGenerationIndex++;
   }
 
   private String _getSimpleName ()

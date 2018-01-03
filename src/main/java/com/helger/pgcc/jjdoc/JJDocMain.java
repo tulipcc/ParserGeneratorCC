@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,13 +30,11 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.jjdoc;
+
+import static com.helger.pgcc.jjdoc.JJDocGlobals.error;
+import static com.helger.pgcc.jjdoc.JJDocGlobals.info;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -41,6 +44,7 @@ import java.io.InputStreamReader;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.parser.JavaCCErrors;
+import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.JavaCCParser;
 import com.helger.pgcc.parser.Main;
 import com.helger.pgcc.parser.Options;
@@ -48,9 +52,8 @@ import com.helger.pgcc.parser.Options;
 /**
  * Main class.
  */
-public final class JJDocMain extends JJDocGlobals
+public final class JJDocMain
 {
-
   private JJDocMain ()
   {}
 
@@ -118,7 +121,7 @@ public final class JJDocMain extends JJDocGlobals
     Main.reInitAll ();
     JJDocOptions.init ();
 
-    bannerLine ("Documentation Generator", "0.1.4");
+    JavaCCGlobals.bannerLine ("Documentation Generator", "0.1.4");
 
     JavaCCParser parser = null;
     if (args.length == 0)

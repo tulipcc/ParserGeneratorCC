@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,11 +30,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 // Copyright 2011 Google Inc. All Rights Reserved.
 // Author: sreeni@google.com (Sreeni Viswanadha)
@@ -1342,7 +1342,9 @@ public class ParseEngine
       m_codeGenerator.genCodeLine (" inline bool jj_2" + e.m_internal_name + "(int xla)");
     }
     m_codeGenerator.genCodeLine (" {");
-    m_codeGenerator.genCodeLine ("    jj_la = xla; jj_lastpos = jj_scanpos = token;");
+    m_codeGenerator.genCodeLine ("    jj_la = xla;");
+    m_codeGenerator.genCodeLine ("    jj_scanpos = token;");
+    m_codeGenerator.genCodeLine ("    jj_lastpos = token;");
 
     String ret_suffix = "";
     if (Options.hasDepthLimit ())

@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,11 +30,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.parser;
 
@@ -55,7 +55,7 @@ import com.helger.pgcc.output.UnsupportedOutputLanguageException;
  * JavaCC input file. This data is what is used by the back-ends of JavaCC as
  * well as any other back-end of JavaCC related tools such as JJTree.
  */
-public abstract class JavaCCGlobals
+public final class JavaCCGlobals
 {
   /**
    * String that identifies the JavaCC generated files.
@@ -466,8 +466,8 @@ public abstract class JavaCCGlobals
     }
   }
 
-  protected static int s_cline;
-  protected static int s_ccol;
+  public static int s_cline;
+  public static int s_ccol;
 
   protected static void printTokenSetup (final Token t)
   {
@@ -552,7 +552,7 @@ public abstract class JavaCCGlobals
     }
   }
 
-  protected static String printTokenOnly (final Token t)
+  public static String printTokenOnly (final Token t)
   {
     String retval = "";
     for (; s_cline < t.beginLine; s_cline++)

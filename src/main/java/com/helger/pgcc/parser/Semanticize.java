@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,22 +30,30 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.parser;
+
+import static com.helger.pgcc.parser.JavaCCGlobals.rexps_of_tokens;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_actForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_bnfproductions;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_S2I;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_named_tokens_table;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_names_of_tokens;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_nextStateForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_ordered_named_tokens;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_production_table;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_simple_tokens_table;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Semanticize extends JavaCCGlobals
+public class Semanticize
 {
-
   static List <List <RegExprSpec>> removeList = new ArrayList <> ();
   static List <Object> itemList = new ArrayList <> ();
 
@@ -89,7 +102,7 @@ public class Semanticize extends JavaCCGlobals
      */
     for (final NormalProduction p : s_bnfproductions)
     {
-      if (s_production_table.put (p.getLhs (), p) != null)
+      if (JavaCCGlobals.s_production_table.put (p.getLhs (), p) != null)
       {
         JavaCCErrors.semantic_error (p, p.getLhs () + " occurs on the left hand side of more than one production.");
       }
@@ -433,7 +446,7 @@ public class Semanticize extends JavaCCGlobals
         for (final RegExprSpec aRegExprSpec : respecs)
         {
           final RegExprSpec res = (aRegExprSpec);
-          frjn.root = res.rexp;
+          frjn.m_root = res.rexp;
           ExpansionTreeWalker.preOrderWalk (res.rexp, frjn);
           if (res.rexp instanceof RJustName)
           {
@@ -908,9 +921,9 @@ public class Semanticize extends JavaCCGlobals
    * Objects of this class are created from class Semanticize to work on
    * references to regular expressions from RJustName's.
    */
-  static class FixRJustNames extends JavaCCGlobals implements TreeWalkerOp
+  static final class FixRJustNames implements ITreeWalkerOperation
   {
-    public RegularExpression root;
+    public RegularExpression m_root;
 
     public boolean goDeeper (final Expansion e)
     {
@@ -928,7 +941,7 @@ public class Semanticize extends JavaCCGlobals
           JavaCCErrors.semantic_error (e, "Undefined lexical token name \"" + jn.m_label + "\".");
         }
         else
-          if (jn == root && !jn.tpContext.m_isExplicit && rexp.private_rexp)
+          if (jn == m_root && !jn.tpContext.m_isExplicit && rexp.private_rexp)
           {
             JavaCCErrors.semantic_error (e,
                                          "Token name \"" +
@@ -937,7 +950,7 @@ public class Semanticize extends JavaCCGlobals
                                             "(with a #) regular expression.");
           }
           else
-            if (jn == root && !jn.tpContext.m_isExplicit && rexp.tpContext.m_kind != TokenProduction.TOKEN)
+            if (jn == m_root && !jn.tpContext.m_isExplicit && rexp.tpContext.m_kind != TokenProduction.TOKEN)
             {
               JavaCCErrors.semantic_error (e,
                                            "Token name \"" +
@@ -955,9 +968,8 @@ public class Semanticize extends JavaCCGlobals
 
   }
 
-  static class LookaheadFixer extends JavaCCGlobals implements TreeWalkerOp
+  static class LookaheadFixer implements ITreeWalkerOperation
   {
-
     public boolean goDeeper (final Expansion e)
     {
       if (e instanceof RegularExpression)
@@ -1031,7 +1043,7 @@ public class Semanticize extends JavaCCGlobals
 
   }
 
-  static class ProductionDefinedChecker extends JavaCCGlobals implements TreeWalkerOp
+  static class ProductionDefinedChecker implements ITreeWalkerOperation
   {
     public boolean goDeeper (final Expansion e)
     {
@@ -1060,7 +1072,7 @@ public class Semanticize extends JavaCCGlobals
 
   }
 
-  static final class EmptyChecker extends JavaCCGlobals implements TreeWalkerOp
+  static final class EmptyChecker implements ITreeWalkerOperation
   {
     public boolean goDeeper (final Expansion e)
     {
@@ -1098,7 +1110,7 @@ public class Semanticize extends JavaCCGlobals
 
   }
 
-  static class LookaheadChecker extends JavaCCGlobals implements TreeWalkerOp
+  static class LookaheadChecker implements ITreeWalkerOperation
   {
 
     public boolean goDeeper (final Expansion e)

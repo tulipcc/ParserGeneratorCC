@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,16 +30,15 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 // Copyright 2011 Google Inc. All Rights Reserved.
 // Author: sreeni@google.com (Sreeni Viswanadha)
 
 package com.helger.pgcc.parser;
+
+import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
+import static com.helger.pgcc.parser.JavaCCGlobals.replaceBackslash;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
 
 import java.io.File;
 import java.io.FileReader;
@@ -49,7 +53,7 @@ import com.helger.pgcc.utils.OutputFileGenerator;
 /**
  * Generate CharStream, TokenManager and Exceptions.
  */
-public class FilesCpp extends JavaCCGlobals
+public class FilesCpp
 {
   /**
    * ID of the latest version (of JavaCC) in which one of the CharStream classes

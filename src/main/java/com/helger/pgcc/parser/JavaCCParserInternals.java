@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,13 +30,19 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.parser;
+
+import static com.helger.pgcc.parser.JavaCCGlobals.s_bnfproductions;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_from_insertion_point_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_S2I;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_simple_tokens_table;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +50,7 @@ import java.util.List;
 /**
  * Utilities.
  */
-public abstract class JavaCCParserInternals extends JavaCCGlobals
+public abstract class JavaCCParserInternals
 {
   protected static void initialize ()
   {
@@ -391,7 +402,7 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     tblk.setColumn (tryLoc.beginColumn);
     tblk.exp = (Expansion) (nestedExp.member);
     tblk.exp.m_parent = tblk;
-    tblk.exp.m_ordinal = 0;
+    tblk.exp.m_ordinalBase = 0;
     tblk.types = types;
     tblk.m_ids = ids;
     tblk.m_catchblks = catchblks;
@@ -407,5 +418,4 @@ public abstract class JavaCCParserInternals extends JavaCCGlobals
     insertionpoint2set = false;
     nextFreeLexState = 1;
   }
-
 }

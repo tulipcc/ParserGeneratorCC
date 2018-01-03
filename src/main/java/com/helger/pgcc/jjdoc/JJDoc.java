@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,11 +30,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.jjdoc;
 
@@ -42,16 +42,16 @@ import com.helger.pgcc.parser.*;
 /**
  * The main entry point for JJDoc.
  */
-public class JJDoc extends JJDocGlobals
+public class JJDoc
 {
 
   static void start ()
   {
-    s_generator = getGenerator ();
-    s_generator.documentStart ();
-    _emitTokenProductions (s_generator, s_rexprlist);
-    _emitNormalProductions (s_generator, s_bnfproductions);
-    s_generator.documentEnd ();
+    JJDocGlobals.s_generator = JJDocGlobals.getGenerator ();
+    JJDocGlobals.s_generator.documentStart ();
+    _emitTokenProductions (JJDocGlobals.s_generator, JavaCCGlobals.s_rexprlist);
+    _emitNormalProductions (JJDocGlobals.s_generator, JavaCCGlobals.s_bnfproductions);
+    JJDocGlobals.s_generator.documentEnd ();
   }
 
   private static Token _getPrecedingSpecialToken (final Token tok)
@@ -75,11 +75,11 @@ public class JJDoc extends JJDocGlobals
     String s = "";
     if (tok != null)
     {
-      s_cline = tok.beginLine;
-      s_ccol = tok.beginColumn;
+      JavaCCGlobals.s_cline = tok.beginLine;
+      JavaCCGlobals.s_ccol = tok.beginColumn;
       while (tok != null)
       {
-        s += printTokenOnly (tok);
+        s += JavaCCGlobals.printTokenOnly (tok);
         tok = tok.next;
       }
     }
@@ -93,6 +93,7 @@ public class JJDoc extends JJDocGlobals
    * instanceof TokenProduction) ); }
    */
 
+  @SuppressWarnings ("unused")
   private static void _emitTokenProductions (final IDocGenerator gen, final List <TokenProduction> prods)
   {
     gen.tokensStart ();
@@ -164,6 +165,7 @@ public class JJDoc extends JJDocGlobals
     return token;
   }
 
+  @SuppressWarnings ("unused")
   private static void _emitNormalProductions (final IDocGenerator gen, final List <NormalProduction> prods)
   {
     gen.nonterminalsStart ();
@@ -262,7 +264,7 @@ public class JJDoc extends JJDocGlobals
                       }
                       else
                       {
-                        error ("Oops: Unknown expansion type.");
+                        JJDocGlobals.error ("Oops: Unknown expansion type.");
                       }
     // gen.text("[<-" + exp.getClass().getName() + "]");
   }
@@ -408,7 +410,7 @@ public class JJDoc extends JJDocGlobals
         {
           returnString += "\"";
           final char s[] = { ((SingleCharacter) o).getChar () };
-          returnString += addEscapes (new String (s));
+          returnString += JavaCCGlobals.addEscapes (new String (s));
           returnString += "\"";
         }
         else
@@ -416,15 +418,15 @@ public class JJDoc extends JJDocGlobals
           {
             returnString += "\"";
             final char s[] = { ((CharacterRange) o).getLeft () };
-            returnString += addEscapes (new String (s));
+            returnString += JavaCCGlobals.addEscapes (new String (s));
             returnString += "\"-\"";
             s[0] = ((CharacterRange) o).getRight ();
-            returnString += addEscapes (new String (s));
+            returnString += JavaCCGlobals.addEscapes (new String (s));
             returnString += "\"";
           }
           else
           {
-            error ("Oops: unknown character list element type.");
+            JJDocGlobals.error ("Oops: unknown character list element type.");
           }
         if (it.hasNext ())
         {
@@ -537,7 +539,7 @@ public class JJDoc extends JJDocGlobals
                       }
                       else
                       {
-                        error ("Oops: Unknown regular expression type.");
+                        JJDocGlobals.error ("Oops: Unknown regular expression type.");
                       }
     if (needBrackets)
     {

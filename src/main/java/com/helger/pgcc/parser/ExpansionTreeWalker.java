@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,11 +30,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.parser;
 
@@ -45,7 +45,7 @@ public final class ExpansionTreeWalker
    * Visits the nodes of the tree rooted at "node" in pre-order. i.e., it
    * executes opObj.action first and then visits the children.
    */
-  static void preOrderWalk (final Expansion node, final TreeWalkerOp opObj)
+  static void preOrderWalk (final Expansion node, final ITreeWalkerOperation opObj)
   {
     opObj.action (node);
     if (opObj.goDeeper (node))
@@ -137,7 +137,7 @@ public final class ExpansionTreeWalker
    * Visits the nodes of the tree rooted at "node" in post-order. i.e., it
    * visits the children first and then executes opObj.action.
    */
-  static void postOrderWalk (final Expansion node, final TreeWalkerOp opObj)
+  static void postOrderWalk (final Expansion node, final ITreeWalkerOperation opObj)
   {
     if (opObj.goDeeper (node))
     {

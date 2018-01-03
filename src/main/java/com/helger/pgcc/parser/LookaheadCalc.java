@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,20 +30,18 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.parser;
+
+import static com.helger.pgcc.parser.JavaCCGlobals.addEscapes;
+import static com.helger.pgcc.parser.JavaCCGlobals.rexps_of_tokens;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.helger.commons.string.StringHelper;
 
-public class LookaheadCalc extends JavaCCGlobals
+public final class LookaheadCalc
 {
 
   static MatchInfo overlap (final List <MatchInfo> v1, final List <MatchInfo> v2)
@@ -139,27 +142,27 @@ public class LookaheadCalc extends JavaCCGlobals
     for (int la = 1; la <= Options.getChoiceAmbiguityCheck (); la++)
     {
       MatchInfo.s_laLimit = la;
-      LookaheadWalk.considerSemanticLA = !Options.getForceLaCheck ();
+      LookaheadWalk.s_considerSemanticLA = !Options.getForceLaCheck ();
       for (int i = first; i < ch.getChoices ().size () - 1; i++)
       {
-        LookaheadWalk.sizeLimitedMatches = new ArrayList <> ();
+        LookaheadWalk.s_sizeLimitedMatches = new ArrayList <> ();
         m = new MatchInfo ();
         m.m_firstFreeLoc = 0;
         v = new ArrayList <> ();
         v.add (m);
         LookaheadWalk.genFirstSet (v, ch.getChoices ().get (i));
-        dbl[i] = LookaheadWalk.sizeLimitedMatches;
+        dbl[i] = LookaheadWalk.s_sizeLimitedMatches;
       }
-      LookaheadWalk.considerSemanticLA = false;
+      LookaheadWalk.s_considerSemanticLA = false;
       for (int i = first + 1; i < ch.getChoices ().size (); i++)
       {
-        LookaheadWalk.sizeLimitedMatches = new ArrayList <> ();
+        LookaheadWalk.s_sizeLimitedMatches = new ArrayList <> ();
         m = new MatchInfo ();
         m.m_firstFreeLoc = 0;
         v = new ArrayList <> ();
         v.add (m);
         LookaheadWalk.genFirstSet (v, ch.getChoices ().get (i));
-        dbr[i] = LookaheadWalk.sizeLimitedMatches;
+        dbr[i] = LookaheadWalk.s_sizeLimitedMatches;
       }
       if (la == 1)
       {
@@ -294,18 +297,18 @@ public class LookaheadCalc extends JavaCCGlobals
     for (la = 1; la <= Options.getOtherAmbiguityCheck (); la++)
     {
       MatchInfo.s_laLimit = la;
-      LookaheadWalk.sizeLimitedMatches = new ArrayList <> ();
+      LookaheadWalk.s_sizeLimitedMatches = new ArrayList <> ();
       m = new MatchInfo ();
       m.m_firstFreeLoc = 0;
       v = new ArrayList <> ();
       v.add (m);
-      LookaheadWalk.considerSemanticLA = !Options.getForceLaCheck ();
+      LookaheadWalk.s_considerSemanticLA = !Options.getForceLaCheck ();
       LookaheadWalk.genFirstSet (v, nested);
-      first = LookaheadWalk.sizeLimitedMatches;
-      LookaheadWalk.sizeLimitedMatches = new ArrayList <> ();
-      LookaheadWalk.considerSemanticLA = false;
-      LookaheadWalk.genFollowSet (v, exp, Expansion.s_nextGenerationIndex++);
-      follow = LookaheadWalk.sizeLimitedMatches;
+      first = LookaheadWalk.s_sizeLimitedMatches;
+      LookaheadWalk.s_sizeLimitedMatches = new ArrayList <> ();
+      LookaheadWalk.s_considerSemanticLA = false;
+      LookaheadWalk.genFollowSet (v, exp, Expansion.getNextGenerationIndex ());
+      follow = LookaheadWalk.s_sizeLimitedMatches;
       if (la == 1)
       {
         if (javaCodeCheck (first))

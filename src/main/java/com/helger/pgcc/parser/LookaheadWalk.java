@@ -1,4 +1,9 @@
 /**
+ * Copyright 2017-2018 Philip Helger, pgcc@helger.com
+ *
+ * Copyright 2011 Google Inc. All Rights Reserved.
+ * Author: sreeni@google.com (Sreeni Viswanadha)
+ *
  * Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
  *
@@ -25,11 +30,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright 2011 Google Inc. All Rights Reserved.
- * Author: sreeni@google.com (Sreeni Viswanadha)
- *
- * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  */
 package com.helger.pgcc.parser;
 
@@ -38,9 +38,8 @@ import java.util.List;
 
 public final class LookaheadWalk
 {
-  public static boolean considerSemanticLA;
-
-  public static List <MatchInfo> sizeLimitedMatches;
+  static boolean s_considerSemanticLA;
+  static List <MatchInfo> s_sizeLimitedMatches;
 
   private LookaheadWalk ()
   {}
@@ -62,7 +61,7 @@ public final class LookaheadWalk
         mnew.m_match[mnew.m_firstFreeLoc++] = ((RegularExpression) exp).m_ordinal;
         if (mnew.m_firstFreeLoc == MatchInfo.s_laLimit)
         {
-          sizeLimitedMatches.add (mnew);
+          s_sizeLimitedMatches.add (mnew);
         }
         else
         {
@@ -71,96 +70,92 @@ public final class LookaheadWalk
       }
       return retval;
     }
-    else
-      if (exp instanceof NonTerminal)
+
+    if (exp instanceof NonTerminal)
+    {
+      final NormalProduction prod = ((NonTerminal) exp).getProd ();
+      if (prod instanceof AbstractCodeProduction)
       {
-        final NormalProduction prod = ((NonTerminal) exp).getProd ();
-        if (prod instanceof AbstractCodeProduction)
-        {
-          return new ArrayList <> ();
-        }
-        return genFirstSet (partialMatches, prod.getExpansion ());
+        return new ArrayList <> ();
       }
-      else
-        if (exp instanceof Choice)
-        {
-          final List <MatchInfo> retval = new ArrayList <> ();
-          final Choice ch = (Choice) exp;
-          for (int i = 0; i < ch.getChoices ().size (); i++)
-          {
-            final List <MatchInfo> v = genFirstSet (partialMatches, ch.getChoices ().get (i));
-            retval.addAll (v);
-          }
-          return retval;
-        }
-        else
-          if (exp instanceof Sequence)
-          {
-            List <MatchInfo> v = partialMatches;
-            final Sequence seq = (Sequence) exp;
-            for (int i = 0; i < seq.m_units.size (); i++)
-            {
-              v = genFirstSet (v, seq.m_units.get (i));
-              if (v.size () == 0)
-                break;
-            }
-            return v;
-          }
-          else
-            if (exp instanceof OneOrMore)
-            {
-              final List <MatchInfo> retval = new ArrayList <> ();
-              List <MatchInfo> v = partialMatches;
-              final OneOrMore om = (OneOrMore) exp;
-              while (true)
-              {
-                v = genFirstSet (v, om.expansion);
-                if (v.size () == 0)
-                  break;
-                retval.addAll (v);
-              }
-              return retval;
-            }
-            else
-              if (exp instanceof ZeroOrMore)
-              {
-                final List <MatchInfo> retval = new ArrayList <> (partialMatches);
-                List <MatchInfo> v = partialMatches;
-                final ZeroOrMore zm = (ZeroOrMore) exp;
-                while (true)
-                {
-                  v = genFirstSet (v, zm.m_expansion);
-                  if (v.size () == 0)
-                    break;
-                  retval.addAll (v);
-                }
-                return retval;
-              }
-              else
-                if (exp instanceof ZeroOrOne)
-                {
-                  final List <MatchInfo> retval = new ArrayList <> ();
-                  retval.addAll (partialMatches);
-                  retval.addAll (genFirstSet (partialMatches, ((ZeroOrOne) exp).expansion));
-                  return retval;
-                }
-                else
-                  if (exp instanceof TryBlock)
-                  {
-                    return genFirstSet (partialMatches, ((TryBlock) exp).exp);
-                  }
-                  else
-                    if (considerSemanticLA &&
-                        exp instanceof Lookahead &&
-                        ((Lookahead) exp).getActionTokens ().size () != 0)
-                    {
-                      return new ArrayList <> ();
-                    }
-                    else
-                    {
-                      final List <MatchInfo> retval = new ArrayList <> (partialMatches);
-                      return retval;
-                    }
+      return genFirstSet (partialMatches, prod.getExpansion ());
+    }
+
+    if (exp instanceof Choice)
+    {
+      final List <MatchInfo> retval = new ArrayList <> ();
+      final Choice ch = (Choice) exp;
+      for (int i = 0; i < ch.getChoices ().size (); i++)
+      {
+        final List <MatchInfo> v = genFirstSet (partialMatches, ch.getChoices ().get (i));
+        retval.addAll (v);
+      }
+      return retval;
+    }
+
+    if (exp instanceof Sequence)
+    {
+      List <MatchInfo> v = partialMatches;
+      final Sequence seq = (Sequence) exp;
+      for (int i = 0; i < seq.m_units.size (); i++)
+      {
+        v = genFirstSet (v, seq.m_units.get (i));
+        if (v.size () == 0)
+          break;
+      }
+      return v;
+    }
+
+    if (exp instanceof OneOrMore)
+    {
+      final List <MatchInfo> retval = new ArrayList <> ();
+      List <MatchInfo> v = partialMatches;
+      final OneOrMore om = (OneOrMore) exp;
+      while (true)
+      {
+        v = genFirstSet (v, om.expansion);
+        if (v.size () == 0)
+          break;
+        retval.addAll (v);
+      }
+      return retval;
+    }
+
+    if (exp instanceof ZeroOrMore)
+    {
+      final List <MatchInfo> retval = new ArrayList <> (partialMatches);
+      List <MatchInfo> v = partialMatches;
+      final ZeroOrMore zm = (ZeroOrMore) exp;
+      while (true)
+      {
+        v = genFirstSet (v, zm.m_expansion);
+        if (v.size () == 0)
+          break;
+        retval.addAll (v);
+      }
+      return retval;
+    }
+
+    if (exp instanceof ZeroOrOne)
+    {
+      final List <MatchInfo> retval = new ArrayList <> ();
+      retval.addAll (partialMatches);
+      retval.addAll (genFirstSet (partialMatches, ((ZeroOrOne) exp).expansion));
+      return retval;
+    }
+
+    if (exp instanceof TryBlock)
+    {
+      return genFirstSet (partialMatches, ((TryBlock) exp).exp);
+    }
+
+    if (s_considerSemanticLA && exp instanceof Lookahead && ((Lookahead) exp).getActionTokens ().size () != 0)
+    {
+      return new ArrayList <> ();
+    }
+
+    final List <MatchInfo> retval = new ArrayList <> (partialMatches);
+    return retval;
   }
 
   private static void _listSplit (final List <MatchInfo> toSplit,
@@ -197,88 +192,82 @@ public final class LookaheadWalk
       final List <MatchInfo> retval = new ArrayList <> (partialMatches);
       return retval;
     }
-    else
 
-      if (exp.m_parent instanceof NormalProduction)
+    if (exp.m_parent instanceof NormalProduction)
+    {
+      final List <Expansion> parents = ((NormalProduction) exp.m_parent).getParents ();
+      final List <MatchInfo> retval = new ArrayList <> ();
+      // System.out.println("1; gen: " + generation + "; exp: " + exp);
+      for (int i = 0; i < parents.size (); i++)
       {
-        final List <Expansion> parents = ((NormalProduction) exp.m_parent).getParents ();
-        final List <MatchInfo> retval = new ArrayList <> ();
-        // System.out.println("1; gen: " + generation + "; exp: " + exp);
-        for (int i = 0; i < parents.size (); i++)
-        {
-          final List <MatchInfo> v = genFollowSet (partialMatches, parents.get (i), generation);
-          retval.addAll (v);
-        }
-        return retval;
+        final List <MatchInfo> v = genFollowSet (partialMatches, parents.get (i), generation);
+        retval.addAll (v);
       }
-      else
+      return retval;
+    }
 
-        if (exp.m_parent instanceof Sequence)
-        {
-          final Sequence seq = (Sequence) exp.m_parent;
-          List <MatchInfo> v = partialMatches;
-          for (int i = exp.m_ordinal + 1; i < seq.m_units.size (); i++)
-          {
-            v = genFirstSet (v, seq.m_units.get (i));
-            if (v.size () == 0)
-              return v;
-          }
-          List <MatchInfo> v1 = new ArrayList <> ();
-          List <MatchInfo> v2 = new ArrayList <> ();
-          _listSplit (v, partialMatches, v1, v2);
-          if (v1.size () != 0)
-          {
-            // System.out.println("2; gen: " + generation + "; exp: " + exp);
-            v1 = genFollowSet (v1, seq, generation);
-          }
-          if (v2.size () != 0)
-          {
-            // System.out.println("3; gen: " + generation + "; exp: " + exp);
-            v2 = genFollowSet (v2, seq, Expansion.s_nextGenerationIndex++);
-          }
-          v2.addAll (v1);
-          return v2;
-        }
-        else
+    if (exp.m_parent instanceof Sequence)
+    {
+      final Sequence seq = (Sequence) exp.m_parent;
+      List <MatchInfo> v = partialMatches;
+      for (int i = exp.m_ordinalBase + 1; i < seq.m_units.size (); i++)
+      {
+        v = genFirstSet (v, seq.m_units.get (i));
+        if (v.size () == 0)
+          return v;
+      }
+      List <MatchInfo> v1 = new ArrayList <> ();
+      List <MatchInfo> v2 = new ArrayList <> ();
+      _listSplit (v, partialMatches, v1, v2);
+      if (v1.size () != 0)
+      {
+        // System.out.println("2; gen: " + generation + "; exp: " + exp);
+        v1 = genFollowSet (v1, seq, generation);
+      }
+      if (v2.size () != 0)
+      {
+        // System.out.println("3; gen: " + generation + "; exp: " + exp);
+        v2 = genFollowSet (v2, seq, Expansion.getNextGenerationIndex ());
+      }
+      v2.addAll (v1);
+      return v2;
+    }
 
-          if (exp.m_parent instanceof OneOrMore || exp.m_parent instanceof ZeroOrMore)
-          {
-            final List <MatchInfo> moreMatches = new ArrayList <> (partialMatches);
-            List <MatchInfo> v = partialMatches;
-            while (true)
-            {
-              v = genFirstSet (v, exp);
-              if (v.size () == 0)
-                break;
-              moreMatches.addAll (v);
-            }
-            List <MatchInfo> v1 = new ArrayList <> ();
-            List <MatchInfo> v2 = new ArrayList <> ();
-            _listSplit (moreMatches, partialMatches, v1, v2);
-            if (v1.size () != 0)
-            {
-              // System.out.println("4; gen: " + generation + "; exp: " + exp);
-              v1 = genFollowSet (v1, (Expansion) exp.m_parent, generation);
-            }
-            if (v2.size () != 0)
-            {
-              // System.out.println("5; gen: " + generation + "; exp: " + exp);
-              v2 = genFollowSet (v2, (Expansion) exp.m_parent, Expansion.s_nextGenerationIndex++);
-            }
-            v2.addAll (v1);
-            return v2;
-          }
-          else
-          {
-            // System.out.println("6; gen: " + generation + "; exp: " + exp);
-            return genFollowSet (partialMatches, (Expansion) exp.m_parent, generation);
-          }
+    if (exp.m_parent instanceof OneOrMore || exp.m_parent instanceof ZeroOrMore)
+    {
+      final List <MatchInfo> moreMatches = new ArrayList <> (partialMatches);
+      List <MatchInfo> v = partialMatches;
+      while (true)
+      {
+        v = genFirstSet (v, exp);
+        if (v.size () == 0)
+          break;
+        moreMatches.addAll (v);
+      }
+      List <MatchInfo> v1 = new ArrayList <> ();
+      List <MatchInfo> v2 = new ArrayList <> ();
+      _listSplit (moreMatches, partialMatches, v1, v2);
+      if (v1.size () != 0)
+      {
+        // System.out.println("4; gen: " + generation + "; exp: " + exp);
+        v1 = genFollowSet (v1, (Expansion) exp.m_parent, generation);
+      }
+      if (v2.size () != 0)
+      {
+        // System.out.println("5; gen: " + generation + "; exp: " + exp);
+        v2 = genFollowSet (v2, (Expansion) exp.m_parent, Expansion.getNextGenerationIndex ());
+      }
+      v2.addAll (v1);
+      return v2;
+    }
+
+    // System.out.println("6; gen: " + generation + "; exp: " + exp);
+    return genFollowSet (partialMatches, (Expansion) exp.m_parent, generation);
   }
 
   public static void reInit ()
   {
-    considerSemanticLA = false;
-    sizeLimitedMatches = null;
+    s_considerSemanticLA = false;
+    s_sizeLimitedMatches = null;
   }
-
 }
