@@ -74,7 +74,7 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_names_of_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_production_table;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
-import static com.helger.pgcc.parser.JavaCCGlobals.staticOpt;
+import static com.helger.pgcc.parser.JavaCCGlobals.javaStaticOpt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -866,7 +866,7 @@ public class ParseEngine
         s_ccol = 1;
         m_codeGenerator.printLeadingComments (t);
         m_codeGenerator.genCode ("  " +
-                                 staticOpt () +
+                                 javaStaticOpt () +
                                  "final " +
                                  (p.getAccessMod () != null ? p.getAccessMod () : "public") +
                                  " ");
@@ -1475,7 +1475,7 @@ public class ParseEngine
     switch (m_codeGenerator.getOutputLanguage ())
     {
       case JAVA:
-        m_codeGenerator.genCodeLine ("  " + staticOpt () + "private boolean jj_2" + e.getInternalName () + "(int xla)");
+        m_codeGenerator.genCodeLine ("  " + javaStaticOpt () + "private boolean jj_2" + e.getInternalName () + "(int xla)");
         break;
       case CPP:
         m_codeGenerator.genCodeLine (" inline bool jj_2" + e.getInternalName () + "(int xla)");
@@ -1706,7 +1706,7 @@ public class ParseEngine
       {
         case JAVA:
           m_codeGenerator.genCodeLine ("  " +
-                                       staticOpt () +
+                                       javaStaticOpt () +
                                        "private " +
                                        Options.getBooleanType () +
                                        " jj_3" +
@@ -2190,7 +2190,7 @@ public class ParseEngine
           codeGenerator.printTokenSetup (t);
           s_ccol = 1;
           codeGenerator.printLeadingComments (t);
-          codeGenerator.genCode ("  " + staticOpt () + (p.getAccessMod () != null ? p.getAccessMod () + " " : ""));
+          codeGenerator.genCode ("  " + javaStaticOpt () + (p.getAccessMod () != null ? p.getAccessMod () + " " : ""));
           s_cline = t.beginLine;
           s_ccol = t.beginColumn;
           codeGenerator.printTokenOnly (t);

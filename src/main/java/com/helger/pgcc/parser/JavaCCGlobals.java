@@ -369,12 +369,11 @@ public final class JavaCCGlobals
     }
   }
 
-  public static String staticOpt ()
+  @Nonnull
+  public static String javaStaticOpt ()
   {
     if (Options.isStatic ())
-    {
       return "static ";
-    }
     return "";
   }
 

@@ -883,30 +883,20 @@ public class Options
     return getJdkVersion ().isNewerOrEqualsThan (version);
   }
 
-  /**
-   * Should the generated code create Exceptions using a constructor taking a
-   * nested exception?
-   *
-   * @return
-   */
-  public static boolean isGenerateChainedException ()
-  {
-    return _isJdkVersionAtLeast (EJavaVersion.JDK_14);
-  }
-
   public static boolean isGenerateBoilerplateCode ()
   {
     return booleanValue (USEROPTION__GENERATE_BOILERPLATE);
   }
 
   /**
-   * Should the generated code contain Generics?
+   * Should the generated code create Exceptions using a constructor taking a
+   * nested exception?
    *
    * @return
    */
-  public static boolean isGenerateGenerics ()
+  public static boolean isGenerateJavaChainedException ()
   {
-    return _isJdkVersionAtLeast (EJavaVersion.JDK_15);
+    return _isJdkVersionAtLeast (EJavaVersion.JDK_14);
   }
 
   /**
