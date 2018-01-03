@@ -83,7 +83,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.helger.commons.system.EJavaVersion;
+import com.helger.pgcc.EJDKVersion;
 
 /**
  * Generate the parser.
@@ -98,9 +98,9 @@ public class ParseGenJava extends CodeGenerator
     if (!Options.isBuildParser ())
       return;
 
-    final EJavaVersion eJavaVersion = Options.getJdkVersion ();
-    final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJavaVersion.JDK_15);
-    final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJavaVersion.JDK_17);
+    final EJDKVersion eJavaVersion = Options.getJdkVersion ();
+    final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
+    final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
 
     final List <String> tn = new ArrayList <> (s_toolNames);
     tn.add (s_toolName);

@@ -82,8 +82,9 @@ import javax.annotation.Nullable;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.string.StringHelper;
-import com.helger.commons.system.EJavaVersion;
+import com.helger.commons.string.StringParser;
 import com.helger.commons.system.SystemHelper;
+import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.utils.EOptionType;
@@ -219,7 +220,7 @@ public class Options
 
     temp.add (new OptionInfo (USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC, EOptionType.BOOLEAN, Boolean.TRUE));
     temp.add (new OptionInfo (USEROPTION__OUTPUT_DIRECTORY, EOptionType.STRING, "."));
-    temp.add (new OptionInfo (USEROPTION__JDK_VERSION, EOptionType.OTHER, EJavaVersion.JDK_15));
+    temp.add (new OptionInfo (USEROPTION__JDK_VERSION, EOptionType.OTHER, EJDKVersion.JDK_15));
 
     temp.add (new OptionInfo (USEROPTION__TOKEN_EXTENDS, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__TOKEN_FACTORY, EOptionType.STRING, ""));
@@ -381,11 +382,20 @@ public class Options
    * @return The upgraded value.
    */
   @Nonnull
-  public static Object upgradeValue (@Nonnull final String name, @Nonnull final Object value)
+  private static Object _upgradeValue (@Nonnull final String name, @Nonnull final Object value)
   {
     if (name.equalsIgnoreCase ("NODE_FACTORY") && value.getClass () == Boolean.class)
     {
       return ((Boolean) value).booleanValue () ? "*" : "";
+    }
+
+    if (name.equalsIgnoreCase (USEROPTION__JDK_VERSION) && value.getClass () == String.class)
+    {
+      final EJDKVersion ret = EJDKVersion.getFromDoubleOrNull (StringParser.parseDouble (value, 0));
+      if (ret != null)
+        return ret;
+
+      // Else: bad option
     }
 
     return value;
@@ -404,7 +414,7 @@ public class Options
     }
     final Object existingValue = s_optionValues.get (nameUpperCase);
 
-    final Object value = upgradeValue (name, aSrcValue);
+    final Object value = _upgradeValue (name, aSrcValue);
 
     if (existingValue != null)
     {
@@ -533,6 +543,7 @@ public class Options
 
     if (index < 0)
     {
+      // No separator char (like in "DO_THIS_AND_THAT")
       name = sValue.toUpperCase (Locale.US);
       if (s_optionValues.containsKey (name))
       {
@@ -552,21 +563,26 @@ public class Options
     }
     else
     {
+      // We have name and value as in "X=Y" or "X:Y"
       name = sValue.substring (0, index).toUpperCase (Locale.US);
-      if (sValue.substring (index + 1).equalsIgnoreCase ("TRUE"))
+      final String sRealValue = sValue.substring (index + 1);
+      if (sRealValue.equalsIgnoreCase ("TRUE"))
       {
+        // Boolean
         val = Boolean.TRUE;
       }
       else
-        if (sValue.substring (index + 1).equalsIgnoreCase ("FALSE"))
+        if (sRealValue.equalsIgnoreCase ("FALSE"))
         {
+          // Boolean
           val = Boolean.FALSE;
         }
         else
         {
           try
           {
-            final int i = Integer.parseInt (sValue.substring (index + 1));
+            // INteger?
+            final int i = Integer.parseInt (sRealValue);
             if (i <= 0)
             {
               System.out.println ("Warning: Bad option value in \"" + arg + "\" will be ignored.");
@@ -576,14 +592,16 @@ public class Options
           }
           catch (final NumberFormatException e)
           {
-            val = sValue.substring (index + 1);
-            if (sValue.length () > index + 2)
+            // String
+            val = sRealValue;
+            if (sRealValue.length () > 2)
             {
+              // Check if quoted
               // i.e., there is space for two '"'s in value
-              if (sValue.charAt (index + 1) == '"' && sValue.charAt (sValue.length () - 1) == '"')
+              if (sRealValue.charAt (0) == '"' && sRealValue.charAt (sRealValue.length () - 1) == '"')
               {
                 // remove the two '"'s.
-                val = sValue.substring (index + 2, sValue.length () - 1);
+                val = sRealValue.substring (1, sRealValue.length () - 1);
               }
             }
           }
@@ -595,6 +613,9 @@ public class Options
       System.out.println ("Warning: Bad option \"" + arg + "\" will be ignored.");
       return;
     }
+
+    val = _upgradeValue (name, val);
+
     final Object valOrig = s_optionValues.get (name);
     if (val.getClass () != valOrig.getClass ())
     {
@@ -606,8 +627,6 @@ public class Options
       System.out.println ("Warning: Duplicate option setting \"" + arg + "\" will be ignored.");
       return;
     }
-
-    val = upgradeValue (name, val);
 
     s_optionValues.put (name, val);
     s_cmdLineSetting.add (name);
@@ -866,9 +885,9 @@ public class Options
    *
    * @return The requested jdk version.
    */
-  public static EJavaVersion getJdkVersion ()
+  public static EJDKVersion getJdkVersion ()
   {
-    return (EJavaVersion) objectValue (USEROPTION__JDK_VERSION);
+    return (EJDKVersion) objectValue (USEROPTION__JDK_VERSION);
   }
 
   /**
@@ -878,7 +897,7 @@ public class Options
    *        the version to check against. E.g. <code>1.5</code>
    * @return true if the output version is at least the specified version.
    */
-  private static boolean _isJdkVersionAtLeast (@Nonnull final EJavaVersion version)
+  private static boolean _isJdkVersionAtLeast (@Nonnull final EJDKVersion version)
   {
     return getJdkVersion ().isNewerOrEqualsThan (version);
   }
@@ -896,7 +915,7 @@ public class Options
    */
   public static boolean isGenerateJavaChainedException ()
   {
-    return _isJdkVersionAtLeast (EJavaVersion.JDK_14);
+    return _isJdkVersionAtLeast (EJDKVersion.JDK_14);
   }
 
   /**
@@ -906,7 +925,7 @@ public class Options
    */
   public static boolean isGenerateAnnotations ()
   {
-    return _isJdkVersionAtLeast (EJavaVersion.JDK_15);
+    return _isJdkVersionAtLeast (EJDKVersion.JDK_15);
   }
 
   /**

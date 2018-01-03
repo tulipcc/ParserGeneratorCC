@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 
-import com.helger.commons.system.EJavaVersion;
+import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.OutputFile;
 
@@ -92,9 +92,9 @@ final class JJTreeStateJava
 
   private static void insertState (final PrintWriter ostr)
   {
-    final EJavaVersion eJavaVersion = Options.getJdkVersion ();
-    final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJavaVersion.JDK_15);
-    final boolean bEmptyImplType = eJavaVersion.isNewerOrEqualsThan (EJavaVersion.JDK_17);
+    final EJDKVersion eJavaVersion = Options.getJdkVersion ();
+    final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
+    final boolean bEmptyImplType = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
     ostr.println ("public class " + nameState () + " {");
 
     if (bGenerateGenerics)

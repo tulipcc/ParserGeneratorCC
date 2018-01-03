@@ -31,43 +31,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.output.java;
+package com.helger.pgcc;
 
-public final class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
+import javax.annotation.Nullable;
+
+public enum EJDKVersion
 {
-  public String getTokenTemplateResourceUrl ()
+  JDK_11 (1),
+  JDK_12 (2),
+  JDK_13 (3),
+  JDK_14 (4),
+  JDK_15 (5),
+  JDK_16 (6),
+  JDK_17 (7),
+  JDK_18 (8),
+  JDK_19 (9);
+
+  private int m_nMajor;
+
+  private EJDKVersion (final int nMajor)
   {
-    return "/templates/Token.template";
+    m_nMajor = nMajor;
   }
 
-  public String getTokenManagerTemplateResourceUrl ()
+  public boolean isNewerOrEqualsThan (final EJDKVersion aOther)
   {
-    return "/templates/TokenManager.template";
+    return m_nMajor >= aOther.m_nMajor;
   }
 
-  public String getTokenMgrErrorTemplateResourceUrl ()
+  private double _getAsDouble1x ()
   {
-    return "/templates/TokenMgrError.template";
+    return 1 + (m_nMajor / 10d);
   }
 
-  public String getJavaCharStreamTemplateResourceUrl ()
+  @Nullable
+  public static EJDKVersion getFromDoubleOrNull (final double dVersion)
   {
-    return "/templates/JavaCharStream.template";
-  }
+    if (dVersion >= 1.0 && dVersion <= 2)
+    {
+      // It's the 1.x writing => 1.6 = JDK 1.6
+      for (final EJDKVersion e : values ())
+        if (dVersion == e._getAsDouble1x ())
+          return e;
+      return null;
+    }
 
-  public String getCharStreamTemplateResourceUrl ()
-  {
-    return "/templates/CharStream.template";
+    // It's the x writing => 6 = JDK 1.6
+    final int nMajor = (int) dVersion;
+    for (final EJDKVersion e : values ())
+      if (nMajor == e.m_nMajor)
+        return e;
+    return null;
   }
-
-  public String getSimpleCharStreamTemplateResourceUrl ()
-  {
-    return "/templates/SimpleCharStream.template";
-  }
-
-  public String getParseExceptionTemplateResourceUrl ()
-  {
-    return "/templates/ParseException.template";
-  }
-
 }

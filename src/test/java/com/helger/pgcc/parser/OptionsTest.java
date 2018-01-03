@@ -40,7 +40,8 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.helger.commons.system.EJavaVersion;
+import com.helger.commons.system.SystemHelper;
+import com.helger.pgcc.EJDKVersion;
 
 /**
  * Test cases to prod at the valitity of Options a little.
@@ -59,7 +60,6 @@ public final class OptionsTest
   @Test
   public void testDefaults ()
   {
-
     assertEquals (44, Options.s_optionValues.size ());
 
     assertEquals (true, Options.isBuildParser ());
@@ -85,16 +85,54 @@ public final class OptionsTest
     assertEquals (1, Options.getLookahead ());
     assertEquals (1, Options.getOtherAmbiguityCheck ());
 
-    assertEquals (EJavaVersion.JDK_15, Options.getJdkVersion ());
+    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
     assertEquals (new File ("."), Options.getOutputDirectory ());
     assertEquals ("", Options.getTokenExtends ());
     assertEquals ("", Options.getTokenFactory ());
-    assertEquals (System.getProperties ().get ("file.encoding"), Options.getGrammarEncoding ().name ());
+    assertEquals (SystemHelper.getSystemCharsetName (), Options.getGrammarEncoding ().name ());
 
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());
     assertEquals (0, JavaCCErrors.getParseErrorCount ());
     assertEquals (0, JavaCCErrors.getSemanticErrorCount ());
+  }
+
+  @Test
+  public void setJdkVersion ()
+  {
+    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    Options.setCmdLineOption ("JDK_VERSION=1.3");
+    assertEquals (EJDKVersion.JDK_13, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    Options.setCmdLineOption ("JDK_VERSION=1.5");
+    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    Options.setCmdLineOption ("JDK_VERSION=1.7");
+    assertEquals (EJDKVersion.JDK_17, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    Options.setCmdLineOption ("JDK_VERSION=1.8");
+    assertEquals (EJDKVersion.JDK_18, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    Options.setCmdLineOption ("JDK_VERSION=1.9");
+    assertEquals (EJDKVersion.JDK_19, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    // Ignore invalid JDK version
+    Options.setCmdLineOption ("JDK_VERSION=2.0");
+    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
+    assertEquals (0, JavaCCErrors.getWarningCount ());
   }
 
   @Test
@@ -122,12 +160,15 @@ public final class OptionsTest
   public void testIntBooleanOption ()
   {
     assertEquals (1, Options.getLookahead ());
+
     Options.setCmdLineOption ("LOOKAHEAD=2");
     assertEquals (2, Options.getLookahead ());
     assertEquals (0, JavaCCErrors.getWarningCount ());
+
     Options.setCmdLineOption ("LOOKAHEAD=0");
     assertEquals (2, Options.getLookahead ());
     assertEquals (0, JavaCCErrors.getWarningCount ());
+
     Options.setInputFileOption (null, null, Options.USEROPTION__LOOKAHEAD, Integer.valueOf (0));
     assertEquals (2, Options.getLookahead ());
     assertEquals (1, JavaCCErrors.getWarningCount ());
