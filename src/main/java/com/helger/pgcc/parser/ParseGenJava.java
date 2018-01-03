@@ -171,7 +171,7 @@ public class ParseGenJava extends CodeGenerator
     {
       genCodeLine ("  /** Generated Token Manager. */");
       genCodeLine ("  " + javaStaticOpt () + "public " + s_cu_name + "TokenManager token_source;");
-      if (!Options.isUserCharStream ())
+      if (!Options.isJavaUserCharStream ())
       {
         if (Options.isJavaUnicodeEscape ())
         {
@@ -249,7 +249,7 @@ public class ParseGenJava extends CodeGenerator
 
     if (!Options.isUserTokenManager ())
     {
-      if (Options.isUserCharStream ())
+      if (Options.isJavaUserCharStream ())
       {
         genCodeLine ("  /** Constructor with user supplied CharStream. */");
         genCodeLine ("  public " + s_cu_name + "(final CharStream stream) {");

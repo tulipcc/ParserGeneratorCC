@@ -52,9 +52,9 @@ import java.util.Map;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.Options;
-import com.helger.pgcc.parser.OutputFile;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 /**
@@ -90,9 +90,6 @@ public class FilesJava
    * modified.
    */
   static final String tokenMgrErrorVersion = PGVersion.MAJOR_DOT_MINOR;
-
-  public static final IJavaResourceTemplateLocations RESOURCES_JAVA_CLASSIC = new JavaResourceTemplateLocationImpl ();
-  public static final IJavaResourceTemplateLocations RESOURCES_JAVA_MODERN = new JavaModernResourceTemplateLocationImpl ();
 
   /**
    * Read the version from the comment in the specified file. This method does
@@ -195,9 +192,9 @@ public class FilesJava
             }
           }
         }
-        final String prefix = (Options.isStatic () ? "static " : "");
+
         final Map <String, Object> options = Options.getAllOptions ();
-        options.put ("PREFIX", prefix);
+        options.put ("PREFIX", Options.isStatic () ? "static " : "");
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getJavaCharStreamTemplateResourceUrl (),
                                                                        options);
@@ -246,9 +243,9 @@ public class FilesJava
             }
           }
         }
-        final String prefix = (Options.isStatic () ? "static " : "");
+
         final Map <String, Object> options = Options.getAllOptions ();
-        options.put ("PREFIX", prefix);
+        options.put ("PREFIX", Options.isStatic () ? "static " : "");
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getSimpleCharStreamTemplateResourceUrl (),
                                                                        options);
@@ -298,8 +295,10 @@ public class FilesJava
           }
         }
 
+        final Map <String, Object> options = Options.getAllOptions ();
+
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (),
-                                                                       Options.getAllOptions ());
+                                                                       options);
 
         generator.generate (ostr);
       }
@@ -314,14 +313,14 @@ public class FilesJava
 
   public static void gen_JavaModernFiles ()
   {
-    genMiscFile ("Provider.java", "/templates/gwt/Provider.template");
-    genMiscFile ("StringProvider.java", "/templates/gwt/StringProvider.template");
+    _genMiscFile ("Provider.java", "/templates/gwt/Provider.template");
+    _genMiscFile ("StringProvider.java", "/templates/gwt/StringProvider.template");
 
     // This provides a bridge to standard Java readers.
-    genMiscFile ("StreamProvider.java", "/templates/gwt/StreamProvider.template");
+    _genMiscFile ("StreamProvider.java", "/templates/gwt/StreamProvider.template");
   }
 
-  private static void genMiscFile (final String fileName, final String templatePath) throws Error
+  private static void _genMiscFile (final String fileName, final String templatePath) throws Error
   {
     final File file = new File (Options.getOutputDirectory (), fileName);
     try (final OutputFile outputFile = new OutputFile (file,
@@ -354,7 +353,9 @@ public class FilesJava
           }
         }
 
-        final OutputFileGenerator generator = new OutputFileGenerator (templatePath, Options.getAllOptions ());
+        final Map <String, Object> options = Options.getAllOptions ();
+
+        final OutputFileGenerator generator = new OutputFileGenerator (templatePath, options);
 
         generator.generate (ostr);
       }
@@ -400,8 +401,10 @@ public class FilesJava
           }
         }
 
+        final Map <String, Object> options = Options.getAllOptions ();
+
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getParseExceptionTemplateResourceUrl (),
-                                                                       Options.getAllOptions ());
+                                                                       options);
 
         generator.generate (ostr);
       }
@@ -447,8 +450,10 @@ public class FilesJava
           }
         }
 
+        final Map <String, Object> options = Options.getAllOptions ();
+
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenMgrErrorTemplateResourceUrl (),
-                                                                       Options.getAllOptions ());
+                                                                       options);
 
         generator.generate (ostr);
       }
@@ -496,8 +501,10 @@ public class FilesJava
           }
         }
 
+        final Map <String, Object> options = Options.getAllOptions ();
+
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenTemplateResourceUrl (),
-                                                                       Options.getAllOptions ());
+                                                                       options);
 
         generator.generate (ostr);
       }
@@ -543,8 +550,10 @@ public class FilesJava
           }
         }
 
+        final Map <String, Object> options = Options.getAllOptions ();
+
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenManagerTemplateResourceUrl (),
-                                                                       Options.getAllOptions ());
+                                                                       options);
         generator.generate (ostr);
       }
     }

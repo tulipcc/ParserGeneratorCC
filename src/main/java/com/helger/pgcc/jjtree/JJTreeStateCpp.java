@@ -41,8 +41,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.Options;
-import com.helger.pgcc.parser.OutputFile;
 
 /**
  * Generate the State of a tree.

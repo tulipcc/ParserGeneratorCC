@@ -77,7 +77,7 @@ public final class OptionsTest
     assertEquals (true, Options.isSanityCheck ());
     assertEquals (true, Options.isStatic ());
     assertEquals (false, Options.isUnicodeInput ());
-    assertEquals (false, Options.isUserCharStream ());
+    assertEquals (false, Options.isJavaUserCharStream ());
     assertEquals (false, Options.isUserTokenManager ());
     assertEquals (false, Options.isTokenManagerUsesParser ());
 

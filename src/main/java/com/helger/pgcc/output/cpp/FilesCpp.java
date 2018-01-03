@@ -46,9 +46,9 @@ import java.io.UncheckedIOException;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.Options;
-import com.helger.pgcc.parser.OutputFile;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 /**

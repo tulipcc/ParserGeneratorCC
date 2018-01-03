@@ -54,7 +54,7 @@ public abstract class AbstractExpRegularExpression extends Expansion
    * internal processing and passing information between the parser and the
    * lexical analyzer.
    */
-  int m_ordinal;
+  public int m_ordinal;
 
   /**
    * The LHS to which the token value of the regular expression is assigned. In

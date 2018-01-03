@@ -236,7 +236,7 @@ public class NfaState
       if (charMoves[i] == 0 || charMoves[i] > c)
         break;
 
-    if (!s_unicodeWarningGiven && c > 0xff && !Options.isJavaUnicodeEscape () && !Options.isUserCharStream ())
+    if (!s_unicodeWarningGiven && c > 0xff && !Options.isJavaUnicodeEscape () && !Options.isJavaUserCharStream ())
     {
       s_unicodeWarningGiven = true;
       JavaCCErrors.warning (LexGenJava.curRE,
@@ -282,7 +282,7 @@ public class NfaState
     if (!s_unicodeWarningGiven &&
         (left > 0xff || right > 0xff) &&
         !Options.isJavaUnicodeEscape () &&
-        !Options.isUserCharStream ())
+        !Options.isJavaUserCharStream ())
     {
       s_unicodeWarningGiven = true;
       JavaCCErrors.warning (LexGenJava.curRE,
@@ -2873,7 +2873,7 @@ public class NfaState
     codeGenerator.genCodeLine ("   jjCheckNAdd(state1);");
     codeGenerator.genCodeLine ("   jjCheckNAdd(state2);");
     codeGenerator.genCodeLine ("}");
-    codeGenerator.genCodeLine ("");
+    codeGenerator.genCodeLine ();
 
     if (s_jjCheckNAddStatesDualNeeded)
     {
@@ -2885,7 +2885,7 @@ public class NfaState
       codeGenerator.genCodeLine ("      jjCheckNAdd(jjnextStates[start]);");
       codeGenerator.genCodeLine ("   } while (start++ != end);");
       codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeLine ("");
+      codeGenerator.genCodeLine ();
     }
 
     if (s_jjCheckNAddStatesUnaryNeeded)
@@ -2897,7 +2897,7 @@ public class NfaState
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start]);");
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start + 1]);");
       codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeLine ("");
+      codeGenerator.genCodeLine ();
     }
   }
 
@@ -2926,7 +2926,7 @@ public class NfaState
     codeGenerator.genCodeLine ("   jjCheckNAdd(state1);\\");
     codeGenerator.genCodeLine ("   jjCheckNAdd(state2);\\");
     codeGenerator.genCodeLine ("}");
-    codeGenerator.genCodeLine ("");
+    codeGenerator.genCodeLine ();
 
     if (s_jjCheckNAddStatesDualNeeded)
     {
@@ -2936,7 +2936,7 @@ public class NfaState
       codeGenerator.genCodeLine ("      jjCheckNAdd(jjnextStates[x]);\\");
       codeGenerator.genCodeLine ("   } /*while (start++ != end);*/\\");
       codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeLine ("");
+      codeGenerator.genCodeLine ();
     }
 
     if (s_jjCheckNAddStatesUnaryNeeded)
@@ -2946,7 +2946,7 @@ public class NfaState
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start]);\\");
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start + 1]);\\");
       codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeLine ("");
+      codeGenerator.genCodeLine ();
     }
     codeGenerator.switchToMainFile ();
   }
@@ -3342,7 +3342,7 @@ public class NfaState
     {
       codeGenerator.genCodeLine ("   if (jjmatchedPos > strPos)");
       codeGenerator.genCodeLine ("      return curPos;");
-      codeGenerator.genCodeLine ("");
+      codeGenerator.genCodeLine ();
       switch (codeGenerator.getOutputLanguage ())
       {
         case JAVA:
@@ -3354,7 +3354,7 @@ public class NfaState
         default:
           throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
       }
-      codeGenerator.genCodeLine ("");
+      codeGenerator.genCodeLine ();
       codeGenerator.genCodeLine ("   if (curPos < toRet)");
       switch (codeGenerator.getOutputLanguage ())
       {
@@ -3371,7 +3371,7 @@ public class NfaState
         default:
           throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
       }
-      codeGenerator.genCodeLine ("");
+      codeGenerator.genCodeLine ();
       codeGenerator.genCodeLine ("   if (jjmatchedPos < strPos)");
       codeGenerator.genCodeLine ("   {");
       codeGenerator.genCodeLine ("      jjmatchedKind = strKind;");
@@ -3379,7 +3379,7 @@ public class NfaState
       codeGenerator.genCodeLine ("   }");
       codeGenerator.genCodeLine ("   else if (jjmatchedPos == strPos && jjmatchedKind > strKind)");
       codeGenerator.genCodeLine ("      jjmatchedKind = strKind;");
-      codeGenerator.genCodeLine ("");
+      codeGenerator.genCodeLine ();
       codeGenerator.genCodeLine ("   return toRet;");
     }
 

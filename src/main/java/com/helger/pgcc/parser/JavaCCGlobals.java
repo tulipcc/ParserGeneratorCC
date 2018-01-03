@@ -469,7 +469,7 @@ public final class JavaCCGlobals
   public static int s_cline;
   public static int s_ccol;
 
-  protected static void printTokenSetup (final Token t)
+  public static void printTokenSetup (final Token t)
   {
     Token tt = t;
     while (tt.specialToken != null)
@@ -619,7 +619,7 @@ public final class JavaCCGlobals
     return retval;
   }
 
-  protected static String printTrailingComments (final Token t)
+  public static String printTrailingComments (final Token t)
   {
     if (t.next == null)
       return "";

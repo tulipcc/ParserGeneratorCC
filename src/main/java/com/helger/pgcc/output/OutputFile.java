@@ -31,7 +31,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.output;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,6 +51,9 @@ import com.helger.commons.io.stream.NonBlockingBufferedOutputStream;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.commons.io.stream.NullOutputStream;
 import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.parser.JavaCCErrors;
+import com.helger.pgcc.parser.JavaCCGlobals;
+import com.helger.pgcc.parser.Options;
 import com.helger.security.messagedigest.EMessageDigestAlgorithm;
 
 /**

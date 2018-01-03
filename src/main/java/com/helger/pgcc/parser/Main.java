@@ -71,6 +71,8 @@ import java.util.Set;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.output.EOutputLanguage;
+import com.helger.pgcc.output.cpp.OtherFilesGenCPP;
+import com.helger.pgcc.output.java.OtherFilesGenJava;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
 
@@ -345,7 +347,7 @@ public class Main
           new LexGenJava ().start ();
 
           Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.s_cu_name);
-          OtherFilesGen.start (isJavaModern);
+          OtherFilesGenJava.start (isJavaModern);
           break;
         case CPP:
           // C++ for now
@@ -425,7 +427,7 @@ public class Main
     com.helger.pgcc.parser.MatchInfo.reInitStatic ();
     com.helger.pgcc.parser.LookaheadWalk.reInit ();
     com.helger.pgcc.parser.Semanticize.reInit ();
-    com.helger.pgcc.parser.OtherFilesGen.reInit ();
+    com.helger.pgcc.output.java.OtherFilesGenJava.reInit ();
     com.helger.pgcc.parser.LexGenJava.reInit ();
   }
 

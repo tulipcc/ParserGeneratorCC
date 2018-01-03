@@ -39,8 +39,8 @@ import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 
 import com.helger.pgcc.EJDKVersion;
+import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.Options;
-import com.helger.pgcc.parser.OutputFile;
 
 /**
  * Generate the State of a tree.

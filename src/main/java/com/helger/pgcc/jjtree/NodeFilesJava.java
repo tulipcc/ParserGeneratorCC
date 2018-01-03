@@ -76,8 +76,8 @@ import java.util.Set;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGVersion;
+import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.Options;
-import com.helger.pgcc.parser.OutputFile;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 final class NodeFilesJava

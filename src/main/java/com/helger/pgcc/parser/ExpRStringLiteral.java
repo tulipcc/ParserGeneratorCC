@@ -374,7 +374,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       if (!NfaState.s_unicodeWarningGiven &&
           c > 0xff &&
           !Options.isJavaUnicodeEscape () &&
-          !Options.isUserCharStream ())
+          !Options.isJavaUserCharStream ())
       {
         NfaState.s_unicodeWarningGiven = true;
         JavaCCErrors.warning (LexGenJava.curRE,

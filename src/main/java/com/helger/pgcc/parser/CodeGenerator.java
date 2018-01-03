@@ -426,7 +426,7 @@ public class CodeGenerator
         {
           genCode (" throws " + exceptions);
         }
-        genCodeLine ("");
+        genCodeLine ();
         break;
       case CPP:
         // for C++, we generate the signature in the header file and body in
@@ -470,7 +470,7 @@ public class CodeGenerator
 
   public static String getCharStreamName ()
   {
-    if (Options.isUserCharStream ())
+    if (Options.isJavaUserCharStream ())
     {
       return "CharStream";
     }

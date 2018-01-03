@@ -794,7 +794,7 @@ public class Options
    *
    * @return The requested user charstream value.
    */
-  public static boolean isUserCharStream ()
+  public static boolean isJavaUserCharStream ()
   {
     return booleanValue (USEROPTION__USER_CHAR_STREAM);
   }
@@ -902,7 +902,7 @@ public class Options
     return getJdkVersion ().isNewerOrEqualsThan (version);
   }
 
-  public static boolean isGenerateBoilerplateCode ()
+  public static boolean isGenerateJavaBoilerplateCode ()
   {
     return booleanValue (USEROPTION__GENERATE_BOILERPLATE);
   }
@@ -923,7 +923,7 @@ public class Options
    *
    * @return
    */
-  public static boolean isSupportClassVisibilityPublic ()
+  public static boolean isJavaSupportClassVisibilityPublic ()
   {
     return booleanValue (USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC);
   }

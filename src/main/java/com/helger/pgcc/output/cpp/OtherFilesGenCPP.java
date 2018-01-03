@@ -61,7 +61,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.output.cpp;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
@@ -83,7 +83,16 @@ import java.util.Locale;
 
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
-import com.helger.pgcc.output.cpp.FilesCpp;
+import com.helger.pgcc.parser.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.ExpRStringLiteral;
+import com.helger.pgcc.parser.JavaCCErrors;
+import com.helger.pgcc.parser.JavaCCParserConstants;
+import com.helger.pgcc.parser.LexGenJava;
+import com.helger.pgcc.parser.MetaParseException;
+import com.helger.pgcc.parser.Options;
+import com.helger.pgcc.parser.RegExprSpec;
+import com.helger.pgcc.parser.Token;
+import com.helger.pgcc.parser.TokenProduction;
 
 /**
  * Generates the Constants file.
