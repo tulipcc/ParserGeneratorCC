@@ -810,7 +810,7 @@ public class ParseGenJava extends CodeGenerator
     }
     genCodeLine ();
     genCodeLine ("/** Get the next Token. */");
-    genCodeLine ("  " + javaStaticOpt () + "final public Token getNextToken() {");
+    genCodeLine ("  " + javaStaticOpt () + "public final Token getNextToken() {");
     if (Options.isCacheTokens ())
     {
       genCodeLine ("	 if ((token = jj_nt).next != null) jj_nt = jj_nt.next;");
@@ -834,29 +834,30 @@ public class ParseGenJava extends CodeGenerator
     genCodeLine ("  }");
     genCodeLine ();
     genCodeLine ("/** Get the specific Token. */");
-    genCodeLine ("  " + javaStaticOpt () + "final public Token getToken(int index) {");
+    genCodeLine ("  " + javaStaticOpt () + "public final Token getToken(int index) {");
     if (s_lookaheadNeeded)
-    {
-      genCodeLine ("	 Token t = jj_lookingAhead ? jj_scanpos : token;");
-    }
+      genCodeLine ("    Token t = jj_lookingAhead ? jj_scanpos : token;");
     else
-    {
-      genCodeLine ("	 Token t = token;");
-    }
-    genCodeLine ("	 for (int i = 0; i < index; i++) {");
-    genCodeLine ("	   if (t.next != null) t = t.next;");
-    genCodeLine ("	   else t = t.next = token_source.getNextToken();");
-    genCodeLine ("	 }");
-    genCodeLine ("	 return t;");
+      genCodeLine ("    Token t = token;");
+    genCodeLine ("    for (int i = 0; i < index; i++) {");
+    genCodeLine ("      if (t.next == null)");
+    genCodeLine ("        t.next = token_source.getNextToken();");
+    genCodeLine ("      t = t.next;");
+    genCodeLine ("    }");
+    genCodeLine ("    return t;");
     genCodeLine ("  }");
     genCodeLine ();
     if (!Options.isCacheTokens ())
     {
       genCodeLine ("  " + javaStaticOpt () + "private int jj_ntk_f() {");
-      genCodeLine ("	 if ((jj_nt=token.next) == null)");
-      genCodeLine ("	   return (jj_ntk = (token.next=token_source.getNextToken()).kind);");
-      genCodeLine ("	 else");
-      genCodeLine ("	   return (jj_ntk = jj_nt.kind);");
+      genCodeLine ("    jj_nt = token.next;");
+      genCodeLine ("    if (jj_nt == null) {");
+      genCodeLine ("      token.next = token_source.getNextToken();");
+      genCodeLine ("      jj_ntk = token.next.kind;");
+      genCodeLine ("      return jj_ntk;");
+      genCodeLine ("    }");
+      genCodeLine ("    jj_ntk = jj_nt.kind;");
+      genCodeLine ("    return jj_ntk;");
       genCodeLine ("  }");
       genCodeLine ();
     }
@@ -1021,8 +1022,11 @@ public class ParseGenJava extends CodeGenerator
     }
     genCodeLine ();
 
-    genCodeLine ("  " + javaStaticOpt () + "private int trace_indent = 0;");
-    genCodeLine ("  " + javaStaticOpt () + "private " + Options.getBooleanType () + " trace_enabled;");
+    if (Options.isDebugParser ())
+    {
+      genCodeLine ("  " + javaStaticOpt () + "private int trace_indent = 0;");
+    }
+    genCodeLine ("  " + javaStaticOpt () + "private " + Options.getBooleanType () + " trace_enabled = false;");
     genCodeLine ();
     genCodeLine ("  /** Trace enabled. */");
     genCodeLine ("  " + javaStaticOpt () + "public final boolean trace_enabled() {");
@@ -1033,12 +1037,12 @@ public class ParseGenJava extends CodeGenerator
     if (Options.isDebugParser ())
     {
       genCodeLine ("  /** Enable tracing. */");
-      genCodeLine ("  " + javaStaticOpt () + "final public void enable_tracing() {");
+      genCodeLine ("  " + javaStaticOpt () + "public final void enable_tracing() {");
       genCodeLine ("    trace_enabled = true;");
       genCodeLine ("  }");
       genCodeLine ();
       genCodeLine ("  /** Disable tracing. */");
-      genCodeLine ("  " + javaStaticOpt () + "final public void disable_tracing() {");
+      genCodeLine ("  " + javaStaticOpt () + "public final void disable_tracing() {");
       genCodeLine ("    trace_enabled = false;");
       genCodeLine ("  }");
       genCodeLine ();
@@ -1096,10 +1100,10 @@ public class ParseGenJava extends CodeGenerator
     else
     {
       genCodeLine ("  /** Enable tracing. */");
-      genCodeLine ("  " + javaStaticOpt () + "final public void enable_tracing() {}");
+      genCodeLine ("  " + javaStaticOpt () + "public final void enable_tracing() {}");
       genCodeLine ();
       genCodeLine ("  /** Disable tracing. */");
-      genCodeLine ("  " + javaStaticOpt () + "final public void disable_tracing() {}");
+      genCodeLine ("  " + javaStaticOpt () + "public final void disable_tracing() {}");
       genCodeLine ();
     }
 
