@@ -39,7 +39,6 @@ package com.helger.pgcc.parser;
 
 public class CharacterRange implements ICCCharacter
 {
-
   /**
    * The line and column number of the construct that corresponds most closely
    * to this node.
@@ -54,9 +53,6 @@ public class CharacterRange implements ICCCharacter
   private char m_nRight;
 
   private char m_nLeft;
-
-  CharacterRange ()
-  {}
 
   CharacterRange (final char l, final char r)
   {
@@ -78,7 +74,7 @@ public class CharacterRange implements ICCCharacter
    */
   void setLine (final int line)
   {
-    this.m_nLine = line;
+    m_nLine = line;
   }
 
   /**
@@ -95,7 +91,7 @@ public class CharacterRange implements ICCCharacter
    */
   void setColumn (final int column)
   {
-    this.m_nColumn = column;
+    m_nColumn = column;
   }
 
   /**
@@ -112,7 +108,7 @@ public class CharacterRange implements ICCCharacter
    */
   public void setLeft (final char left)
   {
-    this.m_nLeft = left;
+    m_nLeft = left;
   }
 
   /**
@@ -129,7 +125,7 @@ public class CharacterRange implements ICCCharacter
    */
   public void setRight (final char right)
   {
-    this.m_nRight = right;
+    m_nRight = right;
   }
 
   /**
@@ -138,5 +134,15 @@ public class CharacterRange implements ICCCharacter
   public char getRight ()
   {
     return m_nRight;
+  }
+
+  public boolean isInRange (final char c)
+  {
+    return c >= m_nLeft && c <= m_nRight;
+  }
+
+  public boolean isSubRangeOf (final CharacterRange r2)
+  {
+    return m_nLeft >= r2.getLeft () && m_nRight <= r2.getRight ();
   }
 }

@@ -1787,7 +1787,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
 
     for (i = 0; i < m_descriptors.size (); i++)
     {
-      final Object tmp = m_descriptors.get (i);
+      final ICCCharacter tmp = m_descriptors.get (i);
       if (tmp instanceof SingleCharacter)
         startState.addChar (((SingleCharacter) tmp).getChar ());
       else // if (descriptors.get(i) instanceof CharacterRange)
@@ -1806,19 +1806,9 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     return retVal;
   }
 
-  static boolean overlaps (final CharacterRange r1, final CharacterRange r2)
+  private static boolean overlaps (final CharacterRange r1, final CharacterRange r2)
   {
     return r1.getLeft () <= r2.getRight () && r1.getRight () > r2.getRight ();
-  }
-
-  static boolean isSubRange (final CharacterRange r1, final CharacterRange r2)
-  {
-    return r1.getLeft () >= r2.getLeft () && r1.getRight () <= r2.getRight ();
-  }
-
-  static boolean isInRange (final char c, final CharacterRange range)
-  {
-    return c >= range.getLeft () && c <= range.getRight ();
   }
 
   void sortDescriptors ()
@@ -1836,7 +1826,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
 
         for (j = 0; j < cnt; j++)
         {
-          final Object tmp2 = newDesc.get (j);
+          final ICCCharacter tmp2 = newDesc.get (j);
           if (tmp2 instanceof SingleCharacter)
           {
             final char c = ((SingleCharacter) tmp2).getChar ();
@@ -1850,7 +1840,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
           {
             final char l = ((CharacterRange) tmp2).getLeft ();
 
-            if (isInRange (s.getChar (), (CharacterRange) tmp2))
+            if (((CharacterRange) tmp2).isInRange (s.getChar ()))
               continue Outer;
             else
               if (l > s.getChar ())
@@ -1867,11 +1857,12 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
 
         for (j = 0; j < cnt; j++)
         {
-          final Object tmp2 = newDesc.get (j);
+          final ICCCharacter tmp2 = newDesc.get (j);
           if (tmp2 instanceof SingleCharacter)
           {
             final char c = ((SingleCharacter) tmp2).getChar ();
-            if (isInRange (c, range))
+            final CharacterRange range1 = range;
+            if (range1.isInRange (c))
             {
               newDesc.remove (j--);
               cnt--;
@@ -1882,32 +1873,34 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
           }
           else
           {
-            if (isSubRange (range, (CharacterRange) tmp2))
+            final CharacterRange rtmp = (CharacterRange) tmp2;
+
+            if (range.isSubRangeOf (rtmp))
             {
               continue Outer;
             }
+
+            if (rtmp.isSubRangeOf (range))
+            {
+              newDesc.set (j, range);
+              continue Outer;
+            }
+
+            if (overlaps (range, rtmp))
+            {
+              range.setLeft ((char) (rtmp.getRight () + 1));
+            }
             else
-              if (isSubRange ((CharacterRange) tmp2, range))
+              if (overlaps (rtmp, range))
               {
-                newDesc.set (j, range);
-                continue Outer;
+                final CharacterRange tmp = range;
+                rtmp.setRight ((char) (range.getLeft () + 1));
+                range = rtmp;
+                newDesc.set (j, tmp);
               }
               else
-                if (overlaps (range, (CharacterRange) tmp2))
-                {
-                  range.setLeft ((char) (((CharacterRange) tmp2).getRight () + 1));
-                }
-                else
-                  if (overlaps ((CharacterRange) tmp2, range))
-                  {
-                    final CharacterRange tmp = range;
-                    ((CharacterRange) tmp2).setRight ((char) (range.getLeft () + 1));
-                    range = (CharacterRange) tmp2;
-                    newDesc.set (j, tmp);
-                  }
-                  else
-                    if (((CharacterRange) tmp2).getLeft () > range.getRight ())
-                      break;
+                if (rtmp.getLeft () > range.getRight ())
+                  break;
           }
         }
 
@@ -1940,7 +1933,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
 
     for (i = 0; i < m_descriptors.size (); i++)
     {
-      final Object tmp = m_descriptors.get (i);
+      final ICCCharacter tmp = m_descriptors.get (i);
       if (tmp instanceof SingleCharacter)
       {
         final char c = ((SingleCharacter) tmp).getChar ();

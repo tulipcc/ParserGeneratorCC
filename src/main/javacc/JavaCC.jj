@@ -132,7 +132,7 @@ public class JavaCCParser extends JavaCCParserInternals {
    /**
     * Class to hold modifiers.
     */
-   static public final class ModifierSet
+   public static final class ModifierSet
    {
      /* Definitions of the bits in the modifiers field.  */
      public static final int PUBLIC = 0x0001;
@@ -1560,17 +1560,14 @@ void character_descriptor(Container c) :
   ]
 	{
 	  if (isrange) {
-	    CharacterRange cr = new CharacterRange();
+	    final CharacterRange cr = new CharacterRange(c1, c2);
 	    cr.setLine(t.beginLine);
 	    cr.setColumn(t.beginColumn);
-      cr.setLeft(c1);
-      cr.setRight(c2);
 	    c.member = cr;
 	  } else {
-	    SingleCharacter sc = new SingleCharacter();
+	    final SingleCharacter sc = new SingleCharacter(c1);
 	    sc.setLine(t.beginLine);
 	    sc.setColumn(t.beginColumn);
-	    sc.setChar (c1);
 	    c.member = sc;
 	  }
 	}
@@ -1650,9 +1647,9 @@ void CompilationUnit() :
   ( ImportDeclaration() )*
   ( TypeDeclaration() )*
 	{
-          if (Options.isOutputLanguageJava()) {
+    if (Options.isOutputLanguageJava()) {
 	    insertionpointerrors(getToken(1));
-          }
+    }
 	}
 }
 
@@ -1676,7 +1673,7 @@ void ImportDeclaration() :
 
 int Modifiers():
 {
-   int modifiers = 0;
+  int modifiers = 0;
 }
 {
  (
@@ -1718,7 +1715,7 @@ int Modifiers():
  */
 void TypeDeclaration():
 {
-   int modifiers;
+  int modifiers;
 }
 {
   ";"
@@ -2107,19 +2104,19 @@ void PrimitiveType():
 {
   "boolean"
 |
-  "char"
-|
   "byte"
 |
-  "short"
+  "char"
+|
+  "double"
+|
+  "float"
 |
   "int"
 |
   "long"
 |
-  "float"
-|
-  "double"
+  "short"
 }
 
 
@@ -2145,7 +2142,7 @@ void ResultType(List tokens) :
 	       if (t == last) break;
 	       t = t.next;
 	    } else {
-           throw new ParseException(t.image + " is invalid in this context");
+        throw new ParseException(t.image + " is invalid in this context");
 	    } 
 	  }
 	}

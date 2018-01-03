@@ -320,13 +320,13 @@ NON-TERMINALS
 	WildcardBounds	:=	"extends" ReferenceType
 		|	"super" ReferenceType
 	PrimitiveType	:=	"boolean"
-		|	"char"
 		|	"byte"
-		|	"short"
+		|	"char"
+		|	"double"
+		|	"float"
 		|	"int"
 		|	"long"
-		|	"float"
-		|	"double"
+		|	"short"
 	ResultType	:=	( "void" ( "*" )? | ( "const" )? Type ( "*" | "&" )? )
 	Name	:=	JavaIdentifier ( "." JavaIdentifier )*
 	NameList	:=	Name ( "," Name )*
