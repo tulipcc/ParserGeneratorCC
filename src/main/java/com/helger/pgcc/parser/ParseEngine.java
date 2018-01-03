@@ -1276,7 +1276,8 @@ public class ParseEngine
                 conds = new ExpLookahead [1];
                 conds[0] = la;
                 actions = new String [2];
-                actions[0] = "\n;";
+                // [ph] empty statement needed???
+                actions[0] = true ? "" : "\n;";
 
                 switch (m_codeGenerator.getOutputLanguage ())
                 {
@@ -1340,7 +1341,8 @@ public class ParseEngine
                   conds = new ExpLookahead [1];
                   conds[0] = la;
                   actions = new String [2];
-                  actions[0] = "\n;";
+                  // [ph] empty statement needed???
+                  actions[0] = true ? "" : "\n;";
 
                   switch (m_codeGenerator.getOutputLanguage ())
                   {
@@ -1390,7 +1392,8 @@ public class ParseEngine
                     conds[0] = la;
                     actions = new String [2];
                     actions[0] = phase1ExpansionGen (nested_e);
-                    actions[1] = "\n;";
+                    // [ph] empty statement needed???
+                    actions[1] = true ? "" : "\n;";
                     retval += buildLookaheadChecker (conds, actions);
                   }
                   else

@@ -379,8 +379,8 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         NfaState.s_unicodeWarningGiven = true;
         JavaCCErrors.warning (LexGenJava.s_curRE,
                               "Non-ASCII characters used in regular expression." +
-                                                "Please make sure you use the correct Reader when you create the parser, " +
-                                                "one that can handle your character set.");
+                                                  "Please make sure you use the correct Reader when you create the parser, " +
+                                                  "one that can handle your character set.");
       }
 
       if (i >= s_charPosKind.size ()) // Kludge, but OK
@@ -626,8 +626,8 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         codeGenerator.generateMethodDefHeader ("int",
                                                LexGenJava.s_tokMgrClassName,
                                                "jjStartNfaWithStates" +
-                                                                           LexGenJava.s_lexStateSuffix +
-                                                                           "(int pos, int kind, int state)");
+                                                                             LexGenJava.s_lexStateSuffix +
+                                                                             "(int pos, int kind, int state)");
         break;
       default:
         throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());
@@ -674,7 +674,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         case JAVA:
           codeGenerator.genCodeLine ("   debugStream.println(" +
                                      (LexGenJava.s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + "
-                                                                  : "") +
+                                                                    : "") +
                                      "\"Current character : \" + " +
                                      Options.getTokenMgrErrorClass () +
                                      ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
@@ -1093,7 +1093,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
             case JAVA:
               codeGenerator.genCodeLine ("   debugStream.println(" +
                                          (LexGenJava.s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + "
-                                                                      : "") +
+                                                                        : "") +
                                          "\"Current character : \" + " +
                                          Options.getTokenMgrErrorClass () +
                                          ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
@@ -1444,10 +1444,12 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
             int k = 0;
             for (; k < maxLongsReqd - 1; k++)
+            {
               if (i <= s_maxLenForActive[k])
                 codeGenerator.genCode ("active" + k + ", ");
               else
                 codeGenerator.genCode ("0L, ");
+            }
             if (i <= s_maxLenForActive[k])
               codeGenerator.genCodeLine ("active" + k + ");");
             else
@@ -1650,9 +1652,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         codeGenerator.generateMethodDefHeader (" int",
                                                LexGenJava.s_tokMgrClassName,
                                                "jjStopStringLiteralDfa" +
-                                                                           LexGenJava.s_lexStateSuffix +
-                                                                           "(int pos, " +
-                                                                           params);
+                                                                             LexGenJava.s_lexStateSuffix +
+                                                                             "(int pos, " +
+                                                                             params);
         break;
       default:
         throw new UnsupportedOutputLanguageException (codeGenerator.getOutputLanguage ());

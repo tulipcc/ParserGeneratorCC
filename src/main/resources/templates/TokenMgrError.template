@@ -1,5 +1,5 @@
 /** Token Manager Error. */
-${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class ${LEGACY_EXCEPTION_HANDLING?TokenMgrError:TokenMgrException} extends ${LEGACY_EXCEPTION_HANDLING?Error:RuntimeException}
+${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class TokenMgrException extends RuntimeException
 {
 
   /**
@@ -126,17 +126,17 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class ${LEGACY_EXCEPTION_HANDLING?Tok
    */
 
   /** No arg constructor. */
-  public ${LEGACY_EXCEPTION_HANDLING?TokenMgrError:TokenMgrException}() {
+  public TokenMgrException() {
   }
 
   /** Constructor with message and reason. */
-  public ${LEGACY_EXCEPTION_HANDLING?TokenMgrError:TokenMgrException}(String message, int reason) {
+  public TokenMgrException(String message, int reason) {
     super(message);
     errorCode = reason;
   }
 
   /** Full Constructor. */
-  public ${LEGACY_EXCEPTION_HANDLING?TokenMgrError:TokenMgrException}(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, int curChar, int reason) {
+  public TokenMgrException(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, int curChar, int reason) {
     this(LexicalErr(EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
   }
 }

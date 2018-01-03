@@ -51,6 +51,7 @@ import java.io.UncheckedIOException;
 import java.util.Map;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
+import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.JavaCCErrors;
@@ -263,6 +264,7 @@ public class FilesJava
 
   public static void gen_CharStream (final IJavaResourceTemplateLocations locations)
   {
+    final EJDKVersion eJDKVersion = Options.getJdkVersion ();
     final File file = new File (Options.getOutputDirectory (), "CharStream.java");
     try (final OutputFile outputFile = new OutputFile (file,
                                                        charStreamVersion,
@@ -296,6 +298,7 @@ public class FilesJava
         }
 
         final Map <String, Object> options = Options.getAllOptions ();
+        options.put ("GENERATE_ANNOTATIONS", Boolean.valueOf (eJDKVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15)));
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (),
                                                                        options);

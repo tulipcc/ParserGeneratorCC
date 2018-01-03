@@ -86,7 +86,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream
     }
     catch (Throwable t)
     {
-      throw new ${LEGACY_EXCEPTION_HANDLING?Error:RuntimeException}(t.getMessage());
+      throw new IllegalStateException(t.getMessage());
     }
 
 
@@ -297,7 +297,7 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class SimpleCharStream
   {
 #if STATIC
     if (inputStream != null)
-      throw new ${LEGACY_EXCEPTION_HANDLING?Error:RuntimeException}("\n   ERROR: Second call to the constructor of a static SimpleCharStream.\n" +
+      throw new IllegalStateException("\n   ERROR: Second call to the constructor of a static SimpleCharStream.\n" +
       "       You must either use ReInit() or set the JavaCC option STATIC to false\n" +
       "       during the generation of this class.");
 #fi

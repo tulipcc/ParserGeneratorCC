@@ -17,45 +17,12 @@
 public
 #fi
 interface CharStream {
-
   /**
    * Returns the next character from the selected input.  The method
    * of selecting the input is the responsibility of the class
    * implementing this interface.  Can throw any java.io.IOException.
    */
   char readChar() throws java.io.IOException;
-
-#if GENERATE_ANNOTATIONS
-  @Deprecated
-#fi
-  /**
-   * Returns the column position of the character last read.
-   * @deprecated
-   * @see #getEndColumn
-   */
-  int getColumn();
-
-#if GENERATE_ANNOTATIONS
-  @Deprecated
-#fi
-  /**
-   * Returns the line number of the character last read.
-   * @deprecated
-   * @see #getEndLine
-   */
-  int getLine();
-
-  /**
-   * Returns the column number of the last character for current token (being
-   * matched after the last call to BeginTOken).
-   */
-  int getEndColumn();
-
-  /**
-   * Returns the line number of the last character for current token (being
-   * matched after the last call to BeginTOken).
-   */
-  int getEndLine();
 
   /**
    * Returns the column number of the first character for current token (being
@@ -68,6 +35,18 @@ interface CharStream {
    * matched after the last call to BeginTOken).
    */
   int getBeginLine();
+
+  /**
+   * Returns the column number of the last character for current token (being
+   * matched after the last call to BeginTOken).
+   */
+  int getEndColumn();
+
+  /**
+   * Returns the line number of the last character for current token (being
+   * matched after the last call to BeginTOken).
+   */
+  int getEndLine();
 
   /**
    * Backs up the input stream by amount steps. Lexer calls this method if it
@@ -113,9 +92,25 @@ interface CharStream {
    */
   void Done();
 
-
+  /**
+   * Set the tab size to use.
+   * @param i spaces per tab
+   */
   void setTabSize(int i);
+  
+  /**
+   * @return Current tab size.
+   */
   int getTabSize();
-  boolean getTrackLineColumn();
+
+  /**
+   * Enable or disable line number and column number tracking.
+   * @param trackLineColumn <code>true</code> to track it, <code>false</code> to not do it.
+   */
   void setTrackLineColumn(boolean trackLineColumn);
+
+  /**
+   * @return <code>true</code> if line number and column numbers should be tracked.
+   */
+  boolean getTrackLineColumn();
 }

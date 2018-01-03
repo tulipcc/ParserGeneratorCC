@@ -135,12 +135,13 @@ class JavaCharStream
         bufpos -= tokenBegin;
       }
     }
-    catch (${LEGACY_EXCEPTION_HANDLING?Throwable:Exception} t)
+    catch (Exception t)
     {
-      throw new ${LEGACY_EXCEPTION_HANDLING?Error:RuntimeException}(t.getMessage());
+      throw new IllegalStateException(t.getMessage());
     }
 
-    available = (bufsize += 2048);
+    bufsize += 2048;
+    available = bufsize;
     tokenBegin = 0;
   }
 
@@ -354,10 +355,10 @@ class JavaCharStream
       catch(java.io.IOException e)
       {
 #if KEEP_LINE_COLUMN
-        throw new ${LEGACY_EXCEPTION_HANDLING?Error:RuntimeException}("Invalid escape character at line " + line +
+        throw new IllegalStateException("Invalid escape character at line " + line +
                                          " column " + column + ".");
 #else
-        throw new ${LEGACY_EXCEPTION_HANDLING?Error:RuntimeException}(\"Invalid escape character in input\");
+        throw new IllegalStateException(\"Invalid escape character in input\");
 #fi
       }
 
@@ -458,7 +459,7 @@ class JavaCharStream
   {
 #if STATIC
     if (inputStream != null)
-      throw new ${LEGACY_EXCEPTION_HANDLING?Error:RuntimeException}("\n   ERROR: Second call to the constructor of a static JavaCharStream.\n" +
+      throw new IllegalStateException("\n   ERROR: Second call to the constructor of a static JavaCharStream.\n" +
       "       You must either use ReInit() or set the JavaCC option STATIC to false\n" +
       "       during the generation of this class.");
 #fi
