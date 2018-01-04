@@ -240,13 +240,6 @@ public class ParseGenJava extends CodeGenerator
     }
     genCodeLine ();
 
-    if (Options.isDebugParser ())
-    {
-      genCodeLine ("  {");
-      genCodeLine ("    enable_tracing();");
-      genCodeLine ("  }");
-    }
-
     if (!Options.isUserTokenManager ())
     {
       if (Options.isJavaUserCharStream ())
@@ -1035,7 +1028,13 @@ public class ParseGenJava extends CodeGenerator
     {
       genCodeLine ("  " + javaStaticOpt () + "private int trace_indent = 0;");
     }
-    genCodeLine ("  " + javaStaticOpt () + "private " + Options.getBooleanType () + " trace_enabled = false;");
+    genCodeLine ("  " +
+                 javaStaticOpt () +
+                 "private " +
+                 Options.getBooleanType () +
+                 " trace_enabled = " +
+                 (Options.isDebugParser () ? "true" : "false") +
+                 ";");
     genCodeLine ();
     genCodeLine ("  /** Trace enabled. */");
     genCodeLine ("  " + javaStaticOpt () + "public final boolean trace_enabled() {");
