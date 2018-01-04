@@ -72,6 +72,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
@@ -738,7 +740,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     codeGenerator.genCodeLine ("}");
   }
 
-  static String [] reArrange (final Map <String, KindInfo> tab)
+  private static String [] _reArrange (final Map <String, KindInfo> tab)
   {
     final String [] ret = new String [tab.size ()];
     int cnt = 0;
@@ -760,6 +762,19 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     }
 
     return ret;
+  }
+
+  @Nonnull
+  private static String _getCaseChar (final char c)
+  {
+    if (false)
+      return Integer.toString (c);
+
+    // Just for better readability
+    if (c < 0x20 || c >= 0x7f)
+      return Integer.toString (c);
+
+    return "'" + c + "'";
   }
 
   static void dumpDfaCode (final CodeGenerator codeGenerator)
@@ -806,7 +821,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       boolean atLeastOne = false;
       boolean startNfaNeeded = false;
       tab = s_charPosKind.get (i);
-      final String [] keys = reArrange (tab);
+      final String [] keys = _reArrange (tab);
 
       final StringBuilder params = new StringBuilder ();
       params.append ("(");
@@ -1168,13 +1183,13 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         if (Options.isIgnoreCase ())
         {
           if (c != Character.toUpperCase (c))
-            codeGenerator.genCodeLine ("      case " + (int) Character.toUpperCase (c) + ":");
+            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toUpperCase (c)) + ":");
 
           if (c != Character.toLowerCase (c))
-            codeGenerator.genCodeLine ("      case " + (int) Character.toLowerCase (c) + ":");
+            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toLowerCase (c)) + ":");
         }
 
-        codeGenerator.genCodeLine ("      case " + (int) c + ":");
+        codeGenerator.genCodeLine ("      case " + _getCaseChar (c) + ":");
 
         long matchedKind;
         final String prefix = (i == 0) ? "         " : "            ";
