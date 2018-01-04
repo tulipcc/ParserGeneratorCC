@@ -179,7 +179,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
         if (k > 0)
           codeGenerator.genCode (", ");
         codeGenerator.genCode (rep + ", ");
-        codeGenerator.genCode ("0x" + Long.toHexString (longs[k]) + eOutputLanguage.getLongValueSuffix ());
+        codeGenerator.genCode (eOutputLanguage.getLongHex (longs[k]));
         k += rep - 1;
       }
       codeGenerator.genCode ("}");
@@ -430,7 +430,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     {
       if (i > 0)
         codeGenerator.genCode (", ");
-      codeGenerator.genCode ("0x" + Long.toHexString (longs[i]) + eOutputLanguage.getLongValueSuffix ());
+      codeGenerator.genCode (eOutputLanguage.getLongHex (longs[i]));
     }
     codeGenerator.genCodeLine ("};");
   }

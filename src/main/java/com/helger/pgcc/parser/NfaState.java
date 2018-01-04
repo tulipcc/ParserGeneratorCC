@@ -983,18 +983,15 @@ public class NfaState
 
       if (common != null)
       {
-        String tmp = "{\n   0x" +
-                     Long.toHexString (common[0]) +
-                     "L, " +
-                     "0x" +
-                     Long.toHexString (common[1]) +
-                     "L, " +
-                     "0x" +
-                     Long.toHexString (common[2]) +
-                     "L, " +
-                     "0x" +
-                     Long.toHexString (common[3]) +
-                     "L\n};";
+        String tmp = "{\n   " +
+                     eOutputLanguage.getLongHex (common[0]) +
+                     ", " +
+                     eOutputLanguage.getLongHex (common[1]) +
+                     ", " +
+                     eOutputLanguage.getLongHex (common[2]) +
+                     ", " +
+                     eOutputLanguage.getLongHex (common[3]) +
+                     "\n};";
         Integer ind = s_lohiByteTab.get (tmp);
         if (ind == null)
         {
@@ -1031,18 +1028,15 @@ public class NfaState
 
         s_tmpIndices[cnt++] = ind.intValue ();
 
-        tmp = "{\n   0x" +
-              Long.toHexString (loBytes[i][0]) +
-              "L, " +
-              "0x" +
-              Long.toHexString (loBytes[i][1]) +
-              "L, " +
-              "0x" +
-              Long.toHexString (loBytes[i][2]) +
-              "L, " +
-              "0x" +
-              Long.toHexString (loBytes[i][3]) +
-              "L\n};";
+        tmp = "{\n   " +
+              eOutputLanguage.getLongHex (loBytes[i][0]) +
+              ", " +
+              eOutputLanguage.getLongHex (loBytes[i][1]) +
+              ", " +
+              eOutputLanguage.getLongHex (loBytes[i][2]) +
+              ", " +
+              eOutputLanguage.getLongHex (loBytes[i][3]) +
+              "\n};";
         ind = s_lohiByteTab.get (tmp);
         if (ind == null)
         {
@@ -1101,18 +1095,15 @@ public class NfaState
         String tmp;
         Integer ind;
 
-        tmp = "{\n   0x" +
-              Long.toHexString (loBytes[i][0]) +
-              "L, " +
-              "0x" +
-              Long.toHexString (loBytes[i][1]) +
-              "L, " +
-              "0x" +
-              Long.toHexString (loBytes[i][2]) +
-              "L, " +
-              "0x" +
-              Long.toHexString (loBytes[i][3]) +
-              "L\n};";
+        tmp = "{\n   " +
+              eOutputLanguage.getLongHex (loBytes[i][0]) +
+              ", " +
+              eOutputLanguage.getLongHex (loBytes[i][1]) +
+              ", " +
+              eOutputLanguage.getLongHex (loBytes[i][2]) +
+              ", " +
+              eOutputLanguage.getLongHex (loBytes[i][3]) +
+              "\n};";
 
         if ((ind = s_lohiByteTab.get (tmp)) == null)
         {
@@ -2006,6 +1997,7 @@ public class NfaState
                                                 final int byteNum,
                                                 final boolean elseNeeded)
   {
+    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
     boolean nextIntersects = _selfLoop ();
 
     for (int j = 0; j < s_allStates.size (); j++)
@@ -2042,9 +2034,11 @@ public class NfaState
       else
         codeGenerator.genCodeLine ("                  " +
                                    (elseNeeded ? "else " : "") +
-                                   "if ((0x" +
-                                   Long.toHexString (m_asciiMoves[byteNum]) +
-                                   "L & l) != 0L)");
+                                   "if ((" +
+                                   eOutputLanguage.getLongHex (m_asciiMoves[byteNum]) +
+                                   " & l) != " +
+                                   eOutputLanguage.getLongPlain (0) +
+                                   ")");
       prefix = "   ";
     }
 
@@ -2116,6 +2110,7 @@ public class NfaState
 
   private void _dumpAsciiMove (final CodeGenerator codeGenerator, final int byteNum, final boolean dumped[])
   {
+    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
     boolean nextIntersects = _selfLoop () && m_isComposite;
     boolean onlyState = true;
 
@@ -2166,9 +2161,10 @@ public class NfaState
         if (oneBit != -1)
           codeGenerator.genCodeLine ("                  if (curChar == " + (64 * byteNum + oneBit) + kindCheck + ")");
         else
-          codeGenerator.genCodeLine ("                  if ((0x" +
-                                     Long.toHexString (m_asciiMoves[byteNum]) +
-                                     "L & l) != 0L" +
+          codeGenerator.genCodeLine ("                  if ((" +
+                                     eOutputLanguage.getLongHex (m_asciiMoves[byteNum]) +
+                                     " & l) != " +
+                                     eOutputLanguage.getLongPlain (0) +
                                      kindCheck +
                                      ")");
 
@@ -2195,9 +2191,11 @@ public class NfaState
       else
         if (m_asciiMoves[byteNum] != 0xffffffffffffffffL)
         {
-          codeGenerator.genCodeLine ("                  if ((0x" +
-                                     Long.toHexString (m_asciiMoves[byteNum]) +
-                                     "L & l) == 0L)");
+          codeGenerator.genCodeLine ("                  if ((" +
+                                     eOutputLanguage.getLongHex (m_asciiMoves[byteNum]) +
+                                     " & l) == " +
+                                     eOutputLanguage.getLongPlain (0) +
+                                     ")");
           codeGenerator.genCodeLine ("                     break;");
         }
 
@@ -2221,9 +2219,11 @@ public class NfaState
       else
         if (m_asciiMoves[byteNum] != 0xffffffffffffffffL)
         {
-          codeGenerator.genCodeLine ("                  if ((0x" +
-                                     Long.toHexString (m_asciiMoves[byteNum]) +
-                                     "L & l) != 0L)");
+          codeGenerator.genCodeLine ("                  if ((" +
+                                     eOutputLanguage.getLongHex (m_asciiMoves[byteNum]) +
+                                     " & l) != " +
+                                     eOutputLanguage.getLongPlain (0) +
+                                     ")");
           prefix = "   ";
         }
     }

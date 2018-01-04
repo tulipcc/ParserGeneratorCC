@@ -115,7 +115,19 @@ public enum EOutputLanguage implements IHasID <String>
    */
   @Nonnull
   @Nonempty
-  public abstract String getLongValueSuffix ();
+  protected abstract String getLongValueSuffix ();
+
+  @Nonnull
+  public String getLongHex (final long n)
+  {
+    return "0x" + Long.toHexString (n) + getLongValueSuffix ();
+  }
+
+  @Nonnull
+  public String getLongPlain (final long n)
+  {
+    return "0x" + Long.toString (n) + getLongValueSuffix ();
+  }
 
   /**
    * @return The native data type for "boolean" values.

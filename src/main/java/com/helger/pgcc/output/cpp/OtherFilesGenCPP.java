@@ -103,12 +103,12 @@ public class OtherFilesGenCPP
   // Used by the CPP code generatror
   public static void printCharArray (final PrintWriter ostr, final String s)
   {
-    ostr.print ("{");
+    ostr.print ("{ ");
     for (int i = 0; i < s.length (); i++)
     {
       ostr.print ("0x" + Integer.toHexString (s.charAt (i)) + ", ");
     }
-    ostr.print ("0}");
+    ostr.print ("0 }");
   }
 
   static public void start () throws MetaParseException

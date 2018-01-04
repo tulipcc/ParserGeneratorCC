@@ -818,6 +818,8 @@ public class LexGenJava extends CodeGenerator
 
   private void _dumpStaticVarDeclarations (final String charStreamName) throws IOException
   {
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
+
     genCodeLine ();
     genCodeLine ("/** Lexer state names. */");
     genCodeLine ("public static final String[] lexStateNames = {");
@@ -850,7 +852,7 @@ public class LexGenJava extends CodeGenerator
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode ("0x" + Long.toHexString (s_toToken[i]) + "L, ");
+        genCode (eOutputLanguage.getLongHex (s_toToken[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -862,7 +864,7 @@ public class LexGenJava extends CodeGenerator
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode ("0x" + Long.toHexString (s_toSkip[i]) + "L, ");
+        genCode (eOutputLanguage.getLongHex (s_toSkip[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -874,7 +876,7 @@ public class LexGenJava extends CodeGenerator
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode ("0x" + Long.toHexString (s_toSpecial[i]) + "L, ");
+        genCode (eOutputLanguage.getLongHex (s_toSpecial[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -886,7 +888,7 @@ public class LexGenJava extends CodeGenerator
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode ("0x" + Long.toHexString (s_toMore[i]) + "L, ");
+        genCode (eOutputLanguage.getLongHex (s_toMore[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -1098,14 +1100,16 @@ public class LexGenJava extends CodeGenerator
         {
           genCodeLine (prefix +
                        "   while ((curChar < 64" +
-                       " && (0x" +
-                       Long.toHexString (s_singlesToSkip[i].m_asciiMoves[0]) +
-                       "L & (1L << curChar)) != 0L) || \n" +
+                       " && (" +
+                       eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[0]) +
+                       " & (1L << curChar)) != 0L) || \n" +
                        prefix +
                        "          (curChar >> 6) == 1" +
-                       " && (0x" +
-                       Long.toHexString (s_singlesToSkip[i].m_asciiMoves[1]) +
-                       "L & (1L << (curChar & 077))) != 0L)");
+                       " && (" +
+                       eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[1]) +
+                       " & (1L << (curChar & 077))) != " +
+                       eOutputLanguage.getLongPlain (0) +
+                       ")");
         }
         else
           if (s_singlesToSkip[i].m_asciiMoves[1] == 0L)
@@ -1113,9 +1117,11 @@ public class LexGenJava extends CodeGenerator
             genCodeLine (prefix +
                          "   while (curChar <= " +
                          (int) maxChar (s_singlesToSkip[i].m_asciiMoves[0]) +
-                         " && (0x" +
-                         Long.toHexString (s_singlesToSkip[i].m_asciiMoves[0]) +
-                         "L & (1L << curChar)) != 0L)");
+                         " && (" +
+                         eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[0]) +
+                         " & (1L << curChar)) != " +
+                         eOutputLanguage.getLongPlain (0) +
+                         ")");
           }
           else
             if (s_singlesToSkip[i].m_asciiMoves[0] == 0L)
@@ -1123,9 +1129,11 @@ public class LexGenJava extends CodeGenerator
               genCodeLine (prefix +
                            "   while (curChar > 63 && curChar <= " +
                            (maxChar (s_singlesToSkip[i].m_asciiMoves[1]) + 64) +
-                           " && (0x" +
-                           Long.toHexString (s_singlesToSkip[i].m_asciiMoves[1]) +
-                           "L & (1L << (curChar & 077))) != 0L)");
+                           " && (" +
+                           eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[1]) +
+                           " & (1L << (curChar & 077))) != " +
+                           eOutputLanguage.getLongPlain (0) +
+                           ")");
             }
 
         if (Options.isDebugTokenManager ())

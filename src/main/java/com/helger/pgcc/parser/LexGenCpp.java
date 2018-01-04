@@ -90,8 +90,6 @@ import com.helger.pgcc.output.java.FilesJava;
  */
 public class LexGenCpp extends LexGenJava
 {
-  private static final EOutputLanguage OL = EOutputLanguage.CPP;
-
   private void _printClassHead ()
   {
     final List <String> tn = new ArrayList <> (s_toolNames);
@@ -557,6 +555,8 @@ public class LexGenCpp extends LexGenJava
 
   private void _dumpBoilerPlateInHeader ()
   {
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
+
     switchToIncludeFile ();
     genCodeLine ("#ifndef JAVACC_CHARSTREAM");
     genCodeLine ("#define JAVACC_CHARSTREAM CharStream");
@@ -572,7 +572,7 @@ public class LexGenCpp extends LexGenJava
     genCodeLine ("  void ReInit(JAVACC_CHARSTREAM *stream, int lexState = " + s_defaultLexState + ");");
     genCodeLine ("  void SwitchTo(int lexState);");
     genCodeLine ("  void clear();");
-    genCodeLine ("  const JJSimpleString jjKindsForBitVector(int i, " + OL.getTypeLong () + " vec);");
+    genCodeLine ("  const JJSimpleString jjKindsForBitVector(int i, " + eOutputLanguage.getTypeLong () + " vec);");
     genCodeLine ("  const JJSimpleString jjKindsForStateVector(int lexState, int vec[], int start, int end);");
     genCodeLine ();
   }
@@ -581,6 +581,7 @@ public class LexGenCpp extends LexGenJava
   {
     int i;
 
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     switchToStaticsFile (); // remaining variables
     genCodeLine ();
     genCodeLine ("/** Lexer state names. */");
@@ -608,12 +609,12 @@ public class LexGenCpp extends LexGenJava
     if (s_hasSkip || s_hasMore || s_hasSpecial)
     {
       // Bit vector for TOKEN
-      genCode ("static const " + OL.getTypeLong () + " jjtoToken[] = {");
+      genCode ("static const " + eOutputLanguage.getTypeLong () + " jjtoToken[] = {");
       for (i = 0; i < s_maxOrdinal / 64 + 1; i++)
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode ("0x" + Long.toHexString (s_toToken[i]) + "L, ");
+        genCode (eOutputLanguage.getLongHex (s_toToken[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -621,12 +622,12 @@ public class LexGenCpp extends LexGenJava
     if (s_hasSkip || s_hasSpecial)
     {
       // Bit vector for SKIP
-      genCode ("static const " + OL.getTypeLong () + " jjtoSkip[] = {");
+      genCode ("static const " + eOutputLanguage.getTypeLong () + " jjtoSkip[] = {");
       for (i = 0; i < s_maxOrdinal / 64 + 1; i++)
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode ("0x" + Long.toHexString (s_toSkip[i]) + "L, ");
+        genCode (eOutputLanguage.getLongHex (s_toSkip[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -634,23 +635,29 @@ public class LexGenCpp extends LexGenJava
     if (s_hasSpecial)
     {
       // Bit vector for SPECIAL
-      genCode ("static const " + OL.getTypeLong () + " jjtoSpecial[] = {");
+      genCode ("static const " + eOutputLanguage.getTypeLong () + " jjtoSpecial[] = {");
       for (i = 0; i < s_maxOrdinal / 64 + 1; i++)
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode ("0x" + Long.toHexString (s_toSpecial[i]) + "L, ");
+        genCode (eOutputLanguage.getLongHex (s_toSpecial[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
 
-    /*
-     * if (hasMore) // Not needed as we just use else { // Bit vector for MORE
-     * genCode("static const " + Options.getLongType() + " jjtoMore[] = {"); for
-     * (i = 0; i < maxOrdinal / 64 + 1; i++) { if (i % 4 == 0) genCode("\n   ");
-     * genCode("0x" + Long.toHexString(toMore[i]) + "L, "); }
-     * genCodeLine("\n};"); }
-     */
+    if (false)
+      if (s_hasMore) // Not needed as we just use else
+      {
+        // Bit vector for MORE
+        genCode ("static const " + eOutputLanguage.getTypeLong () + " jjtoMore[] = {");
+        for (i = 0; i < s_maxOrdinal / 64 + 1; i++)
+        {
+          if (i % 4 == 0)
+            genCode ("\n   ");
+          genCode (eOutputLanguage.getLongHex (s_toMore[i]) + ", ");
+        }
+        genCodeLine ("\n};");
+      }
   }
 
   private void _dumpFillToken ()
@@ -755,6 +762,8 @@ public class LexGenCpp extends LexGenJava
 
   private void _dumpGetNextToken ()
   {
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
+
     switchToIncludeFile ();
     genCodeLine ();
     genCodeLine ("public:");
@@ -849,14 +858,16 @@ public class LexGenCpp extends LexGenJava
         {
           genCodeLine (prefix +
                        "   while ((curChar < 64" +
-                       " && (0x" +
-                       Long.toHexString (s_singlesToSkip[i].m_asciiMoves[0]) +
-                       "L & (1L << curChar)) != 0L) || \n" +
+                       " && (" +
+                       eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[0]) +
+                       " & (1L << curChar)) != 0L) || \n" +
                        prefix +
                        "          (curChar >> 6) == 1" +
-                       " && (0x" +
-                       Long.toHexString (s_singlesToSkip[i].m_asciiMoves[1]) +
-                       "L & (1L << (curChar & 077))) != 0L)");
+                       " && (" +
+                       eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[1]) +
+                       " & (1L << (curChar & 077))) != " +
+                       eOutputLanguage.getLongPlain (0) +
+                       ")");
         }
         else
           if (s_singlesToSkip[i].m_asciiMoves[1] == 0L)
@@ -864,9 +875,11 @@ public class LexGenCpp extends LexGenJava
             genCodeLine (prefix +
                          "   while (curChar <= " +
                          (int) maxChar (s_singlesToSkip[i].m_asciiMoves[0]) +
-                         " && (0x" +
-                         Long.toHexString (s_singlesToSkip[i].m_asciiMoves[0]) +
-                         "L & (1L << curChar)) != 0L)");
+                         " && (" +
+                         eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[0]) +
+                         " & (1L << curChar)) != " +
+                         eOutputLanguage.getLongPlain (0) +
+                         ")");
           }
           else
             if (s_singlesToSkip[i].m_asciiMoves[0] == 0L)
@@ -874,9 +887,11 @@ public class LexGenCpp extends LexGenJava
               genCodeLine (prefix +
                            "   while (curChar > 63 && curChar <= " +
                            (maxChar (s_singlesToSkip[i].m_asciiMoves[1]) + 64) +
-                           " && (0x" +
-                           Long.toHexString (s_singlesToSkip[i].m_asciiMoves[1]) +
-                           "L & (1L << (curChar & 077))) != 0L)");
+                           " && (" +
+                           eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[1]) +
+                           " & (1L << (curChar & 077))) != " +
+                           eOutputLanguage.getLongPlain (0) +
+                           ")");
             }
 
         genCodeLine (prefix + "{");
