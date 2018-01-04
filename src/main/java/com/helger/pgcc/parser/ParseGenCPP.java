@@ -257,7 +257,7 @@ public class ParseGenCPP extends ParseGenJava
     switchToIncludeFile ();
     genCodeLine ("  virtual ~" + s_cu_name + "();");
     switchToMainFile ();
-    genCodeLine ("" + s_cu_name + "::~" + s_cu_name + "()");
+    genCodeLine (s_cu_name + "::~" + s_cu_name + "()");
     genCodeLine ("{");
     genCodeLine ("  clear();");
     genCodeLine ("}");

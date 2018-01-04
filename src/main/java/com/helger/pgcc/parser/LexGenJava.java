@@ -1372,13 +1372,12 @@ public class LexGenJava extends CodeGenerator
             genCodeLine ("   debugStream.println(" +
                          (s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                          "\"Current character : \" + " +
-                         "" +
                          s_errorHandlingClass +
                          ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
                          "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
           genCodeLine (prefix + "         continue;");
           genCodeLine (prefix + "      }");
-          genCodeLine (prefix + "      catch (java.io.IOException e1) { }");
+          genCodeLine (prefix + "      catch (final java.io.IOException e1) { }");
         }
       }
 
@@ -1388,7 +1387,7 @@ public class LexGenJava extends CodeGenerator
       genCodeLine (prefix + "   String error_after = null;");
       genCodeLine (prefix + "   " + eOutputLanguage.getTypeBoolean () + " EOFSeen = false;");
       genCodeLine (prefix + "   try { input_stream.readChar(); input_stream.backup(1); }");
-      genCodeLine (prefix + "   catch (java.io.IOException e1) {");
+      genCodeLine (prefix + "   catch (final java.io.IOException e1) {");
       genCodeLine (prefix + "      EOFSeen = true;");
       genCodeLine (prefix + "      error_after = curPos <= 1 ? \"\" : input_stream.GetImage();");
       genCodeLine (prefix + "      if (curChar == '\\n' || curChar == '\\r') {");
