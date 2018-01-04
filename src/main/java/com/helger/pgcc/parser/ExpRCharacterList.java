@@ -1801,7 +1801,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
       }
     }
 
-    startState.next = finalState;
+    startState.m_next = finalState;
 
     return retVal;
   }

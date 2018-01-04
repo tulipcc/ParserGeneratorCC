@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.output.EOutputLanguage;
 
 /**
  * Class that implements a table driven code generator for the token manager in
@@ -147,9 +148,11 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
 
   private void dumpNfaTables (final CodeGenerator codeGenerator, final TokenizerData tokenizerData)
   {
+    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
+
     // WE do the following for java so that the generated code is reasonable
     // size and can be compiled. May not be needed for other languages.
-    codeGenerator.genCodeLine ("private static final long[][] jjCharData = {");
+    codeGenerator.genCodeLine ("private static final " + eOutputLanguage.getTypeLong () + "[][] jjCharData = {");
     final Map <Integer, TokenizerData.NfaState> nfa = tokenizerData.m_nfa;
     for (int i = 0; i < nfa.size (); i++)
     {
@@ -176,7 +179,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
         if (k > 0)
           codeGenerator.genCode (", ");
         codeGenerator.genCode (rep + ", ");
-        codeGenerator.genCode ("0x" + Long.toHexString (longs[k]) + Options.getLongSuffix ());
+        codeGenerator.genCode ("0x" + Long.toHexString (longs[k]) + eOutputLanguage.getLongValueSuffix ());
         k += rep - 1;
       }
       codeGenerator.genCode ("}");
@@ -420,13 +423,14 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
 
   private static void generateBitVector (final String name, final BitSet bits, final CodeGenerator codeGenerator)
   {
-    codeGenerator.genCodeLine ("private static final long[] " + name + " = {");
+    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
+    codeGenerator.genCodeLine ("private static final " + eOutputLanguage.getTypeLong () + "[] " + name + " = {");
     final long [] longs = bits.toLongArray ();
     for (int i = 0; i < longs.length; i++)
     {
       if (i > 0)
         codeGenerator.genCode (", ");
-      codeGenerator.genCode ("0x" + Long.toHexString (longs[i]) + Options.getLongSuffix ());
+      codeGenerator.genCode ("0x" + Long.toHexString (longs[i]) + eOutputLanguage.getLongValueSuffix ());
     }
     codeGenerator.genCodeLine ("};");
   }

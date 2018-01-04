@@ -88,6 +88,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.java.FilesJava;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
@@ -399,7 +400,7 @@ public class LexGenJava extends CodeGenerator
   public static void addCharToSkip (final char c, final int kind)
   {
     s_singlesToSkip[s_lexStateIndex].addChar (c);
-    s_singlesToSkip[s_lexStateIndex].kind = kind;
+    s_singlesToSkip[s_lexStateIndex].m_kind = kind;
   }
 
   public void start () throws IOException
@@ -437,7 +438,7 @@ public class LexGenJava extends CodeGenerator
       ignoring = false;
 
       s_singlesToSkip[s_lexStateIndex] = new NfaState ();
-      s_singlesToSkip[s_lexStateIndex].dummy = true;
+      s_singlesToSkip[s_lexStateIndex].m_dummy = true;
 
       if (key.equals ("DEFAULT"))
         s_defaultLexState = s_lexStateIndex;
@@ -491,8 +492,8 @@ public class LexGenJava extends CodeGenerator
                 choices.add ((ExpRChoice) s_curRE);
 
               temp = s_curRE.generateNfa (ignore);
-              temp.end.isFinal = true;
-              temp.end.kind = s_curRE.m_ordinal;
+              temp.end.m_isFinal = true;
+              temp.end.m_kind = s_curRE.m_ordinal;
               s_initialState.addMove (temp.start);
             }
 
@@ -550,7 +551,7 @@ public class LexGenJava extends CodeGenerator
       // Generate a static block for initializing the nfa transitions
       NfaState.computeClosures ();
 
-      for (final NfaState aItem : s_initialState.epsilonMoves)
+      for (final NfaState aItem : s_initialState.m_epsilonMoves)
         aItem.generateCode ();
 
       s_hasNfa[s_lexStateIndex] = (NfaState.s_generatedStates != 0);
@@ -560,20 +561,20 @@ public class LexGenJava extends CodeGenerator
         startState = s_initialState.generateInitMoves ();
       }
 
-      if (s_initialState.kind != Integer.MAX_VALUE && s_initialState.kind != 0)
+      if (s_initialState.m_kind != Integer.MAX_VALUE && s_initialState.m_kind != 0)
       {
-        if ((s_toSkip[s_initialState.kind / 64] & (1L << s_initialState.kind)) != 0L ||
-            (s_toSpecial[s_initialState.kind / 64] & (1L << s_initialState.kind)) != 0L)
+        if ((s_toSkip[s_initialState.m_kind / 64] & (1L << s_initialState.m_kind)) != 0L ||
+            (s_toSpecial[s_initialState.m_kind / 64] & (1L << s_initialState.m_kind)) != 0L)
           s_hasSkipActions = true;
         else
-          if ((s_toMore[s_initialState.kind / 64] & (1L << s_initialState.kind)) != 0L)
+          if ((s_toMore[s_initialState.m_kind / 64] & (1L << s_initialState.m_kind)) != 0L)
             s_hasMoreActions = true;
           else
             s_hasTokenActions = true;
 
-        if (s_initMatch[s_lexStateIndex] == 0 || s_initMatch[s_lexStateIndex] > s_initialState.kind)
+        if (s_initMatch[s_lexStateIndex] == 0 || s_initMatch[s_lexStateIndex] > s_initialState.m_kind)
         {
-          s_initMatch[s_lexStateIndex] = s_initialState.kind;
+          s_initMatch[s_lexStateIndex] = s_initialState.m_kind;
           s_hasEmptyMatch = true;
         }
       }
@@ -672,6 +673,8 @@ public class LexGenJava extends CodeGenerator
       return;
     }
 
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
+
     ExpRStringLiteral.dumpStrLiteralImages (this);
     _dumpFillToken ();
     NfaState.dumpStateSets (this);
@@ -689,10 +692,9 @@ public class LexGenJava extends CodeGenerator
       genCodeLine (s_staticString + "int[] jjemptyLineNo = new int[" + s_maxLexStates + "];");
       genCodeLine (s_staticString + "int[] jjemptyColNo = new int[" + s_maxLexStates + "];");
       genCodeLine (s_staticString +
-                   "" +
-                   Options.getBooleanType () +
+                   eOutputLanguage.getTypeBoolean () +
                    "[] jjbeenHere = new " +
-                   Options.getBooleanType () +
+                   eOutputLanguage.getTypeBoolean () +
                    "[" +
                    s_maxLexStates +
                    "];");
@@ -1005,6 +1007,8 @@ public class LexGenJava extends CodeGenerator
 
   private void _dumpGetNextToken ()
   {
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
+
     genCodeLine ();
     genCodeLine (s_staticString + "int curLexState = " + s_defaultLexState + ";");
     genCodeLine (s_staticString + "int defaultLexState = " + s_defaultLexState + ";");
@@ -1090,37 +1094,37 @@ public class LexGenJava extends CodeGenerator
       {
         // added the backup(0) to make JIT happy
         genCodeLine (prefix + "try { input_stream.backup(0);");
-        if (s_singlesToSkip[i].asciiMoves[0] != 0L && s_singlesToSkip[i].asciiMoves[1] != 0L)
+        if (s_singlesToSkip[i].m_asciiMoves[0] != 0L && s_singlesToSkip[i].m_asciiMoves[1] != 0L)
         {
           genCodeLine (prefix +
                        "   while ((curChar < 64" +
                        " && (0x" +
-                       Long.toHexString (s_singlesToSkip[i].asciiMoves[0]) +
+                       Long.toHexString (s_singlesToSkip[i].m_asciiMoves[0]) +
                        "L & (1L << curChar)) != 0L) || \n" +
                        prefix +
                        "          (curChar >> 6) == 1" +
                        " && (0x" +
-                       Long.toHexString (s_singlesToSkip[i].asciiMoves[1]) +
+                       Long.toHexString (s_singlesToSkip[i].m_asciiMoves[1]) +
                        "L & (1L << (curChar & 077))) != 0L)");
         }
         else
-          if (s_singlesToSkip[i].asciiMoves[1] == 0L)
+          if (s_singlesToSkip[i].m_asciiMoves[1] == 0L)
           {
             genCodeLine (prefix +
                          "   while (curChar <= " +
-                         (int) maxChar (s_singlesToSkip[i].asciiMoves[0]) +
+                         (int) maxChar (s_singlesToSkip[i].m_asciiMoves[0]) +
                          " && (0x" +
-                         Long.toHexString (s_singlesToSkip[i].asciiMoves[0]) +
+                         Long.toHexString (s_singlesToSkip[i].m_asciiMoves[0]) +
                          "L & (1L << curChar)) != 0L)");
           }
           else
-            if (s_singlesToSkip[i].asciiMoves[0] == 0L)
+            if (s_singlesToSkip[i].m_asciiMoves[0] == 0L)
             {
               genCodeLine (prefix +
                            "   while (curChar > 63 && curChar <= " +
-                           (maxChar (s_singlesToSkip[i].asciiMoves[1]) + 64) +
+                           (maxChar (s_singlesToSkip[i].m_asciiMoves[1]) + 64) +
                            " && (0x" +
-                           Long.toHexString (s_singlesToSkip[i].asciiMoves[1]) +
+                           Long.toHexString (s_singlesToSkip[i].m_asciiMoves[1]) +
                            "L & (1L << (curChar & 077))) != 0L)");
             }
 
@@ -1374,7 +1378,7 @@ public class LexGenJava extends CodeGenerator
       genCodeLine (prefix + "   int error_line = input_stream.getEndLine();");
       genCodeLine (prefix + "   int error_column = input_stream.getEndColumn();");
       genCodeLine (prefix + "   String error_after = null;");
-      genCodeLine (prefix + "   " + Options.getBooleanType () + " EOFSeen = false;");
+      genCodeLine (prefix + "   " + eOutputLanguage.getTypeBoolean () + " EOFSeen = false;");
       genCodeLine (prefix + "   try { input_stream.readChar(); input_stream.backup(1); }");
       genCodeLine (prefix + "   catch (java.io.IOException e1) {");
       genCodeLine (prefix + "      EOFSeen = true;");

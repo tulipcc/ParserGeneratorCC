@@ -327,7 +327,8 @@ public class CodeGenerator
    */
   public void genAnnotation (final String ann)
   {
-    switch (getOutputLanguage ())
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
+    switch (eOutputLanguage)
     {
       case JAVA:
         genCode ("@" + ann);
@@ -337,7 +338,7 @@ public class CodeGenerator
         genCode ("/*" + ann + "*/");
         break;
       default:
-        throw new UnsupportedOutputLanguageException (getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
   }
 
@@ -346,7 +347,8 @@ public class CodeGenerator
    */
   public void genModifier (final String mod)
   {
-    switch (getOutputLanguage ())
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
+    switch (eOutputLanguage)
     {
       case JAVA:
         genCode (mod);
@@ -358,7 +360,7 @@ public class CodeGenerator
           genCode (origMod + ": ");
         break;
       default:
-        throw new UnsupportedOutputLanguageException (getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
   }
 
@@ -371,7 +373,8 @@ public class CodeGenerator
                              final String [] superClasses,
                              final String [] superInterfaces)
   {
-    switch (getOutputLanguage ())
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
+    switch (eOutputLanguage)
     {
       case JAVA:
         if (mod != null)
@@ -394,7 +397,7 @@ public class CodeGenerator
         genCodeLine ("public:");
         break;
       default:
-        throw new UnsupportedOutputLanguageException (getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
   }
 
@@ -418,7 +421,8 @@ public class CodeGenerator
                                        final String nameAndParams,
                                        final String exceptions)
   {
-    switch (getOutputLanguage ())
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
+    switch (eOutputLanguage)
     {
       case JAVA:
         genCode (qualifiedModsAndRetType + " " + nameAndParams);
@@ -430,8 +434,7 @@ public class CodeGenerator
         break;
       case CPP:
         // for C++, we generate the signature in the header file and body in
-        // main
-        // file
+        // main file
         m_includeBuffer.append (qualifiedModsAndRetType + " " + nameAndParams);
         // if (exceptions != null)
         // includeBuffer.append(" throw(" + exceptions + ")");
@@ -459,7 +462,7 @@ public class CodeGenerator
         switchToMainFile ();
         break;
       default:
-        throw new UnsupportedOutputLanguageException (getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
   }
 

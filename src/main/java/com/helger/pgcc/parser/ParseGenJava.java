@@ -84,6 +84,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.helger.pgcc.EJDKVersion;
+import com.helger.pgcc.output.EOutputLanguage;
 
 /**
  * Generate the parser.
@@ -98,6 +99,7 @@ public class ParseGenJava extends CodeGenerator
     if (!Options.isBuildParser ())
       return;
 
+    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
     final boolean bGenerateAnnotations = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
@@ -160,7 +162,7 @@ public class ParseGenJava extends CodeGenerator
 
     if (Options.isStatic ())
     {
-      genCodeLine ("  private static " + Options.getBooleanType () + " jj_initialized_once = false;");
+      genCodeLine ("  private static " + eOutputLanguage.getTypeBoolean () + " jj_initialized_once = false;");
     }
     if (Options.isUserTokenManager ())
     {
@@ -203,8 +205,12 @@ public class ParseGenJava extends CodeGenerator
       if (s_lookaheadNeeded)
       {
         genCodeLine ("  /** Whether we are looking ahead. */");
-        genCodeLine ("  " + javaStaticOpt () + "private " + Options.getBooleanType () + " jj_lookingAhead = false;");
-        genCodeLine ("  " + javaStaticOpt () + "private " + Options.getBooleanType () + " jj_semLA;");
+        genCodeLine ("  " +
+                     javaStaticOpt () +
+                     "private " +
+                     eOutputLanguage.getTypeBoolean () +
+                     " jj_lookingAhead = false;");
+        genCodeLine ("  " + javaStaticOpt () + "private " + eOutputLanguage.getTypeBoolean () + " jj_semLA;");
       }
     }
     if (Options.isErrorReporting ())
@@ -235,7 +241,7 @@ public class ParseGenJava extends CodeGenerator
     if (s_jj2index != 0 && Options.isErrorReporting ())
     {
       genCodeLine ("  " + javaStaticOpt () + "private final JJCalls[] jj_2_rtns = new JJCalls[" + s_jj2index + "];");
-      genCodeLine ("  " + javaStaticOpt () + "private " + Options.getBooleanType () + " jj_rescan = false;");
+      genCodeLine ("  " + javaStaticOpt () + "private " + eOutputLanguage.getTypeBoolean () + " jj_rescan = false;");
       genCodeLine ("  " + javaStaticOpt () + "private int jj_gc = 0;");
     }
     genCodeLine ();
@@ -775,7 +781,11 @@ public class ParseGenJava extends CodeGenerator
         genCodeLine ("  @SuppressWarnings(\"serial\")");
       genCodeLine ("  private static final class LookaheadSuccess extends IllegalStateException { }");
       genCodeLine ("  " + javaStaticOpt () + "private final LookaheadSuccess jj_ls = new LookaheadSuccess();");
-      genCodeLine ("  " + javaStaticOpt () + "private " + Options.getBooleanType () + " jj_scan_token(int kind) {");
+      genCodeLine ("  " +
+                   javaStaticOpt () +
+                   "private " +
+                   eOutputLanguage.getTypeBoolean () +
+                   " jj_scan_token(int kind) {");
       genCodeLine ("	 if (jj_scanpos == jj_lastpos) {");
       genCodeLine ("	   jj_la--;");
       genCodeLine ("	   if (jj_scanpos.next == null) {");
@@ -935,9 +945,9 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("  " + javaStaticOpt () + "public ParseException generateParseException() {");
       genCodeLine ("    jj_expentries.clear();");
       genCodeLine ("    " +
-                   Options.getBooleanType () +
+                   eOutputLanguage.getTypeBoolean () +
                    "[] la1tokens = new " +
-                   Options.getBooleanType () +
+                   eOutputLanguage.getTypeBoolean () +
                    "[" +
                    s_tokenCount +
                    "];");
@@ -1031,7 +1041,7 @@ public class ParseGenJava extends CodeGenerator
     genCodeLine ("  " +
                  javaStaticOpt () +
                  "private " +
-                 Options.getBooleanType () +
+                 eOutputLanguage.getTypeBoolean () +
                  " trace_enabled = " +
                  (Options.isDebugParser () ? "true" : "false") +
                  ";");

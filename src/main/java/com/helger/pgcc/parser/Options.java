@@ -79,7 +79,6 @@ import java.util.TreeSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.StringParser;
@@ -1040,24 +1039,6 @@ public class Options
       s_optionValues.put (NONUSER_OPTION__HAS_NAMESPACE, Boolean.TRUE);
       s_optionValues.put (NONUSER_OPTION__NAMESPACE_CLOSE, ns_close);
     }
-  }
-
-  @Nonnull
-  @Nonempty
-  public static String getLongType ()
-  {
-    return s_language.getTypeLong ();
-  }
-
-  @Nonnull
-  public static String getLongSuffix ()
-  {
-    return s_language.getLongValueSuffix ();
-  }
-
-  public static String getBooleanType ()
-  {
-    return s_language.getTypeBoolean ();
   }
 
   public static boolean isTokenManagerRequiresParserAccess ()

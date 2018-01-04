@@ -85,6 +85,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
 public class ParseEngine
@@ -130,7 +131,7 @@ public class ParseEngine
   private static final char INDENT_INC = '\u0001';
   private static final char INDENT_DEC = '\u0002';
   private static final char INDENT_OFF = '\u0003';
-  private static final char INDENT_OFN = '\u0004';
+  private static final char INDENT_ON = '\u0004';
 
   /**
    * Returns true if there is a JAVACODE production that the argument expansion
@@ -157,9 +158,10 @@ public class ParseEngine
     if (exp instanceof ExpChoice)
     {
       final ExpChoice ch = (ExpChoice) exp;
-      for (int i = 0; i < ch.getChoices ().size (); i++)
+      final List <Expansion> choices = ch.getChoices ();
+      for (int i = 0; i < choices.size (); i++)
       {
-        if (_javaCodeCheck ((ch.getChoices ().get (i))))
+        if (_javaCodeCheck (choices.get (i)))
         {
           return true;
         }
@@ -181,16 +183,14 @@ public class ParseEngine
           // "A" ( "B" | LOOKAHEAD("X") jcode() | "C" )* "D"
           return false;
         }
-        else
-          if (_javaCodeCheck ((units[i])))
-          {
-            return true;
-          }
-          else
-            if (!Semanticize.emptyExpansionExists (units[i]))
-            {
-              return false;
-            }
+        if (_javaCodeCheck ((units[i])))
+        {
+          return true;
+        }
+        if (!Semanticize.emptyExpansionExists (units[i]))
+        {
+          return false;
+        }
       }
       return false;
     }
@@ -648,12 +648,12 @@ public class ParseEngine
               m_indentamt -= 2;
             }
             else
-              if (ch == '\u0003')
+              if (ch == INDENT_OFF)
               {
                 indentOn = false;
               }
               else
-                if (ch == '\u0004')
+                if (ch == INDENT_ON)
                 {
                   indentOn = true;
                 }
@@ -785,11 +785,12 @@ public class ParseEngine
     return ret_val.toString ();
   }
 
-  void genStackCheck (final boolean voidReturn)
+  private void _genStackCheck (final boolean voidReturn)
   {
+    final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
     if (Options.hasDepthLimit ())
     {
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           m_codeGenerator.genCodeLine ("if(++jj_depth > " + Options.getDepthLimit () + ") {");
@@ -824,7 +825,7 @@ public class ParseEngine
           m_codeGenerator.genCodeLine ("}");
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
     }
   }
@@ -833,7 +834,8 @@ public class ParseEngine
   {
     if (Options.hasDepthLimit ())
     {
-      switch (m_codeGenerator.getOutputLanguage ())
+      final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
+      switch (eOutputLanguage)
       {
         case JAVA:
           m_codeGenerator.genCodeLine (" } finally {");
@@ -844,13 +846,14 @@ public class ParseEngine
           // Nothing;
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
     }
   }
 
   void buildPhase1Routine (final BNFProduction p)
   {
+    final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
     Token t = p.getReturnTypeTokens ().get (0);
     boolean voidReturn = false;
     if (t.kind == JavaCCParserConstants.VOID)
@@ -858,7 +861,7 @@ public class ParseEngine
       voidReturn = true;
     }
     String error_ret_cpp = null;
-    switch (m_codeGenerator.getOutputLanguage ())
+    switch (eOutputLanguage)
     {
       case JAVA:
         m_codeGenerator.printTokenSetup (t);
@@ -903,12 +906,12 @@ public class ParseEngine
         error_ret_cpp = _generateCPPMethodheader (p, t);
         break;
       default:
-        throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
 
     m_codeGenerator.genCode (" {");
 
-    switch (m_codeGenerator.getOutputLanguage ())
+    switch (eOutputLanguage)
     {
       case JAVA:
         // Nothing
@@ -925,15 +928,15 @@ public class ParseEngine
         }
         break;
       default:
-        throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
-    genStackCheck (voidReturn);
+    _genStackCheck (voidReturn);
 
     m_indentamt = 4;
     if (Options.isDebugParser ())
     {
       m_codeGenerator.genCodeLine ();
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           m_codeGenerator.genCodeLine ("    trace_call(\"" + JavaCCGlobals.addUnicodeEscapes (p.getLhs ()) + "\");");
@@ -947,7 +950,7 @@ public class ParseEngine
                                        "\"); });");
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
       m_codeGenerator.genCodeLine ("    try {");
       m_indentamt = 6;
@@ -965,13 +968,13 @@ public class ParseEngine
       m_codeGenerator.printTrailingComments (t);
     }
 
-    final String code = phase1ExpansionGen (p.getExpansion ());
+    final String code = _phase1ExpansionGen (p.getExpansion ());
     dumpFormattedString (code);
     m_codeGenerator.genCodeLine ();
 
     if (p.isJumpPatched () && !voidReturn)
     {
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           // This line is required for Java!
@@ -981,12 +984,12 @@ public class ParseEngine
           m_codeGenerator.genCodeLine ("    throw \"Missing return statement in function\";");
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
     }
     if (Options.isDebugParser ())
     {
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           m_codeGenerator.genCodeLine ("    } finally {");
@@ -999,12 +1002,12 @@ public class ParseEngine
           m_codeGenerator.genCodeLine ("    } catch(...) { }");
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
     }
     if (!voidReturn)
     {
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           // Nothing
@@ -1013,7 +1016,7 @@ public class ParseEngine
           m_codeGenerator.genCodeLine ("assert(false);");
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
     }
 
@@ -1032,12 +1035,13 @@ public class ParseEngine
     m_codeGenerator.genCode (StringHelper.getRepeated (' ', m_indentamt));
   }
 
-  String phase1ExpansionGen (final Expansion e)
+  private String _phase1ExpansionGen (final Expansion e)
   {
     String retval = "";
     Token t = null;
     ExpLookahead [] conds;
     String [] actions;
+    final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
     if (e instanceof AbstractExpRegularExpression)
     {
       final AbstractExpRegularExpression e_nrw = (AbstractExpRegularExpression) e;
@@ -1057,7 +1061,7 @@ public class ParseEngine
       if (e_nrw.m_rhsToken == null)
         tail = ");";
       else
-        switch (m_codeGenerator.getOutputLanguage ())
+        switch (eOutputLanguage)
         {
           case JAVA:
             tail = ")." + e_nrw.m_rhsToken.image + ";";
@@ -1066,7 +1070,7 @@ public class ParseEngine
             tail = ")->" + e_nrw.m_rhsToken.image + ";";
             break;
           default:
-            throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+            throw new UnsupportedOutputLanguageException (eOutputLanguage);
         }
 
       if (e_nrw.m_label.length () == 0)
@@ -1086,7 +1090,7 @@ public class ParseEngine
         retval += "jj_consume_token(" + e_nrw.m_label + tail;
       }
 
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           // Nothing
@@ -1098,7 +1102,7 @@ public class ParseEngine
           }
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
     }
     else
@@ -1129,7 +1133,7 @@ public class ParseEngine
           retval += m_codeGenerator.getTrailingComments (t);
         }
         retval += ");";
-        switch (m_codeGenerator.getOutputLanguage ())
+        switch (eOutputLanguage)
         {
           case JAVA:
             // Nothing
@@ -1141,14 +1145,14 @@ public class ParseEngine
             }
             break;
           default:
-            throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+            throw new UnsupportedOutputLanguageException (eOutputLanguage);
         }
       }
       else
         if (e instanceof ExpAction)
         {
           final ExpAction e_nrw = (ExpAction) e;
-          retval += "\u0003\n";
+          retval += INDENT_OFF + "\n";
           if (!Options.booleanValue (Options.USEROPTION__CPP_IGNORE_ACTIONS) && e_nrw.getActionTokens ().size () != 0)
           {
             m_codeGenerator.printTokenSetup (e_nrw.getActionTokens ().get (0));
@@ -1160,7 +1164,7 @@ public class ParseEngine
             }
             retval += m_codeGenerator.getTrailingComments (t);
           }
-          retval += "\u0004";
+          retval += INDENT_ON;
         }
         else
           if (e instanceof ExpChoice)
@@ -1170,7 +1174,7 @@ public class ParseEngine
             actions = new String [e_nrw.getChoices ().size () + 1];
 
             String sChoice;
-            switch (m_codeGenerator.getOutputLanguage ())
+            switch (eOutputLanguage)
             {
               case JAVA:
                 sChoice = "\n" + "jj_consume_token(-1);\n" + "throw new ParseException();";
@@ -1183,7 +1187,7 @@ public class ParseEngine
                                                                                               : "");
                 break;
               default:
-                throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+                throw new UnsupportedOutputLanguageException (eOutputLanguage);
             }
             actions[e_nrw.getChoices ().size ()] = sChoice;
 
@@ -1193,7 +1197,7 @@ public class ParseEngine
             for (int i = 0; i < e_nrw.getChoices ().size (); i++)
             {
               final ExpSequence nestedSeq = (ExpSequence) e_nrw.getChoices ().get (i);
-              actions[i] = phase1ExpansionGen (nestedSeq);
+              actions[i] = _phase1ExpansionGen (nestedSeq);
               conds[i] = (ExpLookahead) nestedSeq.m_units.get (0);
             }
             retval = buildLookaheadChecker (conds, actions);
@@ -1213,7 +1217,7 @@ public class ParseEngine
                 boolean wrap_in_block = false;
                 if (!JavaCCGlobals.s_jjtreeGenerated)
                 {
-                  switch (m_codeGenerator.getOutputLanguage ())
+                  switch (eOutputLanguage)
                   {
                     case JAVA:
                       // nothing
@@ -1231,10 +1235,10 @@ public class ParseEngine
                       }
                       break;
                     default:
-                      throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+                      throw new UnsupportedOutputLanguageException (eOutputLanguage);
                   }
                 }
-                retval += phase1ExpansionGen (e_nrw.m_units.get (i));
+                retval += _phase1ExpansionGen (e_nrw.m_units.get (i));
                 if (wrap_in_block)
                 {
                   retval += "\n}";
@@ -1259,7 +1263,7 @@ public class ParseEngine
                 }
                 retval += "\n";
                 final int labelIndex = ++m_nGenSymbolIndex;
-                switch (m_codeGenerator.getOutputLanguage ())
+                switch (eOutputLanguage)
                 {
                   case JAVA:
                     retval += "label_" + labelIndex + ":\n";
@@ -1270,16 +1274,16 @@ public class ParseEngine
                     retval += "while (!hasError) {" + INDENT_INC;
                     break;
                   default:
-                    throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+                    throw new UnsupportedOutputLanguageException (eOutputLanguage);
                 }
-                retval += phase1ExpansionGen (nested_e);
+                retval += _phase1ExpansionGen (nested_e);
                 conds = new ExpLookahead [1];
                 conds[0] = la;
                 actions = new String [2];
                 // [ph] empty statement needed???
                 actions[0] = true ? "" : "\n;";
 
-                switch (m_codeGenerator.getOutputLanguage ())
+                switch (eOutputLanguage)
                 {
                   case JAVA:
                     actions[1] = "\nbreak label_" + labelIndex + ";";
@@ -1288,13 +1292,13 @@ public class ParseEngine
                     actions[1] = "\ngoto end_label_" + labelIndex + ";";
                     break;
                   default:
-                    throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+                    throw new UnsupportedOutputLanguageException (eOutputLanguage);
                 }
 
                 retval += buildLookaheadChecker (conds, actions);
                 retval += INDENT_DEC + "\n" + "}";
 
-                switch (m_codeGenerator.getOutputLanguage ())
+                switch (eOutputLanguage)
                 {
                   case JAVA:
                     // nothing
@@ -1303,7 +1307,7 @@ public class ParseEngine
                     retval += "\nend_label_" + labelIndex + ": ;";
                     break;
                   default:
-                    throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+                    throw new UnsupportedOutputLanguageException (eOutputLanguage);
                 }
               }
               else
@@ -1324,7 +1328,7 @@ public class ParseEngine
                   }
                   retval += "\n";
                   final int labelIndex = ++m_nGenSymbolIndex;
-                  switch (m_codeGenerator.getOutputLanguage ())
+                  switch (eOutputLanguage)
                   {
                     case JAVA:
                       retval += "label_" + labelIndex + ":\n";
@@ -1335,7 +1339,7 @@ public class ParseEngine
                       retval += "while (!hasError) {" + INDENT_INC;
                       break;
                     default:
-                      throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+                      throw new UnsupportedOutputLanguageException (eOutputLanguage);
                   }
 
                   conds = new ExpLookahead [1];
@@ -1344,7 +1348,7 @@ public class ParseEngine
                   // [ph] empty statement needed???
                   actions[0] = true ? "" : "\n;";
 
-                  switch (m_codeGenerator.getOutputLanguage ())
+                  switch (eOutputLanguage)
                   {
                     case JAVA:
                       actions[1] = "\nbreak label_" + labelIndex + ";";
@@ -1353,14 +1357,14 @@ public class ParseEngine
                       actions[1] = "\ngoto end_label_" + labelIndex + ";";
                       break;
                     default:
-                      throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+                      throw new UnsupportedOutputLanguageException (eOutputLanguage);
                   }
 
                   retval += buildLookaheadChecker (conds, actions);
-                  retval += phase1ExpansionGen (nested_e);
+                  retval += _phase1ExpansionGen (nested_e);
                   retval += INDENT_DEC + "\n" + "}";
 
-                  switch (m_codeGenerator.getOutputLanguage ())
+                  switch (eOutputLanguage)
                   {
                     case JAVA:
                       // nothing
@@ -1369,7 +1373,7 @@ public class ParseEngine
                       retval += "\nend_label_" + labelIndex + ": ;";
                       break;
                     default:
-                      throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+                      throw new UnsupportedOutputLanguageException (eOutputLanguage);
                   }
                 }
                 else
@@ -1391,7 +1395,7 @@ public class ParseEngine
                     conds = new ExpLookahead [1];
                     conds[0] = la;
                     actions = new String [2];
-                    actions[0] = phase1ExpansionGen (nested_e);
+                    actions[0] = _phase1ExpansionGen (nested_e);
                     // [ph] empty statement needed???
                     actions[1] = true ? "" : "\n;";
                     retval += buildLookaheadChecker (conds, actions);
@@ -1404,7 +1408,7 @@ public class ParseEngine
                       List <Token> list;
                       retval += "\n";
                       retval += "try {" + INDENT_INC;
-                      retval += phase1ExpansionGen (nested_e);
+                      retval += _phase1ExpansionGen (nested_e);
                       retval += INDENT_DEC + "\n" + "}";
                       for (int i = 0; i < e_nrw.m_catchblks.size (); i++)
                       {
@@ -1425,7 +1429,7 @@ public class ParseEngine
                         m_codeGenerator.printTokenSetup (t);
                         retval += m_codeGenerator.getStringToPrint (t);
                         retval += m_codeGenerator.getTrailingComments (t);
-                        retval += ") {\u0003\n";
+                        retval += ") {" + INDENT_OFF + "\n";
                         list = e_nrw.m_catchblks.get (i);
                         if (list.size () != 0)
                         {
@@ -1438,20 +1442,20 @@ public class ParseEngine
                           }
                           retval += m_codeGenerator.getTrailingComments (t);
                         }
-                        retval += "\u0004\n" + "}";
+                        retval += INDENT_ON + "\n" + "}";
                       }
                       if (e_nrw.m_finallyblk != null)
                       {
-                        switch (m_codeGenerator.getOutputLanguage ())
+                        switch (eOutputLanguage)
                         {
                           case JAVA:
-                            retval += " finally {\u0003\n";
+                            retval += " finally {" + INDENT_OFF + "\n";
                             break;
                           case CPP:
-                            retval += " finally {\u0003\n";
+                            retval += " finally {" + INDENT_OFF + "\n";
                             break;
                           default:
-                            throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+                            throw new UnsupportedOutputLanguageException (eOutputLanguage);
                         }
 
                         if (e_nrw.m_finallyblk.size () != 0)
@@ -1465,16 +1469,17 @@ public class ParseEngine
                           }
                           retval += m_codeGenerator.getTrailingComments (t);
                         }
-                        retval += "\u0004\n" + "}";
+                        retval += INDENT_ON + "\n" + "}";
                       }
                     }
     return retval;
   }
 
-  void buildPhase2Routine (final ExpLookahead la)
+  private void _buildPhase2Routine (final ExpLookahead la)
   {
+    final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
     final Expansion e = la.getLaExpansion ();
-    switch (m_codeGenerator.getOutputLanguage ())
+    switch (eOutputLanguage)
     {
       case JAVA:
         m_codeGenerator.genCodeLine ("  " +
@@ -1487,7 +1492,7 @@ public class ParseEngine
         m_codeGenerator.genCodeLine (" inline bool jj_2" + e.getInternalName () + "(int xla)");
         break;
       default:
-        throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
     m_codeGenerator.genCodeLine (" {");
     m_codeGenerator.genCodeLine ("    jj_la = xla;");
@@ -1500,7 +1505,7 @@ public class ParseEngine
       ret_suffix = " && !jj_depth_error";
     }
 
-    switch (m_codeGenerator.getOutputLanguage ())
+    switch (eOutputLanguage)
     {
       case JAVA:
         m_codeGenerator.genCodeLine ("    try { return (!jj_3" + e.getInternalName () + "()" + ret_suffix + "); }");
@@ -1511,11 +1516,11 @@ public class ParseEngine
         m_codeGenerator.genCodeLine ("    return (!jj_3" + e.getInternalName () + "() || jj_done)" + ret_suffix + ";");
         break;
       default:
-        throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
     if (Options.isErrorReporting ())
     {
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           m_codeGenerator.genCodeLine ("    finally { jj_save(" + (e.getInternalIndex () - 1) + ", xla); }");
@@ -1524,7 +1529,7 @@ public class ParseEngine
           m_codeGenerator.genCodeLine (" { jj_save(" + (e.getInternalIndex () - 1) + ", xla); }");
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
     }
     m_codeGenerator.genCodeLine ("  }");
@@ -1680,14 +1685,15 @@ public class ParseEngine
 
   private String _getTypeForToken ()
   {
-    switch (m_codeGenerator.getOutputLanguage ())
+    final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
+    switch (eOutputLanguage)
     {
       case JAVA:
         return "Token";
       case CPP:
         return "Token *";
       default:
-        throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+        throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
   }
 
@@ -1706,15 +1712,16 @@ public class ParseEngine
     if (e.getInternalName ().startsWith ("jj_scan_token"))
       return;
 
+    final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
     if (!recursive_call)
     {
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           m_codeGenerator.genCodeLine ("  " +
                                        javaStaticOpt () +
                                        "private " +
-                                       Options.getBooleanType () +
+                                       eOutputLanguage.getTypeBoolean () +
                                        " jj_3" +
                                        e.getInternalName () +
                                        "()");
@@ -1723,11 +1730,11 @@ public class ParseEngine
           m_codeGenerator.genCodeLine (" inline bool jj_3" + e.getInternalName () + "()");
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
 
       m_codeGenerator.genCodeLine (" {");
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           break;
@@ -1737,9 +1744,9 @@ public class ParseEngine
             m_codeGenerator.genCodeLine ("#define __ERROR_RET__ true");
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
-      genStackCheck (false);
+      _genStackCheck (false);
       m_xsp_declared = false;
       if (Options.isDebugLookahead () && e.m_parent instanceof NormalProduction)
       {
@@ -1962,7 +1969,7 @@ public class ParseEngine
     {
       m_codeGenerator.genCodeLine ("    " + _genReturn (false));
       genStackCheckEnd ();
-      switch (m_codeGenerator.getOutputLanguage ())
+      switch (eOutputLanguage)
       {
         case JAVA:
           // nothing;
@@ -1974,7 +1981,7 @@ public class ParseEngine
           }
           break;
         default:
-          throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+          throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
       m_codeGenerator.genCodeLine ("  }");
       m_codeGenerator.genCodeLine ();
@@ -2099,12 +2106,13 @@ public class ParseEngine
 
   void build (final CodeGenerator codeGenerator)
   {
-    this.m_codeGenerator = codeGenerator;
+    m_codeGenerator = codeGenerator;
+    final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
     for (final NormalProduction p : s_bnfproductions)
     {
       if (p instanceof CodeProductionCpp)
       {
-        if (!m_codeGenerator.getOutputLanguage ().isJava ())
+        if (!eOutputLanguage.isJava ())
         {
           JavaCCErrors.semantic_error ("Cannot use JAVACODE productions with non-Java output.");
           continue;
@@ -2149,7 +2157,7 @@ public class ParseEngine
         if (Options.isDebugParser ())
         {
           codeGenerator.genCodeLine ();
-          switch (m_codeGenerator.getOutputLanguage ())
+          switch (eOutputLanguage)
           {
             case JAVA:
               codeGenerator.genCodeLine ("    trace_call(\"" + JavaCCGlobals.addUnicodeEscapes (cp.getLhs ()) + "\");");
@@ -2165,7 +2173,7 @@ public class ParseEngine
               codeGenerator.genCodeLine ("    try {");
               break;
             default:
-              throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+              throw new UnsupportedOutputLanguageException (eOutputLanguage);
           }
 
         }
@@ -2186,7 +2194,7 @@ public class ParseEngine
       else
         if (p instanceof CodeProductionJava)
         {
-          if (!m_codeGenerator.getOutputLanguage ().isJava ())
+          if (!eOutputLanguage.isJava ())
           {
             JavaCCErrors.semantic_error ("Cannot use JAVACODE productions with non-Java output.");
             continue;
@@ -2218,7 +2226,7 @@ public class ParseEngine
             codeGenerator.printTrailingComments (t);
           }
           codeGenerator.genCode (")");
-          switch (m_codeGenerator.getOutputLanguage ())
+          switch (eOutputLanguage)
           {
             case JAVA:
               codeGenerator.genCode (" throws ParseException");
@@ -2227,7 +2235,7 @@ public class ParseEngine
               // nothing
               break;
             default:
-              throw new UnsupportedOutputLanguageException (m_codeGenerator.getOutputLanguage ());
+              throw new UnsupportedOutputLanguageException (eOutputLanguage);
           }
           for (final List <Token> aElement2 : jp.getThrowsList ())
           {
@@ -2273,7 +2281,7 @@ public class ParseEngine
 
     for (int i = 0; i < m_phase2list.size (); i++)
     {
-      buildPhase2Routine (m_phase2list.get (i));
+      _buildPhase2Routine (m_phase2list.get (i));
     }
 
     int phase3index = 0;
