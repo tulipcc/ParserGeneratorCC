@@ -60,9 +60,9 @@
     <url>http://www.helger.com</url>
   </organization>
   <scm>
-    <connection>scm:git:git@github.com/phax/ParserGeneratorCC.git</connection>
-    <url>git@github.com/phax/ParserGeneratorCC.git</url>
-    <developerConnection>scm:git:git@github.com/phax/ParserGeneratorCC.git</developerConnection>
+    <connection>scm:git:git@github.com:phax/ParserGeneratorCC.git</connection>
+    <developerConnection>scm:git:git@github.com:phax/ParserGeneratorCC.git</developerConnection>
+    <url>http://github.com/phax/ParserGeneratorCC</url>
     <tag>HEAD</tag>
   </scm>
   <developers>
