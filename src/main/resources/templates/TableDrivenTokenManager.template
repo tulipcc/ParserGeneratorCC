@@ -516,6 +516,6 @@ protected ${STATIC?static :} void reportError(int lastReadPosition) {
     input_stream.backup(1);
     error_after = lastReadPosition <= 1 ? "" : input_stream.GetImage();
   }
-  throw new TokenMgrError(EOFSeen, curLexState, error_line, error_column,
-                          error_after, curChar, TokenMgrError.LEXICAL_ERROR);
+  throw new TokenMgrException(EOFSeen, curLexState, error_line, error_column,
+                              error_after, curChar, TokenMgrException.LEXICAL_ERROR);
 }
