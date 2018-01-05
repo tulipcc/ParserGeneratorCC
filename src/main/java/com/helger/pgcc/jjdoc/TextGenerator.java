@@ -38,13 +38,15 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.ExpNonTerminal;
+import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NormalProduction;
-import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.TokenProduction;
 
 /**
@@ -69,7 +71,7 @@ public class TextGenerator implements IDocGenerator
 
   public void documentStart ()
   {
-    m_ostr = create_output_stream ();
+    m_ostr = createOutputStream ();
     m_ostr.print ("\nDOCUMENT START\n");
   }
 
@@ -156,8 +158,11 @@ public class TextGenerator implements IDocGenerator
    * Create an output stream for the generated Jack code. Try to open a file
    * based on the name of the parser, but if that fails use the standard output
    * stream.
+   * 
+   * @return Never <code>null</code>.
    */
-  protected PrintWriter create_output_stream ()
+  @Nonnull
+  protected PrintWriter createOutputStream ()
   {
     if (StringHelper.hasNoText (JJDocOptions.getOutputFile ()))
     {

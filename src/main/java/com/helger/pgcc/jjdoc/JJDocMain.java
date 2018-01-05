@@ -105,8 +105,13 @@ public final class JJDocMain
 
   /**
    * A main program that exercises the parser.
+   *
+   * @param args
+   *        Cmdline args
+   * @throws Exception
+   *         in case of error
    */
-  public static void main (final String args[]) throws Exception
+  public static void main (final String [] args) throws Exception
   {
     final int errorcode = mainProgram (args);
     System.exit (errorcode);
@@ -115,8 +120,14 @@ public final class JJDocMain
   /**
    * The method to call to exercise the parser from other Java programs. It
    * returns an error code. See how the main program above uses this method.
+   *
+   * @param args
+   *        Cmdline args
+   * @return error code (0 == success)
+   * @throws Exception
+   *         in case of error
    */
-  public static int mainProgram (final String args[]) throws Exception
+  public static int mainProgram (final String [] args) throws Exception
   {
     Main.reInitAll ();
     JJDocOptions.init ();

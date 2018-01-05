@@ -38,7 +38,6 @@ import java.util.Set;
 /**
  * Describes zero-or-more expansions (e.g., foo*).
  */
-
 public class ExpZeroOrMore extends Expansion
 {
   /**

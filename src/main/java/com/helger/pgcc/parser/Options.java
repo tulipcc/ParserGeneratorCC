@@ -79,6 +79,7 @@ import java.util.TreeSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.annotation.ReturnsImmutableObject;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.StringParser;
@@ -178,7 +179,7 @@ public class Options
    */
   public static final String JAVA_TEMPLATE_TYPE_CLASSIC = "classic";
 
-  private static final Set <OptionInfo> userOptions;
+  private static final Set <OptionInfo> s_userOptions;
 
   static
   {
@@ -240,7 +241,7 @@ public class Options
     temp.add (new OptionInfo (USEROPTION__DEPTH_LIMIT, EOptionType.INTEGER, Integer.valueOf (0)));
     temp.add (new OptionInfo (USEROPTION__CPP_STACK_LIMIT, EOptionType.STRING, ""));
 
-    userOptions = Collections.unmodifiableSet (temp);
+    s_userOptions = Collections.unmodifiableSet (temp);
   }
 
   /**
@@ -260,7 +261,7 @@ public class Options
     s_cmdLineSetting.clear ();
     s_inputFileSetting.clear ();
 
-    for (final OptionInfo t : userOptions)
+    for (final OptionInfo t : s_userOptions)
       s_optionValues.put (t.getName (), t.getDefault ());
   }
 
@@ -272,6 +273,10 @@ public class Options
 
   /**
    * Convenience method to retrieve integer options.
+   *
+   * @param option
+   *        Name of the option to be retrieved. May not be <code>null</code>.
+   * @return int value
    */
   public static int intValue (final String option)
   {
@@ -280,6 +285,10 @@ public class Options
 
   /**
    * Convenience method to retrieve boolean options.
+   *
+   * @param option
+   *        Name of the option to be retrieved. May not be <code>null</code>.
+   * @return boolean value
    */
   public static boolean booleanValue (final String option)
   {
@@ -288,6 +297,10 @@ public class Options
 
   /**
    * Convenience method to retrieve string options.
+   *
+   * @param option
+   *        Name of the option to be retrieved. May not be <code>null</code>.
+   * @return String value
    */
   @Nullable
   public static String stringValue (final String option)
@@ -499,11 +512,13 @@ public class Options
         }
   }
 
+  @Nonnull
   private static String _getAllValidJavaTemplateTypes ()
   {
     return "[" + StringHelper.getImploded (", ", s_supportedJavaTemplateTypes) + "]";
   }
 
+  @Nonnull
   private static String _getAllValidLanguages ()
   {
     return "[" + StringHelper.getImplodedMapped (", ", EOutputLanguage.values (), EOutputLanguage::getID) + "]";
@@ -514,8 +529,9 @@ public class Options
    * the optionValues map.
    *
    * @param arg
+   *        argument string to set. May not be <code>null</code>.
    */
-  public static void setCmdLineOption (final String arg)
+  public static void setCmdLineOption (@Nonnull final String arg)
   {
     final String sValue;
     if (arg.charAt (0) == '-')
@@ -889,38 +905,15 @@ public class Options
     return (EJDKVersion) objectValue (USEROPTION__JDK_VERSION);
   }
 
-  /**
-   * Determine if the output language is at least the specified version.
-   *
-   * @param version
-   *        the version to check against. E.g. <code>1.5</code>
-   * @return true if the output version is at least the specified version.
-   */
-  private static boolean _isJdkVersionAtLeast (@Nonnull final EJDKVersion version)
-  {
-    return getJdkVersion ().isNewerOrEqualsThan (version);
-  }
-
   public static boolean isGenerateJavaBoilerplateCode ()
   {
     return booleanValue (USEROPTION__GENERATE_BOILERPLATE);
   }
 
   /**
-   * Should the generated code create Exceptions using a constructor taking a
-   * nested exception?
-   *
-   * @return
-   */
-  public static boolean isGenerateJavaChainedException ()
-  {
-    return _isJdkVersionAtLeast (EJDKVersion.JDK_14);
-  }
-
-  /**
    * Should the generated code class visibility public?
    *
-   * @return
+   * @return <code>true</code> for public visibility
    */
   public static boolean isJavaSupportClassVisibilityPublic ()
   {
@@ -1070,9 +1063,7 @@ public class Options
   {
     final String limit = stringValue (USEROPTION__CPP_STACK_LIMIT);
     if (limit.equals ("0"))
-    {
       return "";
-    }
     return limit;
   }
 
@@ -1084,10 +1075,12 @@ public class Options
   /**
    * Gets all the user options (in order)
    *
-   * @return
+   * @return all user options
    */
+  @Nonnull
+  @ReturnsImmutableObject
   public static Set <OptionInfo> getUserOptions ()
   {
-    return userOptions;
+    return s_userOptions;
   }
 }

@@ -37,12 +37,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.ExpNonTerminal;
+import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NormalProduction;
-import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.TokenProduction;
 
 /**
@@ -99,7 +99,7 @@ public class HTMLGenerator extends TextGenerator
   @Override
   public void documentStart ()
   {
-    m_ostr = create_output_stream ();
+    m_ostr = createOutputStream ();
     println ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">");
     println ("<HTML>");
     println ("<HEAD>");
@@ -128,10 +128,8 @@ public class HTMLGenerator extends TextGenerator
     m_ostr.close ();
   }
 
-  /**
-   * Prints out comments, used for tokens and non-terminals. {@inheritDoc}
-   *
-   * @see org.javacc.jjdoc.TextGenerator#specialTokens(java.lang.String)
+  /*
+   * Prints out comments, used for tokens and non-terminals.
    */
   @Override
   public void specialTokens (final String s)
@@ -153,8 +151,8 @@ public class HTMLGenerator extends TextGenerator
     println (" <TR>");
     println ("  <TD>");
     println ("   <PRE>");
-    final String text = JJDoc.getStandardTokenProductionText (tp);
-    text (text);
+    final String sText = JJDoc.getStandardTokenProductionText (tp);
+    text (sText);
     println ("   </PRE>");
     println ("  </TD>");
     println (" </TR>");

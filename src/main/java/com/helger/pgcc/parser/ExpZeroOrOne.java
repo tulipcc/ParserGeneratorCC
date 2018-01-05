@@ -38,7 +38,6 @@ import java.util.Set;
 /**
  * Describes zero-or-one expansions (e.g., [foo], foo?).
  */
-
 public class ExpZeroOrOne extends Expansion
 {
   /**

@@ -38,7 +38,6 @@ import java.util.Set;
 /**
  * Describes one-or-more expansions (e.g., foo+).
  */
-
 public class ExpOneOrMore extends Expansion
 {
   /**

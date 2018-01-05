@@ -351,9 +351,6 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
   /**
    * Used for top level string literals.
-   *
-   * @param codeGenerator
-   * @param kind
    */
   public void generateDfa ()
   {

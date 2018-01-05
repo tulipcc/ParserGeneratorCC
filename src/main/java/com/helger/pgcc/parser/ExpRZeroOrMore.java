@@ -34,9 +34,8 @@
 package com.helger.pgcc.parser;
 
 /**
- * Describes zero-or-more regular expressions (<foo*>).
+ * Describes zero-or-more regular expressions (&lt;foo*&gt;).
  */
-
 public class ExpRZeroOrMore extends AbstractExpRegularExpression
 {
   /**

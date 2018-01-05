@@ -101,6 +101,7 @@ public class ParseGenJava extends CodeGenerator
 
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
+    final boolean bExceptionWithCause = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_14);
     final boolean bGenerateAnnotations = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
@@ -375,7 +376,7 @@ public class ParseGenJava extends CodeGenerator
                                  "(stream, encoding, 1, 1); }" +
                                  " catch(final java.io.UnsupportedEncodingException e) {" +
                                  " throw new IllegalStateException(" +
-                                 (Options.isGenerateJavaChainedException () ? "e" : "e.getMessage()") +
+                                 (bExceptionWithCause ? "e" : "e.getMessage()") +
                                  "); }";
           genCodeLine (sInitIS);
           if (Options.isTokenManagerUsesParser () && !Options.isStatic ())
@@ -416,16 +417,18 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ();
 
           genCodeLine ("  /** Reinitialise. */");
-          genCodeLine ("  " + javaStaticOpt () + "public void ReInit(java.io.InputStream stream) {");
+          genCodeLine ("  " + javaStaticOpt () + "public void ReInit(final java.io.InputStream stream) {");
           genCodeLine ("	  ReInit(stream, null);");
           genCodeLine ("  }");
 
           genCodeLine ("  /** Reinitialise. */");
-          genCodeLine ("  " + javaStaticOpt () + "public void ReInit(java.io.InputStream stream, String encoding) {");
+          genCodeLine ("  " +
+                       javaStaticOpt () +
+                       "public void ReInit(final java.io.InputStream stream, final String encoding) {");
           genCodeLine ("	 try { jj_input_stream.ReInit(stream, encoding, 1, 1); } " +
                        "catch(final java.io.UnsupportedEncodingException e) { " +
                        "throw new IllegalStateException(" +
-                       (Options.isGenerateJavaChainedException () ? "e" : "e.getMessage()") +
+                       (bExceptionWithCause ? "e" : "e.getMessage()") +
                        "); }");
 
           if (Options.isTokenManagerRequiresParserAccess ())

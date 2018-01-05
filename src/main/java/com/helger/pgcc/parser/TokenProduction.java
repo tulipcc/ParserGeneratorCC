@@ -63,10 +63,10 @@ public class TokenProduction
 
   /**
    * The states in which this regular expression production exists. If this
-   * array is null, then "<*>" has been specified and this regular expression
-   * exists in all states. However, this null value is replaced by a String
-   * array that includes all lexical state names during the semanticization
-   * phase.
+   * array is null, then "&lt;*&gt;" has been specified and this regular
+   * expression exists in all states. However, this null value is replaced by a
+   * String array that includes all lexical state names during the
+   * semanticization phase.
    */
   public String [] m_lexStates;
 

@@ -124,12 +124,12 @@ public class ExpNonTerminal extends Expansion
   }
 
   /**
-   * @param argument_tokens
-   *        the argument_tokens to set
+   * @param parametrizedTypeTokens
+   *        the argument tokens to set
    */
-  public void setArgumentTokens (final List <Token> parametrized_type__tokens)
+  public void setArgumentTokens (final List <Token> parametrizedTypeTokens)
   {
-    this.m_parametrizedTypeTokens = parametrized_type__tokens;
+    this.m_parametrizedTypeTokens = parametrizedTypeTokens;
   }
 
   /**

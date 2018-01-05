@@ -37,12 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Describes one-or-more regular expressions (<foo+>).
+ * Describes one-or-more regular expressions (&lt;foo+&gt;).
  */
-
 public class ExpRRepetitionRange extends AbstractExpRegularExpression
 {
-
   /**
    * The regular expression which is repeated one or more times.
    */
