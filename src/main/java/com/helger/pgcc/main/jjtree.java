@@ -1,3 +1,4 @@
+package com.helger.pgcc.main;
 /**
  * Copyright 2017-2018 Philip Helger, pgcc@helger.com
  *
@@ -35,13 +36,15 @@
  * Intermediary between OS script and main program of application. Having this
  * intermediary allows the OS scripts to be package name independent.
  */
-public final class javacc
+public final class jjtree
 {
-  private javacc ()
+
+  private jjtree ()
   {}
 
-  public static void main (final String [] args) throws Exception
+  public static void main (final String [] args)
   {
-    com.helger.pgcc.parser.Main.main (args);
+    com.helger.pgcc.jjtree.Main.main (args);
   }
+
 }

@@ -92,7 +92,6 @@ public final class JJDoc
    * instanceof TokenProduction) ); }
    */
 
-  @SuppressWarnings ("unused")
   private static void _emitTokenProductions (final IDocGenerator gen, final List <TokenProduction> prods)
   {
     gen.tokensStart ();
@@ -164,7 +163,6 @@ public final class JJDoc
     return token;
   }
 
-  @SuppressWarnings ("unused")
   private static void _emitNormalProductions (final IDocGenerator gen, final List <NormalProduction> prods)
   {
     gen.nonterminalsStart ();
