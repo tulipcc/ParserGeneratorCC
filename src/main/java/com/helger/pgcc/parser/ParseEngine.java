@@ -1281,7 +1281,7 @@ public class ParseEngine
                 conds[0] = la;
                 actions = new String [2];
                 // [ph] empty statement needed???
-                actions[0] = true ? "" : "\n;";
+                actions[0] = false ? "" : "\n;";
 
                 switch (eOutputLanguage)
                 {
@@ -1346,7 +1346,7 @@ public class ParseEngine
                   conds[0] = la;
                   actions = new String [2];
                   // [ph] empty statement needed???
-                  actions[0] = true ? "" : "\n;";
+                  actions[0] = false ? "" : "\n;";
 
                   switch (eOutputLanguage)
                   {
@@ -1396,8 +1396,8 @@ public class ParseEngine
                     conds[0] = la;
                     actions = new String [2];
                     actions[0] = _phase1ExpansionGen (nested_e);
-                    // [ph] empty statement needed???
-                    actions[1] = true ? "" : "\n;";
+                    // Empty statement is relevant for Lookup!
+                    actions[1] = "\n;";
                     retval += buildLookaheadChecker (conds, actions);
                   }
                   else

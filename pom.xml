@@ -229,6 +229,9 @@
             </configuration>
           </execution>
         </executions>
+        <configuration>
+          <jdkVersion>1.8</jdkVersion>
+        </configuration>
       </plugin>
     </plugins>
   </build>

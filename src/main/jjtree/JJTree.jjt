@@ -31,10 +31,10 @@ options {
   NODE_DEFAULT_VOID = true;
   NODE_SCOPE_HOOK=true;
   JAVA_UNICODE_ESCAPE = true;
+  LEGACY_EXCEPTION_HANDLING = false;
   STATIC = false;
   NODE_CLASS = "JJTreeNode";
   VISITOR = true;
-//  JJTREE_OUTPUT_DIRECTORY = "org/javacc/jjtree";
 }
 
 PARSER_BEGIN(JJTreeParser)
