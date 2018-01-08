@@ -659,7 +659,7 @@ public class ParseEngine
                 }
                 else
                 {
-                  m_codeGenerator.genCode (Character.toString (ch));
+                  m_codeGenerator.genCode (ch);
                 }
     }
   }
@@ -1281,7 +1281,7 @@ public class ParseEngine
                 conds[0] = la;
                 actions = new String [2];
                 // [ph] empty statement needed???
-                actions[0] = false ? "" : "\n;";
+                actions[0] = true ? "" : "\n;";
 
                 switch (eOutputLanguage)
                 {
@@ -1346,7 +1346,7 @@ public class ParseEngine
                   conds[0] = la;
                   actions = new String [2];
                   // [ph] empty statement needed???
-                  actions[0] = false ? "" : "\n;";
+                  actions[0] = true ? "" : "\n;";
 
                   switch (eOutputLanguage)
                   {

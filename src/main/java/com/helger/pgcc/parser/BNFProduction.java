@@ -36,6 +36,10 @@ package com.helger.pgcc.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import com.helger.commons.annotation.ReturnsMutableObject;
+
 /**
  * Describes BNF productions.
  */
@@ -45,21 +49,23 @@ public class BNFProduction extends NormalProduction
   /**
    * The declarations of this production.
    */
-  private final List <Token> m_declaration_tokens = new ArrayList <> ();
+  private final List <Token> m_aDeclarationTokens = new ArrayList <> ();
 
   /**
    * This flag keeps track of whether or not return and throw statements have
    * been patched within this production's actions to include a preceding "if
    * (true)".
    */
-  private boolean m_jumpPatched;
+  private boolean m_bJumpPatched = false;
 
   /**
    * @return the declaration_tokens
    */
+  @Nonnull
+  @ReturnsMutableObject
   public List <Token> getDeclarationTokens ()
   {
-    return m_declaration_tokens;
+    return m_aDeclarationTokens;
   }
 
   /**
@@ -68,7 +74,7 @@ public class BNFProduction extends NormalProduction
    */
   public void setJumpPatched (final boolean jumpPatched)
   {
-    this.m_jumpPatched = jumpPatched;
+    m_bJumpPatched = jumpPatched;
   }
 
   /**
@@ -76,6 +82,6 @@ public class BNFProduction extends NormalProduction
    */
   public boolean isJumpPatched ()
   {
-    return m_jumpPatched;
+    return m_bJumpPatched;
   }
 }

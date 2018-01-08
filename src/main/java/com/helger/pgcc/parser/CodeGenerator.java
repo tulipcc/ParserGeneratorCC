@@ -122,6 +122,11 @@ public class CodeGenerator
     m_outputBuffer.append ("0}");
   }
 
+  public void genCode (final char c)
+  {
+    m_outputBuffer.append (c);
+  }
+
   public void genCode (final String s)
   {
     m_outputBuffer.append (s);
