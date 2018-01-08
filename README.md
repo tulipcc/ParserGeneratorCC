@@ -10,6 +10,8 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
 
 # News and noteworthy
 
+* v1.0.2 - 2018-01-08
+  * Fixed an error in jump-patching that was originally only considered if legacy exception handling was enabled - now ParserGeneratorCC can create itself using itself!
 * v1.0.1 - 2018-01-05
   * Initial release with expected output compatibility to JavaCC 7.0.3
   * The JavaCC option `GENERATE_STRING_BUILDER` was removed - it was never evaluated
@@ -29,7 +31,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>parser-generator-cc</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ``` 
 
