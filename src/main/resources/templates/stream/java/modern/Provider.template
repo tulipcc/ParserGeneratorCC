@@ -6,7 +6,7 @@ import java.io.IOException;
  */
 public interface Provider
 #if AT_LEAST_JDK7
-extends AutoCloseable
+extends java.io.Closeable
 #fi
 {
   /**
@@ -26,6 +26,6 @@ extends AutoCloseable
     * @exception IOException
     */
    void close() throws IOException;
-#endif
+#fi
  }
  

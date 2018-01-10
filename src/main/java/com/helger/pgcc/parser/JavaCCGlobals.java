@@ -482,7 +482,7 @@ public final class JavaCCGlobals
   {
     for (; s_cline < t.beginLine; s_cline++)
     {
-      ostr.println ("");
+      ostr.println ();
       s_ccol = 1;
     }
     for (; s_ccol < t.beginColumn; s_ccol++)
@@ -546,28 +546,29 @@ public final class JavaCCGlobals
     }
     if (s_ccol != 1 && s_cline != t.beginLine)
     {
-      ostr.println ("");
+      ostr.println ();
       s_cline++;
       s_ccol = 1;
     }
   }
 
-  public static String printTokenOnly (final Token t)
+  @Nonnull
+  public static String printTokenOnly (@Nonnull final Token t)
   {
-    String retval = "";
+    final StringBuilder aSB = new StringBuilder (t.image.length () * 2);
     for (; s_cline < t.beginLine; s_cline++)
     {
-      retval += "\n";
+      aSB.append ('\n');
       s_ccol = 1;
     }
     for (; s_ccol < t.beginColumn; s_ccol++)
     {
-      retval += " ";
+      aSB.append (' ');
     }
     if (t.kind == JavaCCParserConstants.STRING_LITERAL || t.kind == JavaCCParserConstants.CHARACTER_LITERAL)
-      retval += addUnicodeEscapes (t.image);
+      aSB.append (addUnicodeEscapes (t.image));
     else
-      retval += t.image;
+      aSB.append (t.image);
     s_cline = t.endLine;
     s_ccol = t.endColumn + 1;
     final char last = t.image.charAt (t.image.length () - 1);
@@ -576,12 +577,13 @@ public final class JavaCCGlobals
       s_cline++;
       s_ccol = 1;
     }
-    return retval;
+    return aSB.toString ();
   }
 
-  public static String printToken (final Token t)
+  @Nonnull
+  public static String printToken (@Nonnull final Token t)
   {
-    String ret = "";
+    final StringBuilder aSB = new StringBuilder ();
     Token tt = t.specialToken;
     if (tt != null)
     {
@@ -589,37 +591,40 @@ public final class JavaCCGlobals
         tt = tt.specialToken;
       while (tt != null)
       {
-        ret += printTokenOnly (tt);
+        aSB.append (printTokenOnly (tt));
         tt = tt.next;
       }
     }
-    ret += printTokenOnly (t);
-    return ret;
+    aSB.append (printTokenOnly (t));
+    return aSB.toString ();
   }
 
-  protected static String printLeadingComments (final Token t)
+  @Nonnull
+  protected static String printLeadingComments (@Nonnull final Token t)
   {
-    String retval = "";
     if (t.specialToken == null)
-      return retval;
+      return "";
+
+    final StringBuilder aSB = new StringBuilder ();
     Token tt = t.specialToken;
     while (tt.specialToken != null)
       tt = tt.specialToken;
     while (tt != null)
     {
-      retval += printTokenOnly (tt);
+      aSB.append (printTokenOnly (tt));
       tt = tt.next;
     }
     if (s_ccol != 1 && s_cline != t.beginLine)
     {
-      retval += "\n";
+      aSB.append ('\n');
       s_cline++;
       s_ccol = 1;
     }
-    return retval;
+    return aSB.toString ();
   }
 
-  public static String printTrailingComments (final Token t)
+  @Nonnull
+  public static String printTrailingComments (@Nonnull final Token t)
   {
     if (t.next == null)
       return "";

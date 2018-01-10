@@ -33,24 +33,19 @@
  */
 package com.helger.pgcc.output.java;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
-import static com.helger.pgcc.parser.JavaCCGlobals.replaceBackslash;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ccol;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cline;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
 import static com.helger.pgcc.parser.JavaCCParserConstants.PACKAGE;
 import static com.helger.pgcc.parser.JavaCCParserConstants.SEMICOLON;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.util.Map;
 
-import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.output.OutputFile;
@@ -92,74 +87,6 @@ public class FilesJava
    */
   static final String tokenMgrErrorVersion = PGVersion.MAJOR_DOT_MINOR;
 
-  /**
-   * Read the version from the comment in the specified file. This method does
-   * not try to recover from invalid comment syntax, but rather returns version
-   * 0.0 (which will always be taken to mean the file is out of date).
-   *
-   * @param fileName
-   *        eg Token.java
-   * @return The version as a double, eg 4.1
-   * @since 4.1
-   */
-  public static double getVersion (final String fileName)
-  {
-    final String commentHeader = "/* " + getIdString (s_toolName, fileName) + " Version ";
-    final File file = new File (Options.getOutputDirectory (), replaceBackslash (fileName));
-
-    if (!file.exists ())
-    {
-      // Has not yet been created, so it must be up to date.
-      try
-      {
-        final String majorVersion = PGVersion.s_versionNumber.replaceAll ("[^0-9.]+.*", "");
-        return Double.parseDouble (majorVersion);
-      }
-      catch (final NumberFormatException e)
-      {
-        return 0.0; // Should never happen
-      }
-    }
-
-    try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
-    {
-      String str;
-      double version = 0.0;
-
-      // Although the version comment should be the first line, sometimes the
-      // user might have put comments before it.
-      while ((str = reader.readLine ()) != null)
-      {
-        if (str.startsWith (commentHeader))
-        {
-          str = str.substring (commentHeader.length ());
-          final int pos = str.indexOf (' ');
-          if (pos >= 0)
-            str = str.substring (0, pos);
-          if (str.length () > 0)
-          {
-            try
-            {
-              version = Double.parseDouble (str);
-            }
-            catch (final NumberFormatException nfe)
-            {
-              // Ignore - leave version as 0.0
-            }
-          }
-
-          break;
-        }
-      }
-
-      return version;
-    }
-    catch (final IOException ioe)
-    {
-      return 0.0;
-    }
-  }
-
   private static Map <String, Object> _getDefaultOptions ()
   {
     final EJDKVersion eJDKVersion = Options.getJdkVersion ();
@@ -187,6 +114,7 @@ public class FilesJava
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
+        // Copy package name
         if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
         {
           for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
@@ -324,11 +252,10 @@ public class FilesJava
 
   public static void gen_JavaModernFiles ()
   {
-    _genMiscFile ("Provider.java", "/templates/gwt/Provider.template");
-    _genMiscFile ("StringProvider.java", "/templates/gwt/StringProvider.template");
-
-    // This provides a bridge to standard Java readers.
-    _genMiscFile ("StreamProvider.java", "/templates/gwt/StreamProvider.template");
+    // Abstraction for char reader
+    _genMiscFile ("Provider.java", "/templates/stream/java/modern/Provider.template");
+    _genMiscFile ("StringProvider.java", "/templates/stream/java/modern/StringProvider.template");
+    _genMiscFile ("StreamProvider.java", "/templates/stream/java/modern/StreamProvider.template");
   }
 
   private static void _genMiscFile (final String fileName, final String templatePath) throws Error

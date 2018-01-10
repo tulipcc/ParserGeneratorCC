@@ -34,17 +34,11 @@
 
 package com.helger.pgcc.output.cpp;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
-import static com.helger.pgcc.parser.JavaCCGlobals.replaceBackslash;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
-
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 
-import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.JavaCCErrors;
@@ -85,75 +79,7 @@ public class FilesCpp
    */
   static final String tokenMgrErrorVersion = PGVersion.MAJOR_DOT_MINOR;
 
-  /**
-   * Read the version from the comment in the specified file. This method does
-   * not try to recover from invalid comment syntax, but rather returns version
-   * 0.0 (which will always be taken to mean the file is out of date).
-   *
-   * @param fileName
-   *        eg Token.java
-   * @return The version as a double, eg 4.1
-   * @since 4.1
-   */
-  public static double getVersion (final String fileName)
-  {
-    final String commentHeader = "/* " + getIdString (s_toolName, fileName) + " Version ";
-    final File file = new File (Options.getOutputDirectory (), replaceBackslash (fileName));
-
-    if (!file.exists ())
-    {
-      // Has not yet been created, so it must be up to date.
-      try
-      {
-        final String majorVersion = PGVersion.s_versionNumber.replaceAll ("[^0-9.]+.*", "");
-        return Double.parseDouble (majorVersion);
-      }
-      catch (final NumberFormatException e)
-      {
-        return 0.0; // Should never happen
-      }
-    }
-
-    try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
-    {
-      String str;
-      double version = 0.0;
-
-      // Although the version comment should be the first line, sometimes the
-      // user might have put comments before it.
-      while ((str = reader.readLine ()) != null)
-      {
-        if (str.startsWith (commentHeader))
-        {
-          str = str.substring (commentHeader.length ());
-          final int pos = str.indexOf (' ');
-          if (pos >= 0)
-            str = str.substring (0, pos);
-          if (str.length () > 0)
-          {
-            try
-            {
-              version = Double.parseDouble (str);
-            }
-            catch (final NumberFormatException nfe)
-            {
-              // Ignore - leave version as 0.0
-            }
-          }
-
-          break;
-        }
-      }
-
-      return version;
-    }
-    catch (final IOException ioe)
-    {
-      return 0.0;
-    }
-  }
-
-  private static void genFile (final String name, final String version, final String [] parameters)
+  private static void genFile (final String dir, final String name, final String version, final String [] parameters)
   {
     final File file = new File (Options.getOutputDirectory (), name);
     try (final OutputFile outputFile = new OutputFile (file, version, parameters))
@@ -163,7 +89,7 @@ public class FilesCpp
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        final OutputFileGenerator generator = new OutputFileGenerator ("/templates/cpp/" + name + ".template",
+        final OutputFileGenerator generator = new OutputFileGenerator ("/templates/" + dir + "/" + name + ".template",
                                                                        Options.getAllOptions ());
         generator.generate (ostr);
       }
@@ -181,24 +107,24 @@ public class FilesCpp
   {
     final String [] parameters = new String [] { Options.USEROPTION__STATIC,
                                                  Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
-    genFile ("CharStream.h", charStreamVersion, parameters);
-    genFile ("CharStream.cc", charStreamVersion, parameters);
+    genFile ("stream/cpp", "CharStream.h", charStreamVersion, parameters);
+    genFile ("stream/cpp", "CharStream.cc", charStreamVersion, parameters);
   }
 
   public static void gen_ParseException ()
   {
     final String [] parameters = new String [] { Options.USEROPTION__STATIC,
                                                  Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
-    genFile ("ParseException.h", parseExceptionVersion, parameters);
-    genFile ("ParseException.cc", parseExceptionVersion, parameters);
+    genFile ("cpp", "ParseException.h", parseExceptionVersion, parameters);
+    genFile ("cpp", "ParseException.cc", parseExceptionVersion, parameters);
   }
 
   public static void gen_TokenMgrError ()
   {
     final String [] parameters = new String [] { Options.USEROPTION__STATIC,
                                                  Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
-    genFile ("TokenMgrError.h", tokenMgrErrorVersion, parameters);
-    genFile ("TokenMgrError.cc", tokenMgrErrorVersion, parameters);
+    genFile ("cpp", "TokenMgrError.h", tokenMgrErrorVersion, parameters);
+    genFile ("cpp", "TokenMgrError.cc", tokenMgrErrorVersion, parameters);
   }
 
   public static void gen_Token ()
@@ -207,22 +133,22 @@ public class FilesCpp
                                                  Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC,
                                                  Options.USEROPTION__CPP_TOKEN_INCLUDES,
                                                  Options.USEROPTION__TOKEN_EXTENDS };
-    genFile ("Token.h", tokenMgrErrorVersion, parameters);
-    genFile ("Token.cc", tokenMgrErrorVersion, parameters);
+    genFile ("cpp", "Token.h", tokenMgrErrorVersion, parameters);
+    genFile ("cpp", "Token.cc", tokenMgrErrorVersion, parameters);
   }
 
   public static void gen_TokenManager ()
   {
     final String [] parameters = new String [] { Options.USEROPTION__STATIC,
                                                  Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
-    genFile ("TokenManager.h", tokenManagerVersion, parameters);
+    genFile ("cpp", "TokenManager.h", tokenManagerVersion, parameters);
   }
 
   public static void gen_JavaCCDefs ()
   {
     final String [] parameters = new String [] { Options.USEROPTION__STATIC,
                                                  Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
-    genFile ("JavaCC.h", tokenManagerVersion, parameters);
+    genFile ("cpp", "JavaCC.h", tokenManagerVersion, parameters);
   }
 
   public static void gen_ErrorHandler ()
@@ -231,10 +157,12 @@ public class FilesCpp
                                                  Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC,
                                                  Options.USEROPTION__BUILD_PARSER,
                                                  Options.USEROPTION__BUILD_TOKEN_MANAGER };
-    genFile ("ErrorHandler.h", parseExceptionVersion, parameters);
+    genFile ("cpp", "ErrorHandler.h", parseExceptionVersion, parameters);
   }
 
   public static void reInit ()
-  {}
+  {
+    // empty
+  }
 
 }

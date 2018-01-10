@@ -74,6 +74,8 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_ordered_named_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
+import static com.helger.pgcc.parser.JavaCCParserConstants.PACKAGE;
+import static com.helger.pgcc.parser.JavaCCParserConstants.SEMICOLON;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -86,7 +88,6 @@ import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.ExpRStringLiteral;
 import com.helger.pgcc.parser.JavaCCErrors;
-import com.helger.pgcc.parser.JavaCCParserConstants;
 import com.helger.pgcc.parser.LexGenJava;
 import com.helger.pgcc.parser.MetaParseException;
 import com.helger.pgcc.parser.Options;
@@ -160,12 +161,11 @@ public class OtherFilesGenJava
 
       ostr.println ("/* " + getIdString (tn, s_cu_name + CONSTANTS_FILENAME_SUFFIX) + " */");
 
-      if (s_cu_to_insertion_point_1.size () != 0 &&
-          s_cu_to_insertion_point_1.get (0).kind == JavaCCParserConstants.PACKAGE)
+      if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
       {
         for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
         {
-          if (s_cu_to_insertion_point_1.get (i).kind == JavaCCParserConstants.SEMICOLON)
+          if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
           {
             t = s_cu_to_insertion_point_1.get (0);
             printTokenSetup (t);

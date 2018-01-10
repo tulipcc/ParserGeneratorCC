@@ -45,9 +45,9 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class TokenMgrException extends Runti
    */
   protected static final String addEscapes(String str) {
     StringBuilder retval = new StringBuilder();
-    char ch;
     for (int i = 0; i < str.length(); i++) {
-      switch (str.charAt(i))
+      final char ch = str.charAt(i);
+      switch (ch)
       {
         case '\b':
           retval.append("\\b");
@@ -74,9 +74,9 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class TokenMgrException extends Runti
           retval.append("\\\\");
           continue;
         default:
-          if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+          if (ch < 0x20 || ch > 0x7e) {
             String s = "0000" + Integer.toString(ch, 16);
-            retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+            retval.append("\\u").append (s.substring(s.length() - 4, s.length()));
           } else {
             retval.append(ch);
           }
@@ -124,7 +124,6 @@ ${SUPPORT_CLASS_VISIBILITY_PUBLIC?public :}class TokenMgrException extends Runti
   /*
    * Constructors of various flavors follow.
    */
-
   /** No arg constructor. */
   public TokenMgrException() {
   }

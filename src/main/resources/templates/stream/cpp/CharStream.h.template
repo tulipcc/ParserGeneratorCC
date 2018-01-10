@@ -50,15 +50,11 @@ private:
   }
 
 public:
-  virtual int getColumn()        { return getBufcolumn(bufpos); }
-  virtual int getLine()          { return getBufline(bufpos); }
   virtual int getEndColumn()     { return getBufcolumn(bufpos); }
   virtual int getEndLine()       { return getBufline(bufpos); }
   virtual int getBeginColumn()   { return getBufcolumn(tokenBegin); }
   virtual int getBeginLine()     { return getBufline(tokenBegin); }
 #else
-  virtual int  getColumn()       { return -1; }
-  virtual int  getLine()         { return -1; }
   virtual int  getEndColumn()    { return -1; }
   virtual int  getEndLine()      { return -1; }
   virtual int  getBeginColumn()  { return -1; }
@@ -139,8 +135,7 @@ public:
   virtual JJString GetImage() {
     if (bufpos >= tokenBegin)
       return JJString(buffer + tokenBegin, bufpos - tokenBegin + 1);
-    else
-      return JJString(buffer + tokenBegin, bufsize - tokenBegin).append(buffer, bufpos + 1);
+    return JJString(buffer + tokenBegin, bufsize - tokenBegin).append(buffer, bufpos + 1);
   }
 
   /**

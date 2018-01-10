@@ -27,10 +27,10 @@ public class StreamProvider implements Provider {
   }
   
 #if AT_LEAST_JDK4
-  public StreamProvider(final InputStream stream, final java.nio.charset.Charset charset) throws IOException {
+  public StreamProvider(final InputStream stream, final java.nio.charset.Charset charset) {
     _reader = new BufferedReader(new InputStreamReader(stream, charset));
   }
-#endif
+#fi
 
   public int read(char[] buffer, int off, int len) throws IOException {
     int result = _reader.read(buffer, off, len);

@@ -83,7 +83,7 @@ import java.util.Map;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.output.EOutputLanguage;
-import com.helger.pgcc.output.java.FilesJava;
+import com.helger.pgcc.output.OutputHelper;
 
 /**
  * Generate lexer.
@@ -662,7 +662,7 @@ public class LexGenCpp extends LexGenJava
 
   private void _dumpFillToken ()
   {
-    final double tokenVersion = FilesJava.getVersion ("Token.java");
+    final double tokenVersion = OutputHelper.getVersionDashStar ("Token.java");
     final boolean hasBinaryNewToken = tokenVersion > 4.09;
 
     generateMethodDefHeader ("Token *", s_tokMgrClassName, "jjFillToken()");

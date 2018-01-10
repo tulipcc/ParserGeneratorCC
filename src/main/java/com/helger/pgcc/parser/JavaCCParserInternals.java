@@ -253,7 +253,8 @@ public abstract class JavaCCParserInternals
       }
       if (s_lexstate_S2I.get (p.m_lexStates[i]) == null)
       {
-        final Integer ii = Integer.valueOf (s_nextFreeLexState++);
+        final Integer ii = Integer.valueOf (s_nextFreeLexState);
+        s_nextFreeLexState++;
         s_lexstate_S2I.put (p.m_lexStates[i], ii);
         s_lexstate_I2S.put (ii, p.m_lexStates[i]);
         s_simple_tokens_table.put (p.m_lexStates[i], new HashMap <> ());

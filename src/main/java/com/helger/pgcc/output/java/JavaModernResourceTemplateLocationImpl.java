@@ -38,13 +38,13 @@ public class JavaModernResourceTemplateLocationImpl extends JavaResourceTemplate
   @Override
   public String getSimpleCharStreamTemplateResourceUrl ()
   {
-    return "/templates/gwt/SimpleCharStream.template";
+    return "/templates/stream/java/modern/SimpleCharStream.template";
   }
 
   @Override
   public String getJavaCharStreamTemplateResourceUrl ()
   {
-    return "/templates/gwt/JavaCharStream.template";
+    return "/templates/stream/java/modern/JavaCharStream.template";
   }
 
   @Override

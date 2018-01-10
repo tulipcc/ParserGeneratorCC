@@ -89,7 +89,7 @@ import java.util.Map;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.output.EOutputLanguage;
-import com.helger.pgcc.output.java.FilesJava;
+import com.helger.pgcc.output.OutputHelper;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 /**
@@ -536,7 +536,6 @@ public class LexGenJava extends CodeGenerator
                 s_canReachOnMore[_getIndex (s_newLexState[s_curRE.m_ordinal])] = true;
               else
                 s_canReachOnMore[s_lexStateIndex] = true;
-
               break;
             case TokenProduction.TOKEN:
               s_hasTokenActions |= (s_actions[s_curRE.m_ordinal] != null);
@@ -645,31 +644,32 @@ public class LexGenJava extends CodeGenerator
         for (int k = 0; k < act.getActionTokens ().size (); k++)
         {
           sb.append (act.getActionTokens ().get (k).image);
-          sb.append (" ");
+          sb.append (' ');
         }
         actionStrings.put (i, sb.toString ());
       }
       s_tokenizerData.setDefaultLexState (s_defaultLexState);
       s_tokenizerData.setLexStateNames (s_lexStateName);
       s_tokenizerData.updateMatchInfo (actionStrings, newLexStateIndices, s_toSkip, s_toSpecial, s_toMore, s_toToken);
-      if (s_generateDataOnly)
-        return;
-      TokenManagerCodeGenerator gen;
-      try
+      if (!s_generateDataOnly)
       {
-        final Class <?> codeGenClazz = Class.forName (codeGeneratorClass);
-        gen = (TokenManagerCodeGenerator) codeGenClazz.newInstance ();
+        TokenManagerCodeGenerator gen;
+        try
+        {
+          final Class <?> codeGenClazz = Class.forName (codeGeneratorClass);
+          gen = (TokenManagerCodeGenerator) codeGenClazz.newInstance ();
+        }
+        catch (final Exception ee)
+        {
+          JavaCCErrors.semantic_error ("Cound not load the token manager code generator class: " +
+                                       codeGeneratorClass +
+                                       "\nError: " +
+                                       ee.getMessage ());
+          return;
+        }
+        gen.generateCode (s_tokenizerData);
+        gen.finish (s_tokenizerData);
       }
-      catch (final Exception ee)
-      {
-        JavaCCErrors.semantic_error ("Cound not load the token manager code generator class: " +
-                                     codeGeneratorClass +
-                                     "\nError: " +
-                                     ee.getMessage ());
-        return;
-      }
-      gen.generateCode (s_tokenizerData);
-      gen.finish (s_tokenizerData);
       return;
     }
 
@@ -918,7 +918,7 @@ public class LexGenJava extends CodeGenerator
 
   private void _dumpFillToken ()
   {
-    final double tokenVersion = FilesJava.getVersion ("Token.java");
+    final double tokenVersion = OutputHelper.getVersionDashStar ("Token.java");
     final boolean hasBinaryNewToken = tokenVersion > 4.09;
 
     genCodeLine (s_staticString + "protected Token jjFillToken()");
