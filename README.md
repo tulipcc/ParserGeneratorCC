@@ -3,13 +3,15 @@
 Fork of JavaCC 7.0.3 because the original code base has poor quality and PRs are not really merged.
 The overall goal is to maintain compatibility to JavaCC but
 * The code itself should be better maintainable
-* The code itself should conform to best-practises
+* The code itself should conform to best-practices
 * Because this is NOT JavaCC the class names are similar, but the base package name changed from `net.javacc` to `com.helger.pgcc`  
 
 See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses this CC.
 
 # News and noteworthy
 
+* v1.1.0 - work in progress
+  * Focus is on improving the quality and consistency of the template files - this may cause interoperability problem because names change etc.
 * v1.0.2 - 2018-01-08
   * Fixed an error in jump-patching that was originally only considered if legacy exception handling was enabled - now ParserGeneratorCC can create itself using itself!
 * v1.0.1 - 2018-01-05
