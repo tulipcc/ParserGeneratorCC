@@ -33,6 +33,7 @@
  */
 package com.helger.pgcc;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public enum EJDKVersion
@@ -54,9 +55,14 @@ public enum EJDKVersion
     m_nMajor = nMajor;
   }
 
-  public boolean isNewerOrEqualsThan (final EJDKVersion aOther)
+  public boolean isNewerOrEqualsThan (@Nonnull final EJDKVersion aOther)
   {
     return m_nMajor >= aOther.m_nMajor;
+  }
+
+  public boolean isOlderThan (@Nonnull final EJDKVersion aOther)
+  {
+    return m_nMajor < aOther.m_nMajor;
   }
 
   private double _getAsDouble1x ()

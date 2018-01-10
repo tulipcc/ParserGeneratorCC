@@ -952,7 +952,7 @@ public class LexGenJava extends CodeGenerator
       genCodeLine ("   else");
       genCodeLine ("   {");
       genCodeLine ("      String im = jjstrLiteralImages[jjmatchedKind];");
-      genCodeLine ("      curTokenImage = (im == null) ? input_stream.GetImage() : im;");
+      genCodeLine ("      curTokenImage = im == null ? input_stream.getImage() : im;");
 
       if (s_keepLineCol)
       {
@@ -967,7 +967,7 @@ public class LexGenJava extends CodeGenerator
     else
     {
       genCodeLine ("   String im = jjstrLiteralImages[jjmatchedKind];");
-      genCodeLine ("   curTokenImage = (im == null) ? input_stream.GetImage() : im;");
+      genCodeLine ("   curTokenImage = im == null ? input_stream.getImage() : im;");
       if (s_keepLineCol)
       {
         genCodeLine ("   beginLine = input_stream.getBeginLine();");
@@ -1029,13 +1029,14 @@ public class LexGenJava extends CodeGenerator
     genCodeLine ("  Token matchedToken;");
     genCodeLine ("  int curPos = 0;");
     genCodeLine ();
-    genCodeLine ("  EOFLoop :\n  for (;;)");
+    genCodeLine ("  EOFLoop:");
+    genCodeLine ("  for (;;)");
     genCodeLine ("  {");
     genCodeLine ("   try");
     genCodeLine ("   {");
-    genCodeLine ("      curChar = input_stream.BeginToken();");
+    genCodeLine ("      curChar = input_stream.beginToken();");
     genCodeLine ("   }");
-    genCodeLine ("   catch(Exception e)");
+    genCodeLine ("   catch(final Exception e)");
     genCodeLine ("   {");
 
     if (Options.isDebugTokenManager ())
@@ -1095,7 +1096,8 @@ public class LexGenJava extends CodeGenerator
       if (s_singlesToSkip[i].hasTransitions ())
       {
         // added the backup(0) to make JIT happy
-        genCodeLine (prefix + "try { input_stream.backup(0);");
+        genCodeLine (prefix + "try {");
+        genCodeLine (prefix + "  input_stream.backup(0);");
         if (s_singlesToSkip[i].m_asciiMoves[0] != 0L && s_singlesToSkip[i].m_asciiMoves[1] != 0L)
         {
           genCodeLine (prefix +
@@ -1145,13 +1147,15 @@ public class LexGenJava extends CodeGenerator
                        s_errorHandlingClass +
                        ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \")\");");
         }
-        genCodeLine (prefix + "      curChar = input_stream.BeginToken();");
+        genCodeLine (prefix + "      curChar = input_stream.beginToken();");
 
         if (Options.isDebugTokenManager ())
           genCodeLine (prefix + "}");
 
         genCodeLine (prefix + "}");
-        genCodeLine (prefix + "catch (java.io.IOException e1) { continue EOFLoop; }");
+        genCodeLine (prefix + "catch (final java.io.IOException e1) {");
+        genCodeLine (prefix + "  continue EOFLoop;");
+        genCodeLine (prefix + "}");
       }
 
       if (s_initMatch[i] != Integer.MAX_VALUE && s_initMatch[i] != 0)
@@ -1251,7 +1255,7 @@ public class LexGenJava extends CodeGenerator
                        "\"****** FOUND A \" + tokenImage[jjmatchedKind] + \" MATCH " +
                        "(\" + " +
                        s_errorHandlingClass +
-                       ".addEscapes(new String(input_stream.GetSuffix(jjmatchedPos + 1))) + " +
+                       ".addEscapes(new String(input_stream.getSuffix(jjmatchedPos + 1))) + " +
                        "\") ******\\n\");");
         }
         else
@@ -1260,7 +1264,7 @@ public class LexGenJava extends CodeGenerator
                        "\"****** FOUND A \" + tokenImage[jjmatchedKind] + \" MATCH " +
                        "(\" + " +
                        s_errorHandlingClass +
-                       ".addEscapes(new String(input_stream.GetSuffix(jjmatchedPos + 1))) + " +
+                       ".addEscapes(new String(input_stream.getSuffix(jjmatchedPos + 1))) + " +
                        "\") ******\\n\");");
         }
       }
@@ -1386,10 +1390,13 @@ public class LexGenJava extends CodeGenerator
       genCodeLine (prefix + "   int error_column = input_stream.getEndColumn();");
       genCodeLine (prefix + "   String error_after = null;");
       genCodeLine (prefix + "   " + eOutputLanguage.getTypeBoolean () + " EOFSeen = false;");
-      genCodeLine (prefix + "   try { input_stream.readChar(); input_stream.backup(1); }");
+      genCodeLine (prefix + "   try {");
+      genCodeLine (prefix + "     input_stream.readChar();");
+      genCodeLine (prefix + "     input_stream.backup(1);");
+      genCodeLine (prefix + "   }");
       genCodeLine (prefix + "   catch (final java.io.IOException e1) {");
       genCodeLine (prefix + "      EOFSeen = true;");
-      genCodeLine (prefix + "      error_after = curPos <= 1 ? \"\" : input_stream.GetImage();");
+      genCodeLine (prefix + "      error_after = curPos <= 1 ? \"\" : input_stream.getImage();");
       genCodeLine (prefix + "      if (curChar == '\\n' || curChar == '\\r') {");
       genCodeLine (prefix + "         error_line++;");
       genCodeLine (prefix + "         error_column = 0;");
@@ -1399,7 +1406,7 @@ public class LexGenJava extends CodeGenerator
       genCodeLine (prefix + "   }");
       genCodeLine (prefix + "   if (!EOFSeen) {");
       genCodeLine (prefix + "      input_stream.backup(1);");
-      genCodeLine (prefix + "      error_after = curPos <= 1 ? \"\" : input_stream.GetImage();");
+      genCodeLine (prefix + "      error_after = curPos <= 1 ? \"\" : input_stream.getImage();");
       genCodeLine (prefix + "   }");
       genCodeLine (prefix +
                    "   throw new " +
@@ -1472,7 +1479,7 @@ public class LexGenJava extends CodeGenerator
         }
         else
         {
-          genCodeLine ("(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));");
+          genCodeLine ("(input_stream.getSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));");
         }
 
         printTokenSetup (act.getActionTokens ().get (0));
@@ -1548,7 +1555,7 @@ public class LexGenJava extends CodeGenerator
         if (ExpRStringLiteral.s_allImages[i] != null)
           genCodeLine ("(jjstrLiteralImages[" + i + "]);");
         else
-          genCodeLine ("(input_stream.GetSuffix(jjimageLen));");
+          genCodeLine ("(input_stream.getSuffix(jjimageLen));");
 
         genCodeLine ("         jjimageLen = 0;");
         printTokenSetup (act.getActionTokens ().get (0));
@@ -1634,7 +1641,7 @@ public class LexGenJava extends CodeGenerator
           }
           else
           {
-            genCodeLine ("(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));");
+            genCodeLine ("(input_stream.getSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));");
           }
         }
 

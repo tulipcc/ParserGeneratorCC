@@ -33,7 +33,7 @@
  */
 package com.helger.pgcc.output.java;
 
-public final class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
+public class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
 {
   public String getTokenTemplateResourceUrl ()
   {

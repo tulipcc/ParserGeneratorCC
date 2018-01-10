@@ -160,6 +160,18 @@ public class FilesJava
     }
   }
 
+  private static Map <String, Object> _getDefaultOptions ()
+  {
+    final EJDKVersion eJDKVersion = Options.getJdkVersion ();
+    final Map <String, Object> ret = Options.getAllOptions ();
+    ret.put ("PREFIX", Options.isStatic () ? "static " : "");
+    ret.put ("AT_LEAST_JDK4", Boolean.valueOf (eJDKVersion.isNewerOrEqualsThan (EJDKVersion.JDK_14)));
+    ret.put ("AT_LEAST_JDK5", Boolean.valueOf (eJDKVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15)));
+    ret.put ("AT_LEAST_JDK7", Boolean.valueOf (eJDKVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17)));
+    ret.put ("BEFORE_JDK7", Boolean.valueOf (eJDKVersion.isOlderThan (EJDKVersion.JDK_17)));
+    return ret;
+  }
+
   public static void gen_JavaCharStream (final IJavaResourceTemplateLocations locations)
   {
     final File file = new File (Options.getOutputDirectory (), "JavaCharStream.java");
@@ -194,8 +206,7 @@ public class FilesJava
           }
         }
 
-        final Map <String, Object> options = Options.getAllOptions ();
-        options.put ("PREFIX", Options.isStatic () ? "static " : "");
+        final Map <String, Object> options = _getDefaultOptions ();
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getJavaCharStreamTemplateResourceUrl (),
                                                                        options);
@@ -245,8 +256,7 @@ public class FilesJava
           }
         }
 
-        final Map <String, Object> options = Options.getAllOptions ();
-        options.put ("PREFIX", Options.isStatic () ? "static " : "");
+        final Map <String, Object> options = _getDefaultOptions ();
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getSimpleCharStreamTemplateResourceUrl (),
                                                                        options);
@@ -264,7 +274,6 @@ public class FilesJava
 
   public static void gen_CharStream (final IJavaResourceTemplateLocations locations)
   {
-    final EJDKVersion eJDKVersion = Options.getJdkVersion ();
     final File file = new File (Options.getOutputDirectory (), "CharStream.java");
     try (final OutputFile outputFile = new OutputFile (file,
                                                        charStreamVersion,
@@ -297,8 +306,7 @@ public class FilesJava
           }
         }
 
-        final Map <String, Object> options = Options.getAllOptions ();
-        options.put ("GENERATE_ANNOTATIONS", Boolean.valueOf (eJDKVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15)));
+        final Map <String, Object> options = _getDefaultOptions ();
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (),
                                                                        options);
@@ -356,7 +364,7 @@ public class FilesJava
           }
         }
 
-        final Map <String, Object> options = Options.getAllOptions ();
+        final Map <String, Object> options = _getDefaultOptions ();
 
         final OutputFileGenerator generator = new OutputFileGenerator (templatePath, options);
 
@@ -404,7 +412,7 @@ public class FilesJava
           }
         }
 
-        final Map <String, Object> options = Options.getAllOptions ();
+        final Map <String, Object> options = _getDefaultOptions ();
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getParseExceptionTemplateResourceUrl (),
                                                                        options);
@@ -453,7 +461,7 @@ public class FilesJava
           }
         }
 
-        final Map <String, Object> options = Options.getAllOptions ();
+        final Map <String, Object> options = _getDefaultOptions ();
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenMgrErrorTemplateResourceUrl (),
                                                                        options);
@@ -504,7 +512,7 @@ public class FilesJava
           }
         }
 
-        final Map <String, Object> options = Options.getAllOptions ();
+        final Map <String, Object> options = _getDefaultOptions ();
 
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenTemplateResourceUrl (),
                                                                        options);

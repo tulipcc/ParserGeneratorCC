@@ -1,22 +1,31 @@
 
 import java.io.IOException;
 
-public interface Provider {
-    /**
-     * Reads characters into an array
-     * @param buffer  Destination buffer
-     * @param offset   Offset at which to start storing characters
-     * @param length   The maximum possible number of characters to read
-     * @return The number of characters read, or -1 if all read
-     * @exception  IOException
-     */
-    public int read(char buffer[], int offset, int len) throws IOException;
+/**
+ * Abstract interface for reading from a stream.
+ */
+public interface Provider
+#if AT_LEAST_JDK7
+extends AutoCloseable
+#fi
+{
+  /**
+   * Reads characters into an array
+   * @param buffer Destination buffer
+   * @param offset Offset at which to start storing characters
+   * @param len The maximum possible number of characters to read
+   * @return The number of characters read, or -1 if all read
+   * @exception IOException if reading fails
+   */
+  int read(char[] buffer, int offset, int len) throws IOException;
+#if BEFORE_JDK7
     
-    /**
-     * Closes the stream and releases any system resources associated with
-     * it.
-     * @exception IOException
-     */
-     public void close() throws IOException;
-    
-}
+   /**
+    * Closes the stream and releases any system resources associated with
+    * it.
+    * @exception IOException
+    */
+   void close() throws IOException;
+#endif
+ }
+ 

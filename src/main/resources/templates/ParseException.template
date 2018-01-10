@@ -8,18 +8,10 @@
  * mechanisms so long as you retain the public fields.
  */
 public class ParseException extends Exception {
-
-  /**
-   * The version identifier for this Serializable class.
-   * Increment only if the <i>serialized</i> form of the
-   * class changes.
-   */
-  private static final long serialVersionUID = 1L;
-
   /**
    * The end of line string for this machine.
    */
-  protected static String EOL = System.getProperty("line.separator", "\n");
+  protected static final String EOL = System.getProperty("line.separator", "\n");
 
   /**
    * This constructor is used by the method "generateParseException"
@@ -27,12 +19,11 @@ public class ParseException extends Exception {
    * a new object of this type with the fields "currentToken",
    * "expectedTokenSequences", and "tokenImage" set.
    */
-  public ParseException(Token currentTokenVal,
-                        int[][] expectedTokenSequencesVal,
-                        String[] tokenImageVal
-                       )
+  public ParseException(final Token currentTokenVal,
+                        final int[][] expectedTokenSequencesVal,
+                        final String[] tokenImageVal)
   {
-    super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
+    super(_initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
     currentToken = currentTokenVal;
     expectedTokenSequences = expectedTokenSequencesVal;
     tokenImage = tokenImageVal;
@@ -86,56 +77,62 @@ public class ParseException extends Exception {
    * from the parser) the correct error message
    * gets displayed.
    */
-  private static String initialise(Token currentToken,
-                           int[][] expectedTokenSequences,
-                           String[] tokenImage) {
-
+  private static String _initialise(final Token currentToken,
+                                    final int[][] expectedTokenSequences,
+                                    final String[] tokenImage)
+  {
     StringBuilder expected = new StringBuilder();
     int maxSize = 0;
     for (int i = 0; i < expectedTokenSequences.length; i++) {
-      if (maxSize < expectedTokenSequences[i].length) {
+      if (maxSize < expectedTokenSequences[i].length)
         maxSize = expectedTokenSequences[i].length;
-      }
-      for (int j = 0; j < expectedTokenSequences[i].length; j++) {
+      for (int j = 0; j < expectedTokenSequences[i].length; j++)
         expected.append(tokenImage[expectedTokenSequences[i][j]]).append(' ');
-      }
-      if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0) {
+      
+      if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0)
         expected.append("...");
-      }
       expected.append(EOL).append("    ");
     }
-    String retval = "Encountered \"";
+
+	StringBuilder sb = new StringBuilder();
+    sb.append ("Encountered \"");
+
     Token tok = currentToken.next;
     for (int i = 0; i < maxSize; i++) {
-      if (i != 0) retval += " ";
+      String tokenText = tok.image;
+  	  String escapedTokenText = add_escapes(tokenText);
+      if (i != 0) 
+        sb.append (' ');
       if (tok.kind == 0) {
-        retval += tokenImage[0];
+      	sb.append(tokenImage[0]);
         break;
       }
-      retval += " " + tokenImage[tok.kind];
-      retval += " \"";
-      retval += add_escapes(tok.image);
-      retval += " \"";
+      sb.append(" " + tokenImage[tok.kind]);
+      sb.append(" \"");
+	  sb.append(escapedTokenText);
+      sb.append("\"");
       tok = tok.next;
     }
 #if KEEP_LINE_COLUMN
-    retval += "\" at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn;
+    retval.append ("\" at line ")
+          .append (currentToken.next.beginLine)
+          .append (", column ")
+          .append (currentToken.next.beginColumn);
 #fi
-    retval += "." + EOL;
-    
+	sb.append(".").append(EOL);
     
     if (expectedTokenSequences.length == 0) {
         // Nothing to add here
     } else {
-	    if (expectedTokenSequences.length == 1) {
-	      retval += "Was expecting:" + EOL + "    ";
-	    } else {
-	      retval += "Was expecting one of:" + EOL + "    ";
-	    }
-	    retval += expected.toString();
+      sb.append (EOL)
+        .append ("Was expecting")
+        .append (expectedTokenSequences.length == 1 ? ":" : " one of:")
+        .append (EOL)
+        .append (EOL)
+        .append (expected);
     }
     
-    return retval;
+    return sb.toString ();
   }
 
 
@@ -146,9 +143,9 @@ public class ParseException extends Exception {
    */
   static String add_escapes(String str) {
       StringBuilder retval = new StringBuilder();
-      char ch;
       for (int i = 0; i < str.length(); i++) {
-        switch (str.charAt(i))
+        final char ch = str.charAt(i);
+        switch (ch)
         {
            case '\b':
               retval.append("\\b");
@@ -175,7 +172,7 @@ public class ParseException extends Exception {
               retval.append("\\\\");
               continue;
            default:
-              if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+              if (ch < 0x20 || ch > 0x7e) {
                  String s = "0000" + Integer.toString(ch, 16);
                  retval.append("\\u" + s.substring(s.length() - 4, s.length()));
               } else {
@@ -186,5 +183,4 @@ public class ParseException extends Exception {
       }
       return retval.toString();
    }
-
 }
