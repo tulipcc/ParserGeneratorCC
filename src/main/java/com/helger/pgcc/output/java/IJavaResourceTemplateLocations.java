@@ -41,9 +41,11 @@ public interface IJavaResourceTemplateLocations
 
   String getTokenMgrErrorTemplateResourceUrl ();
 
-  String getJavaCharStreamTemplateResourceUrl ();
-
   String getCharStreamTemplateResourceUrl ();
+
+  String getAbstractCharStreamTemplateResourceUrl ();
+
+  String getJavaCharStreamTemplateResourceUrl ();
 
   String getSimpleCharStreamTemplateResourceUrl ();
 

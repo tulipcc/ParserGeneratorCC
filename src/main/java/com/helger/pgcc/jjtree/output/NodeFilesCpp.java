@@ -189,7 +189,7 @@ public final class NodeFilesCpp
     {
       outputFile.setToolName ("JJTree");
 
-      if (file.exists () && !outputFile.needToWrite)
+      if (file.exists () && !outputFile.needToWrite ())
       {
         return;
       }
@@ -225,7 +225,7 @@ public final class NodeFilesCpp
     {
       outputFile.setToolName ("JJTree");
 
-      if (file.exists () && !outputFile.needToWrite)
+      if (file.exists () && !outputFile.needToWrite ())
         return;
 
       final Map <String, Object> optionMap = Options.getAllOptions ();
@@ -259,7 +259,7 @@ public final class NodeFilesCpp
     {
       outputFile.setToolName ("JJTree");
 
-      if (file.exists () && !outputFile.needToWrite)
+      if (file.exists () && !outputFile.needToWrite ())
         return;
 
       final Map <String, Object> optionMap = Options.getAllOptions ();
@@ -296,10 +296,8 @@ public final class NodeFilesCpp
         {
           outputFile.setToolName ("JJTree");
 
-          if (file.exists () && !outputFile.needToWrite)
-          {
+          if (file.exists () && !outputFile.needToWrite ())
             return;
-          }
 
           final Map <String, Object> optionMap = Options.getAllOptions ();
           optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
@@ -339,10 +337,8 @@ public final class NodeFilesCpp
         {
           outputFile.setToolName ("JJTree");
 
-          if (file.exists () && !outputFile.needToWrite)
-          {
+          if (file.exists () && !outputFile.needToWrite ())
             return;
-          }
 
           final Map <String, Object> optionMap = Options.getAllOptions ();
           optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
@@ -379,10 +375,8 @@ public final class NodeFilesCpp
       {
         outputFile.setToolName ("JJTree");
 
-        if (file.exists () && !outputFile.needToWrite)
-        {
+        if (file.exists () && !outputFile.needToWrite ())
           return;
-        }
 
         final Map <String, Object> optionMap = Options.getAllOptions ();
         optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
@@ -428,10 +422,8 @@ public final class NodeFilesCpp
     {
       outputFile.setToolName ("JJTree");
 
-      if (file.exists () && !outputFile.needToWrite)
-      {
+      if (file.exists () && !outputFile.needToWrite ())
         return;
-      }
 
       final Map <String, Object> optionMap = Options.getAllOptions ();
       optionMap.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
@@ -458,7 +450,9 @@ public final class NodeFilesCpp
         outputFile.getPrintWriter ().println (Options.stringValue ("NAMESPACE_CLOSE"));
       }
     }
-    catch (final IOException ex)
+    catch (
+
+    final IOException ex)
     {
       throw new UncheckedIOException (ex);
     }

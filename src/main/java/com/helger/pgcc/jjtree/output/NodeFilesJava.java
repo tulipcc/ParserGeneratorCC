@@ -145,10 +145,8 @@ public final class NodeFilesJava
 
       s_nodesGenerated.add (file.getName ());
 
-      if (!outputFile.needToWrite)
-      {
+      if (!outputFile.needToWrite ())
         return;
-      }
 
       if (nodeType.equals ("Node"))
       {

@@ -46,6 +46,9 @@ import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.WillNotClose;
+
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.output.OutputFile;
@@ -99,6 +102,89 @@ public class FilesJava
     return ret;
   }
 
+  private static void _writePackageName (@Nonnull @WillNotClose final PrintWriter ostr)
+  {
+    if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
+    {
+      for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
+      {
+        if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+        {
+          s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
+          s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
+          for (int j = 0; j <= i; j++)
+          {
+            printToken (s_cu_to_insertion_point_1.get (j), ostr);
+          }
+          ostr.println ();
+          ostr.println ();
+          break;
+        }
+      }
+    }
+  }
+
+  public static void gen_CharStream (final IJavaResourceTemplateLocations locations)
+  {
+    final File file = new File (Options.getOutputDirectory (), "CharStream.java");
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       charStreamVersion,
+                                                       new String [] { Options.USEROPTION__STATIC,
+                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+    {
+      if (!outputFile.needToWrite ())
+        return;
+
+      try (final PrintWriter ostr = outputFile.getPrintWriter ())
+      {
+        _writePackageName (ostr);
+
+        final Map <String, Object> options = _getDefaultOptions ();
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (),
+                                                                       options);
+
+        generator.generate (ostr);
+      }
+    }
+    catch (final IOException e)
+    {
+      System.err.println ("Failed to create CharStream " + e);
+      JavaCCErrors.semantic_error ("Could not open file CharStream.java for writing.");
+      throw new UncheckedIOException (e);
+    }
+  }
+
+  public static void gen_AbstractCharStream (final IJavaResourceTemplateLocations locations)
+  {
+    final File file = new File (Options.getOutputDirectory (), "AbstractCharStream.java");
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       charStreamVersion,
+                                                       new String [] { Options.USEROPTION__STATIC,
+                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+    {
+      if (!outputFile.needToWrite ())
+        return;
+
+      try (final PrintWriter ostr = outputFile.getPrintWriter ())
+      {
+        // Copy package name
+        _writePackageName (ostr);
+
+        final Map <String, Object> options = _getDefaultOptions ();
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getAbstractCharStreamTemplateResourceUrl (),
+                                                                       options);
+
+        generator.generate (ostr);
+      }
+    }
+    catch (final IOException e)
+    {
+      System.err.println ("Failed to create AbstractCharStream " + e);
+      JavaCCErrors.semantic_error ("Could not open file AbstractCharStream.java for writing.");
+      throw new UncheckedIOException (e);
+    }
+  }
+
   public static void gen_JavaCharStream (final IJavaResourceTemplateLocations locations)
   {
     final File file = new File (Options.getOutputDirectory (), "JavaCharStream.java");
@@ -107,35 +193,15 @@ public class FilesJava
                                                        new String [] { Options.USEROPTION__STATIC,
                                                                        Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
-      if (!outputFile.needToWrite)
-      {
+      if (!outputFile.needToWrite ())
         return;
-      }
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
         // Copy package name
-        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
-        {
-          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
-          {
-            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
-            {
-              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
-              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
-              for (int j = 0; j <= i; j++)
-              {
-                printToken (s_cu_to_insertion_point_1.get (j), ostr);
-              }
-              ostr.println ();
-              ostr.println ();
-              break;
-            }
-          }
-        }
+        _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getJavaCharStreamTemplateResourceUrl (),
                                                                        options);
 
@@ -158,34 +224,14 @@ public class FilesJava
                                                        new String [] { Options.USEROPTION__STATIC,
                                                                        Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
-      if (!outputFile.needToWrite)
-      {
+      if (!outputFile.needToWrite ())
         return;
-      }
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
-        {
-          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
-          {
-            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
-            {
-              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
-              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
-              for (int j = 0; j <= i; j++)
-              {
-                printToken (s_cu_to_insertion_point_1.get (j), ostr);
-              }
-              ostr.println ();
-              ostr.println ();
-              break;
-            }
-          }
-        }
+        _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getSimpleCharStreamTemplateResourceUrl (),
                                                                        options);
 
@@ -196,56 +242,6 @@ public class FilesJava
     {
       System.err.println ("Failed to create SimpleCharStream " + e);
       JavaCCErrors.semantic_error ("Could not open file SimpleCharStream.java for writing.");
-      throw new UncheckedIOException (e);
-    }
-  }
-
-  public static void gen_CharStream (final IJavaResourceTemplateLocations locations)
-  {
-    final File file = new File (Options.getOutputDirectory (), "CharStream.java");
-    try (final OutputFile outputFile = new OutputFile (file,
-                                                       charStreamVersion,
-                                                       new String [] { Options.USEROPTION__STATIC,
-                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
-    {
-      if (!outputFile.needToWrite)
-      {
-        return;
-      }
-
-      try (final PrintWriter ostr = outputFile.getPrintWriter ())
-      {
-        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
-        {
-          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
-          {
-            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
-            {
-              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
-              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
-              for (int j = 0; j <= i; j++)
-              {
-                printToken (s_cu_to_insertion_point_1.get (j), ostr);
-              }
-              ostr.println ();
-              ostr.println ();
-              break;
-            }
-          }
-        }
-
-        final Map <String, Object> options = _getDefaultOptions ();
-
-        final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (),
-                                                                       options);
-
-        generator.generate (ostr);
-      }
-    }
-    catch (final IOException e)
-    {
-      System.err.println ("Failed to create CharStream " + e);
-      JavaCCErrors.semantic_error ("Could not open file CharStream.java for writing.");
       throw new UncheckedIOException (e);
     }
   }
@@ -265,34 +261,14 @@ public class FilesJava
                                                        parseExceptionVersion,
                                                        new String [] { Options.USEROPTION__KEEP_LINE_COLUMN }))
     {
-      if (!outputFile.needToWrite)
-      {
+      if (!outputFile.needToWrite ())
         return;
-      }
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
-        {
-          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
-          {
-            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
-            {
-              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
-              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
-              for (int j = 0; j <= i; j++)
-              {
-                printToken (s_cu_to_insertion_point_1.get (j), ostr);
-              }
-              ostr.println ();
-              ostr.println ();
-              break;
-            }
-          }
-        }
+        _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-
         final OutputFileGenerator generator = new OutputFileGenerator (templatePath, options);
 
         generator.generate (ostr);
@@ -313,34 +289,14 @@ public class FilesJava
                                                        parseExceptionVersion,
                                                        new String [] { Options.USEROPTION__KEEP_LINE_COLUMN }))
     {
-      if (!outputFile.needToWrite)
-      {
+      if (!outputFile.needToWrite ())
         return;
-      }
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
-        {
-          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
-          {
-            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
-            {
-              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
-              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
-              for (int j = 0; j <= i; j++)
-              {
-                printToken (s_cu_to_insertion_point_1.get (j), ostr);
-              }
-              ostr.println ();
-              ostr.println ();
-              break;
-            }
-          }
-        }
+        _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getParseExceptionTemplateResourceUrl (),
                                                                        options);
 
@@ -362,34 +318,14 @@ public class FilesJava
 
     try (final OutputFile outputFile = new OutputFile (file, tokenMgrErrorVersion, new String [0]))
     {
-      if (!outputFile.needToWrite)
-      {
+      if (!outputFile.needToWrite ())
         return;
-      }
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
-        {
-          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
-          {
-            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
-            {
-              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
-              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
-              for (int j = 0; j <= i; j++)
-              {
-                printToken (s_cu_to_insertion_point_1.get (j), ostr);
-              }
-              ostr.println ();
-              ostr.println ();
-              break;
-            }
-          }
-        }
+        _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenMgrErrorTemplateResourceUrl (),
                                                                        options);
 
@@ -413,34 +349,14 @@ public class FilesJava
                                                                        Options.USEROPTION__KEEP_LINE_COLUMN,
                                                                        Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
-      if (!outputFile.needToWrite)
-      {
+      if (!outputFile.needToWrite ())
         return;
-      }
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
-        {
-          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
-          {
-            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
-            {
-              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
-              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
-              for (int j = 0; j <= i; j++)
-              {
-                printToken (s_cu_to_insertion_point_1.get (j), ostr);
-              }
-              ostr.println ();
-              ostr.println ();
-              break;
-            }
-          }
-        }
+        _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenTemplateResourceUrl (),
                                                                        options);
 
@@ -462,34 +378,14 @@ public class FilesJava
                                                        tokenManagerVersion,
                                                        new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
-      if (!outputFile.needToWrite)
-      {
+      if (!outputFile.needToWrite ())
         return;
-      }
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())
       {
-        if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
-        {
-          for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
-          {
-            if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
-            {
-              s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
-              s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
-              for (int j = 0; j <= i; j++)
-              {
-                printToken (s_cu_to_insertion_point_1.get (j), ostr);
-              }
-              ostr.println ();
-              ostr.println ();
-              break;
-            }
-          }
-        }
+        _writePackageName (ostr);
 
         final Map <String, Object> options = Options.getAllOptions ();
-
         final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenManagerTemplateResourceUrl (),
                                                                        options);
         generator.generate (ostr);

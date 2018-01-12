@@ -84,7 +84,7 @@ public class FilesCpp
     final File file = new File (Options.getOutputDirectory (), name);
     try (final OutputFile outputFile = new OutputFile (file, version, parameters))
     {
-      if (!outputFile.needToWrite)
+      if (!outputFile.needToWrite ())
         return;
 
       try (final PrintWriter ostr = outputFile.getPrintWriter ())

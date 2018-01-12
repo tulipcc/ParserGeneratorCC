@@ -80,13 +80,13 @@ public class OutputFile implements AutoCloseable
   private static final String MD5_LINE_PART_2 = " (do not edit this line) */";
   private static final String MD5_LINE_PART_2q = " \\(do not edit this line\\) \\*/";
 
-  TrapClosePrintWriter m_pw;
-  DigestOutputStream dos;
-  String m_toolName = JavaCCGlobals.s_toolName;
-  final File m_file;
-  final String m_compatibleVersion;
-  final String [] m_options;
-  public boolean needToWrite = true;
+  private TrapClosePrintWriter m_pw;
+  private DigestOutputStream m_dos;
+  private String m_toolName = JavaCCGlobals.s_toolName;
+  private final File m_file;
+  private final String m_compatibleVersion;
+  private final String [] m_options;
+  private boolean m_needToWrite = true;
 
   /**
    * Create a new OutputFile.
@@ -145,7 +145,7 @@ public class OutputFile implements AutoCloseable
           if (existingMD5 == null || !existingMD5.equals (calculatedDigest))
           {
             // No checksum in file, or checksum differs.
-            needToWrite = false;
+            m_needToWrite = false;
 
             if (compatibleVersion != null)
             {
@@ -163,7 +163,7 @@ public class OutputFile implements AutoCloseable
             // The file has not been altered since JavaCC created it.
             // Rebuild it.
             System.out.println ("File \"" + file.getName () + "\" is being rebuilt.");
-            needToWrite = true;
+            m_needToWrite = true;
           }
         }
       }
@@ -172,7 +172,7 @@ public class OutputFile implements AutoCloseable
     {
       // File does not exist
       System.out.println ("File \"" + file.getName () + "\" does not exist.  Will create one.");
-      needToWrite = true;
+      m_needToWrite = true;
     }
   }
 
@@ -282,8 +282,8 @@ public class OutputFile implements AutoCloseable
       {
         throw new IOException ("No MD5 implementation", e);
       }
-      dos = new DigestOutputStream (new NonBlockingBufferedOutputStream (new FileOutputStream (m_file)), digest);
-      m_pw = new TrapClosePrintWriter (dos);
+      m_dos = new DigestOutputStream (new NonBlockingBufferedOutputStream (new FileOutputStream (m_file)), digest);
+      m_pw = new TrapClosePrintWriter (m_dos);
 
       // Write the headers....
       final String version = m_compatibleVersion == null ? PGVersion.s_versionNumber : m_compatibleVersion;
@@ -316,7 +316,7 @@ public class OutputFile implements AutoCloseable
   private String _getMD5sum ()
   {
     m_pw.flush ();
-    final byte [] digest = dos.getMessageDigest ().digest ();
+    final byte [] digest = m_dos.getMessageDigest ().digest ();
     return toHexString (digest);
   }
 
@@ -386,5 +386,10 @@ public class OutputFile implements AutoCloseable
   public String getPath ()
   {
     return m_file.getAbsolutePath ();
+  }
+
+  public boolean needToWrite ()
+  {
+    return m_needToWrite;
   }
 }

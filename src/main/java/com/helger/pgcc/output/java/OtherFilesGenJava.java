@@ -140,9 +140,15 @@ public class OtherFilesGenJava
           FilesJava.gen_CharStream (templateLoc);
 
         if (Options.isJavaUnicodeEscape ())
+        {
+          FilesJava.gen_AbstractCharStream (templateLoc);
           FilesJava.gen_JavaCharStream (templateLoc);
+        }
         else
+        {
+          FilesJava.gen_AbstractCharStream (templateLoc);
           FilesJava.gen_SimpleCharStream (templateLoc);
+        }
       }
 
     final Writer w = FileHelper.getBufferedWriter (new File (Options.getOutputDirectory (),

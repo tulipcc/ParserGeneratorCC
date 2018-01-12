@@ -35,21 +35,6 @@ package com.helger.pgcc.output.java;
 
 public class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
 {
-  public String getCharStreamTemplateResourceUrl ()
-  {
-    return "/templates/stream/java/CharStream.template";
-  }
-
-  public String getJavaCharStreamTemplateResourceUrl ()
-  {
-    return "/templates/stream/java/JavaCharStream.template";
-  }
-
-  public String getSimpleCharStreamTemplateResourceUrl ()
-  {
-    return "/templates/stream/java/SimpleCharStream.template";
-  }
-
   public String getTokenTemplateResourceUrl ()
   {
     return "/templates/Token.template";
@@ -65,9 +50,28 @@ public class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLo
     return "/templates/TokenMgrError.template";
   }
 
+  public String getCharStreamTemplateResourceUrl ()
+  {
+    return "/templates/stream/java/CharStream.template";
+  }
+
+  public String getAbstractCharStreamTemplateResourceUrl ()
+  {
+    return "/templates/stream/java/AbstractCharStream.template";
+  }
+
+  public String getJavaCharStreamTemplateResourceUrl ()
+  {
+    return "/templates/stream/java/JavaCharStream.template";
+  }
+
+  public String getSimpleCharStreamTemplateResourceUrl ()
+  {
+    return "/templates/stream/java/SimpleCharStream.template";
+  }
+
   public String getParseExceptionTemplateResourceUrl ()
   {
     return "/templates/ParseException.template";
   }
-
 }

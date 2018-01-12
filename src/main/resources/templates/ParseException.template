@@ -109,17 +109,17 @@ public class ParseException extends Exception {
       }
       sb.append(" " + tokenImage[tok.kind]);
       sb.append(" \"");
-	  sb.append(escapedTokenText);
+	    sb.append(escapedTokenText);
       sb.append("\"");
       tok = tok.next;
     }
 #if KEEP_LINE_COLUMN
-    retval.append ("\" at line ")
-          .append (currentToken.next.beginLine)
-          .append (", column ")
-          .append (currentToken.next.beginColumn);
+    sb.append ("\" at line ")
+      .append (currentToken.next.beginLine)
+      .append (", column ")
+      .append (currentToken.next.beginColumn);
 #fi
-	sb.append(".").append(EOL);
+	  sb.append(".").append(EOL);
     
     if (expectedTokenSequences.length == 0) {
         // Nothing to add here
@@ -142,45 +142,45 @@ public class ParseException extends Exception {
    * string literal.
    */
   static String add_escapes(String str) {
-      StringBuilder retval = new StringBuilder();
-      for (int i = 0; i < str.length(); i++) {
-        final char ch = str.charAt(i);
-        switch (ch)
-        {
-           case '\b':
-              retval.append("\\b");
-              continue;
-           case '\t':
-              retval.append("\\t");
-              continue;
-           case '\n':
-              retval.append("\\n");
-              continue;
-           case '\f':
-              retval.append("\\f");
-              continue;
-           case '\r':
-              retval.append("\\r");
-              continue;
-           case '\"':
-              retval.append("\\\"");
-              continue;
-           case '\'':
-              retval.append("\\\'");
-              continue;
-           case '\\':
-              retval.append("\\\\");
-              continue;
-           default:
-              if (ch < 0x20 || ch > 0x7e) {
-                 String s = "0000" + Integer.toString(ch, 16);
-                 retval.append("\\u" + s.substring(s.length() - 4, s.length()));
-              } else {
-                 retval.append(ch);
-              }
-              continue;
-        }
+    final  StringBuilder retval = new StringBuilder();
+    for (int i = 0; i < str.length(); i++) {
+      final char ch = str.charAt(i);
+      switch (ch)
+      {
+        case '\b':
+          retval.append("\\b");
+          continue;
+        case '\t':
+          retval.append("\\t");
+          continue;
+        case '\n':
+          retval.append("\\n");
+          continue;
+        case '\f':
+          retval.append("\\f");
+          continue;
+        case '\r':
+          retval.append("\\r");
+          continue;
+        case '\"':
+          retval.append("\\\"");
+          continue;
+        case '\'':
+          retval.append("\\\'");
+          continue;
+        case '\\':
+          retval.append("\\\\");
+          continue;
+        default:
+          if (ch < 0x20 || ch > 0x7e) {
+            String s = "0000" + Integer.toString(ch, 16);
+            retval.append("\\u").append (s.substring(s.length() - 4, s.length()));
+          } else {
+            retval.append(ch);
+          }
+          continue;
       }
-      return retval.toString();
-   }
+    }
+    return retval.toString();
+  }
 }
