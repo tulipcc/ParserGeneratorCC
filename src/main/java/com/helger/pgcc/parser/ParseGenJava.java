@@ -101,9 +101,6 @@ public class ParseGenJava extends CodeGenerator
 
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
-    final boolean bExceptionWithCause = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_14);
-    final boolean bGenerateAnnotations = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
-    final boolean bGenerateGenerics = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15);
     final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
 
     final List <String> tn = new ArrayList <> (s_toolNames);
@@ -375,9 +372,7 @@ public class ParseGenJava extends CodeGenerator
                                  (Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream") +
                                  "(stream, encoding, 1, 1); }" +
                                  " catch(final java.io.UnsupportedEncodingException e) {" +
-                                 " throw new IllegalStateException(" +
-                                 (bExceptionWithCause ? "e" : "e.getMessage()") +
-                                 "); }";
+                                 " throw new IllegalStateException(e); }";
           genCodeLine (sInitIS);
           if (Options.isTokenManagerUsesParser () && !Options.isStatic ())
           {
@@ -427,9 +422,7 @@ public class ParseGenJava extends CodeGenerator
                        "public void ReInit(final java.io.InputStream stream, final String encoding) {");
           genCodeLine ("	 try { jj_input_stream.ReInit(stream, encoding, 1, 1); } " +
                        "catch(final java.io.UnsupportedEncodingException e) { " +
-                       "throw new IllegalStateException(" +
-                       (bExceptionWithCause ? "e" : "e.getMessage()") +
-                       "); }");
+                       "throw new IllegalStateException(e); }");
 
           if (Options.isTokenManagerRequiresParserAccess ())
           {
@@ -780,8 +773,7 @@ public class ParseGenJava extends CodeGenerator
     genCodeLine ();
     if (s_jj2index != 0)
     {
-      if (bGenerateAnnotations)
-        genCodeLine ("  @SuppressWarnings(\"serial\")");
+      genCodeLine ("  @SuppressWarnings(\"serial\")");
       genCodeLine ("  private static final class LookaheadSuccess extends IllegalStateException { }");
       genCodeLine ("  " + javaStaticOpt () + "private final LookaheadSuccess jj_ls = new LookaheadSuccess();");
       genCodeLine ("  " +
@@ -878,18 +870,11 @@ public class ParseGenJava extends CodeGenerator
     }
     if (Options.isErrorReporting ())
     {
-      if (bGenerateGenerics)
-      {
-        genCodeLine ("  " +
-                     javaStaticOpt () +
-                     "private java.util.List<int[]> jj_expentries = new java.util.ArrayList<" +
-                     (bEmptyTypeVar ? "" : "int[]") +
-                     ">();");
-      }
-      else
-      {
-        genCodeLine ("  " + javaStaticOpt () + "private java.util.List jj_expentries = new java.util.ArrayList();");
-      }
+      genCodeLine ("  " +
+                   javaStaticOpt () +
+                   "private java.util.List<int[]> jj_expentries = new java.util.ArrayList<" +
+                   (bEmptyTypeVar ? "" : "int[]") +
+                   ">();");
       genCodeLine ("  " + javaStaticOpt () + "private int[] jj_expentry;");
       genCodeLine ("  " + javaStaticOpt () + "private int jj_kind = -1;");
       if (s_jj2index != 0)
@@ -911,16 +896,7 @@ public class ParseGenJava extends CodeGenerator
         genCodeLine ("      jj_expentry[i] = jj_lasttokens[i];");
         genCodeLine ("    }");
         genCodeLine ();
-        if (bGenerateGenerics)
-        {
-          genCodeLine ("    for (final int[] oldentry : jj_expentries) {");
-        }
-        else
-        {
-          genCodeLine ("    for (final java.util.Iterator it = jj_expentries.iterator(); it.hasNext();) {");
-          genCodeLine ("      int[] oldentry = (int[])(it.next());");
-        }
-
+        genCodeLine ("    for (final int[] oldentry : jj_expentries) {");
         genCodeLine ("      if (oldentry.length == jj_expentry.length) {");
         genCodeLine ("        boolean isMatched = true;");
         genCodeLine ("        for (int i = 0; i < jj_expentry.length; i++) {");
@@ -988,14 +964,7 @@ public class ParseGenJava extends CodeGenerator
       }
       genCodeLine ("    int[][] exptokseq = new int[jj_expentries.size()][];");
       genCodeLine ("    for (int i = 0; i < jj_expentries.size(); i++) {");
-      if (bGenerateGenerics)
-      {
-        genCodeLine ("      exptokseq[i] = jj_expentries.get(i);");
-      }
-      else
-      {
-        genCodeLine ("      exptokseq[i] = (int[])jj_expentries.get(i);");
-      }
+      genCodeLine ("      exptokseq[i] = jj_expentries.get(i);");
       genCodeLine ("    }");
 
       if (isJavaModernMode)
@@ -1074,11 +1043,11 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("      }");
       genCodeLine ("      System.out.println(\"Call:	\" + s);");
       genCodeLine ("    }");
-      genCodeLine ("    trace_indent = trace_indent + 2;");
+      genCodeLine ("    trace_indent += 2;");
       genCodeLine ("  }");
       genCodeLine ();
       genCodeLine ("  " + javaStaticOpt () + "protected void trace_return(String s) {");
-      genCodeLine ("    trace_indent = trace_indent - 2;");
+      genCodeLine ("    trace_indent -= 2;");
       genCodeLine ("    if (trace_enabled) {");
       genCodeLine ("      for (int i = 0; i < trace_indent; i++) { System.out.print(\" \"); }");
       genCodeLine ("      System.out.println(\"Return: \" + s);");

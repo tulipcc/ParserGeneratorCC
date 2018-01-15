@@ -74,7 +74,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.helger.commons.string.StringHelper;
-import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.jjtree.ASTNodeDescriptor;
 import com.helger.pgcc.jjtree.JJTreeGlobals;
@@ -422,8 +421,6 @@ public final class NodeFilesJava
       final Map <String, Object> options = Options.getAllOptions ();
       options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
-      options.put ("AT_LEAST_JDK15",
-                   Boolean.valueOf (Options.getJdkVersion ().isNewerOrEqualsThan (EJDKVersion.JDK_15)));
 
       final OutputFileGenerator generator = new OutputFileGenerator ("/templates/jjtree/java/SimpleNode.template",
                                                                      options);

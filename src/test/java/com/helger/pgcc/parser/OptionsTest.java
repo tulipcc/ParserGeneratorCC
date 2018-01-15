@@ -100,12 +100,14 @@ public final class OptionsTest
   @Test
   public void setJdkVersion ()
   {
+    assertEquals (EJDKVersion.DEFAULT, Options.getJdkVersion ());
     assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
 
     beforeEach ();
 
+    // Verison too old
     Options.setCmdLineOption ("JDK_VERSION=1.3");
-    assertEquals (EJDKVersion.JDK_13, Options.getJdkVersion ());
+    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
 
     beforeEach ();
 

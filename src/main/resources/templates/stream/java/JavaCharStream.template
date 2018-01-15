@@ -9,23 +9,17 @@ class JavaCharStream extends AbstractCharStream
 {
   ${PREFIX}protected java.io.Reader inputStream;
 
-#if AT_LEAST_JDK5
   @Override
-#fi
   protected int streamRead(final char[] buffer, final int offset, final int len) throws java.io.IOException {
     return inputStream.read (buffer, offset, len); 
   }
   
-#if AT_LEAST_JDK5
   @Override
-#fi
   protected void streamClose() throws java.io.IOException {
     inputStream.close (); 
   }
 
-#if AT_LEAST_JDK5
   @Override
-#fi
   ${PREFIX}protected void fillBuff() throws java.io.IOException
   {
     if (maxNextCharInd == 4096)

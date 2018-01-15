@@ -48,6 +48,8 @@ public enum EJDKVersion
   JDK_18 (8),
   JDK_19 (9);
 
+  public static final EJDKVersion DEFAULT = JDK_15;
+
   private int m_nMajor;
 
   private EJDKVersion (final int nMajor)

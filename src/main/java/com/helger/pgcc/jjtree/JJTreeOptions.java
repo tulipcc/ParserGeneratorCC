@@ -115,7 +115,7 @@ public class JJTreeOptions extends Options
 
     // TODO :: 2013/07/23 -- This appears to be a duplicate from the parent
     // class
-    Options.s_optionValues.put (Options.USEROPTION__JDK_VERSION, EJDKVersion.JDK_15);
+    Options.s_optionValues.put (Options.USEROPTION__JDK_VERSION, EJDKVersion.DEFAULT);
 
     // Also appears to be a duplicate
     Options.s_optionValues.put (Options.USEROPTION__CPP_NAMESPACE, "");

@@ -89,19 +89,22 @@ implements CharStream
   ${PREFIX}protected final boolean trackLineColumn = false;
 #fi
 
-  ${PREFIX}public void setTabSize(int i) { 
+  ${PREFIX}public void setTabSize(int i)
+  { 
     tabSize = i;
   }
-  ${PREFIX}public int getTabSize() { 
+  
+  ${PREFIX}public int getTabSize()
+  { 
     return tabSize;
   }
 
-  ${PREFIX}protected void expandBuff(boolean wrapAround)
+  ${PREFIX}protected void expandBuff(final boolean wrapAround)
   {
-    char[] newbuffer = new char[bufsize + 2048];
+    final char[] newbuffer = new char[bufsize + 2048];
 #if KEEP_LINE_COLUMN
-    int newbufline[] = new int[bufsize + 2048];
-    int newbufcolumn[] = new int[bufsize + 2048];
+    final int newbufline[] = new int[bufsize + 2048];
+    final int newbufcolumn[] = new int[bufsize + 2048];
 #fi
 
     try
@@ -144,11 +147,7 @@ implements CharStream
     }
     catch (final Exception ex)
     {
-#if AT_LEAST_JDK4
       throw new IllegalStateException(ex);
-#else
-      throw new IllegalStateException(ex.getMessage());
-#fi
     }
 
     bufsize += 2048;
@@ -156,7 +155,7 @@ implements CharStream
     tokenBegin = 0;
   }
 
-  protected abstract int streamRead(char[] buffer, int offset, int len) throws java.io.IOException;
+  protected abstract int streamRead(char[] buf, int offset, int len) throws java.io.IOException;
   
   protected abstract void streamClose() throws java.io.IOException;
 

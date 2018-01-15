@@ -95,8 +95,6 @@ public class FilesJava
     final EJDKVersion eJDKVersion = Options.getJdkVersion ();
     final Map <String, Object> ret = Options.getAllOptions ();
     ret.put ("PREFIX", Options.isStatic () ? "static " : "");
-    ret.put ("AT_LEAST_JDK4", Boolean.valueOf (eJDKVersion.isNewerOrEqualsThan (EJDKVersion.JDK_14)));
-    ret.put ("AT_LEAST_JDK5", Boolean.valueOf (eJDKVersion.isNewerOrEqualsThan (EJDKVersion.JDK_15)));
     ret.put ("AT_LEAST_JDK7", Boolean.valueOf (eJDKVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17)));
     ret.put ("BEFORE_JDK7", Boolean.valueOf (eJDKVersion.isOlderThan (EJDKVersion.JDK_17)));
     return ret;

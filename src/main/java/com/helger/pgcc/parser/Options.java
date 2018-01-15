@@ -220,7 +220,7 @@ public class Options
 
     temp.add (new OptionInfo (USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC, EOptionType.BOOLEAN, Boolean.TRUE));
     temp.add (new OptionInfo (USEROPTION__OUTPUT_DIRECTORY, EOptionType.STRING, "."));
-    temp.add (new OptionInfo (USEROPTION__JDK_VERSION, EOptionType.OTHER, EJDKVersion.JDK_15));
+    temp.add (new OptionInfo (USEROPTION__JDK_VERSION, EOptionType.OTHER, EJDKVersion.DEFAULT));
 
     temp.add (new OptionInfo (USEROPTION__TOKEN_EXTENDS, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__TOKEN_FACTORY, EOptionType.STRING, ""));
