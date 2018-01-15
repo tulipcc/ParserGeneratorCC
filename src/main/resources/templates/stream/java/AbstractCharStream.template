@@ -11,6 +11,8 @@ abstract class AbstractCharStream
 implements CharStream
 #fi
 {
+  public static final int DEFAULT_BUF_SIZE = 4096;
+
   /** Whether parser is static. */
   public static final boolean staticFlag = ${STATIC};
 
@@ -62,10 +64,10 @@ implements CharStream
   }
 
   /** Position in buffer. */
-  ${PREFIX}public int bufpos = -1;
-  ${PREFIX}int bufsize;
-  ${PREFIX}int available;
-  ${PREFIX}int tokenBegin;
+  ${PREFIX}protected int bufpos = -1;
+  ${PREFIX}protected int bufsize;
+  ${PREFIX}protected int available;
+  ${PREFIX}protected int tokenBegin;
 #if KEEP_LINE_COLUMN
   ${PREFIX}protected int bufline[];
   ${PREFIX}protected int bufcolumn[];
@@ -84,12 +86,12 @@ implements CharStream
   ${PREFIX}protected char[] nextCharBuf;
   ${PREFIX}protected int nextCharInd = -1;
 #if KEEP_LINE_COLUMN
-  ${PREFIX}protected boolean trackLineColumn = true;
+  ${PREFIX}private boolean trackLineColumn = true;
 #else
-  ${PREFIX}protected final boolean trackLineColumn = false;
+  ${PREFIX}private final boolean trackLineColumn = false;
 #fi
 
-  ${PREFIX}public void setTabSize(int i)
+  ${PREFIX}public void setTabSize(final int i)
   { 
     tabSize = i;
   }
