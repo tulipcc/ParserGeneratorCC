@@ -12,6 +12,7 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
 
 * v1.1.0 - work in progress
   * Focus is on improving the quality and consistency of the template files - this may cause interoperability problem because names change etc.
+  * This version assumes that the created code uses at least Java 1.5 - JDK versions below 1.5 are no longer supported!
 * v1.0.2 - 2018-01-08
   * Fixed an error in jump-patching that was originally only considered if legacy exception handling was enabled - now ParserGeneratorCC can create itself using itself!
 * v1.0.1 - 2018-01-05

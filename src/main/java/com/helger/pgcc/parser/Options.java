@@ -405,7 +405,11 @@ public class Options
     {
       final EJDKVersion ret = EJDKVersion.getFromDoubleOrNull (StringParser.parseDouble (value, 0));
       if (ret != null)
-        return ret;
+      {
+        // Only values >= JDK 1.5 are accepted per PGCC 1.1.0
+        if (ret.isNewerOrEqualsThan (EJDKVersion.JDK_15))
+          return ret;
+      }
 
       // Else: bad option
     }
