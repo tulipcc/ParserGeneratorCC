@@ -46,6 +46,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
@@ -57,11 +58,6 @@ import com.helger.pgcc.output.UnsupportedOutputLanguageException;
  */
 public final class JavaCCGlobals
 {
-  /**
-   * String that identifies the JavaCC generated files.
-   */
-  public static final String s_toolName = "ParserGeneratorCC";
-
   /**
    * The name of the grammar file being processed.
    */
@@ -90,7 +86,7 @@ public final class JavaCCGlobals
    */
   public static void bannerLine (final String fullName, final String ver)
   {
-    System.out.print ("ParserGenerator Version " + PGVersion.s_versionNumber + " (" + fullName);
+    System.out.print ("ParserGenerator Version " + PGVersion.VERSION_NUMBER + " (" + fullName);
     if (StringHelper.hasText (ver))
       System.out.print (" Version " + ver);
     System.out.println (")");
@@ -225,9 +221,7 @@ public final class JavaCCGlobals
    */
   public static String getIdString (final String toolName, final String fileName)
   {
-    final List <String> toolNames = new ArrayList <> ();
-    toolNames.add (toolName);
-    return getIdString (toolNames, fileName);
+    return getIdString (new CommonsArrayList <> (toolName), fileName);
   }
 
   /**

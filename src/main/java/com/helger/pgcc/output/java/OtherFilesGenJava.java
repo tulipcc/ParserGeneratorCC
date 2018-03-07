@@ -72,7 +72,6 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ordered_named_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 import static com.helger.pgcc.parser.JavaCCParserConstants.PACKAGE;
 import static com.helger.pgcc.parser.JavaCCParserConstants.SEMICOLON;
@@ -85,6 +84,7 @@ import java.util.List;
 
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.CPG;
 import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.ExpRStringLiteral;
 import com.helger.pgcc.parser.JavaCCErrors;
@@ -163,7 +163,7 @@ public class OtherFilesGenJava
     try (final PrintWriter ostr = new PrintWriter (w))
     {
       final List <String> tn = new ArrayList <> (s_toolNames);
-      tn.add (s_toolName);
+      tn.add (CPG.APP_NAME);
 
       ostr.println ("/* " + getIdString (tn, s_cu_name + CONSTANTS_FILENAME_SUFFIX) + " */");
 

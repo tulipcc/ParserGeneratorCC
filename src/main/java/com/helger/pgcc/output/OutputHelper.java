@@ -35,13 +35,13 @@ package com.helger.pgcc.output;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.replaceBackslash;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
+import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.parser.Options;
 
@@ -63,7 +63,7 @@ public class OutputHelper
    */
   public static double getVersionDashStar (final String fileName)
   {
-    final String commentHeader = "/* " + getIdString (s_toolName, fileName) + " Version ";
+    final String commentHeader = "/* " + getIdString (CPG.APP_NAME, fileName) + " Version ";
     final File file = new File (Options.getOutputDirectory (), replaceBackslash (fileName));
 
     if (!file.exists ())
@@ -71,7 +71,7 @@ public class OutputHelper
       // Has not yet been created, so it must be up to date.
       try
       {
-        final String majorVersion = PGVersion.s_versionNumber.replaceAll ("[^0-9.]+.*", "");
+        final String majorVersion = PGVersion.VERSION_NUMBER.replaceAll ("[^0-9.]+.*", "");
         return Double.parseDouble (majorVersion);
       }
       catch (final NumberFormatException e)

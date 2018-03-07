@@ -251,7 +251,3 @@ public class DefaultJJTreeVisitor implements JJTreeParserVisitor
     return defaultVisit (node, data);
   }
 }
-/*
- * JavaCC - OriginalChecksum=3b7689ed0de9c57e70ae4a27c1480635 (do not edit this
- * line)
- */

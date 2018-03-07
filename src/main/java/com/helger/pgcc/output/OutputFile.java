@@ -50,6 +50,7 @@ import javax.annotation.WillCloseWhenClosed;
 import com.helger.commons.io.stream.NonBlockingBufferedOutputStream;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.commons.io.stream.NullOutputStream;
+import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCGlobals;
@@ -75,18 +76,19 @@ import com.helger.security.messagedigest.EMessageDigestAlgorithm;
  */
 public class OutputFile implements AutoCloseable
 {
-  private static final String MD5_LINE_PART_1 = "/* JavaCC - OriginalChecksum=";
-  private static final String MD5_LINE_PART_1q = "/\\* JavaCC - OriginalChecksum=";
+  private static final String OPTIONS_PREFIX = CPG.APP_NAME + "Options";
+  private static final String MD5_LINE_PART_1 = "/* " + CPG.APP_NAME + " - OriginalChecksum=";
+  private static final String MD5_LINE_PART_1q = "/\\* " + CPG.APP_NAME + " - OriginalChecksum=";
   private static final String MD5_LINE_PART_2 = " (do not edit this line) */";
   private static final String MD5_LINE_PART_2q = " \\(do not edit this line\\) \\*/";
 
   private TrapClosePrintWriter m_pw;
   private DigestOutputStream m_dos;
-  private String m_toolName = JavaCCGlobals.s_toolName;
-  private final File m_file;
-  private final String m_compatibleVersion;
-  private final String [] m_options;
-  private boolean m_needToWrite = true;
+  private String m_sToolName = CPG.APP_NAME;
+  private final File m_aFile;
+  private final String m_sCompatibleVersion;
+  private final String [] m_aOptions;
+  private boolean m_bNeedToWrite = true;
 
   /**
    * Create a new OutputFile.
@@ -102,9 +104,9 @@ public class OutputFile implements AutoCloseable
    */
   public OutputFile (final File file, final String compatibleVersion, final String [] options) throws IOException
   {
-    this.m_file = file;
-    this.m_compatibleVersion = compatibleVersion;
-    this.m_options = options;
+    m_aFile = file;
+    m_sCompatibleVersion = compatibleVersion;
+    m_aOptions = options;
 
     if (file.exists ())
     {
@@ -145,7 +147,7 @@ public class OutputFile implements AutoCloseable
           if (existingMD5 == null || !existingMD5.equals (calculatedDigest))
           {
             // No checksum in file, or checksum differs.
-            m_needToWrite = false;
+            m_bNeedToWrite = false;
 
             if (compatibleVersion != null)
             {
@@ -163,7 +165,7 @@ public class OutputFile implements AutoCloseable
             // The file has not been altered since JavaCC created it.
             // Rebuild it.
             System.out.println ("File \"" + file.getName () + "\" is being rebuilt.");
-            m_needToWrite = true;
+            m_bNeedToWrite = true;
           }
         }
       }
@@ -172,7 +174,7 @@ public class OutputFile implements AutoCloseable
     {
       // File does not exist
       System.out.println ("File \"" + file.getName () + "\" does not exist.  Will create one.");
-      m_needToWrite = true;
+      m_bNeedToWrite = true;
     }
   }
 
@@ -190,7 +192,7 @@ public class OutputFile implements AutoCloseable
    */
   private void checkVersion (final File file, final String versionId)
   {
-    final String firstLine = "/* " + JavaCCGlobals.getIdString (m_toolName, file.getName ()) + " Version ";
+    final String firstLine = "/* " + JavaCCGlobals.getIdString (m_sToolName, file.getName ()) + " Version ";
 
     try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
     {
@@ -236,7 +238,7 @@ public class OutputFile implements AutoCloseable
       String line;
       while ((line = reader.readLine ()) != null)
       {
-        if (line.startsWith ("/* JavaCCOptions:"))
+        if (line.startsWith ("/* " + OPTIONS_PREFIX + ":"))
         {
           final String currentOptions = Options.getOptionsString (options);
           if (line.indexOf (currentOptions) == -1)
@@ -282,15 +284,15 @@ public class OutputFile implements AutoCloseable
       {
         throw new IOException ("No MD5 implementation", e);
       }
-      m_dos = new DigestOutputStream (new NonBlockingBufferedOutputStream (new FileOutputStream (m_file)), digest);
+      m_dos = new DigestOutputStream (new NonBlockingBufferedOutputStream (new FileOutputStream (m_aFile)), digest);
       m_pw = new TrapClosePrintWriter (m_dos);
 
       // Write the headers....
-      final String version = m_compatibleVersion == null ? PGVersion.s_versionNumber : m_compatibleVersion;
-      m_pw.println ("/* " + JavaCCGlobals.getIdString (m_toolName, m_file.getName ()) + " Version " + version + " */");
-      if (m_options != null)
+      final String version = m_sCompatibleVersion == null ? PGVersion.VERSION_NUMBER : m_sCompatibleVersion;
+      m_pw.println ("/* " + JavaCCGlobals.getIdString (m_sToolName, m_aFile.getName ()) + " Version " + version + " */");
+      if (m_aOptions != null)
       {
-        m_pw.println ("/* JavaCCOptions:" + Options.getOptionsString (m_options) + " */");
+        m_pw.println ("/* " + OPTIONS_PREFIX + ":" + Options.getOptionsString (m_aOptions) + " */");
       }
     }
 
@@ -371,7 +373,7 @@ public class OutputFile implements AutoCloseable
    */
   public String getToolName ()
   {
-    return m_toolName;
+    return m_sToolName;
   }
 
   /**
@@ -380,16 +382,16 @@ public class OutputFile implements AutoCloseable
    */
   public void setToolName (final String toolName)
   {
-    this.m_toolName = toolName;
+    m_sToolName = toolName;
   }
 
   public String getPath ()
   {
-    return m_file.getAbsolutePath ();
+    return m_aFile.getAbsolutePath ();
   }
 
   public boolean needToWrite ()
   {
-    return m_needToWrite;
+    return m_bNeedToWrite;
   }
 }

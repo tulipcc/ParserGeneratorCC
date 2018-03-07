@@ -71,7 +71,6 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_nextStateForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
@@ -82,6 +81,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.CPG;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.OutputHelper;
 
@@ -93,7 +93,7 @@ public class LexGenCpp extends LexGenJava
   private void _printClassHead ()
   {
     final List <String> tn = new ArrayList <> (s_toolNames);
-    tn.add (s_toolName);
+    tn.add (CPG.APP_NAME);
 
     switchToStaticsFile ();
 

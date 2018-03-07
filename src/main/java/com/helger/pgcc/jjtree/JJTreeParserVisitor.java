@@ -120,7 +120,3 @@ public interface JJTreeParserVisitor
 
   Object visit (ASTPrimaryExpression node, Object data);
 }
-/*
- * JavaCC - OriginalChecksum=236a0da55ea23f741ece2c8012f6d143 (do not edit this
- * line)
- */

@@ -82,7 +82,7 @@ public final class PGVersion
   /** e.g. 1.0 */
   public static final String MAJOR_DOT_MINOR;
   /** e.g. 1.0.0-SNAPSHOT */
-  public static final String s_versionNumber;
+  public static final String VERSION_NUMBER;
 
   static
   {
@@ -93,7 +93,7 @@ public final class PGVersion
     if (sProjectVersion == null)
     {
       sProjectVersion = "undefined";
-      throw new InitializationException ("Failed to load PGCC version number");
+      throw new InitializationException ("Failed to load " + CPG.APP_NAME + " version number");
     }
 
     final String [] aParts = StringHelper.getExplodedArray ('.', sProjectVersion, 3);
@@ -102,7 +102,7 @@ public final class PGVersion
     MINOR_VERSION = aParts.length > 1 ? aParts[1] : "";
     PATCH_VERSION = aParts.length > 2 ? aParts[2] : "";
     MAJOR_DOT_MINOR = MAJOR_VERSION + "." + MINOR_VERSION;
-    s_versionNumber = MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION;
+    VERSION_NUMBER = MAJOR_VERSION + "." + MINOR_VERSION + "." + PATCH_VERSION;
   }
 
   private PGVersion ()

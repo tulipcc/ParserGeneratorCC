@@ -75,13 +75,13 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_lookaheadNeeded;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskVals;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_toolName;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.helger.pgcc.CPG;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.output.EOutputLanguage;
 
@@ -103,7 +103,7 @@ public class ParseGenJava extends CodeGenerator
     final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
 
     final List <String> tn = new ArrayList <> (s_toolNames);
-    tn.add (s_toolName);
+    tn.add (CPG.APP_NAME);
 
     // This is the first line generated -- the the comment line at the top of
     // the generated parser
