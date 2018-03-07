@@ -79,6 +79,7 @@ import java.util.TreeSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsImmutableObject;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.string.StringHelper;
@@ -162,7 +163,7 @@ public class Options
   public static final String USEROPTION__CPP_TOKEN_INCLUDE = "TOKEN_INCLUDE";
   public static final String USEROPTION__CPP_PARSER_INCLUDE = "PARSER_INCLUDE";
 
-  public static EOutputLanguage s_language = EOutputLanguage.JAVA;
+  private static EOutputLanguage s_language = EOutputLanguage.JAVA;
 
   /**
    * 2013/07/22 -- GWT Compliant Output -- no external dependencies on GWT, but
@@ -354,6 +355,8 @@ public class Options
     return sb.toString ();
   }
 
+  @Nonnull
+  @Nonempty
   public static String getTokenMgrErrorClass ()
   {
     switch (s_language)
@@ -974,12 +977,6 @@ public class Options
   public static EOutputLanguage getOutputLanguage ()
   {
     return s_language;
-  }
-
-  @Deprecated
-  public static boolean isOutputLanguageJava ()
-  {
-    return s_language.isJava ();
   }
 
   public static String getJavaTemplateType ()

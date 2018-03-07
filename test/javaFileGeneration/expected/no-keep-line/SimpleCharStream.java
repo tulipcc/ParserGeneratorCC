@@ -165,26 +165,6 @@ public class SimpleCharStream
     return c;
   }
 
-  @Deprecated
-  /**
-   * @deprecated
-   * @see #getEndColumn
-   */
-
-  static public int getColumn() {
-    return -1;
-  }
-
-  @Deprecated
-  /**
-   * @deprecated
-   * @see #getEndLine
-   */
-
-  static public int getLine() {
-    return -1;
-  }
-
   /** Get token end column number. */
   static public int getEndColumn() {
     return -1;
