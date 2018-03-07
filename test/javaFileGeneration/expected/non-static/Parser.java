@@ -106,7 +106,7 @@ public class Parser implements ParserConstants {
   }
   /** Reinitialise. */
   public void ReInit(java.io.InputStream stream, String encoding) {
-    try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+    try { jj_input_stream.reInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
@@ -126,7 +126,7 @@ public class Parser implements ParserConstants {
 
   /** Reinitialise. */
   public void ReInit(java.io.Reader stream) {
-    jj_input_stream.ReInit(stream, 1, 1);
+    jj_input_stream.reInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;

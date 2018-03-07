@@ -1,6 +1,6 @@
 public class ${parserName}TokenManager ${superClass} implements ${parserName}Constants {
 
-protected ${STATIC?static :}boolean moveToNextChar() {
+protected boolean moveToNextChar() {
   try {
     curChar = input_stream.readChar();
 #if IGNORE_CASE
@@ -14,7 +14,7 @@ protected ${STATIC?static :}boolean moveToNextChar() {
 
 ${decls}
 
-#if TOKEN_MANAGER_USES_PARSER && !STATIC
+#if TOKEN_MANAGER_USES_PARSER
 
 /* Declarations from the TOKEN_MGR_DECLS section */
 
@@ -25,24 +25,10 @@ ${decls}
     /** Constructor. */
     public ${parserName}TokenManager(${charStreamName} stream){
 #fi
-
-#if STATIC && !USER_CHAR_STREAM
-      if (input_stream != null)
-        throw new TokenMgrException("ERROR: Second call to constructor of static lexer. You must use ReInit() to initialize the static variables.", 
-                                    TokenMgrException.STATIC_LEXER_ERROR);
-#elif !USER_CHAR_STREAM
-    #if JAVA_UNICODE_ESCAPE
-      if (JavaCharStream.staticFlag)
-    #else
-      if (${charStreamName}.staticFlag)
-    #fi
-            throw new IllegalStateException("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
-#fi
-
     input_stream = stream;
   }
 
-#if TOKEN_MANAGER_USES_PARSER && !STATIC
+#if TOKEN_MANAGER_USES_PARSER
   /** Constructor with parser. */
   public ${parserName}TokenManager (${parserName} parserArg, ${charStreamName} stream, int lexState){
     ReInit(parserArg, stream);
@@ -57,16 +43,14 @@ ${decls}
 
   /** Reinitialise parser. */
   
-#if TOKEN_MANAGER_USES_PARSER && !STATIC
+#if TOKEN_MANAGER_USES_PARSER &&
   public void ReInit(${parserName} parserArg, ${charStreamName} stream)
 #else
-  ${STATIC?static :}public void ReInit(${charStreamName} stream)
+  public void ReInit(${charStreamName} stream)
 #fi
   {
-#if TOKEN_MANAGER_USES_PARSER && !STATIC
+#if TOKEN_MANAGER_USES_PARSER
 	this.parser = parserArg;
-#else
-
 #fi
 
     jjmatchedPos = 0;
@@ -75,14 +59,14 @@ ${decls}
   }
 
   /** Reinitialise parser. */
-#if TOKEN_MANAGER_USES_PARSER && !STATIC
+#if TOKEN_MANAGER_USES_PARSER
   public void ReInit( ${parserName} parserArg, ${charStreamName} stream, int lexState)
 #else
-  ${STATIC?static :}public void ReInit(${charStreamName} stream, int lexState)
+  public void ReInit(${charStreamName} stream, int lexState)
 #fi
   
   {
-#if TOKEN_MANAGER_USES_PARSER && !STATIC
+#if TOKEN_MANAGER_USES_PARSER
     ReInit(parserArg, stream);
 #else
     ReInit(stream);
@@ -91,12 +75,12 @@ ${decls}
   }
 
   /** Switch to specified lex state. */
-  public ${STATIC?static :}void SwitchTo(int lexState) {
+  public void SwitchTo(int lexState) {
     curLexState = lexState;
   }
 
 #if !NO_DFA
-private ${STATIC?static :}final int jjRunStringLiteralMatch() {
+private final int jjRunStringLiteralMatch() {
   int curPos = 0;
   final int key = (int)curLexState << 16 | curChar;
   final int[] arr = startAndSize.get(key);
@@ -156,12 +140,12 @@ private ${STATIC?static :}final int jjRunStringLiteralMatch() {
 }
 #fi
 
-private ${STATIC?static :}  int[] stateSet = new int[${generatedStates}];
-private ${STATIC?static :}  int[] newStateSet = new int[${generatedStates}];
-private ${STATIC?static :}  final long[] moved = new long[${generatedStates}];
-private ${STATIC?static :} long moveIndex = 1L;
+private   int[] stateSet = new int[${generatedStates}];
+private   int[] newStateSet = new int[${generatedStates}];
+private   final long[] moved = new long[${generatedStates}];
+private  long moveIndex = 1L;
 
-private ${STATIC?static :}final int jjMoveNfa(int startState, int curPos) {
+private final int jjMoveNfa(int startState, int curPos) {
 
   if (startState < 0) {
 #if DEBUG_TOKEN_MANAGER
@@ -284,16 +268,16 @@ private ${STATIC?static :}final int jjMoveNfa(int startState, int curPos) {
   return curPos;
 }
 
-private ${STATIC?static :} int defaultLexState = ${defaultLexState};
-private ${STATIC?static :} int curLexState = ${defaultLexState};
-private ${STATIC?static :} int jjmatchedPos;
-private ${STATIC?static :} int jjmatchedKind;
-private ${STATIC?static :}final StringBuilder jjimage = new StringBuilder();
-private ${STATIC?static :}StringBuilder image = jjimage;
-private ${STATIC?static :}int jjimageLen;
-private ${STATIC?static :}int lengthOfMatch;
-protected ${STATIC?static :}int curChar;
-protected ${STATIC?static :} ${charStreamName} input_stream;
+private  int defaultLexState = ${defaultLexState};
+private  int curLexState = ${defaultLexState};
+private  int jjmatchedPos;
+private  int jjmatchedKind;
+private final StringBuilder jjimage = new StringBuilder();
+private StringBuilder image = jjimage;
+private int jjimageLen;
+private int lengthOfMatch;
+protected int curChar;
+protected  ${charStreamName} input_stream;
 
 public static final boolean isToken(int kind) {
   return (jjtoToken[kind >> 6] & (1L << (kind & 077))) != 0L;
@@ -311,7 +295,7 @@ public static final boolean isMore(int kind) {
   return (jjtoMore[kind >> 6] & (1L << (kind & 077))) != 0L;
 }
 
-protected ${STATIC?static :} Token jjFillToken() {
+protected  Token jjFillToken() {
   final Token t;
   final String curTokenImage;
 #if KEEP_LINE_COLUMN
@@ -362,7 +346,7 @@ protected ${STATIC?static :} Token jjFillToken() {
 }
 
 /** Get the next Token. */
-public ${STATIC?static :} Token getNextToken() {
+public  Token getNextToken() {
   Token specialToken = null;
   Token matchedToken;
   int lastReadPosition = 0;
@@ -494,7 +478,7 @@ public ${STATIC?static :} Token getNextToken() {
   }
 }
 
-protected ${STATIC?static :} void reportError(int lastReadPosition) {
+protected void reportError(int lastReadPosition) {
   int error_line = input_stream.getEndLine();
   int error_column = input_stream.getEndColumn();
   String error_after = null;

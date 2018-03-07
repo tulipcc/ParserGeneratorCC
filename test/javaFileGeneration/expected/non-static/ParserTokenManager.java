@@ -85,10 +85,6 @@ public static final String[] lexStateNames = {
 
     /** Constructor. */
     public ParserTokenManager(SimpleCharStream stream){
-
-      if (SimpleCharStream.staticFlag)
-            throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
-
     input_stream = stream;
   }
 

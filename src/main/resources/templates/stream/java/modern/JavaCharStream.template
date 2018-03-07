@@ -225,12 +225,6 @@ class JavaCharStream extends AbstractCharStream
                         final int buffersize)
   {
     super (startline, startcolumn, buffersize);
-#if STATIC
-    if (inputStream != null)
-      throw new IllegalStateException("\n   ERROR: Second call to the constructor of a static JavaCharStream.\n" +
-      "       You must either use reInit() or set the JavaCC option STATIC to false\n" +
-      "       during the generation of this class.");
-#fi
     inputStream = dstream;
   }
 

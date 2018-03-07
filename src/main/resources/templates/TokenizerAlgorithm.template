@@ -1,7 +1,7 @@
 // Bit vector to track possible kinds. maxLongs = MAX(kind) / 64 + 1;
-private ${STATIC?static :}final long[] jjcurActive = new long[${maxLongs}];
-private ${STATIC?static :}final long[] jjnewActive = new long[${maxLongs}];
-private ${STATIC?static :}final int jjRunDfa() {
+private final long[] jjcurActive = new long[${maxLongs}];
+private final long[] jjnewActive = new long[${maxLongs}];
+private final int jjRunDfa() {
   int curPos = 0;
   for (int i = 0; i < ${maxLongs}; i++) jjcurActive[i] = 0xffffffffffffffffL;
   do {
@@ -84,7 +84,7 @@ private ${STATIC?static :}final int jjRunDfa() {
   } while(true);
 }
 
-private ${STATIC?static :}final int jjMoveNfa(int startState, int curPos) {
+private final int jjMoveNfa(int startState, int curPos) {
   if (startState<0) {
     return curPos + 1;
   }

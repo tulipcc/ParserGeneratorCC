@@ -7,14 +7,9 @@
 public
 #fi
 abstract class AbstractCharStream
-#if !STATIC
 implements CharStream
-#fi
 {
   public static final int DEFAULT_BUF_SIZE = 4096;
-
-  /** Whether parser is static. */
-  public static final boolean staticFlag = ${STATIC};
 
   static final int hexval(final char c) throws java.io.IOException {
     switch(c)
@@ -465,7 +460,7 @@ implements CharStream
     trackLineColumn = tlc;
   }
   
-  public boolean getTrackLineColumn() { 
+  public boolean isTrackLineColumn() { 
     return trackLineColumn;
   }
 #fi

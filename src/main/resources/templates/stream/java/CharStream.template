@@ -116,5 +116,5 @@ interface CharStream {
   /**
    * @return <code>true</code> if line number and column numbers should be tracked.
    */
-  boolean getTrackLineColumn();
+  boolean isTrackLineColumn();
 }

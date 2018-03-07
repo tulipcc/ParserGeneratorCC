@@ -480,6 +480,7 @@ public class CodeGenerator
   {
     if (Options.isJavaUserCharStream ())
     {
+      // User interface name
       return "CharStream";
     }
     return Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream";

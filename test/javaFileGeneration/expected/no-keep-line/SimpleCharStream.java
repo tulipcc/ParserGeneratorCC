@@ -40,8 +40,6 @@
 
 public class SimpleCharStream
 {
-/** Whether parser is static. */
-  public static final boolean staticFlag = true;
   static int bufsize;
   static int available;
   static int tokenBegin;

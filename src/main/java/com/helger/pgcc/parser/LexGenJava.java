@@ -78,7 +78,6 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -86,6 +85,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.output.EOutputLanguage;
@@ -261,8 +261,7 @@ public class LexGenJava extends CodeGenerator
     }
   }
 
-  @SuppressWarnings ("unchecked")
-  protected void writeTemplate (final String name, final Object... additionalOptions) throws IOException
+  protected void writeTemplate (final String name, final String... additionalOptions) throws IOException
   {
     final Map <String, Object> options = Options.getAllOptions ();
     options.put ("maxOrdinal", Integer.valueOf (s_maxOrdinal));
@@ -287,27 +286,19 @@ public class LexGenJava extends CodeGenerator
 
     for (int i = 0; i < additionalOptions.length; i++)
     {
-      final Object o = additionalOptions[i];
+      final String o = additionalOptions[i];
+      if (i == additionalOptions.length - 1)
+        throw new IllegalArgumentException ("Must supply pairs of [name value] args");
 
-      if (o instanceof Map <?, ?>)
-      {
-        options.putAll ((Map <String, Object>) o);
-      }
-      else
-      {
-        if (i == additionalOptions.length - 1)
-          throw new IllegalArgumentException ("Must supply pairs of [name value] args");
-
-        options.put ((String) o, additionalOptions[i + 1]);
-        i++;
-      }
+      options.put (o, additionalOptions[i + 1]);
+      i++;
     }
 
     final OutputFileGenerator gen = new OutputFileGenerator (name, options);
-    try (final StringWriter sw = new StringWriter ())
+    try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())
     {
       gen.generate (new PrintWriter (sw));
-      genCode (sw.toString ());
+      genCode (sw.getAsString ());
     }
   }
 
@@ -701,28 +692,19 @@ public class LexGenJava extends CodeGenerator
 
     NfaState.printBoilerPlateJava (this);
 
-    String charStreamName;
-    if (Options.isJavaUserCharStream ())
-      charStreamName = "CharStream";
-    else
-    {
-      if (Options.isJavaUnicodeEscape ())
-        charStreamName = "JavaCharStream";
-      else
-        charStreamName = "SimpleCharStream";
-    }
+    final String charStreamName = CodeGenerator.getCharStreamName ();
 
     writeTemplate (BOILERPLATER_METHOD_RESOURCE_URL,
                    "charStreamName",
                    charStreamName,
                    "lexStateNameLength",
-                   s_lexStateName.length,
+                   Integer.toString (s_lexStateName.length),
                    "defaultLexState",
-                   s_defaultLexState,
+                   Integer.toString (s_defaultLexState),
                    "noDfa",
-                   Options.isNoDfa (),
+                   Boolean.toString (Options.isNoDfa ()),
                    "generatedStates",
-                   s_totalNumStates);
+                   Integer.toString (s_totalNumStates));
 
     _dumpStaticVarDeclarations (charStreamName);
     genCodeLine (/* { */ "}");
@@ -898,7 +880,7 @@ public class LexGenJava extends CodeGenerator
                    "final",
                    "final",
                    "lexStateNameLength",
-                   s_lexStateName.length);
+                   Integer.toString (s_lexStateName.length));
   }
 
   // Assumes l != 0L

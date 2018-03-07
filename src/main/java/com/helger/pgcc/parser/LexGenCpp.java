@@ -215,9 +215,9 @@ public class LexGenCpp extends LexGenJava
   {
     writeTemplate ("/templates/cpp/DumpDebugMethods.template",
                    "maxOrdinal",
-                   s_maxOrdinal,
+                   Integer.toString (s_maxOrdinal),
                    "stateSetSize",
-                   s_stateSetSize);
+                   Integer.toString (s_stateSetSize));
   }
 
   private static void _buildLexStatesTable ()
@@ -528,7 +528,7 @@ public class LexGenCpp extends LexGenJava
                    "defaultLexState",
                    "defaultLexState",
                    "lexStateNameLength",
-                   s_lexStateName.length);
+                   Integer.toString (s_lexStateName.length));
 
     _dumpBoilerPlateInHeader ();
 
@@ -540,7 +540,7 @@ public class LexGenCpp extends LexGenJava
                    "charStreamName",
                    "CharStream",
                    "lexStateNameLength",
-                   s_lexStateName.length);
+                   Integer.toString (s_lexStateName.length));
     genCodeLine (/* { */ "};");
 
     switchToStaticsFile ();

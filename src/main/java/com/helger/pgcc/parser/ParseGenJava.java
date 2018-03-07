@@ -336,13 +336,11 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ();
           genCodeLine ("  /** Constructor with InputStream and supplied encoding */");
           genCodeLine ("  public " + s_cu_name + "(final java.io.InputStream stream, final String encoding) {");
-
-          final String sInitIS = "   try { jj_input_stream = new " +
-                                 (Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream") +
-                                 "(stream, encoding, 1, 1); }" +
-                                 " catch(final java.io.UnsupportedEncodingException e) {" +
-                                 " throw new IllegalStateException(e); }";
-          genCodeLine (sInitIS);
+          genCodeLine ("   try { jj_input_stream = new " +
+                       (Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream") +
+                       "(stream, encoding, 1, 1); }" +
+                       " catch(final java.io.UnsupportedEncodingException e) {" +
+                       " throw new IllegalStateException(e); }");
           if (Options.isTokenManagerUsesParser ())
           {
             genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(this, jj_input_stream);");
@@ -387,7 +385,7 @@ public class ParseGenJava extends CodeGenerator
 
           genCodeLine ("  /** Reinitialise. */");
           genCodeLine ("  public void ReInit(final java.io.InputStream stream, final String encoding) {");
-          genCodeLine ("	 try { jj_input_stream.ReInit(stream, encoding, 1, 1); } " +
+          genCodeLine ("	 try { jj_input_stream.reInit(stream, encoding, 1, 1); } " +
                        "catch(final java.io.UnsupportedEncodingException e) { " +
                        "throw new IllegalStateException(e); }");
 
@@ -508,7 +506,7 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("	if (jj_input_stream == null) {");
           genCodeLine ("	   jj_input_stream = new JavaCharStream(stream, 1, 1);");
           genCodeLine ("	} else {");
-          genCodeLine ("	   jj_input_stream.ReInit(stream, 1, 1);");
+          genCodeLine ("	   jj_input_stream.reInit(stream, 1, 1);");
           genCodeLine ("	}");
         }
         else
@@ -516,7 +514,7 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("	if (jj_input_stream == null) {");
           genCodeLine ("	   jj_input_stream = new SimpleCharStream(stream, 1, 1);");
           genCodeLine ("	} else {");
-          genCodeLine ("	   jj_input_stream.ReInit(stream, 1, 1);");
+          genCodeLine ("	   jj_input_stream.reInit(stream, 1, 1);");
           genCodeLine ("	}");
         }
 
