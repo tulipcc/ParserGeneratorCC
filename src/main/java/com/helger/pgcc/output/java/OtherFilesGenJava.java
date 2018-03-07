@@ -137,10 +137,10 @@ public class OtherFilesGenJava
       if (Options.isGenerateJavaBoilerplateCode ())
       {
         FilesJava.gen_CharStream (templateLoc);
-        FilesJava.gen_AbstractCharStream (templateLoc);
 
         if (!Options.isJavaUserCharStream ())
         {
+          FilesJava.gen_AbstractCharStream (templateLoc);
           if (Options.isJavaUnicodeEscape ())
             FilesJava.gen_JavaCharStream (templateLoc);
           else

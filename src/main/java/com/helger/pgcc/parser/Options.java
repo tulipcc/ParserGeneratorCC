@@ -426,27 +426,27 @@ public class Options
       JavaCCErrors.warning (nameloc, "Bad option name \"" + name + "\".  Option setting will be ignored.");
       return;
     }
-    final Object existingValue = s_optionValues.get (nameUpperCase);
+    final Object aExistingValue = s_optionValues.get (nameUpperCase);
 
-    final Object value = _upgradeValue (name, aSrcValue);
+    final Object aRealSrc = _upgradeValue (name, aSrcValue);
 
-    if (existingValue != null)
+    if (aExistingValue != null)
     {
       Object object = null;
-      if (value instanceof List)
+      if (aRealSrc instanceof List)
       {
-        object = ((List <?>) value).get (0);
+        object = ((List <?>) aRealSrc).get (0);
       }
       else
       {
-        object = value;
+        object = aRealSrc;
       }
-      final boolean isValidInteger = object instanceof Integer && ((Integer) value).intValue () <= 0;
-      if (existingValue.getClass () != object.getClass () || isValidInteger)
+      final boolean isValidInteger = object instanceof Integer && ((Integer) aRealSrc).intValue () <= 0;
+      if (aExistingValue.getClass () != object.getClass () || isValidInteger)
       {
         JavaCCErrors.warning (valueloc,
                               "Bad option value \"" +
-                                        value +
+                                        aRealSrc +
                                         "\" for \"" +
                                         name +
                                         "\".  Option setting will be ignored.");
@@ -461,7 +461,7 @@ public class Options
 
       if (s_cmdLineSetting.contains (nameUpperCase))
       {
-        if (!existingValue.equals (value))
+        if (!aExistingValue.equals (aRealSrc))
         {
           JavaCCErrors.warning (nameloc, "Command line setting of \"" + name + "\" modifies option value in file.");
         }
@@ -469,40 +469,42 @@ public class Options
       }
     }
 
-    s_optionValues.put (nameUpperCase, value);
+    s_optionValues.put (nameUpperCase, aRealSrc);
     s_inputFileSetting.add (nameUpperCase);
 
     // Special case logic block here for setting indirect flags
 
     if (nameUpperCase.equalsIgnoreCase (USEROPTION__JAVA_TEMPLATE_TYPE))
     {
-      final String templateType = (String) value;
-      if (!isValidJavaTemplateType (templateType))
+      final String templateType = (String) aRealSrc;
+      if (!_isValidJavaTemplateType (templateType))
       {
         JavaCCErrors.warning (valueloc,
                               "Bad option value \"" +
-                                        value +
+                                        aRealSrc +
                                         "\" for \"" +
                                         name +
-                                        "\".  Option setting will be ignored. Valid options : " +
-                                        _getAllValidJavaTemplateTypes ());
+                                        "\".  Option setting will be ignored. Valid options are: " +
+                                        StringHelper.getImploded (", ", s_supportedJavaTemplateTypes));
         return;
       }
     }
     else
       if (nameUpperCase.equalsIgnoreCase (USEROPTION__OUTPUT_LANGUAGE))
       {
-        final String outputLanguage = (String) value;
+        final String outputLanguage = (String) aRealSrc;
         final EOutputLanguage eOutLanguage = EOutputLanguage.getFromIDCaseInsensitiveOrNull (outputLanguage);
         if (eOutLanguage == null)
         {
           JavaCCErrors.warning (valueloc,
                                 "Bad option value \"" +
-                                          value +
+                                          aRealSrc +
                                           "\" for \"" +
                                           name +
-                                          "\".  Option setting will be ignored. Valid options : " +
-                                          _getAllValidLanguages ());
+                                          "\".  Option setting will be ignored. Valid options are: " +
+                                          StringHelper.getImplodedMapped (", ",
+                                                                          EOutputLanguage.values (),
+                                                                          EOutputLanguage::getID));
           return;
         }
         s_language = eOutLanguage;
@@ -510,20 +512,8 @@ public class Options
       else
         if (nameUpperCase.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
         {
-          processCPPNamespaceOption ((String) value);
+          processCPPNamespaceOption ((String) aRealSrc);
         }
-  }
-
-  @Nonnull
-  private static String _getAllValidJavaTemplateTypes ()
-  {
-    return "[" + StringHelper.getImploded (", ", s_supportedJavaTemplateTypes) + "]";
-  }
-
-  @Nonnull
-  private static String _getAllValidLanguages ()
-  {
-    return "[" + StringHelper.getImplodedMapped (", ", EOutputLanguage.values (), EOutputLanguage::getID) + "]";
   }
 
   /**
@@ -975,7 +965,7 @@ public class Options
     s_supportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_MODERN);
   }
 
-  public static boolean isValidJavaTemplateType (@Nullable final String type)
+  private static boolean _isValidJavaTemplateType (@Nullable final String type)
   {
     return type == null ? false : s_supportedJavaTemplateTypes.contains (type.toLowerCase (Locale.US));
   }
