@@ -7,7 +7,7 @@ public
 #fi
 class JavaCharStream extends AbstractCharStream
 {
-  ${PREFIX}protected java.io.Reader inputStream;
+  protected java.io.Reader inputStream;
 
   @Override
   protected int streamRead(final char[] buffer, final int offset, final int len) throws java.io.IOException {
@@ -20,7 +20,7 @@ class JavaCharStream extends AbstractCharStream
   }
 
   @Override
-  ${PREFIX}protected void fillBuff() throws java.io.IOException
+  protected void fillBuff() throws java.io.IOException
   {
     if (maxNextCharInd == 4096)
       maxNextCharInd = nextCharInd = 0;
@@ -52,7 +52,7 @@ class JavaCharStream extends AbstractCharStream
     }
   }
 
-  ${PREFIX}protected char readByte() throws java.io.IOException
+  protected char readByte() throws java.io.IOException
   {
     if (++nextCharInd >= maxNextCharInd)
       fillBuff();
@@ -60,7 +60,7 @@ class JavaCharStream extends AbstractCharStream
     return nextCharBuf[nextCharInd];
   }
 
-  ${PREFIX}public char beginToken() throws java.io.IOException
+  public char beginToken() throws java.io.IOException
   {
     if (inBuf > 0)
     {
@@ -79,7 +79,7 @@ class JavaCharStream extends AbstractCharStream
     return readChar();
   }
 
-  ${PREFIX}protected void adjustBuffSize()
+  protected void adjustBuffSize()
   {
     if (available == bufsize)
     {
@@ -102,7 +102,7 @@ class JavaCharStream extends AbstractCharStream
   }
 
 /** Read a character. */
-  ${PREFIX}public char readChar() throws java.io.IOException
+  public char readChar() throws java.io.IOException
   {
     if (inBuf > 0)
     {

@@ -347,8 +347,7 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
     NodeFilesCpp.addType (type);
 
     io.print (indent + nodeClass + " *" + ns.m_nodeVar + " = ");
-    final String p = Options.isStatic () ? "null" : "this";
-    final String parserArg = JJTreeOptions.isNodeUsesParser () ? (p + ", ") : "";
+    final String parserArg = JJTreeOptions.isNodeUsesParser () ? ("this, ") : "";
 
     if (JJTreeOptions.getNodeFactory ().equals ("*"))
     {
@@ -365,7 +364,12 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
     else
       if (JJTreeOptions.getNodeFactory ().length () > 0)
       {
-        io.println ("(" + nodeClass + "*)nodeFactory->jjtCreate(" + parserArg + ns.m_node_descriptor.getNodeId () + ");");
+        io.println ("(" +
+                    nodeClass +
+                    "*)nodeFactory->jjtCreate(" +
+                    parserArg +
+                    ns.m_node_descriptor.getNodeId () +
+                    ");");
       }
       else
       {
@@ -441,7 +445,11 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
 
   }
 
-  void tryTokenSequence (final NodeScope ns, final JJTreeIO io, final String indent, final Token first, final Token last)
+  void tryTokenSequence (final NodeScope ns,
+                         final JJTreeIO io,
+                         final String indent,
+                         final Token first,
+                         final Token last)
   {
     io.println (indent + "try {");
     closeJJTreeComment (io);

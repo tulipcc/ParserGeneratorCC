@@ -181,7 +181,6 @@ public class LexGenCpp extends LexGenJava
         JavaCCErrors.warning ("You have the COMMON_TOKEN_ACTION option set. " +
                               "But it appears you have not defined the method :\n" +
                               "      " +
-                              s_staticString +
                               "void CommonTokenAction(Token *t)\n" +
                               "in your TOKEN_MGR_DECLS. The generated token manager will not compile.");
       }
@@ -192,7 +191,6 @@ public class LexGenCpp extends LexGenJava
         JavaCCErrors.warning ("You have the COMMON_TOKEN_ACTION option set. " +
                               "But you have not defined the method :\n" +
                               "      " +
-                              s_staticString +
                               "void CommonTokenAction(Token *t)\n" +
                               "in your TOKEN_MGR_DECLS. The generated token manager will not compile.");
       }
@@ -312,7 +310,6 @@ public class LexGenCpp extends LexGenJava
     final List <ExpRChoice> choices = new ArrayList <> ();
     TokenProduction tp;
 
-    s_staticString = (Options.isStatic () ? "static " : "");
     s_tokMgrClassName = s_cu_name + "TokenManager";
 
     _printClassHead ();

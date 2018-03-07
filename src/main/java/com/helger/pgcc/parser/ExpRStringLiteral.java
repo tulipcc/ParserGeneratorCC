@@ -618,9 +618,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     switch (eOutputLanguage)
     {
       case JAVA:
-        codeGenerator.genCodeLine ((Options.isStatic () ? "static " : "") +
-                                   "private int " +
-                                   "jjStartNfaWithStates" +
+        codeGenerator.genCodeLine ("private int jjStartNfaWithStates" +
                                    LexGenJava.s_lexStateSuffix +
                                    "(int pos, int kind, int state)");
         break;
@@ -705,9 +703,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     switch (eOutputLanguage)
     {
       case JAVA:
-        codeGenerator.genCodeLine ((Options.isStatic () ? "static " : "") +
-                                   "private int " +
-                                   "jjStopAtPos(int pos, int kind)");
+        codeGenerator.genCodeLine ("private int jjStopAtPos(int pos, int kind)");
         break;
       case CPP:
         codeGenerator.generateMethodDefHeader (" int ", LexGenJava.s_tokMgrClassName, "jjStopAtPos(int pos, int kind)");
@@ -793,11 +789,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       switch (eOutputLanguage)
       {
         case JAVA:
-          codeGenerator.genCodeLine ((Options.isStatic () ? "static " : "") +
-                                     "private int " +
-                                     "jjMoveStringLiteralDfa0" +
-                                     LexGenJava.s_lexStateSuffix +
-                                     "()");
+          codeGenerator.genCodeLine ("private int jjMoveStringLiteralDfa0" + LexGenJava.s_lexStateSuffix + "()");
           break;
         case CPP:
           codeGenerator.generateMethodDefHeader (" int ",
@@ -887,12 +879,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       switch (eOutputLanguage)
       {
         case JAVA:
-          codeGenerator.genCode ((Options.isStatic () ? "static " : "") +
-                                 "private int " +
-                                 "jjMoveStringLiteralDfa" +
-                                 i +
-                                 LexGenJava.s_lexStateSuffix +
-                                 params);
+          codeGenerator.genCode ("private int jjMoveStringLiteralDfa" + i + LexGenJava.s_lexStateSuffix + params);
           break;
         case CPP:
           codeGenerator.generateMethodDefHeader (" int ",
@@ -1517,6 +1504,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     return Integer.MAX_VALUE;
   }
 
+  @SuppressWarnings ("unchecked")
   static void generateNfaStartStates (final CodeGenerator codeGenerator, final NfaState initialState)
   {
     final boolean [] seen = new boolean [NfaState.s_generatedStates];
@@ -1668,9 +1656,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     switch (eOutputLanguage)
     {
       case JAVA:
-        codeGenerator.genCode ("private" +
-                               (Options.isStatic () ? " static" : "") +
-                               " final int jjStopStringLiteralDfa" +
+        codeGenerator.genCode ("private final int jjStopStringLiteralDfa" +
                                LexGenJava.s_lexStateSuffix +
                                "(int pos, " +
                                params);
@@ -1822,11 +1808,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     switch (eOutputLanguage)
     {
       case JAVA:
-        codeGenerator.genCode ("private" +
-                               (Options.isStatic () ? " static" : "") +
-                               " final int jjStartNfa" +
-                               LexGenJava.s_lexStateSuffix +
-                               params);
+        codeGenerator.genCode ("private final int jjStartNfa" + LexGenJava.s_lexStateSuffix + params);
         break;
       case CPP:
         codeGenerator.generateMethodDefHeader ("int ",

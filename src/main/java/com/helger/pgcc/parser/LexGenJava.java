@@ -101,7 +101,6 @@ public class LexGenJava extends CodeGenerator
   private static final String DUMP_DEBUG_METHODS_TEMPLATE_RESOURCE_URL = "/templates/DumpDebugMethods.template";
   private static final String BOILERPLATER_METHOD_RESOURCE_URL = "/templates/TokenManagerBoilerPlateMethods.template";
 
-  public static String s_staticString;
   public static String s_tokMgrClassName;
 
   // Order is important!
@@ -235,7 +234,6 @@ public class LexGenJava extends CodeGenerator
         JavaCCErrors.warning ("You have the COMMON_TOKEN_ACTION option set. " +
                               "But it appears you have not defined the method :\n" +
                               "      " +
-                              s_staticString +
                               "void CommonTokenAction(Token t)\n" +
                               "in your TOKEN_MGR_DECLS. The generated token manager will not compile.");
       }
@@ -246,16 +244,15 @@ public class LexGenJava extends CodeGenerator
         JavaCCErrors.warning ("You have the COMMON_TOKEN_ACTION option set. " +
                               "But you have not defined the method :\n" +
                               "      " +
-                              s_staticString +
                               "void CommonTokenAction(Token t)\n" +
                               "in your TOKEN_MGR_DECLS. The generated token manager will not compile.");
       }
 
     genCodeLine ();
     genCodeLine ("  /** Debug output. */");
-    genCodeLine ("  public " + s_staticString + " java.io.PrintStream debugStream = System.out;");
+    genCodeLine ("  public java.io.PrintStream debugStream = System.out;");
     genCodeLine ("  /** Set debug output. */");
-    genCodeLine ("  public " + s_staticString + " void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }");
+    genCodeLine ("  public void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }");
 
     if (Options.isTokenManagerUsesParser ())
     {
@@ -413,7 +410,6 @@ public class LexGenJava extends CodeGenerator
     s_errorHandlingClass = Options.getTokenMgrErrorClass ();
     final List <ExpRChoice> choices = new ArrayList <> ();
 
-    s_staticString = (Options.isStatic () ? "static " : "");
     s_tokMgrClassName = s_cu_name + "TokenManager";
 
     if (!s_generateDataOnly && codeGeneratorClass == null)
@@ -689,10 +685,9 @@ public class LexGenJava extends CodeGenerator
 
     if (s_hasLoop)
     {
-      genCodeLine (s_staticString + "int[] jjemptyLineNo = new int[" + s_maxLexStates + "];");
-      genCodeLine (s_staticString + "int[] jjemptyColNo = new int[" + s_maxLexStates + "];");
-      genCodeLine (s_staticString +
-                   eOutputLanguage.getTypeBoolean () +
+      genCodeLine ("int[] jjemptyLineNo = new int[" + s_maxLexStates + "];");
+      genCodeLine ("int[] jjemptyColNo = new int[" + s_maxLexStates + "];");
+      genCodeLine (eOutputLanguage.getTypeBoolean () +
                    "[] jjbeenHere = new " +
                    eOutputLanguage.getTypeBoolean () +
                    "[" +
@@ -921,7 +916,7 @@ public class LexGenJava extends CodeGenerator
     final double tokenVersion = OutputHelper.getVersionDashStar ("Token.java");
     final boolean hasBinaryNewToken = tokenVersion > 4.09;
 
-    genCodeLine (s_staticString + "protected Token jjFillToken()");
+    genCodeLine ("protected Token jjFillToken()");
     genCodeLine ("{");
     genCodeLine ("   final Token t;");
     genCodeLine ("   final String curTokenImage;");
@@ -1012,15 +1007,15 @@ public class LexGenJava extends CodeGenerator
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
 
     genCodeLine ();
-    genCodeLine (s_staticString + "int curLexState = " + s_defaultLexState + ";");
-    genCodeLine (s_staticString + "int defaultLexState = " + s_defaultLexState + ";");
-    genCodeLine (s_staticString + "int jjnewStateCnt;");
-    genCodeLine (s_staticString + "int jjround;");
-    genCodeLine (s_staticString + "int jjmatchedPos;");
-    genCodeLine (s_staticString + "int jjmatchedKind;");
+    genCodeLine ("int curLexState = " + s_defaultLexState + ";");
+    genCodeLine ("int defaultLexState = " + s_defaultLexState + ";");
+    genCodeLine ("int jjnewStateCnt;");
+    genCodeLine ("int jjround;");
+    genCodeLine ("int jjmatchedPos;");
+    genCodeLine ("int jjmatchedKind;");
     genCodeLine ();
     genCodeLine ("/** Get the next Token. */");
-    genCodeLine ("public " + s_staticString + "Token getNextToken()" + " ");
+    genCodeLine ("public " + "Token getNextToken()" + " ");
     genCodeLine ("{");
     if (s_hasSpecial)
     {
@@ -1429,7 +1424,7 @@ public class LexGenJava extends CodeGenerator
   {
     ExpAction act;
 
-    genCodeLine (s_staticString + "void SkipLexicalActions(Token matchedToken)");
+    genCodeLine ("void SkipLexicalActions(Token matchedToken)");
     genCodeLine ("{");
     genCodeLine ("   switch(jjmatchedKind)");
     genCodeLine ("   {");
@@ -1505,7 +1500,7 @@ public class LexGenJava extends CodeGenerator
   {
     ExpAction act;
 
-    genCodeLine (s_staticString + "void MoreLexicalActions()");
+    genCodeLine ("void MoreLexicalActions()");
     genCodeLine ("{");
     genCodeLine ("   jjimageLen += (lengthOfMatch = jjmatchedPos + 1);");
     genCodeLine ("   switch(jjmatchedKind)");
@@ -1583,7 +1578,7 @@ public class LexGenJava extends CodeGenerator
     ExpAction act;
     int i;
 
-    genCodeLine (s_staticString + "void TokenLexicalActions(Token matchedToken)");
+    genCodeLine ("void TokenLexicalActions(Token matchedToken)");
     genCodeLine ("{");
     genCodeLine ("   switch(jjmatchedKind)");
     genCodeLine ("   {");
@@ -1703,7 +1698,6 @@ public class LexGenJava extends CodeGenerator
     s_singlesToSkip = null;
     s_stateHasActions = null;
     s_stateSetSize = 0;
-    s_staticString = null;
     s_toMore = null;
     s_toSkip = null;
     s_toSpecial = null;

@@ -121,7 +121,6 @@ public class Options
   public static final String USEROPTION__PARSER_CODE_GENERATOR = "PARSER_CODE_GENERATOR";
   public static final String USEROPTION__TOKEN_MANAGER_CODE_GENERATOR = "TOKEN_MANAGER_CODE_GENERATOR";
   public static final String USEROPTION__NO_DFA = "NO_DFA";
-  public static final String USEROPTION__STATIC = "STATIC";
   public static final String USEROPTION__TOKEN_MANAGER_SUPER_CLASS = "TOKEN_MANAGER_SUPER_CLASS";
   public static final String USEROPTION__LOOKAHEAD = "LOOKAHEAD";
   public static final String USEROPTION__IGNORE_CASE = "IGNORE_CASE";
@@ -190,7 +189,6 @@ public class Options
 
     temp.add (new OptionInfo (USEROPTION__CHOICE_AMBIGUITY_CHECK, EOptionType.INTEGER, Integer.valueOf (2)));
     temp.add (new OptionInfo (USEROPTION__OTHER_AMBIGUITY_CHECK, EOptionType.INTEGER, Integer.valueOf (1)));
-    temp.add (new OptionInfo (USEROPTION__STATIC, EOptionType.BOOLEAN, Boolean.TRUE));
     temp.add (new OptionInfo (USEROPTION__PARSER_CODE_GENERATOR, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__TOKEN_MANAGER_CODE_GENERATOR, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__NO_DFA, EOptionType.BOOLEAN, Boolean.FALSE));
@@ -699,16 +697,6 @@ public class Options
     return intValue (USEROPTION__OTHER_AMBIGUITY_CHECK);
   }
 
-  /**
-   * Find the static value.
-   *
-   * @return The requested static value.
-   */
-  public static boolean isStatic ()
-  {
-    return booleanValue (USEROPTION__STATIC);
-  }
-
   @Nullable
   public static String getParserCodeGenerator ()
   {
@@ -845,7 +833,7 @@ public class Options
    */
   public static boolean isTokenManagerUsesParser ()
   {
-    return booleanValue (USEROPTION__TOKEN_MANAGER_USES_PARSER) && !Options.isStatic ();
+    return booleanValue (USEROPTION__TOKEN_MANAGER_USES_PARSER);
   }
 
   /**
@@ -1040,7 +1028,7 @@ public class Options
 
   public static boolean isTokenManagerRequiresParserAccess ()
   {
-    return isTokenManagerUsesParser () && !isStatic ();
+    return isTokenManagerUsesParser ();
   }
 
   /**

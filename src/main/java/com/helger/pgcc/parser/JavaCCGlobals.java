@@ -371,14 +371,6 @@ public final class JavaCCGlobals
   }
 
   @Nonnull
-  public static String javaStaticOpt ()
-  {
-    if (Options.isStatic ())
-      return "static ";
-    return "";
-  }
-
-  @Nonnull
   public static String addEscapes (@Nonnull final String str)
   {
     final StringBuilder retval = new StringBuilder (str.length () * 2);

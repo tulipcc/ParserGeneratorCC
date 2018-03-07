@@ -2856,10 +2856,7 @@ public class NfaState
   // private static boolean boilerPlateDumped = false;
   static void printBoilerPlateJava (final CodeGenerator codeGenerator)
   {
-    codeGenerator.genCodeLine ("private " +
-                               (Options.isStatic () ? "static " : "") +
-                               "void " +
-                               "jjCheckNAdd(int state)");
+    codeGenerator.genCodeLine ("private void jjCheckNAdd(int state)");
     codeGenerator.genCodeLine ("{");
     codeGenerator.genCodeLine ("   if (jjrounds[state] != jjround)");
     codeGenerator.genCodeLine ("   {");
@@ -2868,20 +2865,14 @@ public class NfaState
     codeGenerator.genCodeLine ("   }");
     codeGenerator.genCodeLine ("}");
 
-    codeGenerator.genCodeLine ("private " +
-                               (Options.isStatic () ? "static " : "") +
-                               "void " +
-                               "jjAddStates(int start, int end)");
+    codeGenerator.genCodeLine ("private void jjAddStates(int start, int end)");
     codeGenerator.genCodeLine ("{");
     codeGenerator.genCodeLine ("   do {");
     codeGenerator.genCodeLine ("      jjstateSet[jjnewStateCnt++] = jjnextStates[start];");
     codeGenerator.genCodeLine ("   } while (start++ != end);");
     codeGenerator.genCodeLine ("}");
 
-    codeGenerator.genCodeLine ("private " +
-                               (Options.isStatic () ? "static " : "") +
-                               "void " +
-                               "jjCheckNAddTwoStates(int state1, int state2)");
+    codeGenerator.genCodeLine ("private void jjCheckNAddTwoStates(int state1, int state2)");
     codeGenerator.genCodeLine ("{");
     codeGenerator.genCodeLine ("   jjCheckNAdd(state1);");
     codeGenerator.genCodeLine ("   jjCheckNAdd(state2);");
@@ -2890,10 +2881,7 @@ public class NfaState
 
     if (s_jjCheckNAddStatesDualNeeded)
     {
-      codeGenerator.genCodeLine ("private " +
-                                 (Options.isStatic () ? "static " : "") +
-                                 "void " +
-                                 "jjCheckNAddStates(int start, int end)");
+      codeGenerator.genCodeLine ("private void jjCheckNAddStates(int start, int end)");
       codeGenerator.genCodeLine ("{");
       codeGenerator.genCodeLine ("   do {");
       codeGenerator.genCodeLine ("      jjCheckNAdd(jjnextStates[start]);");
@@ -2904,10 +2892,7 @@ public class NfaState
 
     if (s_jjCheckNAddStatesUnaryNeeded)
     {
-      codeGenerator.genCodeLine ("private " +
-                                 (Options.isStatic () ? "static " : "") +
-                                 "void " +
-                                 "jjCheckNAddStates(int start)");
+      codeGenerator.genCodeLine ("private void jjCheckNAddStates(int start)");
       codeGenerator.genCodeLine ("{");
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start]);");
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start + 1]);");
@@ -3124,9 +3109,7 @@ public class NfaState
     switch (eOutputLanguage)
     {
       case JAVA:
-        codeGenerator.genCodeLine ((Options.isStatic () ? "static " : "") +
-                                   "private int " +
-                                   "jjMoveNfa" +
+        codeGenerator.genCodeLine ("private int jjMoveNfa" +
                                    LexGenJava.s_lexStateSuffix +
                                    "(int startState, int curPos)");
         break;

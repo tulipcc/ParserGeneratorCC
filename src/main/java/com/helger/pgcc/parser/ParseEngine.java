@@ -63,7 +63,6 @@
  */
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.javaStaticOpt;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_bnfproductions;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ccol;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cline;
@@ -867,11 +866,7 @@ public class ParseEngine
         m_codeGenerator.printTokenSetup (t);
         s_ccol = 1;
         m_codeGenerator.printLeadingComments (t);
-        m_codeGenerator.genCode ("  " +
-                                 javaStaticOpt () +
-                                 "final " +
-                                 (p.getAccessMod () != null ? p.getAccessMod () : "public") +
-                                 " ");
+        m_codeGenerator.genCode ("  final " + (p.getAccessMod () != null ? p.getAccessMod () : "public") + " ");
         s_cline = t.beginLine;
         s_ccol = t.beginColumn;
         m_codeGenerator.printTokenOnly (t);
@@ -1482,11 +1477,7 @@ public class ParseEngine
     switch (eOutputLanguage)
     {
       case JAVA:
-        m_codeGenerator.genCodeLine ("  " +
-                                     javaStaticOpt () +
-                                     "private boolean jj_2" +
-                                     e.getInternalName () +
-                                     "(int xla)");
+        m_codeGenerator.genCodeLine ("  private boolean jj_2" + e.getInternalName () + "(int xla)");
         break;
       case CPP:
         m_codeGenerator.genCodeLine (" inline bool jj_2" + e.getInternalName () + "(int xla)");
@@ -1718,9 +1709,7 @@ public class ParseEngine
       switch (eOutputLanguage)
       {
         case JAVA:
-          m_codeGenerator.genCodeLine ("  " +
-                                       javaStaticOpt () +
-                                       "private " +
+          m_codeGenerator.genCodeLine ("  private " +
                                        eOutputLanguage.getTypeBoolean () +
                                        " jj_3" +
                                        e.getInternalName () +
@@ -2204,7 +2193,7 @@ public class ParseEngine
           codeGenerator.printTokenSetup (t);
           s_ccol = 1;
           codeGenerator.printLeadingComments (t);
-          codeGenerator.genCode ("  " + javaStaticOpt () + (p.getAccessMod () != null ? p.getAccessMod () + " " : ""));
+          codeGenerator.genCode ("  " + (p.getAccessMod () != null ? p.getAccessMod () + " " : ""));
           s_cline = t.beginLine;
           s_ccol = t.beginColumn;
           codeGenerator.printTokenOnly (t);

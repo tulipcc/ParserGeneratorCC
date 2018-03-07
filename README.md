@@ -13,6 +13,7 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
 * v1.1.0 - work in progress
   * Focus is on improving the quality and consistency of the template files - this may cause interoperability problem because names change etc.
   * This version assumes that the created code uses at least Java 1.5 - JDK versions below 1.5 are no longer supported!
+  * The "static" option for Java was removed - it caused too many variations in the templates which decreases maintainability. STATIC is now always `false`!
 * v1.0.2 - 2018-01-08
   * Fixed an error in jump-patching that was originally only considered if legacy exception handling was enabled - now ParserGeneratorCC can create itself using itself!
 * v1.0.1 - 2018-01-05
@@ -40,5 +41,5 @@ Add the following to your pom.xml to use this artifact:
 
 ---
 
-My personal [Coding Styleguide](https://github.com/phax/meta/blob/master/CodeingStyleguide.md) |
+My personal [Coding Styleguide](https://github.com/phax/meta/blob/master/CodingStyleguide.md) |
 On Twitter: <a href="https://twitter.com/philiphelger">@philiphelger</a>

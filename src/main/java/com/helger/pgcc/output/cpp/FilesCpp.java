@@ -105,32 +105,28 @@ public class FilesCpp
 
   public static void gen_CharStream ()
   {
-    final String [] parameters = new String [] { Options.USEROPTION__STATIC,
-                                                 Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
+    final String [] parameters = new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
     genFile ("stream/cpp", "CharStream.h", charStreamVersion, parameters);
     genFile ("stream/cpp", "CharStream.cc", charStreamVersion, parameters);
   }
 
   public static void gen_ParseException ()
   {
-    final String [] parameters = new String [] { Options.USEROPTION__STATIC,
-                                                 Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
+    final String [] parameters = new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
     genFile ("cpp", "ParseException.h", parseExceptionVersion, parameters);
     genFile ("cpp", "ParseException.cc", parseExceptionVersion, parameters);
   }
 
   public static void gen_TokenMgrError ()
   {
-    final String [] parameters = new String [] { Options.USEROPTION__STATIC,
-                                                 Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
+    final String [] parameters = new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
     genFile ("cpp", "TokenMgrError.h", tokenMgrErrorVersion, parameters);
     genFile ("cpp", "TokenMgrError.cc", tokenMgrErrorVersion, parameters);
   }
 
   public static void gen_Token ()
   {
-    final String [] parameters = new String [] { Options.USEROPTION__STATIC,
-                                                 Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC,
+    final String [] parameters = new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC,
                                                  Options.USEROPTION__CPP_TOKEN_INCLUDES,
                                                  Options.USEROPTION__TOKEN_EXTENDS };
     genFile ("cpp", "Token.h", tokenMgrErrorVersion, parameters);
@@ -139,22 +135,19 @@ public class FilesCpp
 
   public static void gen_TokenManager ()
   {
-    final String [] parameters = new String [] { Options.USEROPTION__STATIC,
-                                                 Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
+    final String [] parameters = new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
     genFile ("cpp", "TokenManager.h", tokenManagerVersion, parameters);
   }
 
   public static void gen_JavaCCDefs ()
   {
-    final String [] parameters = new String [] { Options.USEROPTION__STATIC,
-                                                 Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
+    final String [] parameters = new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC };
     genFile ("cpp", "JavaCC.h", tokenManagerVersion, parameters);
   }
 
   public static void gen_ErrorHandler ()
   {
-    final String [] parameters = new String [] { Options.USEROPTION__STATIC,
-                                                 Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC,
+    final String [] parameters = new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC,
                                                  Options.USEROPTION__BUILD_PARSER,
                                                  Options.USEROPTION__BUILD_TOKEN_MANAGER };
     genFile ("cpp", "ErrorHandler.h", parseExceptionVersion, parameters);

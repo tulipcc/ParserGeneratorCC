@@ -45,7 +45,6 @@ import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.jjtree.output.JJTreeStateJava;
 import com.helger.pgcc.jjtree.output.NodeFilesJava;
 import com.helger.pgcc.parser.JavaCCGlobals;
-import com.helger.pgcc.parser.Options;
 
 public class CodeGeneratorJava extends DefaultJJTreeVisitor
 {
@@ -387,8 +386,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
     NodeFilesJava.ensure (io, type);
 
     io.print (indent + nodeClass + " " + ns.m_nodeVar + " = ");
-    final String p = Options.isStatic () ? "null" : "this";
-    final String parserArg = JJTreeOptions.isNodeUsesParser () ? (p + ", ") : "";
+    final String parserArg = JJTreeOptions.isNodeUsesParser () ? ("this, ") : "";
 
     if (JJTreeOptions.getNodeFactory ().equals ("*"))
     {

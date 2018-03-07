@@ -64,44 +64,44 @@ implements CharStream
   }
 
   /** Position in buffer. */
-  ${PREFIX}protected int bufpos = -1;
-  ${PREFIX}protected int bufsize;
-  ${PREFIX}protected int available;
-  ${PREFIX}protected int tokenBegin;
+  protected int bufpos = -1;
+  protected int bufsize;
+  protected int available;
+  protected int tokenBegin;
 #if KEEP_LINE_COLUMN
-  ${PREFIX}protected int bufline[];
-  ${PREFIX}protected int bufcolumn[];
+  protected int bufline[];
+  protected int bufcolumn[];
 
-  ${PREFIX}protected int column = 0;
-  ${PREFIX}protected int line = 1;
+  protected int column = 0;
+  protected int line = 1;
 
-  ${PREFIX}protected boolean prevCharIsCR = false;
-  ${PREFIX}protected boolean prevCharIsLF = false;
+  protected boolean prevCharIsCR = false;
+  protected boolean prevCharIsLF = false;
 #fi
 
-  ${PREFIX}protected char[] buffer;
-  ${PREFIX}protected int maxNextCharInd = 0;
-  ${PREFIX}protected int inBuf = 0;
-  ${PREFIX}private int tabSize = 1;
-  ${PREFIX}protected char[] nextCharBuf;
-  ${PREFIX}protected int nextCharInd = -1;
+  protected char[] buffer;
+  protected int maxNextCharInd = 0;
+  protected int inBuf = 0;
+  private int tabSize = 1;
+  protected char[] nextCharBuf;
+  protected int nextCharInd = -1;
 #if KEEP_LINE_COLUMN
-  ${PREFIX}private boolean trackLineColumn = true;
+  private boolean trackLineColumn = true;
 #else
-  ${PREFIX}private final boolean trackLineColumn = false;
+  private final boolean trackLineColumn = false;
 #fi
 
-  ${PREFIX}public void setTabSize(final int i)
+  public void setTabSize(final int i)
   { 
     tabSize = i;
   }
   
-  ${PREFIX}public int getTabSize()
+  public int getTabSize()
   { 
     return tabSize;
   }
 
-  ${PREFIX}protected void expandBuff(final boolean wrapAround)
+  protected void expandBuff(final boolean wrapAround)
   {
     final char[] newbuffer = new char[bufsize + 2048];
 #if KEEP_LINE_COLUMN
@@ -161,7 +161,7 @@ implements CharStream
   
   protected abstract void streamClose() throws java.io.IOException;
 
-  ${PREFIX}protected void fillBuff() throws java.io.IOException
+  protected void fillBuff() throws java.io.IOException
   {
     if (maxNextCharInd == available)
     {
@@ -207,7 +207,7 @@ implements CharStream
     }
   }
 
-  ${PREFIX}public char beginToken() throws java.io.IOException
+  public char beginToken() throws java.io.IOException
   {
     tokenBegin = -1;
     char c = readChar();
@@ -217,7 +217,7 @@ implements CharStream
   }
 #if KEEP_LINE_COLUMN
 
-  ${PREFIX}protected void updateLineColumn(char c)
+  protected void updateLineColumn(char c)
   {
     column++;
 
@@ -262,7 +262,7 @@ implements CharStream
 #fi
 
   /** Read a character. */
-  ${PREFIX}public char readChar() throws java.io.IOException
+  public char readChar() throws java.io.IOException
   {
     if (inBuf > 0)
     {
@@ -287,7 +287,7 @@ implements CharStream
     return c;
   }
 
-  ${PREFIX}public int getEndColumn() {
+  public int getEndColumn() {
 #if KEEP_LINE_COLUMN
     return bufcolumn[bufpos];
 #else
@@ -295,7 +295,7 @@ implements CharStream
 #fi
   }
 
-  ${PREFIX}public int getEndLine() {
+  public int getEndLine() {
 #if KEEP_LINE_COLUMN
      return bufline[bufpos];
 #else
@@ -303,7 +303,7 @@ implements CharStream
 #fi
   }
 
-  ${PREFIX}public int getBeginColumn() {
+  public int getBeginColumn() {
 #if KEEP_LINE_COLUMN
     return bufcolumn[tokenBegin];
 #else
@@ -311,7 +311,7 @@ implements CharStream
 #fi
   }
 
-  ${PREFIX}public int getBeginLine() {
+  public int getBeginLine() {
 #if KEEP_LINE_COLUMN
     return bufline[tokenBegin];
 #else
@@ -319,7 +319,7 @@ implements CharStream
 #fi
   }
 
-  ${PREFIX}public void backup(final int amount) {
+  public void backup(final int amount) {
     inBuf += amount;
     bufpos -= amount;
     if (bufpos < 0)
@@ -376,7 +376,7 @@ implements CharStream
     nextCharInd = -1;
   }
 
-  ${PREFIX}public String getImage()
+  public String getImage()
   {
     if (bufpos >= tokenBegin)
       return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
@@ -384,7 +384,7 @@ implements CharStream
            new String(buffer, 0, bufpos + 1);
   }
 
-  ${PREFIX}public char[] getSuffix(int len)
+  public char[] getSuffix(int len)
   {
     char[] ret = new char[len];
     if ((bufpos + 1) >= len)
@@ -397,7 +397,7 @@ implements CharStream
     return ret;
   }
 
-  ${PREFIX}public void done()
+  public void done()
   {
     nextCharBuf = null;
     buffer = null;
@@ -411,7 +411,7 @@ implements CharStream
   /**
    * Method to adjust line and column numbers for the start of a token.
    */
-  ${PREFIX}public void adjustBeginLineColumn(final int nNewLine, final int newCol)
+  public void adjustBeginLineColumn(final int nNewLine, final int newCol)
   {
     int start = tokenBegin;
     int newLine = nNewLine;
@@ -461,11 +461,11 @@ implements CharStream
     column = bufcolumn[j];
   }
 
-  ${PREFIX}public void setTrackLineColumn(final boolean tlc) { 
+  public void setTrackLineColumn(final boolean tlc) { 
     trackLineColumn = tlc;
   }
   
-  ${PREFIX}public boolean getTrackLineColumn() { 
+  public boolean getTrackLineColumn() { 
     return trackLineColumn;
   }
 #fi

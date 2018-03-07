@@ -94,7 +94,6 @@ public class FilesJava
   {
     final EJDKVersion eJDKVersion = Options.getJdkVersion ();
     final Map <String, Object> ret = Options.getAllOptions ();
-    ret.put ("PREFIX", Options.isStatic () ? "static " : "");
     ret.put ("AT_LEAST_JDK7", Boolean.valueOf (eJDKVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17)));
     ret.put ("BEFORE_JDK7", Boolean.valueOf (eJDKVersion.isOlderThan (EJDKVersion.JDK_17)));
     return ret;
@@ -127,8 +126,7 @@ public class FilesJava
     final File file = new File (Options.getOutputDirectory (), "CharStream.java");
     try (final OutputFile outputFile = new OutputFile (file,
                                                        charStreamVersion,
-                                                       new String [] { Options.USEROPTION__STATIC,
-                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -157,8 +155,7 @@ public class FilesJava
     final File file = new File (Options.getOutputDirectory (), "AbstractCharStream.java");
     try (final OutputFile outputFile = new OutputFile (file,
                                                        charStreamVersion,
-                                                       new String [] { Options.USEROPTION__STATIC,
-                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -188,8 +185,7 @@ public class FilesJava
     final File file = new File (Options.getOutputDirectory (), "JavaCharStream.java");
     try (final OutputFile outputFile = new OutputFile (file,
                                                        charStreamVersion,
-                                                       new String [] { Options.USEROPTION__STATIC,
-                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -219,8 +215,7 @@ public class FilesJava
     final File file = new File (Options.getOutputDirectory (), "SimpleCharStream.java");
     try (final OutputFile outputFile = new OutputFile (file,
                                                        charStreamVersion,
-                                                       new String [] { Options.USEROPTION__STATIC,
-                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;

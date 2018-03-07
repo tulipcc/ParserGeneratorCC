@@ -60,7 +60,7 @@ public final class OptionsTest
   @Test
   public void testDefaults ()
   {
-    assertEquals (44, Options.s_optionValues.size ());
+    assertEquals (43, Options.s_optionValues.size ());
 
     assertEquals (true, Options.isBuildParser ());
     assertEquals (true, Options.isBuildTokenManager ());
@@ -75,7 +75,6 @@ public final class OptionsTest
     assertEquals (false, Options.isJavaUnicodeEscape ());
     assertEquals (true, Options.isKeepLineColumn ());
     assertEquals (true, Options.isSanityCheck ());
-    assertEquals (true, Options.isStatic ());
     assertEquals (false, Options.isUnicodeInput ());
     assertEquals (false, Options.isJavaUserCharStream ());
     assertEquals (false, Options.isUserTokenManager ());
@@ -140,10 +139,6 @@ public final class OptionsTest
   @Test
   public void testSetBooleanOption ()
   {
-    assertEquals (true, Options.isStatic ());
-    Options.setCmdLineOption ("-NOSTATIC");
-    assertEquals (false, Options.isStatic ());
-
     assertEquals (false, Options.isJavaUnicodeEscape ());
     Options.setCmdLineOption ("-JAVA_UNICODE_ESCAPE:true");
     assertEquals (true, Options.isJavaUnicodeEscape ());
@@ -216,7 +211,7 @@ public final class OptionsTest
   {
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());
-    Options.setInputFileOption (null, null, Options.USEROPTION__STATIC, Integer.valueOf (8));
+    Options.setInputFileOption (null, null, Options.USEROPTION__CACHE_TOKENS, Integer.valueOf (8));
     assertEquals (1, JavaCCErrors.getWarningCount ());
 
     assertEquals (0, JavaCCErrors.getErrorCount ());
@@ -245,10 +240,10 @@ public final class OptionsTest
   @Test
   public void testOptionsString ()
   {
-    Options.setCmdLineOption ("-STATIC=False");
+    Options.setCmdLineOption ("-CACHE_TOKENS=False");
     Options.setCmdLineOption ("-IGNORE_CASE=True");
-    final String [] options = { Options.USEROPTION__STATIC, Options.USEROPTION__IGNORE_CASE };
+    final String [] options = { Options.USEROPTION__CACHE_TOKENS, Options.USEROPTION__IGNORE_CASE };
     final String optionString = Options.getOptionsString (options);
-    assertEquals ("STATIC=false,IGNORE_CASE=true", optionString);
+    assertEquals ("CACHE_TOKENS=false,IGNORE_CASE=true", optionString);
   }
 }

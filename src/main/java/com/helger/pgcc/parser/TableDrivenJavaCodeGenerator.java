@@ -369,22 +369,21 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
 
     // Action functions.
 
-    final String staticString = Options.isStatic () ? "static " : "";
     // Token actions.
-    codeGenerator.genCodeLine (staticString + "void TokenLexicalActions(Token matchedToken) {");
+    codeGenerator.genCodeLine ("void TokenLexicalActions(Token matchedToken) {");
     _dumpLexicalActions (allMatches, TokenizerData.EMatchType.TOKEN, "matchedToken.kind", codeGenerator);
     codeGenerator.genCodeLine ("}");
 
     // Skip actions.
     // TODO(sreeni) : Streamline this mess.
 
-    codeGenerator.genCodeLine (staticString + "void SkipLexicalActions(Token matchedToken) {");
+    codeGenerator.genCodeLine ("void SkipLexicalActions(Token matchedToken) {");
     _dumpLexicalActions (allMatches, TokenizerData.EMatchType.SKIP, "jjmatchedKind", codeGenerator);
     _dumpLexicalActions (allMatches, TokenizerData.EMatchType.SPECIAL_TOKEN, "jjmatchedKind", codeGenerator);
     codeGenerator.genCodeLine ("}");
 
     // More actions.
-    codeGenerator.genCodeLine (staticString + "void MoreLexicalActions() {");
+    codeGenerator.genCodeLine ("void MoreLexicalActions() {");
     codeGenerator.genCodeLine ("jjimageLen += (lengthOfMatch = jjmatchedPos + 1);");
     _dumpLexicalActions (allMatches, TokenizerData.EMatchType.MORE, "jjmatchedKind", codeGenerator);
     codeGenerator.genCodeLine ("}");

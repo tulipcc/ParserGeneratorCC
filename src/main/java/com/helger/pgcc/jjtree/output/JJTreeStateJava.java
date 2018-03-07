@@ -38,6 +38,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 
+import javax.annotation.Nonnull;
+
+import com.helger.commons.annotation.Nonempty;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.jjtree.JJTreeGlobals;
 import com.helger.pgcc.jjtree.JJTreeIO;
@@ -57,15 +60,12 @@ public final class JJTreeStateJava
   public static void insertParserMembers (final JJTreeIO io)
   {
     io.println ();
-    io.println ("  protected " +
-                (Options.isStatic () ? "static " : "") +
-                _nameState () +
-                " jjtree = new " +
-                _nameState () +
-                "();");
+    io.println ("  protected " + _nameState () + " jjtree = new " + _nameState () + "();");
     io.println ();
   }
 
+  @Nonnull
+  @Nonempty
   private static String _nameState ()
   {
     return "JJT" + JJTreeGlobals.s_parserName + "State";
