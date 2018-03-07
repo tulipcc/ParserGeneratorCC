@@ -107,12 +107,12 @@ public class OtherFilesGenJava
 
   public static void start (final boolean isJavaModern) throws MetaParseException
   {
+    if (JavaCCErrors.getErrorCount () != 0)
+      throw new MetaParseException ("Error count is already present!");
+
     final IJavaResourceTemplateLocations templateLoc = isJavaModern ? RESOURCES_JAVA_MODERN : RESOURCES_JAVA_CLASSIC;
 
     Token t = null;
-
-    if (JavaCCErrors.getErrorCount () != 0)
-      throw new MetaParseException ();
 
     // Added this if condition -- 2012/10/17 -- cba
     if (Options.isGenerateJavaBoilerplateCode ())

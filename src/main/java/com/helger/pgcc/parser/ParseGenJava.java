@@ -93,14 +93,14 @@ public class ParseGenJava extends CodeGenerator
   public void start (final boolean isJavaModernMode) throws MetaParseException
   {
     if (JavaCCErrors.getErrorCount () != 0)
-      throw new MetaParseException ();
+      throw new MetaParseException ("Error count is already present!");
 
     if (!Options.isBuildParser ())
       return;
 
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
-    final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
+    final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_1_7);
 
     final List <String> tn = new ArrayList <> (s_toolNames);
     tn.add (CPG.APP_NAME);

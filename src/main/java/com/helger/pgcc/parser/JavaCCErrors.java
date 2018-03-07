@@ -158,6 +158,11 @@ public final class JavaCCErrors
     fatal ("Internal error in JavaCC: Please file an issue at https://github.com/phax/ParserGeneratorCC/issues . Thank you.");
   }
 
+  public static void note (final String mess)
+  {
+    System.err.println ("Note: " + mess);
+  }
+
   public static void reInit ()
   {
     s_parse_error_count = 0;

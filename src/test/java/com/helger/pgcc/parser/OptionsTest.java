@@ -84,7 +84,7 @@ public final class OptionsTest
     assertEquals (1, Options.getLookahead ());
     assertEquals (1, Options.getOtherAmbiguityCheck ());
 
-    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
+    assertEquals (EJDKVersion.DEFAULT, Options.getJdkVersion ());
     assertEquals (new File ("."), Options.getOutputDirectory ());
     assertEquals ("", Options.getTokenExtends ());
     assertEquals ("", Options.getTokenFactory ());
@@ -100,39 +100,60 @@ public final class OptionsTest
   public void setJdkVersion ()
   {
     assertEquals (EJDKVersion.DEFAULT, Options.getJdkVersion ());
-    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
+    assertEquals (EJDKVersion.JDK_1_5, Options.getJdkVersion ());
 
     beforeEach ();
 
-    // Verison too old
-    Options.setCmdLineOption ("JDK_VERSION=1.3");
-    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
+    // Version too old
+    Options.setCmdLineOption ("JDK_VERSION=1.1");
+    assertEquals (EJDKVersion.DEFAULT, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    // Version too old
+    Options.setCmdLineOption ("JDK_VERSION=1.4");
+    assertEquals (EJDKVersion.DEFAULT, Options.getJdkVersion ());
 
     beforeEach ();
 
     Options.setCmdLineOption ("JDK_VERSION=1.5");
-    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
+    assertEquals (EJDKVersion.JDK_1_5, Options.getJdkVersion ());
 
     beforeEach ();
 
     Options.setCmdLineOption ("JDK_VERSION=1.7");
-    assertEquals (EJDKVersion.JDK_17, Options.getJdkVersion ());
+    assertEquals (EJDKVersion.JDK_1_7, Options.getJdkVersion ());
 
     beforeEach ();
 
     Options.setCmdLineOption ("JDK_VERSION=1.8");
-    assertEquals (EJDKVersion.JDK_18, Options.getJdkVersion ());
+    assertEquals (EJDKVersion.JDK_1_8, Options.getJdkVersion ());
 
     beforeEach ();
 
     Options.setCmdLineOption ("JDK_VERSION=1.9");
-    assertEquals (EJDKVersion.JDK_19, Options.getJdkVersion ());
+    assertEquals (EJDKVersion.JDK_9, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    Options.setCmdLineOption ("JDK_VERSION=9");
+    assertEquals (EJDKVersion.JDK_9, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    Options.setCmdLineOption ("JDK_VERSION=10");
+    assertEquals (EJDKVersion.JDK_10, Options.getJdkVersion ());
+
+    beforeEach ();
+
+    Options.setCmdLineOption ("JDK_VERSION=11");
+    assertEquals (EJDKVersion.JDK_11, Options.getJdkVersion ());
 
     beforeEach ();
 
     // Ignore invalid JDK version
     Options.setCmdLineOption ("JDK_VERSION=2.0");
-    assertEquals (EJDKVersion.JDK_15, Options.getJdkVersion ());
+    assertEquals (EJDKVersion.DEFAULT, Options.getJdkVersion ());
     assertEquals (0, JavaCCErrors.getWarningCount ());
   }
 

@@ -114,7 +114,7 @@ public class OtherFilesGenCPP
   static public void start () throws MetaParseException
   {
     if (JavaCCErrors.getErrorCount () != 0)
-      throw new MetaParseException ();
+      throw new MetaParseException ("Error count is already present!");
 
     FilesCpp.gen_JavaCCDefs ();
     FilesCpp.gen_CharStream ();

@@ -66,10 +66,15 @@ package com.helger.pgcc.parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
+import com.helger.commons.state.ESuccess;
+import com.helger.pgcc.CPG;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.cpp.OtherFilesGenCPP;
 import com.helger.pgcc.output.java.OtherFilesGenJava;
@@ -81,42 +86,40 @@ import com.helger.pgcc.utils.OptionInfo;
  */
 public class Main
 {
-  protected Main ()
+  private Main ()
   {}
 
-  public static LexGenJava lg;
-
-  static void help_message ()
+  private static void _showHelpMessage ()
   {
-
     System.out.println ("Usage:");
-    System.out.println ("    javacc option-settings inputfile");
-    System.out.println ("");
+    System.out.println ("    " + CPG.CMDLINE_NAME + " option-settings inputfile");
+    System.out.println ();
     System.out.println ("\"option-settings\" is a sequence of settings separated by spaces.");
     System.out.println ("Each option setting must be of one of the following forms:");
-    System.out.println ("");
+    System.out.println ();
     System.out.println ("    -optionname=value (e.g., -STATIC=false)");
     System.out.println ("    -optionname:value (e.g., -STATIC:false)");
     System.out.println ("    -optionname       (equivalent to -optionname=true.  e.g., -STATIC)");
     System.out.println ("    -NOoptionname     (equivalent to -optionname=false. e.g., -NOSTATIC)");
-    System.out.println ("");
+    System.out.println ();
     System.out.println ("Option settings are not case-sensitive, so one can say \"-nOsTaTiC\" instead");
     System.out.println ("of \"-NOSTATIC\".  Option values must be appropriate for the corresponding");
     System.out.println ("option, and must be either an integer, a boolean, or a string value.");
-    System.out.println ("");
+    System.out.println ();
 
     // 2013/07/23 -- Changed this to auto-generate from metadata in Options so
     // that help is always in-sync with codebase
-    printOptions ();
+    _printOptions ();
 
     System.out.println ("EXAMPLE:");
-    System.out.println ("    javacc -STATIC=false -LOOKAHEAD:2 -debug_parser mygrammar.jj");
-    System.out.println ("");
+    System.out.println ("    " +
+                        CPG.CMDLINE_NAME +
+                        " -OUTPUT_DIRECTORY=target/code -LOOKAHEAD:2 -debug_parser mygrammar.jj");
+    System.out.println ();
   }
 
-  private static void printOptions ()
+  private static void _printOptions ()
   {
-
     final Set <OptionInfo> options = Options.getUserOptions ();
 
     int maxLengthInt = 0;
@@ -126,70 +129,65 @@ public class Main
     for (final OptionInfo i : options)
     {
       final int length = i.getName ().length ();
-
-      if (i.getType () == EOptionType.INTEGER)
+      switch (i.getType ())
       {
-        maxLengthInt = length > maxLengthInt ? length : maxLengthInt;
-      }
-      else
-        if (i.getType () == EOptionType.BOOLEAN)
-        {
+        case INTEGER:
+          maxLengthInt = length > maxLengthInt ? length : maxLengthInt;
+          break;
+        case BOOLEAN:
           maxLengthBool = length > maxLengthBool ? length : maxLengthBool;
-
-        }
-        else
-          if (i.getType () == EOptionType.STRING)
-          {
-            maxLengthString = length > maxLengthString ? length : maxLengthString;
-
-          }
-          else
-          {
-            // Not interested
-          }
+          break;
+        case STRING:
+          maxLengthString = length > maxLengthString ? length : maxLengthString;
+          break;
+        case OTHER:
+        default:
+          // Not interested
+          break;
+      }
     }
 
     if (maxLengthInt > 0)
     {
       System.out.println ("The integer valued options are:");
-      System.out.println ("");
+      System.out.println ();
       for (final OptionInfo i : options)
       {
-        printOptionInfo (EOptionType.INTEGER, i, maxLengthInt);
+        _printOptionInfo (EOptionType.INTEGER, i, maxLengthInt);
       }
-      System.out.println ("");
+      System.out.println ();
     }
 
     if (maxLengthBool > 0)
     {
       System.out.println ("The boolean valued options are:");
-      System.out.println ("");
+      System.out.println ();
       for (final OptionInfo i : options)
       {
-        printOptionInfo (EOptionType.BOOLEAN, i, maxLengthBool);
+        _printOptionInfo (EOptionType.BOOLEAN, i, maxLengthBool);
       }
-      System.out.println ("");
+      System.out.println ();
     }
 
     if (maxLengthString > 0)
     {
       System.out.println ("The string valued options are:");
-      System.out.println ("");
+      System.out.println ();
       for (final OptionInfo i : options)
       {
-        printOptionInfo (EOptionType.STRING, i, maxLengthString);
+        _printOptionInfo (EOptionType.STRING, i, maxLengthString);
       }
-      System.out.println ("");
+      System.out.println ();
     }
   }
 
-  private static void printOptionInfo (final EOptionType filter, final OptionInfo optionInfo, final int padLength)
+  private static void _printOptionInfo (final EOptionType filter, final OptionInfo optionInfo, final int padLength)
   {
     if (optionInfo.getType () == filter)
     {
       final Object default1 = optionInfo.getDefault ();
       System.out.println ("    " +
-                          padRight (optionInfo.getName (), padLength + 1) +
+                          _padRight (optionInfo.getName (), padLength + 1) +
                           (default1 == null ? ""
                                             : ("(default : " +
                                                (default1.toString ().length () == 0 ? "<<empty>>" : default1) +
@@ -197,13 +195,11 @@ public class Main
     }
   }
 
-  private static String padRight (final String name, final int maxLengthInt)
+  private static String _padRight (final String name, final int maxLengthInt)
   {
     final int nameLength = name.length ();
     if (nameLength == maxLengthInt)
-    {
       return name;
-    }
 
     final int charsToPad = maxLengthInt - nameLength;
     final StringBuilder sb = new StringBuilder (charsToPad);
@@ -215,62 +211,65 @@ public class Main
   }
 
   /**
-   * A main program that exercises the parser.
+   * A main program that exercises the parser. Calls <code>System.exit</code>!
+   *
+   * @see #mainProgram(String[])(String[]) for a version that does NOT call
+   *      <code>System.exit</code>
    */
-  public static void main (final String args[]) throws Exception
+  public static void main (final String args[]) throws IOException
   {
-    final int errorcode = mainProgram (args);
-    System.exit (errorcode);
+    final ESuccess eSuccess = mainProgram (args);
+    System.exit (eSuccess.isSuccess () ? 0 : 1);
   }
 
   /**
    * The method to call to exercise the parser from other Java programs. It
    * returns an error code. See how the main program above uses this method.
    */
-  public static int mainProgram (final String args[]) throws Exception
+  @Nonnull
+  public static ESuccess mainProgram (final String args[]) throws IOException
   {
-
     // Initialize all static state
     reInitAll ();
 
-    JavaCCGlobals.bannerLine ("Parser Generator", "");
+    JavaCCGlobals.bannerLine (CPG.APP_NAME, "");
 
-    JavaCCParser parser = null;
     if (args.length == 0)
     {
-      System.out.println ("");
-      help_message ();
-      return 1;
+      System.out.println ();
+      _showHelpMessage ();
+      return ESuccess.FAILURE;
     }
-    System.out.println ("(type \"javacc\" with no arguments for help)");
+    System.out.println ("(type \"" + CPG.CMDLINE_NAME + "\" with no arguments for help)");
 
     if (Options.isOption (args[args.length - 1]))
     {
       System.out.println ("Last argument \"" + args[args.length - 1] + "\" is not a filename.");
-      return 1;
+      return ESuccess.FAILURE;
     }
     for (int arg = 0; arg < args.length - 1; arg++)
     {
       if (!Options.isOption (args[arg]))
       {
         System.out.println ("Argument \"" + args[arg] + "\" must be an option setting.");
-        return 1;
+        return ESuccess.FAILURE;
       }
       Options.setCmdLineOption (args[arg]);
     }
 
+    JavaCCParser parser = null;
     try
     {
       final File fp = new File (args[args.length - 1]);
       if (!fp.exists ())
       {
         System.out.println ("File " + args[args.length - 1] + " not found.");
-        return 1;
+        return ESuccess.FAILURE;
       }
       if (fp.isDirectory ())
       {
         System.out.println (args[args.length - 1] + " is a directory. Please use a valid file name.");
-        return 1;
+        return ESuccess.FAILURE;
       }
       parser = new JavaCCParser (new NonBlockingBufferedReader (new InputStreamReader (new FileInputStream (args[args.length -
                                                                                                                  1]),
@@ -279,18 +278,19 @@ public class Main
     catch (final SecurityException se)
     {
       System.out.println ("Security violation while trying to open " + args[args.length - 1]);
-      return 1;
+      return ESuccess.FAILURE;
     }
     catch (final FileNotFoundException e)
     {
       System.out.println ("File " + args[args.length - 1] + " not found.");
-      return 1;
+      return ESuccess.FAILURE;
     }
 
     try
     {
-      System.out.println ("Reading from file " + args[args.length - 1] + " . . .");
-      JavaCCGlobals.s_fileName = JavaCCGlobals.s_origFileName = args[args.length - 1];
+      System.out.println ("Reading from file " + args[args.length - 1] + " ...");
+      JavaCCGlobals.s_fileName = args[args.length - 1];
+      JavaCCGlobals.s_origFileName = JavaCCGlobals.s_fileName;
       JavaCCGlobals.s_jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", args[args.length - 1]);
       JavaCCGlobals.s_toolNames = JavaCCGlobals.getToolNames (args[args.length - 1]);
       parser.javacc_input ();
@@ -300,31 +300,19 @@ public class Main
       // variable
       // to a lexer before the configuration override in the cc file had been
       // read.
-      final EOutputLanguage outputLanguage = Options.getOutputLanguage ();
+      final EOutputLanguage eOutputLanguage = Options.getOutputLanguage ();
 
       // 2013/07/22 Java Modern is a
-      final boolean isJavaModern = outputLanguage.isJava () &&
+      final boolean isJavaModern = eOutputLanguage.isJava () &&
                                    Options.getJavaTemplateType ().equals (Options.JAVA_TEMPLATE_TYPE_MODERN);
-
-      switch (outputLanguage)
-      {
-        case JAVA:
-          lg = new LexGenJava ();
-          break;
-        case CPP:
-          lg = new LexGenCpp ();
-          break;
-        default:
-          return unhandledLanguageExit (outputLanguage);
-      }
 
       JavaCCGlobals.createOutputDir (Options.getOutputDirectory ());
 
       if (Options.isUnicodeInput ())
       {
         NfaState.s_unicodeWarningGiven = true;
-        System.out.println ("Note: UNICODE_INPUT option is specified. " +
-                            "Please make sure you create the parser/lexer using a Reader with the correct character encoding.");
+        JavaCCErrors.note ("UNICODE_INPUT option is specified. " +
+                           "Please make sure you create the parser/lexer using a Reader with the correct character encoding.");
       }
 
       Semanticize.start ();
@@ -335,7 +323,7 @@ public class Main
       // and have the enumerations describe the deltas between the outputs. The
       // current approach means that per-langauge configuration is distributed
       // and small changes between targets does not benefit from inheritance.
-      switch (outputLanguage)
+      switch (eOutputLanguage)
       {
         case JAVA:
           if (isBuildParser)
@@ -363,29 +351,28 @@ public class Main
           OtherFilesGenCPP.start ();
           break;
         default:
-          unhandledLanguageExit (outputLanguage);
-          break;
+          throw new IllegalStateException ("Unhandled language!");
       }
 
-      if ((JavaCCErrors.getErrorCount () == 0) && (isBuildParser || Options.isBuildTokenManager ()))
+      final int nErrors = JavaCCErrors.getErrorCount ();
+      final int nWarnings = JavaCCErrors.getWarningCount ();
+      if (nErrors == 0 && (isBuildParser || Options.isBuildTokenManager ()))
       {
-        if (JavaCCErrors.getWarningCount () == 0)
+        if (nWarnings == 0)
         {
           if (isBuildParser)
             System.out.println ("Parser generated successfully.");
         }
         else
         {
-          System.out.println ("Parser generated with 0 errors and " + JavaCCErrors.getWarningCount () + " warnings.");
+          System.out.println ("Parser generated with 0 errors and " + nWarnings + " warnings.");
         }
-        return 0;
       }
-      System.out.println ("Detected " +
-                          JavaCCErrors.getErrorCount () +
-                          " errors and " +
-                          JavaCCErrors.getWarningCount () +
-                          " warnings.");
-      return (JavaCCErrors.getErrorCount () == 0) ? 0 : 1;
+      else
+      {
+        System.out.println ("Detected " + nErrors + " error(s) and " + nWarnings + " warning(s).");
+      }
+      return ESuccess.valueOf (nErrors == 0);
     }
     catch (final MetaParseException e)
     {
@@ -394,7 +381,6 @@ public class Main
                           " errors and " +
                           JavaCCErrors.getWarningCount () +
                           " warnings.");
-      return 1;
     }
     catch (final ParseException e)
     {
@@ -404,14 +390,8 @@ public class Main
                           " errors and " +
                           JavaCCErrors.getWarningCount () +
                           " warnings.");
-      return 1;
     }
-  }
-
-  private static int unhandledLanguageExit (final EOutputLanguage outputLanguage)
-  {
-    System.out.println ("Invalid '" + Options.USEROPTION__OUTPUT_LANGUAGE + "' specified : " + outputLanguage);
-    return 1;
+    return ESuccess.FAILURE;
   }
 
   public static void reInitAll ()
@@ -430,5 +410,4 @@ public class Main
     com.helger.pgcc.output.java.OtherFilesGenJava.reInit ();
     com.helger.pgcc.parser.LexGenJava.reInit ();
   }
-
 }

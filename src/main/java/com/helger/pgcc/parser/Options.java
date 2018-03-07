@@ -83,7 +83,6 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsImmutableObject;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.string.StringHelper;
-import com.helger.commons.string.StringParser;
 import com.helger.commons.system.SystemHelper;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.output.EOutputLanguage;
@@ -402,13 +401,14 @@ public class Options
       return ((Boolean) value).booleanValue () ? "*" : "";
     }
 
-    if (name.equalsIgnoreCase (USEROPTION__JDK_VERSION) && value.getClass () == String.class)
+    if (name.equalsIgnoreCase (USEROPTION__JDK_VERSION) &&
+        (value.getClass () == String.class || value.getClass () == Integer.class))
     {
-      final EJDKVersion ret = EJDKVersion.getFromDoubleOrNull (StringParser.parseDouble (value, 0));
+      final EJDKVersion ret = EJDKVersion.getFromStringOrNull (value.toString ());
       if (ret != null)
       {
         // Only values >= JDK 1.5 are accepted per PGCC 1.1.0
-        if (ret.isNewerOrEqualsThan (EJDKVersion.JDK_15))
+        if (ret.isNewerOrEqualsThan (EJDKVersion.JDK_1_5))
           return ret;
       }
 
@@ -526,56 +526,59 @@ public class Options
    * @param arg
    *        argument string to set. May not be <code>null</code>.
    */
-  public static void setCmdLineOption (@Nonnull final String arg)
+  public static void setCmdLineOption (@Nonnull final String sArg)
   {
-    final String sValue;
-    if (arg.charAt (0) == '-')
-      sValue = arg.substring (1);
+    final String sRealArg;
+    if (sArg.charAt (0) == '-')
+      sRealArg = sArg.substring (1);
     else
-      sValue = arg;
+      sRealArg = sArg;
+
+    final int index;
+    {
+      // Look for the first ":" or "=", which will separate the option name
+      // from its value (if any).
+      final int index1 = sRealArg.indexOf ('=');
+      final int index2 = sRealArg.indexOf (':');
+      if (index1 < 0)
+        index = index2;
+      else
+        if (index2 < 0)
+          index = index1;
+        else
+          index = Math.min (index1, index2);
+    }
 
     String name;
     Object val;
-
-    // Look for the first ":" or "=", which will separate the option name
-    // from its value (if any).
-    final int index1 = sValue.indexOf ('=');
-    final int index2 = sValue.indexOf (':');
-    final int index;
-
-    if (index1 < 0)
-      index = index2;
-    else
-      if (index2 < 0)
-        index = index1;
-      else
-        index = Math.min (index1, index2);
-
     if (index < 0)
     {
       // No separator char (like in "DO_THIS_AND_THAT")
-      name = sValue.toUpperCase (Locale.US);
+      name = sRealArg.toUpperCase (Locale.US);
       if (s_optionValues.containsKey (name))
       {
         val = Boolean.TRUE;
       }
       else
-        if (name.length () > 2 && name.charAt (0) == 'N' && name.charAt (1) == 'O')
+        if (name.length () > 2 &&
+            name.charAt (0) == 'N' &&
+            name.charAt (1) == 'O' &&
+            s_optionValues.containsKey (name.substring (2)))
         {
           val = Boolean.FALSE;
           name = name.substring (2);
         }
         else
         {
-          System.out.println ("Warning: Bad option \"" + arg + "\" will be ignored.");
+          System.out.println ("Warning: Bad option \"" + sArg + "\" will be ignored.");
           return;
         }
     }
     else
     {
       // We have name and value as in "X=Y" or "X:Y"
-      name = sValue.substring (0, index).toUpperCase (Locale.US);
-      final String sRealValue = sValue.substring (index + 1);
+      name = sRealArg.substring (0, index).toUpperCase (Locale.US);
+      final String sRealValue = sRealArg.substring (index + 1);
       if (sRealValue.equalsIgnoreCase ("TRUE"))
       {
         // Boolean
@@ -595,7 +598,7 @@ public class Options
             final int i = Integer.parseInt (sRealValue);
             if (i <= 0)
             {
-              System.out.println ("Warning: Bad option value in \"" + arg + "\" will be ignored.");
+              System.out.println ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
               return;
             }
             val = Integer.valueOf (i);
@@ -620,7 +623,7 @@ public class Options
 
     if (!s_optionValues.containsKey (name))
     {
-      System.out.println ("Warning: Bad option \"" + arg + "\" will be ignored.");
+      System.out.println ("Warning: Bad option \"" + sArg + "\" will be ignored.");
       return;
     }
 
@@ -629,12 +632,12 @@ public class Options
     final Object valOrig = s_optionValues.get (name);
     if (val.getClass () != valOrig.getClass ())
     {
-      System.out.println ("Warning: Bad option value in \"" + arg + "\" will be ignored.");
+      System.out.println ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
       return;
     }
     if (s_cmdLineSetting.contains (name))
     {
-      System.out.println ("Warning: Duplicate option setting \"" + arg + "\" will be ignored.");
+      System.out.println ("Warning: Duplicate option setting \"" + sArg + "\" will be ignored.");
       return;
     }
 

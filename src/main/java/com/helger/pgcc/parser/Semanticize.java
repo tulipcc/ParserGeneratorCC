@@ -77,9 +77,8 @@ public class Semanticize
 
   static public void start () throws MetaParseException
   {
-
     if (JavaCCErrors.getErrorCount () != 0)
-      throw new MetaParseException ();
+      throw new MetaParseException ("Error count is already present!");
 
     if (Options.getLookahead () > 1 && !Options.isForceLaCheck () && Options.isSanityCheck ())
     {
@@ -530,7 +529,7 @@ public class Semanticize
     }
 
     if (JavaCCErrors.getErrorCount () != 0)
-      throw new MetaParseException ();
+      throw new MetaParseException ("Error count is already present!");
 
     // The following code sets the value of the "emptyPossible" field of
     // NormalProduction
@@ -628,19 +627,16 @@ public class Semanticize
           ExpansionTreeWalker.preOrderWalk (aNormalProduction.getExpansion (), new LookaheadChecker ());
         }
       }
-
     } // matches "if (Options.getSanityCheck()) {"
 
     if (JavaCCErrors.getErrorCount () != 0)
-      throw new MetaParseException ();
-
+      throw new MetaParseException ("Error count is already present!");
   }
 
   public static AbstractExpRegularExpression other;
 
   // Checks to see if the "str" is superceded by another equal (except case)
-  // string
-  // in table.
+  // string in table.
   public static boolean hasIgnoreCase (final Map <String, AbstractExpRegularExpression> table, final String str)
   {
     final AbstractExpRegularExpression rexp = table.get (str);

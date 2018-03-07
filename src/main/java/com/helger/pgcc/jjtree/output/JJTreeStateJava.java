@@ -89,7 +89,7 @@ public final class JJTreeStateJava
   private static void _insertState (final PrintWriter ostr)
   {
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
-    final boolean bEmptyImplType = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_17);
+    final boolean bEmptyImplType = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_1_7);
 
     ostr.println ("public class " + _nameState () + " {");
 

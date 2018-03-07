@@ -38,17 +38,19 @@ import javax.annotation.Nullable;
 
 public enum EJDKVersion
 {
-  JDK_11 (1),
-  JDK_12 (2),
-  JDK_13 (3),
-  JDK_14 (4),
-  JDK_15 (5),
-  JDK_16 (6),
-  JDK_17 (7),
-  JDK_18 (8),
-  JDK_19 (9);
+  JDK_1_1 (1),
+  JDK_1_2 (2),
+  JDK_1_3 (3),
+  JDK_1_4 (4),
+  JDK_1_5 (5),
+  JDK_1_6 (6),
+  JDK_1_7 (7),
+  JDK_1_8 (8),
+  JDK_9 (9),
+  JDK_10 (10),
+  JDK_11 (11);
 
-  public static final EJDKVersion DEFAULT = JDK_15;
+  public static final EJDKVersion DEFAULT = JDK_1_5;
 
   private int m_nMajor;
 
@@ -73,22 +75,30 @@ public enum EJDKVersion
   }
 
   @Nullable
-  public static EJDKVersion getFromDoubleOrNull (final double dVersion)
+  public static EJDKVersion getFromStringOrNull (final String sVersion)
   {
-    if (dVersion >= 1.0 && dVersion <= 2)
-    {
-      // It's the 1.x writing => 1.6 = JDK 1.6
-      for (final EJDKVersion e : values ())
-        if (dVersion == e._getAsDouble1x ())
-          return e;
-      return null;
-    }
-
-    // It's the x writing => 6 = JDK 1.6
-    final int nMajor = (int) dVersion;
-    for (final EJDKVersion e : values ())
-      if (nMajor == e.m_nMajor)
-        return e;
+    if ("1.1".equals (sVersion))
+      return EJDKVersion.JDK_1_1;
+    if ("1.2".equals (sVersion))
+      return EJDKVersion.JDK_1_2;
+    if ("1.3".equals (sVersion))
+      return EJDKVersion.JDK_1_3;
+    if ("1.4".equals (sVersion))
+      return EJDKVersion.JDK_1_4;
+    if ("1.5".equals (sVersion))
+      return EJDKVersion.JDK_1_5;
+    if ("1.6".equals (sVersion))
+      return EJDKVersion.JDK_1_6;
+    if ("1.7".equals (sVersion))
+      return EJDKVersion.JDK_1_7;
+    if ("1.8".equals (sVersion))
+      return EJDKVersion.JDK_1_8;
+    if ("1.9".equals (sVersion) || "9".equals (sVersion))
+      return EJDKVersion.JDK_9;
+    if ("1.10".equals (sVersion) || "10".equals (sVersion))
+      return EJDKVersion.JDK_10;
+    if ("1.11".equals (sVersion) || "11".equals (sVersion))
+      return EJDKVersion.JDK_11;
     return null;
   }
 }

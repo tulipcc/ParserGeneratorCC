@@ -63,11 +63,8 @@ public class ParseGenCPP extends ParseGenJava
   @SuppressWarnings ("unchecked")
   public void start () throws MetaParseException
   {
-
-    Token t = null;
-
     if (JavaCCErrors.getErrorCount () != 0)
-      throw new MetaParseException ();
+      throw new MetaParseException ("Error count is already present!");
 
     final List <String> tn = new ArrayList <> (s_toolNames);
     tn.add (CPG.APP_NAME);
@@ -144,12 +141,9 @@ public class ParseGenCPP extends ParseGenJava
     switchToMainFile ();
     if (s_cu_to_insertion_point_2.size () != 0)
     {
-      printTokenSetup ((s_cu_to_insertion_point_2.get (0)));
-      for (final Object name : s_cu_to_insertion_point_2)
-      {
-        t = (Token) name;
+      printTokenSetup (s_cu_to_insertion_point_2.get (0));
+      for (final Token t : s_cu_to_insertion_point_2)
         printToken (t);
-      }
     }
 
     switchToMainFile ();
@@ -797,11 +791,12 @@ public class ParseGenCPP extends ParseGenJava
 
     if (s_cu_from_insertion_point_2.size () != 0)
     {
-      printTokenSetup ((s_cu_from_insertion_point_2.get (0)));
+      printTokenSetup (s_cu_from_insertion_point_2.get (0));
       m_ccol = 1;
-      for (final Object name : s_cu_from_insertion_point_2)
+      Token t = null;
+      for (final Token name : s_cu_from_insertion_point_2)
       {
-        t = (Token) name;
+        t = name;
         printToken (t);
       }
       printTrailingComments (t);

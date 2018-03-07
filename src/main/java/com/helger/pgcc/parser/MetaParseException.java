@@ -38,9 +38,8 @@ package com.helger.pgcc.parser;
  */
 public class MetaParseException extends ParseException
 {
-
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 1L;
+  public MetaParseException (final String sMsg)
+  {
+    super (sMsg);
+  }
 }
