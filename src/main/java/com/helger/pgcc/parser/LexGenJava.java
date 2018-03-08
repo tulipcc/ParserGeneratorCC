@@ -158,6 +158,7 @@ public class LexGenJava extends CodeGenerator
     // into a single Enum class
     genCodeLine ("/* " + getIdString (tn, s_tokMgrClassName + getFileExtension ()) + " */");
 
+    boolean bHasImport = false;
     int nIndex = 0;
     int i = 1;
     for (;;)
@@ -168,6 +169,9 @@ public class LexGenJava extends CodeGenerator
       int kind = s_cu_to_insertion_point_1.get (nIndex).kind;
       if (kind == JavaCCParserConstants.PACKAGE || kind == JavaCCParserConstants.IMPORT)
       {
+        if (kind == JavaCCParserConstants.IMPORT)
+          bHasImport = true;
+
         for (; i < s_cu_to_insertion_point_1.size (); i++)
         {
           kind = s_cu_to_insertion_point_1.get (i).kind;
@@ -205,8 +209,13 @@ public class LexGenJava extends CodeGenerator
     genCodeLine ();
     genCodeLine ("/** Token Manager. */");
 
-    // For issue #14
-    genCodeLine ("@SuppressWarnings (\"unused\")");
+    // Emit only if an import is present
+    if (bHasImport)
+    {
+      // For issue #14
+      genCodeLine ("@SuppressWarnings (\"unused\")");
+    }
+
     if (Options.isJavaSupportClassVisibilityPublic ())
     {
       genModifier ("public ");
