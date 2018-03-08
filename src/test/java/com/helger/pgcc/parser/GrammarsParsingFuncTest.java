@@ -4,7 +4,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+
+import javax.annotation.Nonnull;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -22,6 +26,18 @@ public final class GrammarsParsingFuncTest
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (GrammarsParsingFuncTest.class);
 
+  private static void _parseCreatedJavaFiles (@Nonnull final File fGrammarDest,
+                                              @Nonnull final Charset aCharset) throws FileNotFoundException
+  {
+    // Parse all created Java files
+    for (final File fJava : new FileSystemIterator (fGrammarDest).withFilter (IFileFilter.filenameEndsWith (".java")))
+    {
+      s_aLogger.info ("  Java Parsing " + fJava.getName () + " in " + aCharset.name ());
+      final CompilationUnit aCU = JavaParser.parse (fJava, aCharset);
+      assertNotNull (aCU);
+    }
+  }
+
   @Test
   public void testParseDemoGrammars () throws Exception
   {
@@ -30,13 +46,11 @@ public final class GrammarsParsingFuncTest
 
     for (final File f : new FileSystemIterator (new File ("grammars")).withFilter (IFileFilter.filenameEndsWith (".jj")))
     {
-      final String sBaseName = FilenameHelper.getBaseName (f);
       s_aLogger.info ("Parsing " + f.getName ());
 
-      final File fGrammarDest = new File (fDest, sBaseName);
+      final File fGrammarDest = new File (fDest, FilenameHelper.getBaseName (f));
       fGrammarDest.mkdirs ();
 
-      // Always Java
       final ESuccess eSuccess = Main.mainProgram (new String [] { "-OUTPUT_DIRECTORY=" +
                                                                   fGrammarDest.getAbsolutePath (),
                                                                   "-JDK_VERSION=1.8",
@@ -44,13 +58,31 @@ public final class GrammarsParsingFuncTest
                                                                   f.getAbsolutePath () });
       assertTrue (eSuccess.isSuccess ());
 
-      // Parse all created Java files
-      for (final File fJava : new FileSystemIterator (fGrammarDest).withFilter (IFileFilter.filenameEndsWith (".java")))
-      {
-        s_aLogger.info ("  Java Parsing " + fJava.getName ());
-        final CompilationUnit aCU = JavaParser.parse (fJava, StandardCharsets.UTF_8);
-        assertNotNull (aCU);
-      }
+      _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
+    }
+  }
+
+  @Test
+  public void testParseDemoGrammars15 () throws Exception
+  {
+    final File fDest = new File ("target/grammars");
+    fDest.mkdirs ();
+
+    for (final File f : new FileSystemIterator (new File ("grammars")).withFilter (IFileFilter.filenameEndsWith (".jj")))
+    {
+      s_aLogger.info ("Parsing " + f.getName ());
+
+      final File fGrammarDest = new File (fDest, FilenameHelper.getBaseName (f));
+      fGrammarDest.mkdirs ();
+
+      final ESuccess eSuccess = Main.mainProgram (new String [] { "-OUTPUT_DIRECTORY=" +
+                                                                  fGrammarDest.getAbsolutePath (),
+                                                                  "-JDK_VERSION=1.5",
+                                                                  "-OUTPUT_ENCODING=UTF-8",
+                                                                  f.getAbsolutePath () });
+      assertTrue (eSuccess.isSuccess ());
+
+      _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
     }
   }
 
@@ -68,7 +100,6 @@ public final class GrammarsParsingFuncTest
       final File fGrammarDest = new File (fDest, sBaseName);
       fGrammarDest.mkdirs ();
 
-      // Also contains C++
       final ESuccess eSuccess = Main.mainProgram (new String [] { "-OUTPUT_DIRECTORY=" +
                                                                   fGrammarDest.getAbsolutePath (),
                                                                   "-JDK_VERSION=1.8",
@@ -76,13 +107,7 @@ public final class GrammarsParsingFuncTest
                                                                   f.getAbsolutePath () });
       assertTrue (eSuccess.isSuccess ());
 
-      // Parse all created Java files
-      for (final File fJava : new FileSystemIterator (fGrammarDest).withFilter (IFileFilter.filenameEndsWith (".java")))
-      {
-        s_aLogger.info ("  Java Parsing " + fJava.getName ());
-        final CompilationUnit aCU = JavaParser.parse (fJava, StandardCharsets.UTF_8);
-        assertNotNull (aCU);
-      }
+      _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
     }
   }
 }

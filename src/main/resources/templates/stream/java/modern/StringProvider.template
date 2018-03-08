@@ -11,7 +11,7 @@ public class StringProvider implements Provider {
 		_size = string.length();
 	}
 	
-	public int read(char[] cbuf, int off, int len) throws IOException {
+	public int read(final char[] cbuf, final int off, final int len) throws IOException {
 		int numCharsOutstandingInString = _size - _position;
 		
 		if (numCharsOutstandingInString == 0)
@@ -32,7 +32,7 @@ public class StringProvider implements Provider {
 		return numBytesToRead;
 	}
 
-	public void close() throws IOException {
+	public void close() {
 		_string = null;
 	}
 }

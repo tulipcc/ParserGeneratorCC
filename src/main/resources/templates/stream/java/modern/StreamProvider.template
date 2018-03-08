@@ -10,20 +10,23 @@ import java.io.Reader;
  */
 public class StreamProvider implements Provider {
 	private Reader _reader;
-
-	public StreamProvider(final Reader reader) {
-		_reader = reader;
-	}
 	
+#if AT_LEAST_JDK6
+  @Deprecated
+#endif  	
   public StreamProvider(final InputStream stream, final String charsetName) throws IOException {
-    _reader = new BufferedReader(new InputStreamReader(stream, charsetName));
+    this (new BufferedReader(new InputStreamReader(stream, charsetName)));
   }
   
   public StreamProvider(final InputStream stream, final java.nio.charset.Charset charset) {
-    _reader = new BufferedReader(new InputStreamReader(stream, charset));
+    this (new BufferedReader(new InputStreamReader(stream, charset)));
   }
 
-  public int read(char[] buffer, int off, int len) throws IOException {
+  public StreamProvider(final Reader reader) {
+    _reader = reader;
+  }
+
+  public int read(final char[] buffer, final int off, final int len) throws IOException {
     int result = _reader.read(buffer, off, len);
 
     /* CBA -- Added 2014/03/29 -- 

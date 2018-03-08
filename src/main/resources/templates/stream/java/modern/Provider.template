@@ -18,7 +18,8 @@ extends java.io.Closeable
    * @exception IOException if reading fails
    */
   int read(char[] buffer, int offset, int len) throws IOException;
-#if BEFORE_JDK7
+#if AT_LEAST_JDK7
+#else
     
    /**
     * Closes the stream and releases any system resources associated with
