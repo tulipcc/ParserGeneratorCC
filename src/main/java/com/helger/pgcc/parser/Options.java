@@ -66,6 +66,7 @@ package com.helger.pgcc.parser;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -146,6 +147,7 @@ public class Options
   public static final String USEROPTION__OUTPUT_DIRECTORY = "OUTPUT_DIRECTORY";
   public static final String USEROPTION__KEEP_LINE_COLUMN = "KEEP_LINE_COLUMN";
   public static final String USEROPTION__GRAMMAR_ENCODING = "GRAMMAR_ENCODING";
+  public static final String USEROPTION__OUTPUT_ENCODING = "OUTPUT_ENCODING";
   public static final String USEROPTION__TOKEN_FACTORY = "TOKEN_FACTORY";
   public static final String USEROPTION__TOKEN_EXTENDS = "TOKEN_EXTENDS";
   public static final String USEROPTION__DEPTH_LIMIT = "DEPTH_LIMIT";
@@ -223,6 +225,7 @@ public class Options
     temp.add (new OptionInfo (USEROPTION__TOKEN_EXTENDS, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__TOKEN_FACTORY, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__GRAMMAR_ENCODING, EOptionType.STRING, ""));
+    temp.add (new OptionInfo (USEROPTION__OUTPUT_ENCODING, EOptionType.STRING, StandardCharsets.UTF_8.name ()));
     s_language = EOutputLanguage.JAVA;
     temp.add (new OptionInfo (USEROPTION__OUTPUT_LANGUAGE, EOptionType.STRING, s_language.getID ()));
 
@@ -934,23 +937,48 @@ public class Options
   }
 
   /**
-   * Return the file encoding; this will return the file.encoding system
-   * property if no value was explicitly set
+   * Return the file encoding for reading grammars; this will return the
+   * file.encoding system property if no value was explicitly set
    *
    * @return The file encoding (e.g., UTF-8, ISO_8859-1, MacRoman)
    */
+  @Nonnull
   public static Charset getGrammarEncoding ()
   {
     final String sValue = stringValue (USEROPTION__GRAMMAR_ENCODING);
-    if (StringHelper.hasNoText (sValue))
-    {
-      return SystemHelper.getSystemCharset ();
-    }
-    return Charset.forName (sValue);
+    if (StringHelper.hasText (sValue))
+      try
+      {
+        return Charset.forName (sValue);
+      }
+      catch (final UnsupportedCharsetException ex)
+      {
+        // Fall through
+        JavaCCErrors.warning ("The grammar encoding value '" + sValue + "' is invalid. Falling back to default.");
+      }
+    return SystemHelper.getSystemCharset ();
   }
 
+  /**
+   * Return the file encoding for reading grammars; this will return the UTF-8
+   * if no value was explicitly set
+   *
+   * @return The output encoding
+   */
+  @Nonnull
   public static Charset getOutputEncoding ()
   {
+    final String sValue = stringValue (USEROPTION__OUTPUT_ENCODING);
+    if (StringHelper.hasText (sValue))
+      try
+      {
+        return Charset.forName (sValue);
+      }
+      catch (final UnsupportedCharsetException ex)
+      {
+        // Fall through
+        JavaCCErrors.warning ("The output encoding value '" + sValue + "' is invalid. Falling back to default.");
+      }
     return StandardCharsets.UTF_8;
   }
 

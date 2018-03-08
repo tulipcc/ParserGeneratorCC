@@ -36,6 +36,7 @@ package com.helger.pgcc.parser;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +61,7 @@ public final class OptionsTest
   @Test
   public void testDefaults ()
   {
-    assertEquals (43, Options.s_optionValues.size ());
+    assertEquals (44, Options.s_optionValues.size ());
 
     assertEquals (true, Options.isBuildParser ());
     assertEquals (true, Options.isBuildTokenManager ());
@@ -266,5 +267,21 @@ public final class OptionsTest
     final String [] options = { Options.USEROPTION__CACHE_TOKENS, Options.USEROPTION__IGNORE_CASE };
     final String optionString = Options.getOptionsString (options);
     assertEquals ("CACHE_TOKENS=false,IGNORE_CASE=true", optionString);
+  }
+
+  @Test
+  public void testOutputEncoding ()
+  {
+    Options.setCmdLineOption ("-OUTPUT_ENCODING=bla");
+    assertEquals (StandardCharsets.UTF_8, Options.getOutputEncoding ());
+    beforeEach ();
+
+    Options.setCmdLineOption ("-OUTPUT_ENCODING=iso-8859-1");
+    assertEquals (StandardCharsets.ISO_8859_1, Options.getOutputEncoding ());
+    beforeEach ();
+
+    Options.setCmdLineOption ("-OUTPUT_ENCODING=ISO8859-1");
+    assertEquals (StandardCharsets.ISO_8859_1, Options.getOutputEncoding ());
+    beforeEach ();
   }
 }
