@@ -20,7 +20,6 @@
  *
  ******************************************************************************/
 options {
-      STATIC = false;
       SUPPORT_CLASS_VISIBILITY_PUBLIC = true;
       ERROR_REPORTING = false;
       JAVA_UNICODE_ESCAPE = true;

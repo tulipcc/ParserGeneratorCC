@@ -21,6 +21,7 @@ import com.helger.commons.io.file.FileSystemRecursiveIterator;
 import com.helger.commons.io.file.FilenameHelper;
 import com.helger.commons.io.file.IFileFilter;
 import com.helger.commons.state.ESuccess;
+import com.helger.pgcc.jjtree.JJTree;
 
 public final class GrammarsParsingFuncTest
 {
@@ -102,6 +103,29 @@ public final class GrammarsParsingFuncTest
                                                                   "-JDK_VERSION=1.8",
                                                                   "-JAVA_TEMPLATE_TYPE=modern",
                                                                   f.getAbsolutePath () });
+      assertTrue (eSuccess.isSuccess ());
+
+      _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
+    }
+  }
+
+  @Test
+  public void testParseDemoGrammarsJJT () throws Exception
+  {
+    final File fDest = new File ("target/grammars");
+    fDest.mkdirs ();
+
+    for (final File f : new FileSystemIterator (new File ("grammars")).withFilter (IFileFilter.filenameEndsWith (".jjt")))
+    {
+      s_aLogger.info ("Parsing " + f.getName ());
+
+      final File fGrammarDest = new File (fDest, FilenameHelper.getBaseName (f));
+      fGrammarDest.mkdirs ();
+
+      final ESuccess eSuccess = new JJTree ().main (new String [] { "-OUTPUT_DIRECTORY=" +
+                                                                    fGrammarDest.getAbsolutePath (),
+                                                                    "-JDK_VERSION=1.8",
+                                                                    f.getAbsolutePath () });
       assertTrue (eSuccess.isSuccess ());
 
       _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);

@@ -66,6 +66,9 @@ package com.helger.pgcc.jjtree;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+
+import com.helger.commons.state.ESuccess;
 import com.helger.pgcc.jjtree.output.JJTreeStateCpp;
 import com.helger.pgcc.jjtree.output.JJTreeStateJava;
 import com.helger.pgcc.jjtree.output.NodeFilesCpp;
@@ -142,8 +145,11 @@ public class JJTree
 
   /**
    * A main program that exercises the parser.
+   *
+   * @return {@link ESuccess}
    */
-  public int main (final String args[])
+  @Nonnull
+  public ESuccess main (final String [] args)
   {
     // initialize static state for allowing repeat runs without exiting
     ASTNodeDescriptor.reInit ();
@@ -152,7 +158,6 @@ public class JJTree
     JavaCCGlobals.bannerLine ("Tree Builder", "");
 
     io = new JJTreeIO ();
-
     try
     {
 
@@ -161,7 +166,7 @@ public class JJTree
       {
         _println ("");
         help_message ();
-        return 1;
+        return ESuccess.FAILURE;
       }
       _println ("(type \"jjtree\" with no arguments for help)");
 
@@ -169,14 +174,14 @@ public class JJTree
       if (Options.isOption (fn))
       {
         _println ("Last argument \"" + fn + "\" is not a filename");
-        return 1;
+        return ESuccess.FAILURE;
       }
       for (int arg = 0; arg < args.length - 1; arg++)
       {
         if (!Options.isOption (args[arg]))
         {
           _println ("Argument \"" + args[arg] + "\" must be an option setting.");
-          return 1;
+          return ESuccess.FAILURE;
         }
         Options.setCmdLineOption (args[arg]);
       }
@@ -190,7 +195,7 @@ public class JJTree
       catch (final IOException ioe)
       {
         _println ("Error setting input: " + ioe.getMessage ());
-        return 1;
+        return ESuccess.FAILURE;
       }
       _println ("Reading from file " + io.getInputFilename () + " . . .");
 
@@ -215,7 +220,7 @@ public class JJTree
         catch (final IOException ioe)
         {
           _println ("Error setting output: " + ioe.getMessage ());
-          return 1;
+          return ESuccess.FAILURE;
         }
         root.generate (io);
         io.getOut ().close ();
@@ -237,25 +242,22 @@ public class JJTree
             break;
           default:
             _println ("Unsupported JJTree output language : " + Options.getOutputLanguage ());
-            return 1;
+            return ESuccess.FAILURE;
         }
 
         _println ("Annotated grammar generated successfully in " + io.getOutputFilename ());
+        return ESuccess.SUCCESS;
       }
       catch (final ParseException pe)
       {
         _println ("Error parsing input: " + pe.toString ());
-        return 1;
       }
       catch (final Exception e)
       {
         _println ("Error parsing input: " + e.toString ());
         e.printStackTrace (io.getMsg ());
-        return 1;
       }
-
-      return 0;
-
+      return ESuccess.FAILURE;
     }
     finally
     {

@@ -33,6 +33,8 @@
  */
 package com.helger.pgcc.jjtree;
 
+import com.helger.commons.state.ESuccess;
+
 /**
  * Entry point.
  */
@@ -44,7 +46,7 @@ public final class Main
   public static void main (final String args[])
   {
     final JJTree jjtree = new JJTree ();
-    final int result = jjtree.main (args);
-    System.exit (result);
+    final ESuccess eSuccess = jjtree.main (args);
+    System.exit (eSuccess.isFailure () ? 1 : 0);
   }
 }
