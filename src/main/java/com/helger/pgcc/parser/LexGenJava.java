@@ -158,14 +158,14 @@ public class LexGenJava extends CodeGenerator
     // into a single Enum class
     genCodeLine ("/* " + getIdString (tn, s_tokMgrClassName + getFileExtension ()) + " */");
 
-    int l = 0, kind;
+    int nIndex = 0;
     int i = 1;
     for (;;)
     {
-      if (s_cu_to_insertion_point_1.size () <= l)
+      if (s_cu_to_insertion_point_1.size () <= nIndex)
         break;
 
-      kind = s_cu_to_insertion_point_1.get (l).kind;
+      int kind = s_cu_to_insertion_point_1.get (nIndex).kind;
       if (kind == JavaCCParserConstants.PACKAGE || kind == JavaCCParserConstants.IMPORT)
       {
         for (; i < s_cu_to_insertion_point_1.size (); i++)
@@ -174,13 +174,17 @@ public class LexGenJava extends CodeGenerator
           if (kind == JavaCCParserConstants.SEMICOLON ||
               kind == JavaCCParserConstants.ABSTRACT ||
               kind == JavaCCParserConstants.FINAL ||
+              kind == JavaCCParserConstants.PRIVATE ||
+              kind == JavaCCParserConstants.PROTECTED ||
               kind == JavaCCParserConstants.PUBLIC ||
+              kind == JavaCCParserConstants.STATIC ||
               kind == JavaCCParserConstants.CLASS ||
-              kind == JavaCCParserConstants.INTERFACE)
+              kind == JavaCCParserConstants.INTERFACE ||
+              kind == JavaCCParserConstants.ENUM)
           {
-            m_cline = s_cu_to_insertion_point_1.get (l).beginLine;
-            m_ccol = s_cu_to_insertion_point_1.get (l).beginColumn;
-            int j = l;
+            m_cline = s_cu_to_insertion_point_1.get (nIndex).beginLine;
+            m_ccol = s_cu_to_insertion_point_1.get (nIndex).beginColumn;
+            int j = nIndex;
             for (; j < i; j++)
             {
               printToken (s_cu_to_insertion_point_1.get (j));
@@ -191,7 +195,8 @@ public class LexGenJava extends CodeGenerator
             break;
           }
         }
-        l = ++i;
+        ++i;
+        nIndex = i;
       }
       else
         break;
@@ -199,6 +204,9 @@ public class LexGenJava extends CodeGenerator
 
     genCodeLine ();
     genCodeLine ("/** Token Manager. */");
+
+    // For issue #14
+    genCodeLine ("@SuppressWarnings (\"unused\")");
     if (Options.isJavaSupportClassVisibilityPublic ())
     {
       genModifier ("public ");
