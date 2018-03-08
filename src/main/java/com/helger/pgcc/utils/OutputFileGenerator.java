@@ -48,6 +48,7 @@ import javax.annotation.WillNotClose;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.file.SimpleFileIO;
+import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.commons.io.stream.NonBlockingStringReader;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
@@ -98,7 +99,7 @@ public class OutputFileGenerator
    */
   public void generate (@WillNotClose final Writer out) throws IOException
   {
-    final InputStream is = getClass ().getResourceAsStream (m_templateName);
+    final InputStream is = ClassPathResource.getInputStream (m_templateName);
     if (is == null)
       throw new IOException ("Invalid template name: " + m_templateName);
     try (final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is)))

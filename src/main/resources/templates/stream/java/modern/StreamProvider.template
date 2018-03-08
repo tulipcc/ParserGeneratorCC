@@ -13,7 +13,7 @@ public class StreamProvider implements Provider {
 	
 #if AT_LEAST_JDK6
   @Deprecated
-#endif  	
+#fi
   public StreamProvider(final InputStream stream, final String charsetName) throws IOException {
     this (new BufferedReader(new InputStreamReader(stream, charsetName)));
   }
@@ -46,4 +46,3 @@ public class StreamProvider implements Provider {
     _reader.close();
 	}
 }
-

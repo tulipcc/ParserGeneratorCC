@@ -54,7 +54,6 @@ public final class GrammarsParsingFuncTest
       final ESuccess eSuccess = Main.mainProgram (new String [] { "-OUTPUT_DIRECTORY=" +
                                                                   fGrammarDest.getAbsolutePath (),
                                                                   "-JDK_VERSION=1.8",
-                                                                  "-OUTPUT_ENCODING=UTF-8",
                                                                   f.getAbsolutePath () });
       assertTrue (eSuccess.isSuccess ());
 
@@ -63,7 +62,7 @@ public final class GrammarsParsingFuncTest
   }
 
   @Test
-  public void testParseDemoGrammars15 () throws Exception
+  public void testParseDemoGrammarsJDK15 () throws Exception
   {
     final File fDest = new File ("target/grammars");
     fDest.mkdirs ();
@@ -78,7 +77,30 @@ public final class GrammarsParsingFuncTest
       final ESuccess eSuccess = Main.mainProgram (new String [] { "-OUTPUT_DIRECTORY=" +
                                                                   fGrammarDest.getAbsolutePath (),
                                                                   "-JDK_VERSION=1.5",
-                                                                  "-OUTPUT_ENCODING=UTF-8",
+                                                                  f.getAbsolutePath () });
+      assertTrue (eSuccess.isSuccess ());
+
+      _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
+    }
+  }
+
+  @Test
+  public void testParseDemoGrammarsModern () throws Exception
+  {
+    final File fDest = new File ("target/grammars");
+    fDest.mkdirs ();
+
+    for (final File f : new FileSystemIterator (new File ("grammars")).withFilter (IFileFilter.filenameEndsWith (".jj")))
+    {
+      s_aLogger.info ("Parsing " + f.getName ());
+
+      final File fGrammarDest = new File (fDest, FilenameHelper.getBaseName (f));
+      fGrammarDest.mkdirs ();
+
+      final ESuccess eSuccess = Main.mainProgram (new String [] { "-OUTPUT_DIRECTORY=" +
+                                                                  fGrammarDest.getAbsolutePath (),
+                                                                  "-JDK_VERSION=1.8",
+                                                                  "-JAVA_TEMPLATE_TYPE=modern",
                                                                   f.getAbsolutePath () });
       assertTrue (eSuccess.isSuccess ());
 
@@ -103,7 +125,6 @@ public final class GrammarsParsingFuncTest
       final ESuccess eSuccess = Main.mainProgram (new String [] { "-OUTPUT_DIRECTORY=" +
                                                                   fGrammarDest.getAbsolutePath (),
                                                                   "-JDK_VERSION=1.8",
-                                                                  "-OUTPUT_ENCODING=UTF-8",
                                                                   f.getAbsolutePath () });
       assertTrue (eSuccess.isSuccess ());
 
