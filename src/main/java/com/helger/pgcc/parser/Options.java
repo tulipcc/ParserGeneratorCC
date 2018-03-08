@@ -264,6 +264,8 @@ public class Options
 
     for (final OptionInfo t : s_userOptions)
       s_optionValues.put (t.getName (), t.getDefault ());
+
+    s_language = EOutputLanguage.JAVA;
   }
 
   @Nullable

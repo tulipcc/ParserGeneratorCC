@@ -3261,9 +3261,10 @@ public class NfaState
     switch (eOutputLanguage)
     {
       case JAVA:
-        codeGenerator.genCodeLine ("      if ((i = jjnewStateCnt) == (startsAt = " +
-                                   s_generatedStates +
-                                   " - (jjnewStateCnt = startsAt)))");
+        codeGenerator.genCodeLine ("      i = jjnewStateCnt;");
+        codeGenerator.genCodeLine ("      jjnewStateCnt = startsAt;");
+        codeGenerator.genCodeLine ("      startsAt = " + s_generatedStates + " - jjnewStateCnt;");
+        codeGenerator.genCodeLine ("      if (i == startsAt)");
         break;
       case CPP:
         codeGenerator.genCodeLine ("      if ((i = jjnewStateCnt), (jjnewStateCnt = startsAt), (i == (startsAt = " +
