@@ -102,7 +102,6 @@ public class JJTree
 
     _println ("The boolean valued options are:");
     _println ("");
-    _println ("    STATIC                   (default true)");
     _println ("    MULTI                    (default false)");
     _println ("    NODE_DEFAULT_VOID        (default false)");
     _println ("    NODE_SCOPE_HOOK          (default false)");

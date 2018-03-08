@@ -90,7 +90,7 @@ import com.helger.pgcc.output.EOutputLanguage;
  */
 public class ParseGenJava extends CodeGenerator
 {
-  public void start (final boolean isJavaModernMode) throws MetaParseException
+  public void start (final boolean bIsJavaModernMode) throws MetaParseException
   {
     if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ("Error count is already present!");
@@ -100,6 +100,7 @@ public class ParseGenJava extends CodeGenerator
 
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
+    final boolean bHasCharset = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_1_6);
     final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_1_7);
 
     final List <String> tn = new ArrayList <> (s_toolNames);
@@ -239,16 +240,15 @@ public class ParseGenJava extends CodeGenerator
     {
       if (Options.isJavaUserCharStream ())
       {
-        genCodeLine ("  /** Constructor with user supplied CharStream. */");
+        genCodeLine ("  /**");
+        genCodeLine ("   * Constructor with user supplied CharStream.");
+        genCodeLine ("   * @param stream stream to init with");
+        genCodeLine ("   */");
         genCodeLine ("  public " + s_cu_name + "(final CharStream stream) {");
         if (Options.isTokenManagerUsesParser ())
-        {
           genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(this, stream);");
-        }
         else
-        {
           genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(stream);");
-        }
         genCodeLine ("	 token = new Token();");
         if (Options.isCacheTokens ())
         {
@@ -277,8 +277,11 @@ public class ParseGenJava extends CodeGenerator
         }
         genCodeLine ("  }");
         genCodeLine ();
-        genCodeLine ("  /** Reinitialise. */");
-        genCodeLine ("  public void ReInit(CharStream stream) {");
+        genCodeLine ("  /**");
+        genCodeLine ("   * Reinitialise.");
+        genCodeLine ("   * @param stream stream to init with");
+        genCodeLine ("   */");
+        genCodeLine ("  public void ReInit(final CharStream stream) {");
 
         if (Options.isTokenManagerRequiresParserAccess ())
         {
@@ -316,39 +319,59 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("	 jj_gen = 0;");
           if (s_maskindex > 0)
           {
-            genCodeLine ("	 for (int i = 0; i < " + s_maskindex + "; i++) jj_la1[i] = -1;");
+            genCodeLine ("   for (int i = 0; i < " + s_maskindex + "; i++)");
+            genCodeLine ("     jj_la1[i] = -1;");
           }
           if (s_jj2index != 0)
           {
-            genCodeLine ("	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();");
+            genCodeLine ("   for (int i = 0; i < jj_2_rtns.length; i++)");
+            genCodeLine ("     jj_2_rtns[i] = new JJCalls();");
           }
         }
         genCodeLine ("  }");
       }
       else
       {
-        if (!isJavaModernMode)
+        if (!bIsJavaModernMode)
         {
-          genCodeLine ("  /** Constructor with InputStream. */");
+          genCodeLine ("  /**");
+          genCodeLine ("   * Constructor with InputStream.");
+          genCodeLine ("   * @param stream input stream");
+          genCodeLine ("   */");
           genCodeLine ("  public " + s_cu_name + "(final java.io.InputStream stream) {");
           genCodeLine ("	  this(stream, null);");
           genCodeLine ("  }");
           genCodeLine ();
-          genCodeLine ("  /** Constructor with InputStream and supplied encoding */");
-          genCodeLine ("  public " + s_cu_name + "(final java.io.InputStream stream, final String encoding) {");
-          genCodeLine ("   try { jj_input_stream = new " +
-                       (Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream") +
-                       "(stream, encoding, 1, 1); }" +
-                       " catch(final java.io.UnsupportedEncodingException e) {" +
-                       " throw new IllegalStateException(e); }");
-          if (Options.isTokenManagerUsesParser ())
+          genCodeLine ("  /**");
+          genCodeLine ("   * Constructor with InputStream and supplied encoding");
+          genCodeLine ("   * @param stream input stream");
+          genCodeLine ("   * @param encoding charset to be used");
+          genCodeLine ("   */");
+          if (bHasCharset)
           {
-            genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(this, jj_input_stream);");
+            genCodeLine ("  public " +
+                         s_cu_name +
+                         "(final java.io.InputStream stream, final java.nio.Charset encoding) {");
+            genCodeLine ("   jj_input_stream = new " +
+                         (Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream") +
+                         "(stream, encoding, 1, 1);");
           }
           else
           {
-            genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(jj_input_stream);");
+            genCodeLine ("  public " + s_cu_name + "(final java.io.InputStream stream, final String encoding) {");
+            genCodeLine ("   try {");
+            genCodeLine ("     jj_input_stream = new " +
+                         (Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream") +
+                         "(stream, encoding, 1, 1);");
+            genCodeLine ("   } catch(final java.io.UnsupportedEncodingException e) {");
+            genCodeLine ("     throw new IllegalStateException(e);");
+            genCodeLine ("   }");
           }
+
+          if (Options.isTokenManagerUsesParser ())
+            genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(this, jj_input_stream);");
+          else
+            genCodeLine ("	 token_source = new " + s_cu_name + "TokenManager(jj_input_stream);");
           genCodeLine ("	 token = new Token();");
           if (Options.isCacheTokens ())
           {
@@ -378,16 +401,33 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("  }");
           genCodeLine ();
 
-          genCodeLine ("  /** Reinitialise. */");
+          genCodeLine ("  /**");
+          genCodeLine ("   * Reinitialise");
+          genCodeLine ("   * @param stream input stream");
+          genCodeLine ("   */");
           genCodeLine ("  public void ReInit(final java.io.InputStream stream) {");
           genCodeLine ("	  ReInit(stream, null);");
           genCodeLine ("  }");
 
-          genCodeLine ("  /** Reinitialise. */");
-          genCodeLine ("  public void ReInit(final java.io.InputStream stream, final String encoding) {");
-          genCodeLine ("	 try { jj_input_stream.reInit(stream, encoding, 1, 1); } " +
-                       "catch(final java.io.UnsupportedEncodingException e) { " +
-                       "throw new IllegalStateException(e); }");
+          genCodeLine ("  /**");
+          genCodeLine ("   * Reinitialise");
+          genCodeLine ("   * @param stream input stream");
+          genCodeLine ("   * @param encoding charset to be used");
+          genCodeLine ("   */");
+          if (bHasCharset)
+          {
+            genCodeLine ("  public void ReInit(final java.io.InputStream stream, final java.nio.Charset encoding) {");
+            genCodeLine ("    jj_input_stream.reInit(stream, encoding, 1, 1);");
+          }
+          else
+          {
+            genCodeLine ("  public void ReInit(final java.io.InputStream stream, final String encoding) {");
+            genCodeLine ("	  try {");
+            genCodeLine ("      jj_input_stream.reInit(stream, encoding, 1, 1);");
+            genCodeLine ("    } catch(final java.io.UnsupportedEncodingException e) { ");
+            genCodeLine ("      throw new IllegalStateException(e);");
+            genCodeLine ("    }");
+          }
 
           if (Options.isTokenManagerRequiresParserAccess ())
           {
@@ -430,11 +470,14 @@ public class ParseGenJava extends CodeGenerator
 
         }
 
-        final String readerInterfaceName = isJavaModernMode ? "Provider" : "java.io.Reader";
-        final String stringReaderClass = isJavaModernMode ? "StringProvider" : "java.io.StringReader";
+        final String readerInterfaceName = bIsJavaModernMode ? "Provider" : "java.io.Reader";
+        final String stringReaderClass = bIsJavaModernMode ? "StringProvider" : "java.io.StringReader";
 
-        genCodeLine ("  /** Constructor. */");
-        genCodeLine ("  public " + s_cu_name + "(" + readerInterfaceName + " stream) {");
+        genCodeLine ("  /**");
+        genCodeLine ("   * Constructor with InputStream.");
+        genCodeLine ("   * @param stream char stream");
+        genCodeLine ("   */");
+        genCodeLine ("  public " + s_cu_name + "(final " + readerInterfaceName + " stream) {");
         if (Options.isJavaUnicodeEscape ())
         {
           genCodeLine ("	 jj_input_stream = new JavaCharStream(stream, 1, 1);");
@@ -469,11 +512,13 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("	 jj_gen = 0;");
           if (s_maskindex > 0)
           {
-            genCodeLine ("	 for (int i = 0; i < " + s_maskindex + "; i++) jj_la1[i] = -1;");
+            genCodeLine ("   for (int i = 0; i < " + s_maskindex + "; i++)");
+            genCodeLine ("     jj_la1[i] = -1;");
           }
           if (s_jj2index != 0)
           {
-            genCodeLine ("	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();");
+            genCodeLine ("   for (int i = 0; i < jj_2_rtns.length; i++)");
+            genCodeLine ("     jj_2_rtns[i] = new JJCalls();");
           }
         }
         genCodeLine ("  }");
@@ -481,54 +526,58 @@ public class ParseGenJava extends CodeGenerator
 
         // Add-in a string based constructor because its convenient (modern
         // only to prevent regressions)
-        if (isJavaModernMode)
+        if (bIsJavaModernMode)
         {
-          genCodeLine ("  /** Constructor. */");
+          genCodeLine ("  /**");
+          genCodeLine ("   * Constructor with InputStream.");
+          genCodeLine ("   * @param sDSL String representation to be parsed");
+          genCodeLine ("   */");
           genCodeLine ("  public " +
                        s_cu_name +
-                       "(String dsl) throws ParseException, " +
+                       "(final String sDSL) throws ParseException, " +
                        Options.getTokenMgrErrorClass () +
                        " {");
-          genCodeLine ("	   this(new " + stringReaderClass + "(dsl));");
+          genCodeLine ("	   this(new " + stringReaderClass + "(sDSL));");
           genCodeLine ("  }");
           genCodeLine ();
 
-          genCodeLine ("  public void ReInit(String s) {");
-          genCodeLine ("	  ReInit(new " + stringReaderClass + "(s));");
+          genCodeLine ("  /**");
+          genCodeLine ("   * Reinitialise.");
+          genCodeLine ("   * @param sDSL String representation to be parsed");
+          genCodeLine ("   */");
+          genCodeLine ("  public void ReInit(final String sDSL) {");
+          genCodeLine ("	  ReInit(new " + stringReaderClass + "(sDSL));");
           genCodeLine ("  }");
 
         }
 
-        genCodeLine ("  /** Reinitialise. */");
-        genCodeLine ("  public void ReInit(" + readerInterfaceName + " stream) {");
+        genCodeLine ("  /**");
+        genCodeLine ("   * Reinitialise");
+        genCodeLine ("   * @param stream char stream");
+        genCodeLine ("   */");
+        genCodeLine ("  public void ReInit(final " + readerInterfaceName + " stream) {");
         if (Options.isJavaUnicodeEscape ())
         {
           genCodeLine ("	if (jj_input_stream == null) {");
-          genCodeLine ("	   jj_input_stream = new JavaCharStream(stream, 1, 1);");
+          genCodeLine ("	  jj_input_stream = new JavaCharStream(stream, 1, 1);");
           genCodeLine ("	} else {");
-          genCodeLine ("	   jj_input_stream.reInit(stream, 1, 1);");
-          genCodeLine ("	}");
+          genCodeLine ("	  jj_input_stream.reInit(stream, 1, 1);");
+          genCodeLine ("  }");
         }
         else
         {
           genCodeLine ("	if (jj_input_stream == null) {");
-          genCodeLine ("	   jj_input_stream = new SimpleCharStream(stream, 1, 1);");
+          genCodeLine ("	  jj_input_stream = new SimpleCharStream(stream, 1, 1);");
           genCodeLine ("	} else {");
-          genCodeLine ("	   jj_input_stream.reInit(stream, 1, 1);");
-          genCodeLine ("	}");
+          genCodeLine ("	  jj_input_stream.reInit(stream, 1, 1);");
+          genCodeLine ("  }");
         }
 
         genCodeLine ("	if (token_source == null) {");
-
         if (Options.isTokenManagerUsesParser ())
-        {
           genCodeLine (" token_source = new " + s_cu_name + "TokenManager(this, jj_input_stream);");
-        }
         else
-        {
           genCodeLine (" token_source = new " + s_cu_name + "TokenManager(jj_input_stream);");
-        }
-
         genCodeLine ("	}");
         genCodeLine ();
 
@@ -563,11 +612,13 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("	 jj_gen = 0;");
           if (s_maskindex > 0)
           {
-            genCodeLine ("	 for (int i = 0; i < " + s_maskindex + "; i++) jj_la1[i] = -1;");
+            genCodeLine ("   for (int i = 0; i < " + s_maskindex + "; i++)");
+            genCodeLine ("     j_la1[i] = -1;");
           }
           if (s_jj2index != 0)
           {
-            genCodeLine ("	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();");
+            genCodeLine ("   for (int i = 0; i < jj_2_rtns.length; i++)");
+            genCodeLine ("     jj_2_rtns[i] = new JJCalls();");
           }
         }
         genCodeLine ("  }");
@@ -577,13 +628,19 @@ public class ParseGenJava extends CodeGenerator
     genCodeLine ();
     if (Options.isUserTokenManager ())
     {
-      genCodeLine ("  /** Constructor with user supplied Token Manager. */");
-      genCodeLine ("  public " + s_cu_name + "(TokenManager tm) {");
+      genCodeLine ("  /**");
+      genCodeLine ("   * Constructor with user supplied Token Manager.");
+      genCodeLine ("   * @param tm Token manager to use");
+      genCodeLine ("   */");
+      genCodeLine ("  public " + s_cu_name + "(final TokenManager tm) {");
     }
     else
     {
-      genCodeLine ("  /** Constructor with generated Token Manager. */");
-      genCodeLine ("  public " + s_cu_name + "(" + s_cu_name + "TokenManager tm) {");
+      genCodeLine ("  /**");
+      genCodeLine ("   * Constructor with generated Token Manager.");
+      genCodeLine ("   * @param tm Token manager to use");
+      genCodeLine ("   */");
+      genCodeLine ("  public " + s_cu_name + "(final " + s_cu_name + "TokenManager tm) {");
     }
     genCodeLine ("	 token_source = tm;");
     genCodeLine ("	 token = new Token();");
@@ -615,13 +672,19 @@ public class ParseGenJava extends CodeGenerator
     genCodeLine ();
     if (Options.isUserTokenManager ())
     {
-      genCodeLine ("  /** Reinitialise. */");
-      genCodeLine ("  public void ReInit(TokenManager tm) {");
+      genCodeLine ("  /**");
+      genCodeLine ("   * Reinitialise");
+      genCodeLine ("   * @param tm Token manager to use");
+      genCodeLine ("   */");
+      genCodeLine ("  public void ReInit(final TokenManager tm) {");
     }
     else
     {
-      genCodeLine ("  /** Reinitialise. */");
-      genCodeLine ("  public void ReInit(" + s_cu_name + "TokenManager tm) {");
+      genCodeLine ("  /**");
+      genCodeLine ("   * Reinitialise");
+      genCodeLine ("   * @param tm Token manager to use");
+      genCodeLine ("   */");
+      genCodeLine ("  public void ReInit(final " + s_cu_name + "TokenManager tm) {");
     }
     genCodeLine ("	 token_source = tm;");
     genCodeLine ("	 token = new Token();");
@@ -755,17 +818,24 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ();
     }
     genCodeLine ();
-    genCodeLine ("  /** Get the next Token. */");
+    genCodeLine ("  /**");
+    genCodeLine ("   * @return the next Token.");
+    genCodeLine ("   */");
     genCodeLine ("  public final Token getNextToken() {");
     if (Options.isCacheTokens ())
     {
-      genCodeLine ("	 if ((token = jj_nt).next != null) jj_nt = jj_nt.next;");
-      genCodeLine ("	 else jj_nt = jj_nt.next = token_source.getNextToken();");
+      genCodeLine ("   token = jj_nt;");
+      genCodeLine ("   if (token.next != null)");
+      genCodeLine ("     jj_nt = jj_nt.next;");
+      genCodeLine ("   else");
+      genCodeLine ("     jj_nt = jj_nt.next = token_source.getNextToken();");
     }
     else
     {
-      genCodeLine ("	 if (token.next != null) token = token.next;");
-      genCodeLine ("	 else token = token.next = token_source.getNextToken();");
+      genCodeLine ("   if (token.next != null)");
+      genCodeLine ("     token = token.next;");
+      genCodeLine ("   else");
+      genCodeLine ("     token = token.next = token_source.getNextToken();");
       genCodeLine ("	 jj_ntk = -1;");
     }
     if (Options.isErrorReporting ())
@@ -779,8 +849,11 @@ public class ParseGenJava extends CodeGenerator
     genCodeLine ("	 return token;");
     genCodeLine ("  }");
     genCodeLine ();
-    genCodeLine ("/** Get the specific Token. */");
-    genCodeLine ("  public final Token getToken(int index) {");
+    genCodeLine ("  /**");
+    genCodeLine ("   * @param index index to be retrieved");
+    genCodeLine ("   * @return the specific Token.");
+    genCodeLine ("   */");
+    genCodeLine ("  public final Token getToken(final int index) {");
     if (s_lookaheadNeeded)
       genCodeLine ("    Token t = jj_lookingAhead ? jj_scanpos : token;");
     else
@@ -857,7 +930,10 @@ public class ParseGenJava extends CodeGenerator
         genCodeLine ("}");
       }
       genCodeLine ();
-      genCodeLine ("  /** Generate ParseException. */");
+      genCodeLine ("  /**");
+      genCodeLine ("   * Generate ParseException.");
+      genCodeLine ("   * @return new Exception object. Never <code>null</code>");
+      genCodeLine ("   */");
       genCodeLine ("  public ParseException generateParseException() {");
       genCodeLine ("    jj_expentries.clear();");
       genCodeLine ("    " +
@@ -904,7 +980,7 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("      exptokseq[i] = jj_expentries.get(i);");
       genCodeLine ("    }");
 
-      if (isJavaModernMode)
+      if (bIsJavaModernMode && !Options.isUserTokenManager ())
       {
         // Add the lexical state onto the exception message
         genCodeLine ("    return new ParseException(token, exptokseq, tokenImage, token_source == null ? null : " +
@@ -947,20 +1023,22 @@ public class ParseGenJava extends CodeGenerator
     {
       genCodeLine ("  private int trace_indent = 0;");
     }
-    genCodeLine ("  private " +
-                 eOutputLanguage.getTypeBoolean () +
-                 " trace_enabled = " +
-                 (Options.isDebugParser () ? "true" : "false") +
-                 ";");
-    genCodeLine ();
-    genCodeLine ("  /** Trace enabled. */");
-    genCodeLine ("  public final boolean trace_enabled() {");
-    genCodeLine ("    return trace_enabled;");
-    genCodeLine ("  }");
-    genCodeLine ();
 
     if (Options.isDebugParser ())
     {
+      genCodeLine ("  private " +
+                   eOutputLanguage.getTypeBoolean () +
+                   " trace_enabled = " +
+                   (Options.isDebugParser () ? "true" : "false") +
+                   ";");
+      genCodeLine ();
+      genCodeLine ("  /**");
+      genCodeLine ("   * @return Trace enabled or not?");
+      genCodeLine ("   */");
+      genCodeLine ("  public final boolean trace_enabled() {");
+      genCodeLine ("    return trace_enabled;");
+      genCodeLine ("  }");
+      genCodeLine ();
       genCodeLine ("  /** Enable tracing. */");
       genCodeLine ("  public final void enable_tracing() {");
       genCodeLine ("    trace_enabled = true;");
@@ -1024,6 +1102,13 @@ public class ParseGenJava extends CodeGenerator
     }
     else
     {
+      genCodeLine ("  /**");
+      genCodeLine ("   * @return Always <code>false</code>.");
+      genCodeLine ("   */");
+      genCodeLine ("  public final boolean trace_enabled() {");
+      genCodeLine ("    return false;");
+      genCodeLine ("  }");
+      genCodeLine ();
       genCodeLine ("  /** Enable tracing. */");
       genCodeLine ("  public final void enable_tracing() {}");
       genCodeLine ();

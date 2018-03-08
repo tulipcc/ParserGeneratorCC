@@ -308,7 +308,6 @@ public class LexGenCpp extends LexGenJava
 
     s_keepLineCol = Options.isKeepLineColumn ();
     final List <ExpRChoice> choices = new ArrayList <> ();
-    TokenProduction tp;
 
     s_tokMgrClassName = s_cu_name + "TokenManager";
 
@@ -339,7 +338,7 @@ public class LexGenCpp extends LexGenJava
 
       for (int i = 0; i < allTps.size (); i++)
       {
-        tp = allTps.get (i);
+        final TokenProduction tp = allTps.get (i);
         final int kind = tp.m_kind;
         final boolean ignore = tp.m_ignoreCase;
         final List <RegExprSpec> rexps = tp.m_respecs;
