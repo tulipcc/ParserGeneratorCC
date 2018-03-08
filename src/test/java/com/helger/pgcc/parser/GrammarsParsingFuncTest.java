@@ -43,9 +43,12 @@ public final class GrammarsParsingFuncTest
       assertTrue (eSuccess.isSuccess ());
 
       // It assumes that basename and class name are identical
-      final CompilationUnit aCU = JavaParser.parse (new File (fGrammarDest, sBaseName + ".java"),
-                                                    StandardCharsets.UTF_8);
-      assertNotNull (aCU);
+      for (final File fJava : new FileSystemIterator (fGrammarDest).withFilter (IFileFilter.filenameEndsWith (".java")))
+      {
+        s_aLogger.info ("  Java Parsing " + fJava.getName ());
+        final CompilationUnit aCU = JavaParser.parse (fJava, StandardCharsets.UTF_8);
+        assertNotNull (aCU);
+      }
     }
   }
 }

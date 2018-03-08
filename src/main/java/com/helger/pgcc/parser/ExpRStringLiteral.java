@@ -762,7 +762,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
   }
 
   @Nonnull
-  private static String _getCaseChar (final char c)
+  private static String _getCaseChar (final char c, final EOutputLanguage eOutputLanguage)
   {
     if (false)
       return Integer.toString (c);
@@ -770,6 +770,10 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     // Just for better readability
     if (c < 0x20 || c >= 0x7f)
       return Integer.toString (c);
+
+    if (eOutputLanguage.isJava ())
+      if (c == '\'' || c == '\\')
+        return "'\\" + c + "'";
 
     return "'" + c + "'";
   }
@@ -1184,13 +1188,13 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         if (Options.isIgnoreCase ())
         {
           if (c != Character.toUpperCase (c))
-            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toUpperCase (c)) + ":");
+            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toUpperCase (c), eOutputLanguage) + ":");
 
           if (c != Character.toLowerCase (c))
-            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toLowerCase (c)) + ":");
+            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toLowerCase (c), eOutputLanguage) + ":");
         }
 
-        codeGenerator.genCodeLine ("      case " + _getCaseChar (c) + ":");
+        codeGenerator.genCodeLine ("      case " + _getCaseChar (c, eOutputLanguage) + ":");
 
         long matchedKind;
         final String prefix = (i == 0) ? "         " : "            ";
