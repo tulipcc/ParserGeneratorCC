@@ -1,5 +1,4 @@
 options {
-    STATIC=false;       // change to true for static instance of kbparser
     DEBUG_PARSER=true;  // change to false to remove method trace
 }
 

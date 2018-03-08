@@ -622,7 +622,7 @@ void entity_decl() : { }
 /********** PRODUCTION 197 **********/
 void entity_head() : { }
 {
-        <ENTITY> entity_id() (subsuper())? <SEMICOLON>
+        <ENTITY> entity_id() subsuper() <SEMICOLON>
 }
 
 /********** PRODUCTION 198 **********/
