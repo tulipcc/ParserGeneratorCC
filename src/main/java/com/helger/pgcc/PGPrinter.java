@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,8 +53,8 @@ public class PGPrinter
     }
   }
 
-  private static IPrinter msg = new PSPrinter (System.out, false);
-  private static IPrinter err = new PSPrinter (System.err, false);
+  private static IPrinter s_aOut = new PSPrinter (System.out, false);
+  private static IPrinter s_aErr = new PSPrinter (System.err, false);
 
   public static void init (@Nonnull final IPrinter aPrinter)
   {
@@ -64,8 +65,8 @@ public class PGPrinter
   {
     ValueEnforcer.notNull (aPrinterInfo, "PrinterInfo");
     ValueEnforcer.notNull (aPrinterError, "PrinterError");
-    msg = aPrinterInfo;
-    err = aPrinterError;
+    s_aOut = aPrinterInfo;
+    s_aErr = aPrinterError;
   }
 
   private PGPrinter ()
@@ -73,17 +74,17 @@ public class PGPrinter
 
   public static void debug (@Nonnull final String sMsg)
   {
-    msg.println (sMsg);
+    s_aOut.println (sMsg);
   }
 
   public static void info ()
   {
-    msg.println (null);
+    s_aOut.println (null);
   }
 
   public static void info (@Nonnull final String sMsg)
   {
-    msg.println (sMsg);
+    s_aOut.println (sMsg);
   }
 
   public static void warn (@Nonnull final String sMsg)
@@ -93,9 +94,9 @@ public class PGPrinter
 
   public static void warn (@Nonnull final String sMsg, @Nullable final Throwable t)
   {
-    err.println (sMsg);
+    s_aErr.println (sMsg);
     if (t != null)
-      err.println (StackTraceHelper.getStackAsString (t));
+      s_aErr.println (StackTraceHelper.getStackAsString (t));
   }
 
   public static void error (@Nonnull final String sMsg)
@@ -105,32 +106,32 @@ public class PGPrinter
 
   public static void error (@Nonnull final String sMsg, @Nullable final Throwable t)
   {
-    err.println (sMsg);
+    s_aErr.println (sMsg);
     if (t != null)
-      err.println (StackTraceHelper.getStackAsString (t));
+      s_aErr.println (StackTraceHelper.getStackAsString (t));
   }
 
   public static void flush ()
   {
-    msg.flush ();
-    err.flush ();
+    s_aOut.flush ();
+    s_aErr.flush ();
   }
 
   public static void close () throws Exception
   {
-    msg.close ();
-    err.close ();
+    s_aOut.close ();
+    s_aErr.close ();
   }
 
   @Nonnull
   public static PrintWriter getOutWriter ()
   {
-    return new PrintWriter (new OutputStreamWriter (System.out));
+    return new PrintWriter (new OutputStreamWriter (System.out, Charset.defaultCharset ()));
   }
 
   @Nonnull
   public static PrintWriter getErrWriter ()
   {
-    return new PrintWriter (new OutputStreamWriter (System.err));
+    return new PrintWriter (new OutputStreamWriter (System.err, Charset.defaultCharset ()));
   }
 }

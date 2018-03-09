@@ -264,14 +264,27 @@ public class LexGenJava extends CodeGenerator
                               "in your TOKEN_MGR_DECLS. The generated token manager will not compile.");
       }
 
-    genCodeLine ();
-    genCodeLine ("  /** Debug output. */");
-    genCodeLine ("  public java.io.PrintStream debugStream = System.out;");
-    genCodeLine ();
-    genCodeLine ("  /** Set debug output. */");
-    genCodeLine ("  public void setDebugStream(final java.io.PrintStream ds) {");
-    genCodeLine ("    debugStream = ds;");
-    genCodeLine ("  }");
+    if (Options.isDebugTokenManager ())
+    {
+      genCodeLine ();
+      genCodeLine ("  /** Debug output. */");
+      genCodeLine ("  private java.io.PrintStream debugStream = System.out;");
+      genCodeLine ();
+      genCodeLine ("  /**");
+      genCodeLine ("   * @return debug output");
+      genCodeLine ("   */");
+      genCodeLine ("  public java.io.PrintStream getDebugStream() {");
+      genCodeLine ("    return debugStream;");
+      genCodeLine ("  }");
+      genCodeLine ();
+      genCodeLine ("  /**");
+      genCodeLine ("   * Set debug output");
+      genCodeLine ("   * @param ds debug PrintStream. May not be <code>null</code>");
+      genCodeLine ("   */");
+      genCodeLine ("  public void setDebugStream(final java.io.PrintStream ds) {");
+      genCodeLine ("    debugStream = ds;");
+      genCodeLine ("  }");
+    }
 
     if (Options.isTokenManagerUsesParser ())
     {
