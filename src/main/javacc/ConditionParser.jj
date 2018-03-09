@@ -44,30 +44,6 @@ import java.util.Map;
 public class ConditionParser
 {
     private Map<String, Object> options;
-    
-    public static void main(String... args) throws ParseException
-    {
-      test("F", false);
-      test("T", true);
-      test("F || T", true);
-      test("T || F", true);
-      test("T || will not be compiled )", true);
-      test("F && T", false);
-      test("T && T", true);
-      test("unknown", false);
-    }
-    
-    private static void test(String input, boolean expectedValue)  throws ParseException
-    {
-      ConditionParser cp = new ConditionParser(new StringReader(input));
-      Map<String,Object> values = new java.util.HashMap<String,Object>();
-      values.put("F", Boolean.FALSE);
-      values.put("T", Boolean.TRUE);
-      boolean value = cp.CompilationUnit(values);
-      System.out.println(input + " = " + value);
-      if (value != expectedValue)
-        throw new RuntimeException();
-    }
 }
 
 PARSER_END(ConditionParser)
