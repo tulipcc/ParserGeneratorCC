@@ -68,7 +68,7 @@ class SimpleCharStream extends AbstractCharStream
     }
   }
 
-/** Read a character. */
+  /** Read a character. */
   public char readChar() throws java.io.IOException
   {
     if (inBuf > 0)
@@ -119,24 +119,25 @@ class SimpleCharStream extends AbstractCharStream
   }
 
   /** Reinitialise. */
-  public void reInit(Provider dstream,
-                     int startline,
-                     int startcolumn,
-                     int buffersize)
+  public void reInit(final Provider dstream,
+                     final int startline,
+                     final int startcolumn,
+                     final int buffersize)
   {
     inputStream = dstream;
     super.reInit (startline, startcolumn, buffersize);
   }
 
   /** Reinitialise. */
-  public void reInit(Provider dstream, int startline,
-                     int startcolumn)
+  public void reInit(final Provider dstream,
+                     final int startline,
+                     final int startcolumn)
   {
     reInit(dstream, startline, startcolumn, 4096);
   }
 
   /** Reinitialise. */
-  public void reInit(Provider dstream)
+  public void reInit(final Provider dstream)
   {
     reInit(dstream, 1, 1, 4096);
   }

@@ -106,6 +106,7 @@ interface CharStream {
    * @return Current tab size.
    */
   int getTabSize();
+#if KEEP_LINE_COLUMN
 
   /**
    * Enable or disable line number and column number tracking.
@@ -117,4 +118,5 @@ interface CharStream {
    * @return <code>true</code> if line number and column numbers should be tracked.
    */
   boolean isTrackLineColumn();
+#fi
 }

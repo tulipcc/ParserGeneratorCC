@@ -3,6 +3,7 @@ import java.io.IOException;
 
 /**
  * Abstract interface for reading from a stream.
+ * The buffering should be done internally.
  */
 public interface Provider
 #if AT_LEAST_JDK7
@@ -11,13 +12,13 @@ extends java.io.Closeable
 {
   /**
    * Reads characters into an array
-   * @param buffer Destination buffer
-   * @param offset Offset at which to start storing characters
-   * @param len The maximum possible number of characters to read
+   * @param aDest Destination buffer
+   * @param nOfs Offset at which to start storing characters. Must be &ge; 0.
+   * @param nLen The maximum possible number of characters to read. Must be &ge; 0.
    * @return The number of characters read, or -1 if all read
    * @exception IOException if reading fails
    */
-  int read(char[] buffer, int offset, int len) throws IOException;
+  int read(char[] aDest, int nOfs, int nLen) throws IOException;
 #if AT_LEAST_JDK7
 #else
     

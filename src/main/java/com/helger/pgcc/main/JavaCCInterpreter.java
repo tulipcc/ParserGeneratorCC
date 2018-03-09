@@ -1,7 +1,6 @@
 package com.helger.pgcc.main;
 
 import java.io.File;
-import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +14,7 @@ import com.helger.pgcc.parser.Main;
 import com.helger.pgcc.parser.MetaParseException;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.Semanticize;
+import com.helger.pgcc.parser.StringProvider;
 import com.helger.pgcc.parser.TokenizerData;
 
 public class JavaCCInterpreter
@@ -48,7 +48,7 @@ public class JavaCCInterpreter
   {
     try
     {
-      final JavaCCParser parser = new JavaCCParser (new StringReader (grammar));
+      final JavaCCParser parser = new JavaCCParser (new StringProvider (grammar));
       parser.javacc_input ();
       Semanticize.start ();
       final LexGenJava lg = new LexGenJava ();

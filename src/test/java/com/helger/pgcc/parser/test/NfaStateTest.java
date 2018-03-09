@@ -36,14 +36,13 @@ package com.helger.pgcc.parser.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.helger.commons.exception.InitializationException;
-import com.helger.commons.io.stream.NonBlockingBufferedReader;
+import com.helger.commons.io.file.FileHelper;
 import com.helger.pgcc.AbstractJavaCCTestCase;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.JavaCCGlobals;
@@ -53,6 +52,7 @@ import com.helger.pgcc.parser.Main;
 import com.helger.pgcc.parser.NfaState;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.Semanticize;
+import com.helger.pgcc.parser.StreamProvider;
 
 /**
  * A sea anchor, to ensure that code is not inadvertently broken.
@@ -75,8 +75,8 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   {
     try
     {
-      final JavaCCParser parser = new JavaCCParser (new NonBlockingBufferedReader (new InputStreamReader (new FileInputStream (parserInput),
-                                                                                                          Options.getGrammarEncoding ())));
+      final JavaCCParser parser = new JavaCCParser (new StreamProvider (FileHelper.getBufferedReader (new File (parserInput),
+                                                                                                      Options.getGrammarEncoding ())));
       parser.javacc_input ();
       JavaCCGlobals.s_fileName = JavaCCGlobals.s_origFileName = parserInput;
       JavaCCGlobals.s_jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", parserInput);

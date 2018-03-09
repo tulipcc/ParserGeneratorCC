@@ -64,15 +64,13 @@
 package com.helger.pgcc.parser;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import com.helger.commons.io.stream.NonBlockingBufferedReader;
+import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.state.ESuccess;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGPrinter;
@@ -272,18 +270,19 @@ public class Main
         PGPrinter.info (args[args.length - 1] + " is a directory. Please use a valid file name.");
         return ESuccess.FAILURE;
       }
-      parser = new JavaCCParser (new NonBlockingBufferedReader (new InputStreamReader (new FileInputStream (args[args.length -
-                                                                                                                 1]),
-                                                                                       Options.getGrammarEncoding ())));
+
+      final Reader aReader = FileHelper.getBufferedReader (new File (args[args.length - 1]),
+                                                           Options.getGrammarEncoding ());
+      if (aReader == null)
+      {
+        PGPrinter.info ("File " + args[args.length - 1] + " not found.");
+        return ESuccess.FAILURE;
+      }
+      parser = new JavaCCParser (new StreamProvider (aReader));
     }
     catch (final SecurityException se)
     {
       PGPrinter.info ("Security violation while trying to open " + args[args.length - 1]);
-      return ESuccess.FAILURE;
-    }
-    catch (final FileNotFoundException e)
-    {
-      PGPrinter.info ("File " + args[args.length - 1] + " not found.");
       return ESuccess.FAILURE;
     }
 

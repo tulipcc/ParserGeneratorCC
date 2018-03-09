@@ -36,6 +36,7 @@ package com.helger.pgcc.jjdoc;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.Reader;
+import java.nio.charset.Charset;
 
 import javax.annotation.Nonnull;
 
@@ -49,6 +50,7 @@ import com.helger.pgcc.parser.Main;
 import com.helger.pgcc.parser.MetaParseException;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.ParseException;
+import com.helger.pgcc.parser.StreamProvider;
 
 /**
  * Main class.
@@ -162,7 +164,8 @@ public final class JJDocMain
     if (args[args.length - 1].equals ("-"))
     {
       PGPrinter.info ("Reading from standard input . . .");
-      parser = new JavaCCParser (new DataInputStream (System.in));
+      parser = new JavaCCParser (new StreamProvider (new DataInputStream (System.in),
+                                                     Charset.defaultCharset ().name ()));
       JJDocGlobals.s_input_file = JJDocGlobals.STANDARD_INPUT;
       JJDocGlobals.s_output_file = JJDocGlobals.STANDARD_OUTPUT;
     }
@@ -190,7 +193,7 @@ public final class JJDocMain
           PGPrinter.error ("File " + args[args.length - 1] + " not found.");
           return ESuccess.FAILURE;
         }
-        parser = new JavaCCParser (aReader);
+        parser = new JavaCCParser (new StreamProvider (aReader));
       }
       catch (final SecurityException se)
       {

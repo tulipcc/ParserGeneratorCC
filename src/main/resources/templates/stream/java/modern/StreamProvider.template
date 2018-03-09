@@ -26,8 +26,8 @@ public class StreamProvider implements Provider {
     _reader = reader;
   }
 
-  public int read(final char[] buffer, final int off, final int len) throws IOException {
-    int result = _reader.read(buffer, off, len);
+  public int read(final char[] aDest, final int nOfs, final int nLen) throws IOException {
+    int result = _reader.read(aDest, nOfs, nLen);
 
     /* CBA -- Added 2014/03/29 -- 
        This logic allows the generated Java code to be easily translated to C# (via sharpen) -
@@ -36,7 +36,7 @@ public class StreamProvider implements Provider {
        ** Technically, this is not required for java but the overhead is extremely low compared to the code generation benefits.
 	   */
     if (result == 0)
-      if (off < buffer.length && len > 0)
+      if (nOfs < aDest.length && nLen > 0)
         result = -1;
 	   
     return result;

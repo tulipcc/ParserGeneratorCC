@@ -1,38 +1,34 @@
-	
+  
 import java.io.IOException;
-	
+  
 public class StringProvider implements Provider {
-	private String _string;
-	private int _position = 0;
-	private final int _size;
-	
-	public StringProvider(final String string) {
-		_string = string;
-		_size = string.length();
-	}
-	
-	public int read(final char[] cbuf, final int off, final int len) throws IOException {
-		int numCharsOutstandingInString = _size - _position;
-		
-		if (numCharsOutstandingInString == 0)
-			return -1;
-		
-		int numBytesInBuffer = cbuf.length;
-		int numBytesToRead = numBytesInBuffer -off;
-		numBytesToRead = numBytesToRead > len ? len : numBytesToRead;
-		
-		if (numBytesToRead > numCharsOutstandingInString) {
-			numBytesToRead = numCharsOutstandingInString;
-		}
-		
-		_string.getChars(_position, _position + numBytesToRead, cbuf, off);
-		
-		_position += numBytesToRead;
-		
-		return numBytesToRead;
-	}
+  private String _string;
+  private int _position = 0;
+  private final int _size;
+  
+  public StringProvider(final String string) {
+    _string = string;
+    _size = string.length();
+  }
+  
+  public int read(final char[] aDest, final int nOfs, final int nLen) throws IOException {
+    final int numCharsOutstandingInString = _size - _position;
+    if (numCharsOutstandingInString == 0)
+      return -1;
+    
+    int numBytesToRead = aDest.length - nOfs;
+    if (nLen < numBytesToRead)
+      numBytesToRead = nLen;
+    if (numCharsOutstandingInString < numBytesToRead)
+      numBytesToRead = numCharsOutstandingInString;
+    
+    _string.getChars(_position, _position + numBytesToRead, aDest, nOfs);
+    _position += numBytesToRead;
+    
+    return numBytesToRead;
+  }
 
-	public void close() {
-		_string = null;
-	}
+  public void close() {
+    _string = null;
+  }
 }
