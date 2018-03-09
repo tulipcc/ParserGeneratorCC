@@ -128,13 +128,13 @@ public final class JavaCCErrors
 
   public static void warning (final Object node, final String mess)
   {
-    PGPrinter.error ("Warning: " + _getLocationInfo (node) + mess);
+    PGPrinter.warn ("Warning: " + _getLocationInfo (node) + mess);
     s_warning_count++;
   }
 
   public static void warning (final String mess)
   {
-    PGPrinter.error ("Warning: " + mess);
+    PGPrinter.warn ("Warning: " + mess);
     s_warning_count++;
   }
 

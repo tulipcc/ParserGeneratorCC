@@ -576,7 +576,7 @@ public class Options
         }
         else
         {
-          PGPrinter.info ("Warning: Bad option \"" + sArg + "\" will be ignored.");
+          PGPrinter.warn ("Warning: Bad option \"" + sArg + "\" will be ignored.");
           return;
         }
     }
@@ -604,7 +604,7 @@ public class Options
             final int i = Integer.parseInt (sRealValue);
             if (i <= 0)
             {
-              PGPrinter.info ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
+              PGPrinter.warn ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
               return;
             }
             val = Integer.valueOf (i);
@@ -629,7 +629,7 @@ public class Options
 
     if (!s_optionValues.containsKey (name))
     {
-      PGPrinter.info ("Warning: Bad option \"" + sArg + "\" will be ignored.");
+      PGPrinter.warn ("Warning: Bad option \"" + sArg + "\" will be ignored.");
       return;
     }
 
@@ -638,12 +638,12 @@ public class Options
     final Object valOrig = s_optionValues.get (name);
     if (val.getClass () != valOrig.getClass ())
     {
-      PGPrinter.info ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
+      PGPrinter.warn ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
       return;
     }
     if (s_cmdLineSetting.contains (name))
     {
-      PGPrinter.info ("Warning: Duplicate option setting \"" + sArg + "\" will be ignored.");
+      PGPrinter.warn ("Warning: Duplicate option setting \"" + sArg + "\" will be ignored.");
       return;
     }
 
