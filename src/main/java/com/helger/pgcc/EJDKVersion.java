@@ -69,11 +69,6 @@ public enum EJDKVersion
     return m_nMajor < aOther.m_nMajor;
   }
 
-  private double _getAsDouble1x ()
-  {
-    return 1 + (m_nMajor / 10d);
-  }
-
   @Nullable
   public static EJDKVersion getFromStringOrNull (final String sVersion)
   {

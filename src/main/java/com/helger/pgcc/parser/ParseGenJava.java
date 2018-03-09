@@ -1049,12 +1049,14 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("    trace_enabled = false;");
       genCodeLine ("  }");
       genCodeLine ();
+      genCodeLine ("  protected java.io.PrintStream tracePS = System.out;");
+      genCodeLine ();
       genCodeLine ("  protected void trace_call(final String s) {");
       genCodeLine ("    if (trace_enabled) {");
       genCodeLine ("      for (int i = 0; i < trace_indent; i++) {");
-      genCodeLine ("        System.out.print(\" \");");
+      genCodeLine ("        tracePS.print(\" \");");
       genCodeLine ("      }");
-      genCodeLine ("      System.out.println(\"Call:	\" + s);");
+      genCodeLine ("      tracePS.println(\"Call:	\" + s);");
       genCodeLine ("    }");
       genCodeLine ("    trace_indent += 2;");
       genCodeLine ("  }");
@@ -1062,39 +1064,39 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("  protected void trace_return(String s) {");
       genCodeLine ("    trace_indent -= 2;");
       genCodeLine ("    if (trace_enabled) {");
-      genCodeLine ("      for (int i = 0; i < trace_indent; i++) { System.out.print(\" \"); }");
-      genCodeLine ("      System.out.println(\"Return: \" + s);");
+      genCodeLine ("      for (int i = 0; i < trace_indent; i++) { tracePS.print(\" \"); }");
+      genCodeLine ("      tracePS.println(\"Return: \" + s);");
       genCodeLine ("    }");
       genCodeLine ("  }");
       genCodeLine ();
       genCodeLine ("  protected void trace_token(Token t, String where) {");
       genCodeLine ("    if (trace_enabled) {");
       genCodeLine ("      for (int i = 0; i < trace_indent; i++) {");
-      genCodeLine ("        System.out.print(\" \");");
+      genCodeLine ("        tracePS.print(\" \");");
       genCodeLine ("      }");
-      genCodeLine ("      System.out.print(\"Consumed token: <\" + tokenImage[t.kind]);");
+      genCodeLine ("      tracePS.print(\"Consumed token: <\" + tokenImage[t.kind]);");
       genCodeLine ("      if (t.kind != 0 && !tokenImage[t.kind].equals(\"\\\"\" + t.image + \"\\\"\")) {");
-      genCodeLine ("        System.out.print(\": \\\"\" + " +
+      genCodeLine ("        tracePS.print(\": \\\"\" + " +
                    Options.getTokenMgrErrorClass () +
                    ".addEscapes(" +
                    "t.image) + \"\\\"\");");
       genCodeLine ("      }");
-      genCodeLine ("      System.out.println(\" at line \" + t.beginLine + " +
+      genCodeLine ("      tracePS.println(\" at line \" + t.beginLine + " +
                    "\" column \" + t.beginColumn + \">\" + where);");
       genCodeLine ("    }");
       genCodeLine ("  }");
       genCodeLine ();
       genCodeLine ("  protected void trace_scan(Token t1, int t2) {");
       genCodeLine ("    if (trace_enabled) {");
-      genCodeLine ("      for (int i = 0; i < trace_indent; i++) { System.out.print(\" \"); }");
-      genCodeLine ("      System.out.print(\"Visited token: <\" + tokenImage[t1.kind]);");
+      genCodeLine ("      for (int i = 0; i < trace_indent; i++) { tracePS.print(\" \"); }");
+      genCodeLine ("      tracePS.print(\"Visited token: <\" + tokenImage[t1.kind]);");
       genCodeLine ("      if (t1.kind != 0 && !tokenImage[t1.kind].equals(\"\\\"\" + t1.image + \"\\\"\")) {");
-      genCodeLine ("        System.out.print(\": \\\"\" + " +
+      genCodeLine ("        tracePS.print(\": \\\"\" + " +
                    Options.getTokenMgrErrorClass () +
                    ".addEscapes(" +
                    "t1.image) + \"\\\"\");");
       genCodeLine ("      }");
-      genCodeLine ("      System.out.println(\" at line \" + t1.beginLine + \"" +
+      genCodeLine ("      tracePS.println(\" at line \" + t1.beginLine + \"" +
                    " column \" + t1.beginColumn + \">; Expected token: <\" + tokenImage[t2] + \">\");");
       genCodeLine ("    }");
       genCodeLine ("  }");

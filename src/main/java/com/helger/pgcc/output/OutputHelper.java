@@ -37,9 +37,9 @@ import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.replaceBackslash;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
+import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGVersion;
@@ -80,7 +80,7 @@ public class OutputHelper
       }
     }
 
-    try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
+    try (final NonBlockingBufferedReader reader = FileHelper.getBufferedReader (file, Options.getOutputEncoding ()))
     {
       String str;
       double version = 0.0;
@@ -118,5 +118,4 @@ public class OutputHelper
       return 0.0;
     }
   }
-
 }

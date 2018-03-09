@@ -33,13 +33,16 @@
  */
 package com.helger.pgcc.jjdoc;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import com.helger.commons.ValueEnforcer;
+import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.ExpNonTerminal;
+import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NormalProduction;
-import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.TokenProduction;
 
 /**
@@ -48,107 +51,139 @@ import com.helger.pgcc.parser.TokenProduction;
  * @author timp
  * @since 11-Dec-2006
  */
-public interface IDocGenerator
+public interface IDocGenerator extends Serializable
 {
   /**
    * Output string with entity substitution for brackets and ampersands.
    *
    * @param s
    *        the String to output
+   * @throws IOException
+   *         on IO error
    */
-  void text (String s);
+  void text (String s) throws IOException;
 
   /**
    * Output String.
    *
    * @param s
    *        String to output
+   * @throws IOException
+   *         on IO error
    */
-  void print (String s);
+  void print (String s) throws IOException;
 
   /**
    * Output document header.
+   * 
+   * @throws IOException
+   *         on IO error
    */
-  void documentStart ();
+  void documentStart () throws IOException;
 
   /**
    * Output document footer.
+   * 
+   * @throws IOException
+   *         on IO error
    */
-  void documentEnd ();
+  void documentEnd () throws IOException;
 
   /**
    * Output Special Tokens.
    *
    * @param s
    *        tokens to output
+   * @throws IOException
+   *         on IO error
    */
-  void specialTokens (String s);
+  void specialTokens (String s) throws IOException;
 
-  void handleTokenProduction (TokenProduction tp);
+  void handleTokenProduction (TokenProduction tp) throws IOException;
 
   // /**
   // * Output start of a TokenProduction.
   // * @param tp the TokenProduction being output
   // */
-  // void tokenStart(TokenProduction tp);
+  // void tokenStart(TokenProduction tp) throws IOException;
   //
   // /**
   // * Output end of a TokenProduction.
   // * @param tp the TokenProduction being output
   // */
-  // void tokenEnd(TokenProduction tp);
+  // void tokenEnd(TokenProduction tp) throws IOException;
 
   /**
    * Output start of non-terminal.
+   * 
+   * @throws IOException
+   *         on IO error
    */
-  void nonterminalsStart ();
+  void nonterminalsStart () throws IOException;
 
   /**
    * Output end of non-terminal.
+   * 
+   * @throws IOException
+   *         on IO error
    */
-  void nonterminalsEnd ();
+  void nonterminalsEnd () throws IOException;
 
   /**
    * Output start of tokens.
+   * 
+   * @throws IOException
+   *         on IO error
    */
-  void tokensStart ();
+  void tokensStart () throws IOException;
 
   /**
    * Output end of tokens.
+   * 
+   * @throws IOException
+   *         on IO error
    */
-  void tokensEnd ();
+  void tokensEnd () throws IOException;
 
   /**
    * Output comment from a production.
    *
    * @param jp
    *        the JavaCodeProduction to output
+   * @throws IOException
+   *         on IO error
    */
-  void javacode (CodeProductionJava jp);
+  void javacode (CodeProductionJava jp) throws IOException;
 
   /**
    * Output comment from a production.
    *
    * @param cp
    *        the CppCodeProduction to output
+   * @throws IOException
+   *         on IO error
    */
-  void cppcode (CodeProductionCpp cp);
+  void cppcode (CodeProductionCpp cp) throws IOException;
 
   /**
    * Output start of a normal production.
    *
    * @param np
    *        the NormalProduction being output
+   * @throws IOException
+   *         on IO error
    */
-  void productionStart (NormalProduction np);
+  void productionStart (NormalProduction np) throws IOException;
 
   /**
    * Output end of a normal production.
    *
    * @param np
    *        the NormalProduction being output
+   * @throws IOException
+   *         on IO error
    */
-  void productionEnd (NormalProduction np);
+  void productionEnd (NormalProduction np) throws IOException;
 
   /**
    * Output start of an Expansion.
@@ -157,8 +192,10 @@ public interface IDocGenerator
    *        Expansion being output
    * @param first
    *        whether this is the first expansion
+   * @throws IOException
+   *         on IO error
    */
-  void expansionStart (Expansion e, boolean first);
+  void expansionStart (Expansion e, boolean first) throws IOException;
 
   /**
    * Output end of Expansion.
@@ -167,84 +204,50 @@ public interface IDocGenerator
    *        Expansion being output
    * @param first
    *        whether this is the first expansion
+   * @throws IOException
+   *         on IO error
    */
-  void expansionEnd (Expansion e, boolean first);
+  void expansionEnd (Expansion e, boolean first) throws IOException;
 
   /**
    * Output start of non-terminal.
    *
    * @param nt
    *        the NonTerminal being output
+   * @throws IOException
+   *         on IO error
    */
-  void nonTerminalStart (ExpNonTerminal nt);
+  void nonTerminalStart (ExpNonTerminal nt) throws IOException;
 
   /**
    * Output end of non-terminal.
    *
    * @param nt
    *        the NonTerminal being output
+   * @throws IOException
+   *         on IO error
    */
-  void nonTerminalEnd (ExpNonTerminal nt);
+  void nonTerminalEnd (ExpNonTerminal nt) throws IOException;
 
   /**
    * Output start of regular expression.
    *
    * @param re
    *        the RegularExpression being output
+   * @throws IOException
+   *         on IO error
    */
-  void reStart (AbstractExpRegularExpression re);
+  void reStart (AbstractExpRegularExpression re) throws IOException;
 
   /**
    * Output end of regular expression.
    *
    * @param re
    *        the RegularExpression being output
+   * @throws IOException
+   *         on IO error
    */
-  void reEnd (AbstractExpRegularExpression re);
-
-  /**
-   * Log debug messages.
-   *
-   * @param message
-   *        the string to log
-   */
-  default void debug (final String message)
-  {
-    System.err.println (message);
-  }
-
-  /**
-   * Log informational messages.
-   *
-   * @param message
-   *        the string to log
-   */
-  default void info (final String message)
-  {
-    System.err.println (message);
-  }
-
-  /**
-   * Log warning messages.
-   *
-   * @param message
-   *        the string to log
-   */
-  default void warn (final String message)
-  {
-    System.err.println (message);
-  }
-
-  /**
-   * Log error messages.
-   *
-   * @param message
-   *        the string to log
-   */
-  default void error (final String message)
-  {
-    System.err.println (message);
-  }
+  void reEnd (AbstractExpRegularExpression re) throws IOException;
 
   /**
    * Dummy method to ensure parameters are used...

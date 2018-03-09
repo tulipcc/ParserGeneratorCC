@@ -33,6 +33,7 @@
  */
 package com.helger.pgcc.jjdoc;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,13 +62,13 @@ public class HTMLGenerator extends TextGenerator
     return id_map.computeIfAbsent (nt, k -> "prod" + id++);
   }
 
-  private void println (final String s)
+  private void println (final String s) throws IOException
   {
     print (s + "\n");
   }
 
   @Override
-  public void text (final String s)
+  public void text (final String s) throws IOException
   {
     final StringBuilder ret = new StringBuilder (s.length () * 2);
     for (final char c : s.toCharArray ())
@@ -91,15 +92,15 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void print (final String s)
+  public void print (final String s) throws IOException
   {
-    m_ostr.print (s);
+    m_aPW.write (s);
   }
 
   @Override
-  public void documentStart ()
+  public void documentStart () throws IOException
   {
-    m_ostr = createOutputStream ();
+    m_aPW = createPrintWriter ();
     println ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">");
     println ("<HTML>");
     println ("<HEAD>");
@@ -121,18 +122,19 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void documentEnd ()
+  public void documentEnd () throws IOException
   {
     println ("</BODY>");
     println ("</HTML>");
-    m_ostr.close ();
+    m_aPW.close ();
   }
 
   /*
    * Prints out comments, used for tokens and non-terminals.
    */
+
   @Override
-  public void specialTokens (final String s)
+  public void specialTokens (final String s) throws IOException
   {
     println (" <!-- Special token -->");
     println (" <TR>");
@@ -145,7 +147,7 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void handleTokenProduction (final TokenProduction tp)
+  public void handleTokenProduction (final TokenProduction tp) throws IOException
   {
     println (" <!-- Token -->");
     println (" <TR>");
@@ -159,7 +161,7 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void nonterminalsStart ()
+  public void nonterminalsStart () throws IOException
   {
     println ("<H2 ALIGN=CENTER>NON-TERMINALS</H2>");
     if (JJDocOptions.isOneTable ())
@@ -169,7 +171,7 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void nonterminalsEnd ()
+  public void nonterminalsEnd () throws IOException
   {
     if (JJDocOptions.isOneTable ())
     {
@@ -178,20 +180,20 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void tokensStart ()
+  public void tokensStart () throws IOException
   {
     println ("<H2 ALIGN=CENTER>TOKENS</H2>");
     println ("<TABLE>");
   }
 
   @Override
-  public void tokensEnd ()
+  public void tokensEnd () throws IOException
   {
     println ("</TABLE>");
   }
 
   @Override
-  public void javacode (final CodeProductionJava jp)
+  public void javacode (final CodeProductionJava jp) throws IOException
   {
     productionStart (jp);
     println ("<I>java code</I></TD></TR>");
@@ -199,7 +201,7 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void cppcode (final CodeProductionCpp cp)
+  public void cppcode (final CodeProductionCpp cp) throws IOException
   {
     productionStart (cp);
     println ("<I>cpp code</I></TD></TR>");
@@ -207,7 +209,7 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void productionStart (final NormalProduction np)
+  public void productionStart (final NormalProduction np) throws IOException
   {
     if (!JJDocOptions.isOneTable ())
     {
@@ -222,7 +224,7 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void productionEnd (final NormalProduction np)
+  public void productionEnd (final NormalProduction np) throws IOException
   {
     if (!JJDocOptions.isOneTable ())
     {
@@ -232,7 +234,7 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void expansionStart (final Expansion e, final boolean first)
+  public void expansionStart (final Expansion e, final boolean first) throws IOException
   {
     if (!first)
     {
@@ -244,20 +246,20 @@ public class HTMLGenerator extends TextGenerator
   }
 
   @Override
-  public void expansionEnd (final Expansion e, final boolean first)
+  public void expansionEnd (final Expansion e, final boolean first) throws IOException
   {
     println ("</TD>");
     println ("</TR>");
   }
 
   @Override
-  public void nonTerminalStart (final ExpNonTerminal nt)
+  public void nonTerminalStart (final ExpNonTerminal nt) throws IOException
   {
     print ("<A HREF=\"#" + get_id (nt.getName ()) + "\">");
   }
 
   @Override
-  public void nonTerminalEnd (final ExpNonTerminal nt)
+  public void nonTerminalEnd (final ExpNonTerminal nt) throws IOException
   {
     print ("</A>");
   }

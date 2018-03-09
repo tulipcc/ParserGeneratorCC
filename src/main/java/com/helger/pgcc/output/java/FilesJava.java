@@ -145,8 +145,7 @@ public class FilesJava
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create CharStream " + e);
-      JavaCCErrors.semantic_error ("Could not open file CharStream.java for writing.");
+      JavaCCErrors.semantic_error ("Could not open file CharStream.java for writing.", e);
       throw new UncheckedIOException (e);
     }
   }
@@ -175,8 +174,7 @@ public class FilesJava
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create AbstractCharStream " + e);
-      JavaCCErrors.semantic_error ("Could not open file AbstractCharStream.java for writing.");
+      JavaCCErrors.semantic_error ("Could not open file AbstractCharStream.java for writing.", e);
       throw new UncheckedIOException (e);
     }
   }
@@ -205,8 +203,7 @@ public class FilesJava
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create JavaCharStream " + e);
-      JavaCCErrors.semantic_error ("Could not open file JavaCharStream.java for writing.");
+      JavaCCErrors.semantic_error ("Could not open file JavaCharStream.java for writing.", e);
       throw new UncheckedIOException (e);
     }
   }
@@ -234,8 +231,7 @@ public class FilesJava
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create SimpleCharStream " + e);
-      JavaCCErrors.semantic_error ("Could not open file SimpleCharStream.java for writing.");
+      JavaCCErrors.semantic_error ("Could not open file SimpleCharStream.java for writing.", e);
       throw new UncheckedIOException (e);
     }
   }
@@ -270,8 +266,7 @@ public class FilesJava
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create " + fileName + " " + e);
-      JavaCCErrors.semantic_error ("Could not open file " + fileName + " for writing.");
+      JavaCCErrors.semantic_error ("Could not open file " + fileName + " for writing.", e);
       throw new UncheckedIOException (e);
     }
   }
@@ -299,8 +294,7 @@ public class FilesJava
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create ParseException " + e);
-      JavaCCErrors.semantic_error ("Could not open file ParseException.java for writing.");
+      JavaCCErrors.semantic_error ("Could not open file ParseException.java for writing.", e);
       throw new UncheckedIOException (e);
     }
   }
@@ -328,8 +322,7 @@ public class FilesJava
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create " + filename + " " + e);
-      JavaCCErrors.semantic_error ("Could not open file " + filename + " for writing.");
+      JavaCCErrors.semantic_error ("Could not open file " + filename + " for writing.", e);
       throw new UncheckedIOException (e);
     }
   }
@@ -359,8 +352,7 @@ public class FilesJava
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create Token " + e);
-      JavaCCErrors.semantic_error ("Could not open file Token.java for writing.");
+      JavaCCErrors.semantic_error ("Could not open file Token.java for writing.", e);
       throw new UncheckedIOException (e);
     }
   }
@@ -387,8 +379,7 @@ public class FilesJava
     }
     catch (final IOException e)
     {
-      System.err.println ("Failed to create TokenManager " + e);
-      JavaCCErrors.semantic_error ("Could not open file TokenManager.java for writing.");
+      JavaCCErrors.semantic_error ("Could not open file TokenManager.java for writing.", e);
       throw new UncheckedIOException (e);
     }
   }

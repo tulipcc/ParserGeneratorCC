@@ -33,6 +33,8 @@
  */
 package com.helger.pgcc.jjdoc;
 
+import com.helger.pgcc.PGPrinter;
+
 /**
  * Global variables for JJDoc.
  */
@@ -121,38 +123,5 @@ public final class JJDocGlobals
           }
     }
     return s_generator;
-  }
-
-  /**
-   * Log informational messages.
-   *
-   * @param message
-   *        the message to log
-   */
-  public static void debug (final String message)
-  {
-    getGenerator ().debug (message);
-  }
-
-  /**
-   * Log informational messages.
-   *
-   * @param message
-   *        the message to log
-   */
-  public static void info (final String message)
-  {
-    getGenerator ().info (message);
-  }
-
-  /**
-   * Log error messages.
-   *
-   * @param message
-   *        the message to log
-   */
-  public static void error (final String message)
-  {
-    getGenerator ().error (message);
   }
 }

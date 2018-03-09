@@ -33,29 +33,26 @@
  */
 package com.helger.pgcc.jjdoc;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.ExpNonTerminal;
-import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.ExpRCharacterList;
 import com.helger.pgcc.parser.ExpRJustName;
-import com.helger.pgcc.parser.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.Expansion;
+import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.TokenProduction;
 
 public class BNFGenerator implements IDocGenerator
 {
   private final Map <String, String> m_id_map = new HashMap <> ();
   private int m_id = 1;
-  protected PrintWriter m_ostr;
+  protected Writer m_aPW;
   private boolean m_bPrinting = true;
 
   protected String get_id (final String nt)
@@ -63,57 +60,12 @@ public class BNFGenerator implements IDocGenerator
     return m_id_map.computeIfAbsent (nt, k -> "prod" + m_id++);
   }
 
-  protected PrintWriter create_output_stream ()
+  protected static Writer create_output_stream ()
   {
-    if (StringHelper.hasNoText (JJDocOptions.getOutputFile ()))
-    {
-      if (JJDocGlobals.s_input_file.equals (JJDocGlobals.STANDARD_INPUT))
-      {
-        return new PrintWriter (new OutputStreamWriter (System.out));
-      }
-
-      final String ext = ".bnf";
-      final int i = JJDocGlobals.s_input_file.lastIndexOf ('.');
-      if (i == -1)
-      {
-        JJDocGlobals.s_output_file = JJDocGlobals.s_input_file + ext;
-      }
-      else
-      {
-        final String suffix = JJDocGlobals.s_input_file.substring (i);
-        if (suffix.equals (ext))
-        {
-          JJDocGlobals.s_output_file = JJDocGlobals.s_input_file + ext;
-        }
-        else
-        {
-          JJDocGlobals.s_output_file = JJDocGlobals.s_input_file.substring (0, i) + ext;
-        }
-      }
-    }
-    else
-    {
-      JJDocGlobals.s_output_file = JJDocOptions.getOutputFile ();
-    }
-    try
-    {
-      m_ostr = new PrintWriter (new FileWriter (JJDocGlobals.s_output_file));
-    }
-    catch (final IOException e)
-    {
-      error ("JJDoc: can't open output stream on file " + JJDocGlobals.s_output_file + ".  Using standard output.");
-      m_ostr = new PrintWriter (new OutputStreamWriter (System.out));
-    }
-
-    return m_ostr;
+    return TextGenerator.createPrintWriter (".bnf");
   }
 
-  private void println (final String s)
-  {
-    print (s + "\n");
-  }
-
-  public void text (final String s)
+  public void text (final String s) throws IOException
   {
     if (m_bPrinting && !(s.length () == 1 && (s.charAt (0) == '\n' || s.charAt (0) == '\r')))
     {
@@ -121,19 +73,19 @@ public class BNFGenerator implements IDocGenerator
     }
   }
 
-  public void print (final String s)
+  public void print (final String s) throws IOException
   {
-    m_ostr.print (s);
+    m_aPW.write (s);
   }
 
   public void documentStart ()
   {
-    m_ostr = create_output_stream ();
+    m_aPW = create_output_stream ();
   }
 
-  public void documentEnd ()
+  public void documentEnd () throws IOException
   {
-    m_ostr.close ();
+    m_aPW.close ();
   }
 
   public void specialTokens (final String s)
@@ -174,18 +126,18 @@ public class BNFGenerator implements IDocGenerator
   public void nonTerminalEnd (final ExpNonTerminal nt)
   {}
 
-  public void productionStart (final NormalProduction np)
+  public void productionStart (final NormalProduction np) throws IOException
   {
-    println ("");
+    print ("\n");
     print (np.getLhs () + " ::= ");
   }
 
-  public void productionEnd (final NormalProduction np)
+  public void productionEnd (final NormalProduction np) throws IOException
   {
-    println ("");
+    print ("\n");
   }
 
-  public void expansionStart (final Expansion e, final boolean first)
+  public void expansionStart (final Expansion e, final boolean first) throws IOException
   {
     if (!first)
     {
@@ -207,7 +159,7 @@ public class BNFGenerator implements IDocGenerator
   }
 
   @Override
-  public void handleTokenProduction (final TokenProduction tp)
+  public void handleTokenProduction (final TokenProduction tp) throws IOException
   {
     m_bPrinting = false;
     final String text = JJDoc.getStandardTokenProductionText (tp);

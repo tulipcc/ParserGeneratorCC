@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
@@ -46,6 +45,7 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
 
@@ -55,8 +55,6 @@ public final class JJTreeIO
   private String m_sOutputFilename;
   private Reader m_in;
   private PrintWriter m_out;
-  private final PrintStream msg = System.out;
-  private final PrintStream err = System.err;
 
   JJTreeIO ()
   {}
@@ -81,16 +79,6 @@ public final class JJTreeIO
     return m_out;
   }
 
-  PrintStream getMsg ()
-  {
-    return msg;
-  }
-
-  PrintStream getErr ()
-  {
-    return err;
-  }
-
   void print (final String s)
   {
     m_out.print (s);
@@ -109,10 +97,7 @@ public final class JJTreeIO
   void closeAll ()
   {
     StreamHelper.close (m_out);
-    if (msg != null)
-      msg.flush ();
-    if (err != null)
-      err.flush ();
+    PGPrinter.flush ();
   }
 
   private static String _createOutputFilename (final String sInput)

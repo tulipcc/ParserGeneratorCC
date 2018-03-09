@@ -41,15 +41,14 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.stream.NonBlockingBufferedWriter;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.pgcc.output.EOutputLanguage;
@@ -183,8 +182,8 @@ public class CodeGenerator
 
   public void saveOutput (final String fileName, final StringBuilder sb)
   {
-    final File tmp = new File (fileName);
-    try (final Writer fw = new NonBlockingBufferedWriter (new FileWriter (tmp)))
+    try (final NonBlockingBufferedWriter fw = FileHelper.getBufferedWriter (new File (fileName),
+                                                                            Options.getOutputEncoding ()))
     {
       fw.write (sb.toString ());
     }

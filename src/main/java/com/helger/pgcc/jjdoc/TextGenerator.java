@@ -33,20 +33,23 @@
  */
 package com.helger.pgcc.jjdoc;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.ExpNonTerminal;
 import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NormalProduction;
+import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.TokenProduction;
 
 /**
@@ -54,133 +57,139 @@ import com.helger.pgcc.parser.TokenProduction;
  */
 public class TextGenerator implements IDocGenerator
 {
-  protected PrintWriter m_ostr;
+  protected Writer m_aPW;
 
   public TextGenerator ()
   {}
 
-  public void text (final String s)
+  public void text (final String s) throws IOException
   {
     print (s);
   }
 
-  public void print (final String s)
+  public void print (final String s) throws IOException
   {
-    m_ostr.print (s);
+    m_aPW.write (s);
   }
 
-  public void documentStart ()
+  public void documentStart () throws IOException
   {
-    m_ostr = createOutputStream ();
-    m_ostr.print ("\nDOCUMENT START\n");
+    m_aPW = createPrintWriter ();
+    m_aPW.write ("\nDOCUMENT START\n");
   }
 
-  public void documentEnd ()
+  public void documentEnd () throws IOException
   {
-    m_ostr.print ("\nDOCUMENT END\n");
-    m_ostr.close ();
+    m_aPW.write ("\nDOCUMENT END\n");
+    m_aPW.close ();
   }
 
-  public void specialTokens (final String s)
+  public void specialTokens (final String s) throws IOException
   {
-    m_ostr.print (s);
+    m_aPW.write (s);
   }
 
-  public void nonterminalsStart ()
+  public void nonterminalsStart () throws IOException
   {
     text ("NON-TERMINALS\n");
   }
 
-  public void nonterminalsEnd ()
+  public void nonterminalsEnd () throws IOException
   {}
 
-  public void tokensStart ()
+  public void tokensStart () throws IOException
   {
     text ("TOKENS\n");
   }
 
-  @Override
-  public void handleTokenProduction (final TokenProduction tp)
+  public void handleTokenProduction (final TokenProduction tp) throws IOException
   {
     final String text = JJDoc.getStandardTokenProductionText (tp);
     text (text);
   }
 
-  public void tokensEnd ()
+  public void tokensEnd () throws IOException
   {}
 
-  public void javacode (final CodeProductionJava jp)
+  public void javacode (final CodeProductionJava jp) throws IOException
   {
     productionStart (jp);
     text ("java code");
     productionEnd (jp);
   }
 
-  public void cppcode (final CodeProductionCpp cp)
+  public void cppcode (final CodeProductionCpp cp) throws IOException
   {
     productionStart (cp);
     text ("c++ code");
     productionEnd (cp);
   }
 
-  public void productionStart (final NormalProduction np)
+  public void productionStart (final NormalProduction np) throws IOException
   {
-    m_ostr.print ("\t" + np.getLhs () + "\t:=\t");
+    m_aPW.write ("\t" + np.getLhs () + "\t:=\t");
   }
 
-  public void productionEnd (final NormalProduction np)
+  public void productionEnd (final NormalProduction np) throws IOException
   {
-    m_ostr.print ("\n");
+    m_aPW.write ("\n");
   }
 
-  public void expansionStart (final Expansion e, final boolean first)
+  public void expansionStart (final Expansion e, final boolean first) throws IOException
   {
     if (!first)
-      m_ostr.print ("\n\t\t|\t");
+      m_aPW.write ("\n\t\t|\t");
   }
 
-  public void expansionEnd (final Expansion e, final boolean first)
+  public void expansionEnd (final Expansion e, final boolean first) throws IOException
   {}
 
-  public void nonTerminalStart (final ExpNonTerminal nt)
+  public void nonTerminalStart (final ExpNonTerminal nt) throws IOException
   {}
 
-  public void nonTerminalEnd (final ExpNonTerminal nt)
+  public void nonTerminalEnd (final ExpNonTerminal nt) throws IOException
   {}
 
-  public void reStart (final AbstractExpRegularExpression r)
+  public void reStart (final AbstractExpRegularExpression r) throws IOException
   {}
 
-  public void reEnd (final AbstractExpRegularExpression r)
+  public void reEnd (final AbstractExpRegularExpression r) throws IOException
   {}
 
   /**
    * Create an output stream for the generated Jack code. Try to open a file
    * based on the name of the parser, but if that fails use the standard output
    * stream.
-   * 
+   *
    * @return Never <code>null</code>.
    */
   @Nonnull
-  protected PrintWriter createOutputStream ()
+  protected static Writer createPrintWriter ()
+  {
+    String ext = ".html";
+    if (JJDocOptions.isText ())
+      ext = ".txt";
+    else
+      if (JJDocOptions.isXText ())
+        ext = ".xtext";
+
+    return createPrintWriter (ext);
+  }
+
+  /**
+   * Create an output stream for the generated Jack code. Try to open a file
+   * based on the name of the parser, but if that fails use the standard output
+   * stream.
+   *
+   * @return Never <code>null</code>.
+   */
+  @Nonnull
+  protected static Writer createPrintWriter (@Nonnull final String ext)
   {
     if (StringHelper.hasNoText (JJDocOptions.getOutputFile ()))
     {
       if (JJDocGlobals.s_input_file.equals (JJDocGlobals.STANDARD_INPUT))
-      {
-        return new PrintWriter (new OutputStreamWriter (System.out));
-      }
-
-      String ext = ".html";
-      if (JJDocOptions.isText ())
-      {
-        ext = ".txt";
-      }
-      else
-        if (JJDocOptions.isXText ())
-        {
-          ext = ".xtext";
-        }
+        return PGPrinter.getOutWriter ();
 
       final int i = JJDocGlobals.s_input_file.lastIndexOf ('.');
       if (i == -1)
@@ -205,17 +214,13 @@ public class TextGenerator implements IDocGenerator
       JJDocGlobals.s_output_file = JJDocOptions.getOutputFile ();
     }
 
-    try
-    {
-      m_ostr = new PrintWriter (new FileWriter (JJDocGlobals.s_output_file));
-    }
-    catch (final IOException e)
-    {
-      error ("JJDoc: can't open output stream on file " + JJDocGlobals.s_output_file + ".  Using standard output.");
-      m_ostr = new PrintWriter (new OutputStreamWriter (System.out));
-    }
-
-    return m_ostr;
+    final Writer aWriter = FileHelper.getBufferedWriter (new File (JJDocGlobals.s_output_file),
+                                                         Options.getOutputEncoding ());
+    if (aWriter != null)
+      return new PrintWriter (aWriter);
+    PGPrinter.error ("JJDoc: can't open output stream on file " +
+                     JJDocGlobals.s_output_file +
+                     ".  Using standard output.");
+    return PGPrinter.getOutWriter ();
   }
-
 }

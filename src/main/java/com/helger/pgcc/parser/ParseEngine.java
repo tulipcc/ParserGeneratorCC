@@ -84,6 +84,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
@@ -332,9 +333,9 @@ public class ParseEngine
   {
     for (int i = 0; i < conds.length; i++)
     {
-      System.err.println ("Lookahead: " + i);
-      System.err.println (conds[i].dump (0, new HashSet <> ()));
-      System.err.println ();
+      PGPrinter.error ("Lookahead: " + i);
+      PGPrinter.error (conds[i].dump (0, new HashSet <> ()).toString ());
+      PGPrinter.error ("");
     }
   }
 
@@ -1868,17 +1869,21 @@ public class ParseEngine
           {
             final ExpSequence e_nrw = (ExpSequence) e;
             // We skip the first element in the following iteration since it is
-            // the
-            // Lookahead object.
+            // the Lookahead object.
             int cnt = inf.m_count;
             for (int i = 1; i < e_nrw.m_units.size (); i++)
             {
-              final Expansion eseq = (e_nrw.m_units.get (i));
+              final Expansion eseq = e_nrw.m_units.get (i);
               buildPhase3Routine (new Phase3Data (eseq, cnt), true);
 
-              // System.out.println("minimumSize: line: " + eseq.line + ",
-              // column: " + eseq.column + ": " +
-              // minimumSize(eseq));//Test Code
+              // Test Code
+              if (false)
+                PGPrinter.info ("minimumSize: line: " +
+                                eseq.getLine () +
+                                ", column: " +
+                                eseq.getColumn () +
+                                ": " +
+                                minimumSize (eseq));
 
               cnt -= minimumSize (eseq);
               if (cnt <= 0)
@@ -2110,38 +2115,46 @@ public class ParseEngine
         final CodeProductionCpp cp = (CodeProductionCpp) p;
 
         _generateCPPMethodheader (cp);
-        // t = (Token)(cp.getReturnTypeTokens().get(0));
-        // codeGenerator.printTokenSetup(t); ccol = 1;
-        // codeGenerator.printLeadingComments(t);
-        // codeGenerator.genCode(" " + staticOpt() + (p.getAccessMod() != null ?
-        // p.getAccessMod() + " " : ""));
-        // cline = t.beginLine; ccol = t.beginColumn;
-        // codeGenerator.printTokenOnly(t);
-        // for (int i = 1; i < cp.getReturnTypeTokens().size(); i++) {
-        // t = (Token)(cp.getReturnTypeTokens().get(i));
-        // codeGenerator.printToken(t);
-        // }
-        // codeGenerator.printTrailingComments(t);
-        // codeGenerator.genCode(" " + cp.getLhs() + "(");
-        // if (cp.getParameterListTokens().size() != 0) {
-        // codeGenerator.printTokenSetup((Token)(cp.getParameterListTokens().get(0)));
-        // for (Iterator it = cp.getParameterListTokens().iterator();
-        // it.hasNext();) {
-        // t = (Token)it.next();
-        // codeGenerator.printToken(t);
-        // }
-        // codeGenerator.printTrailingComments(t);
-        // }
-        // codeGenerator.genCode(")");
-        // for (Iterator it = cp.getThrowsList().iterator();
-        // it.hasNext();) {
-        // codeGenerator.genCode(", ");
-        // List name = (List)it.next();
-        // for (Iterator it2 = name.iterator(); it2.hasNext();) {
-        // t = (Token)it2.next();
-        // codeGenerator.genCode(t.image);
-        // }
-        // }
+
+        if (false)
+        {
+          Token t = (cp.getReturnTypeTokens ().get (0));
+          codeGenerator.printTokenSetup (t);
+          s_ccol = 1;
+          codeGenerator.printLeadingComments (t);
+          codeGenerator.genCode (" " + (p.getAccessMod () != null ? p.getAccessMod () + " " : ""));
+          s_cline = t.beginLine;
+          s_ccol = t.beginColumn;
+          codeGenerator.printTokenOnly (t);
+          for (int i = 1; i < cp.getReturnTypeTokens ().size (); i++)
+          {
+            t = (cp.getReturnTypeTokens ().get (i));
+            codeGenerator.printToken (t);
+          }
+          codeGenerator.printTrailingComments (t);
+          codeGenerator.genCode (" " + cp.getLhs () + "(");
+          if (cp.getParameterListTokens ().size () != 0)
+          {
+            codeGenerator.printTokenSetup (cp.getParameterListTokens ().get (0));
+            for (final Token aElement : cp.getParameterListTokens ())
+            {
+              t = aElement;
+              codeGenerator.printToken (t);
+            }
+            codeGenerator.printTrailingComments (t);
+          }
+          codeGenerator.genCode (")");
+          for (final List <Token> aElement : cp.getThrowsList ())
+          {
+            codeGenerator.genCode (", ");
+            for (final Token aElement2 : aElement)
+            {
+              t = aElement2;
+              codeGenerator.genCode (t.image);
+            }
+          }
+        }
+
         codeGenerator.genCodeLine (" {");
         if (Options.isDebugParser ())
         {
@@ -2286,13 +2299,16 @@ public class ParseEngine
     {
       buildPhase3Routine (data, false);
     }
-    // for (Enumeration enumeration = phase3table.elements();
-    // enumeration.hasMoreElements();) {
-    // Phase3Data inf = (Phase3Data)(enumeration.nextElement());
-    // System.err.println("**** Table for: " + inf.exp.internal_name);
-    // buildPhase3Table(inf);
-    // System.err.println("**** END TABLE *********");
-    // }
+
+    if (false)
+    {
+      for (final Phase3Data inf : m_phase3table.values ())
+      {
+        PGPrinter.info ("**** Table for: " + inf.m_exp.getInternalName ());
+        buildPhase3TableRec (inf);
+        PGPrinter.info ("**** END TABLE *********");
+      }
+    }
 
     codeGenerator.switchToMainFile ();
   }
@@ -2311,13 +2327,13 @@ public class ParseEngine
   }
 
   // Table driven.
-  void buildPhase3Table (final Phase3Data inf)
+  void buildPhase3TableRec (final Phase3Data inf)
   {
     final Expansion e = inf.m_exp;
     if (e instanceof AbstractExpRegularExpression)
     {
       final AbstractExpRegularExpression e_nrw = (AbstractExpRegularExpression) e;
-      System.err.println ("TOKEN, " + e_nrw.m_ordinal);
+      PGPrinter.info ("TOKEN, " + e_nrw.m_ordinal);
     }
     else
       if (e instanceof ExpNonTerminal)
@@ -2327,38 +2343,40 @@ public class ParseEngine
         if (ntprod instanceof AbstractCodeProduction)
         {
           // javacode, true - always (warn?)
-          System.err.println ("JAVACODE_PROD, true");
+          PGPrinter.info ("JAVACODE_PROD, true");
         }
         else
         {
           final Expansion ntexp = ntprod.getExpansion ();
           // nt exp's table.
-          System.err.println ("PRODUCTION, " + ntexp.getInternalIndex ());
-          // buildPhase3Table(new Phase3Data(ntexp, inf.count));
+          PGPrinter.info ("PRODUCTION, " + ntexp.getInternalIndex ());
+          if (false)
+            buildPhase3TableRec (new Phase3Data (ntexp, inf.m_count));
         }
       }
       else
         if (e instanceof ExpChoice)
         {
-          ExpSequence nested_seq;
           final ExpChoice e_nrw = (ExpChoice) e;
-          System.err.print ("CHOICE, ");
+          PGPrinter.info ("CHOICE, ");
           for (int i = 0; i < e_nrw.getChoices ().size (); i++)
           {
             if (i > 0)
-              System.err.print ("\n|");
-            nested_seq = (ExpSequence) (e_nrw.getChoices ().get (i));
+              PGPrinter.info ("\n|");
+            final ExpSequence nested_seq = (ExpSequence) (e_nrw.getChoices ().get (i));
             final ExpLookahead la = (ExpLookahead) (nested_seq.m_units.get (0));
             if (la.getActionTokens ().size () != 0)
             {
-              System.err.print ("SEMANTIC,");
+              PGPrinter.info ("SEMANTIC,");
             }
             else
             {
-              buildPhase3Table (new Phase3Data (nested_seq, inf.m_count));
+              PGPrinter.info ("<start recurse>");
+              buildPhase3TableRec (new Phase3Data (nested_seq, inf.m_count));
+              PGPrinter.info ("<end recurse>");
             }
           }
-          System.err.println ();
+          PGPrinter.info ();
         }
         else
           if (e instanceof ExpSequence)
@@ -2367,12 +2385,11 @@ public class ParseEngine
             int cnt = inf.m_count;
             if (e_nrw.m_units.size () > 2)
             {
-              System.err.println ("SEQ, " + cnt);
+              PGPrinter.info ("SEQ, " + cnt);
               for (int i = 1; i < e_nrw.m_units.size (); i++)
               {
-                System.err.print ("   ");
                 final Expansion eseq = (e_nrw.m_units.get (i));
-                buildPhase3Table (new Phase3Data (eseq, cnt));
+                buildPhase3TableRec (new Phase3Data (eseq, cnt));
                 cnt -= minimumSize (eseq);
                 if (cnt <= 0)
                   break;
@@ -2388,34 +2405,34 @@ public class ParseEngine
                   break;
                 tmp = ntprod.getExpansion ();
               }
-              buildPhase3Table (new Phase3Data (tmp, cnt));
+              buildPhase3TableRec (new Phase3Data (tmp, cnt));
             }
-            System.err.println ();
+            PGPrinter.info ();
           }
           else
             if (e instanceof ExpTryBlock)
             {
               final ExpTryBlock e_nrw = (ExpTryBlock) e;
-              buildPhase3Table (new Phase3Data (e_nrw.m_exp, inf.m_count));
+              buildPhase3TableRec (new Phase3Data (e_nrw.m_exp, inf.m_count));
             }
             else
               if (e instanceof ExpOneOrMore)
               {
                 final ExpOneOrMore e_nrw = (ExpOneOrMore) e;
-                System.err.println ("SEQ PROD " + e_nrw.m_expansion.getInternalIndex ());
-                System.err.println ("ZEROORMORE " + e_nrw.m_expansion.getInternalIndex ());
+                PGPrinter.info ("SEQ PROD " + e_nrw.m_expansion.getInternalIndex ());
+                PGPrinter.info ("ZEROORMORE " + e_nrw.m_expansion.getInternalIndex ());
               }
               else
                 if (e instanceof ExpZeroOrMore)
                 {
                   final ExpZeroOrMore e_nrw = (ExpZeroOrMore) e;
-                  System.err.print ("ZEROORMORE, " + e_nrw.m_expansion.getInternalIndex ());
+                  PGPrinter.info ("ZEROORMORE, " + e_nrw.m_expansion.getInternalIndex ());
                 }
                 else
                   if (e instanceof ExpZeroOrOne)
                   {
                     final ExpZeroOrOne e_nrw = (ExpZeroOrOne) e;
-                    System.err.println ("ZERORONE, " + e_nrw.m_expansion.getInternalIndex ());
+                    PGPrinter.info ("ZERORONE, " + e_nrw.m_expansion.getInternalIndex ());
                   }
                   else
                   {

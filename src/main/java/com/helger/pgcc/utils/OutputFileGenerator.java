@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,7 +103,9 @@ public class OutputFileGenerator
     final InputStream is = ClassPathResource.getInputStream (m_templateName);
     if (is == null)
       throw new IOException ("Invalid template name: " + m_templateName);
-    try (final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is)))
+
+    try (final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is,
+                                                                                                    StandardCharsets.UTF_8)))
     {
       _process (in, out, false);
     }

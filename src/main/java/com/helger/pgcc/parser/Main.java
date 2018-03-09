@@ -75,6 +75,7 @@ import javax.annotation.Nonnull;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.commons.state.ESuccess;
 import com.helger.pgcc.CPG;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.cpp.OtherFilesGenCPP;
 import com.helger.pgcc.output.java.OtherFilesGenJava;
@@ -91,31 +92,31 @@ public class Main
 
   private static void _showHelpMessage ()
   {
-    System.out.println ("Usage:");
-    System.out.println ("    " + CPG.CMDLINE_NAME + " option-settings inputfile");
-    System.out.println ();
-    System.out.println ("\"option-settings\" is a sequence of settings separated by spaces.");
-    System.out.println ("Each option setting must be of one of the following forms:");
-    System.out.println ();
-    System.out.println ("    -optionname=value (e.g., -STATIC=false)");
-    System.out.println ("    -optionname:value (e.g., -STATIC:false)");
-    System.out.println ("    -optionname       (equivalent to -optionname=true.  e.g., -STATIC)");
-    System.out.println ("    -NOoptionname     (equivalent to -optionname=false. e.g., -NOSTATIC)");
-    System.out.println ();
-    System.out.println ("Option settings are not case-sensitive, so one can say \"-nOsTaTiC\" instead");
-    System.out.println ("of \"-NOSTATIC\".  Option values must be appropriate for the corresponding");
-    System.out.println ("option, and must be either an integer, a boolean, or a string value.");
-    System.out.println ();
+    PGPrinter.info ("Usage:");
+    PGPrinter.info ("    " + CPG.CMDLINE_NAME + " option-settings inputfile");
+    PGPrinter.info ();
+    PGPrinter.info ("\"option-settings\" is a sequence of settings separated by spaces.");
+    PGPrinter.info ("Each option setting must be of one of the following forms:");
+    PGPrinter.info ();
+    PGPrinter.info ("    -optionname=value (e.g., -STATIC=false)");
+    PGPrinter.info ("    -optionname:value (e.g., -STATIC:false)");
+    PGPrinter.info ("    -optionname       (equivalent to -optionname=true.  e.g., -STATIC)");
+    PGPrinter.info ("    -NOoptionname     (equivalent to -optionname=false. e.g., -NOSTATIC)");
+    PGPrinter.info ();
+    PGPrinter.info ("Option settings are not case-sensitive, so one can say \"-nOsTaTiC\" instead");
+    PGPrinter.info ("of \"-NOSTATIC\".  Option values must be appropriate for the corresponding");
+    PGPrinter.info ("option, and must be either an integer, a boolean, or a string value.");
+    PGPrinter.info ();
 
     // 2013/07/23 -- Changed this to auto-generate from metadata in Options so
     // that help is always in-sync with codebase
     _printOptions ();
 
-    System.out.println ("EXAMPLE:");
-    System.out.println ("    " +
-                        CPG.CMDLINE_NAME +
-                        " -OUTPUT_DIRECTORY=target/code -LOOKAHEAD:2 -debug_parser mygrammar.jj");
-    System.out.println ();
+    PGPrinter.info ("EXAMPLE:");
+    PGPrinter.info ("    " +
+                    CPG.CMDLINE_NAME +
+                    " -OUTPUT_DIRECTORY=target/code -LOOKAHEAD:2 -debug_parser mygrammar.jj");
+    PGPrinter.info ();
   }
 
   private static void _printOptions ()
@@ -149,35 +150,35 @@ public class Main
 
     if (maxLengthInt > 0)
     {
-      System.out.println ("The integer valued options are:");
-      System.out.println ();
+      PGPrinter.info ("The integer valued options are:");
+      PGPrinter.info ();
       for (final OptionInfo i : options)
       {
         _printOptionInfo (EOptionType.INTEGER, i, maxLengthInt);
       }
-      System.out.println ();
+      PGPrinter.info ();
     }
 
     if (maxLengthBool > 0)
     {
-      System.out.println ("The boolean valued options are:");
-      System.out.println ();
+      PGPrinter.info ("The boolean valued options are:");
+      PGPrinter.info ();
       for (final OptionInfo i : options)
       {
         _printOptionInfo (EOptionType.BOOLEAN, i, maxLengthBool);
       }
-      System.out.println ();
+      PGPrinter.info ();
     }
 
     if (maxLengthString > 0)
     {
-      System.out.println ("The string valued options are:");
-      System.out.println ();
+      PGPrinter.info ("The string valued options are:");
+      PGPrinter.info ();
       for (final OptionInfo i : options)
       {
         _printOptionInfo (EOptionType.STRING, i, maxLengthString);
       }
-      System.out.println ();
+      PGPrinter.info ();
     }
   }
 
@@ -186,12 +187,12 @@ public class Main
     if (optionInfo.getType () == filter)
     {
       final Object default1 = optionInfo.getDefault ();
-      System.out.println ("    " +
-                          _padRight (optionInfo.getName (), padLength + 1) +
-                          (default1 == null ? ""
-                                            : ("(default : " +
-                                               (default1.toString ().length () == 0 ? "<<empty>>" : default1) +
-                                               ")")));
+      PGPrinter.info ("    " +
+                      _padRight (optionInfo.getName (), padLength + 1) +
+                      (default1 == null ? ""
+                                        : ("(default : " +
+                                           (default1.toString ().length () == 0 ? "<<empty>>" : default1) +
+                                           ")")));
     }
   }
 
@@ -236,22 +237,22 @@ public class Main
 
     if (args.length == 0)
     {
-      System.out.println ();
+      PGPrinter.info ();
       _showHelpMessage ();
       return ESuccess.FAILURE;
     }
-    System.out.println ("(type \"" + CPG.CMDLINE_NAME + "\" with no arguments for help)");
+    PGPrinter.info ("(type \"" + CPG.CMDLINE_NAME + "\" with no arguments for help)");
 
     if (Options.isOption (args[args.length - 1]))
     {
-      System.out.println ("Last argument \"" + args[args.length - 1] + "\" is not a filename.");
+      PGPrinter.info ("Last argument \"" + args[args.length - 1] + "\" is not a filename.");
       return ESuccess.FAILURE;
     }
     for (int arg = 0; arg < args.length - 1; arg++)
     {
       if (!Options.isOption (args[arg]))
       {
-        System.out.println ("Argument \"" + args[arg] + "\" must be an option setting.");
+        PGPrinter.info ("Argument \"" + args[arg] + "\" must be an option setting.");
         return ESuccess.FAILURE;
       }
       Options.setCmdLineOption (args[arg]);
@@ -263,12 +264,12 @@ public class Main
       final File fp = new File (args[args.length - 1]);
       if (!fp.exists ())
       {
-        System.out.println ("File " + args[args.length - 1] + " not found.");
+        PGPrinter.info ("File " + args[args.length - 1] + " not found.");
         return ESuccess.FAILURE;
       }
       if (fp.isDirectory ())
       {
-        System.out.println (args[args.length - 1] + " is a directory. Please use a valid file name.");
+        PGPrinter.info (args[args.length - 1] + " is a directory. Please use a valid file name.");
         return ESuccess.FAILURE;
       }
       parser = new JavaCCParser (new NonBlockingBufferedReader (new InputStreamReader (new FileInputStream (args[args.length -
@@ -277,18 +278,18 @@ public class Main
     }
     catch (final SecurityException se)
     {
-      System.out.println ("Security violation while trying to open " + args[args.length - 1]);
+      PGPrinter.info ("Security violation while trying to open " + args[args.length - 1]);
       return ESuccess.FAILURE;
     }
     catch (final FileNotFoundException e)
     {
-      System.out.println ("File " + args[args.length - 1] + " not found.");
+      PGPrinter.info ("File " + args[args.length - 1] + " not found.");
       return ESuccess.FAILURE;
     }
 
     try
     {
-      System.out.println ("Reading from file " + args[args.length - 1] + " ...");
+      PGPrinter.info ("Reading from file " + args[args.length - 1] + " ...");
       JavaCCGlobals.s_fileName = args[args.length - 1];
       JavaCCGlobals.s_origFileName = JavaCCGlobals.s_fileName;
       JavaCCGlobals.s_jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", args[args.length - 1]);
@@ -361,35 +362,35 @@ public class Main
         if (nWarnings == 0)
         {
           if (isBuildParser)
-            System.out.println ("Parser generated successfully.");
+            PGPrinter.info ("Parser generated successfully.");
         }
         else
         {
-          System.out.println ("Parser generated with 0 errors and " + nWarnings + " warnings.");
+          PGPrinter.info ("Parser generated with 0 errors and " + nWarnings + " warnings.");
         }
       }
       else
       {
-        System.out.println ("Detected " + nErrors + " error(s) and " + nWarnings + " warning(s).");
+        PGPrinter.info ("Detected " + nErrors + " error(s) and " + nWarnings + " warning(s).");
       }
       return ESuccess.valueOf (nErrors == 0);
     }
     catch (final MetaParseException e)
     {
-      System.out.println ("Detected " +
-                          JavaCCErrors.getErrorCount () +
-                          " errors and " +
-                          JavaCCErrors.getWarningCount () +
-                          " warnings.");
+      PGPrinter.error ("Detected " +
+                       JavaCCErrors.getErrorCount () +
+                       " errors and " +
+                       JavaCCErrors.getWarningCount () +
+                       " warnings.");
     }
     catch (final ParseException e)
     {
-      System.out.println (e.toString ());
-      System.out.println ("Detected " +
-                          (JavaCCErrors.getErrorCount () + 1) +
-                          " errors and " +
-                          JavaCCErrors.getWarningCount () +
-                          " warnings.");
+      PGPrinter.error ("Detected " +
+                       (JavaCCErrors.getErrorCount () + 1) +
+                       " errors and " +
+                       JavaCCErrors.getWarningCount () +
+                       " warnings.",
+                       e);
     }
     return ESuccess.FAILURE;
   }

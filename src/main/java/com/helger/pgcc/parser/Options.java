@@ -86,6 +86,7 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.system.SystemHelper;
 import com.helger.pgcc.EJDKVersion;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.utils.EOptionType;
@@ -575,7 +576,7 @@ public class Options
         }
         else
         {
-          System.out.println ("Warning: Bad option \"" + sArg + "\" will be ignored.");
+          PGPrinter.info ("Warning: Bad option \"" + sArg + "\" will be ignored.");
           return;
         }
     }
@@ -603,7 +604,7 @@ public class Options
             final int i = Integer.parseInt (sRealValue);
             if (i <= 0)
             {
-              System.out.println ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
+              PGPrinter.info ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
               return;
             }
             val = Integer.valueOf (i);
@@ -628,7 +629,7 @@ public class Options
 
     if (!s_optionValues.containsKey (name))
     {
-      System.out.println ("Warning: Bad option \"" + sArg + "\" will be ignored.");
+      PGPrinter.info ("Warning: Bad option \"" + sArg + "\" will be ignored.");
       return;
     }
 
@@ -637,12 +638,12 @@ public class Options
     final Object valOrig = s_optionValues.get (name);
     if (val.getClass () != valOrig.getClass ())
     {
-      System.out.println ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
+      PGPrinter.info ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
       return;
     }
     if (s_cmdLineSetting.contains (name))
     {
-      System.out.println ("Warning: Duplicate option setting \"" + sArg + "\" will be ignored.");
+      PGPrinter.info ("Warning: Duplicate option setting \"" + sArg + "\" will be ignored.");
       return;
     }
 

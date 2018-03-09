@@ -43,6 +43,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.PGPrinter;
 
 public final class LookaheadCalc
 {
@@ -134,8 +135,8 @@ public final class LookaheadCalc
     // dbl[i] and dbr[i] are lists of size limited matches for choice i
     // of ch. dbl ignores matches with semantic lookaheads (when force_la_check
     // is false), while dbr ignores semantic lookahead.
-    final List <MatchInfo> [] dbl = new ArrayList [ch.getChoices ().size ()];
-    final List <MatchInfo> [] dbr = new ArrayList [ch.getChoices ().size ()];
+    final List <MatchInfo> [] dbl = new List [ch.getChoices ().size ()];
+    final List <MatchInfo> [] dbr = new List [ch.getChoices ().size ()];
     final int [] minLA = new int [ch.getChoices ().size () - 1];
     final MatchInfo [] overlapInfo = new MatchInfo [ch.getChoices ().size () - 1];
     final int [] other = new int [ch.getChoices ().size () - 1];
@@ -219,25 +220,33 @@ public final class LookaheadCalc
       if (minLA[i] > Options.getChoiceAmbiguityCheck ())
       {
         JavaCCErrors.warning ("Choice conflict involving two expansions at");
-        System.err.print ("         line " + exp.getLine ());
-        System.err.print (", column " + exp.getColumn ());
-        System.err.print (" and line " + ch.getChoices ().get (other[i]).getLine ());
-        System.err.print (", column " + ch.getChoices ().get (other[i]).getColumn ());
-        System.err.println (" respectively.");
-        System.err.println ("         A common prefix is: " + _image (overlapInfo[i]));
-        System.err.println ("         Consider using a lookahead of " + minLA[i] + " or more for earlier expansion.");
+        PGPrinter.error ("         line " +
+                         exp.getLine () +
+                         ", column " +
+                         exp.getColumn () +
+                         " and line " +
+                         ch.getChoices ().get (other[i]).getLine () +
+                         ", column " +
+                         ch.getChoices ().get (other[i]).getColumn () +
+                         " respectively.");
+        PGPrinter.error ("         A common prefix is: " + _image (overlapInfo[i]));
+        PGPrinter.error ("         Consider using a lookahead of " + minLA[i] + " or more for earlier expansion.");
       }
       else
         if (minLA[i] > 1)
         {
           JavaCCErrors.warning ("Choice conflict involving two expansions at");
-          System.err.print ("         line " + exp.getLine ());
-          System.err.print (", column " + exp.getColumn ());
-          System.err.print (" and line " + ch.getChoices ().get (other[i]).getLine ());
-          System.err.print (", column " + ch.getChoices ().get (other[i]).getColumn ());
-          System.err.println (" respectively.");
-          System.err.println ("         A common prefix is: " + _image (overlapInfo[i]));
-          System.err.println ("         Consider using a lookahead of " + minLA[i] + " for earlier expansion.");
+          PGPrinter.error ("         line " +
+                           exp.getLine () +
+                           ", column " +
+                           exp.getColumn () +
+                           " and line " +
+                           ch.getChoices ().get (other[i]).getLine () +
+                           ", column " +
+                           ch.getChoices ().get (other[i]).getColumn () +
+                           " respectively.");
+          PGPrinter.error ("         A common prefix is: " + _image (overlapInfo[i]));
+          PGPrinter.error ("         Consider using a lookahead of " + minLA[i] + " for earlier expansion.");
         }
     }
   }
@@ -332,9 +341,9 @@ public final class LookaheadCalc
                             ", column " +
                             exp.getColumn () +
                             ".");
-      System.err.println ("         Expansion nested within construct and expansion following construct");
-      System.err.println ("         have common prefixes, one of which is: " + _image (m1));
-      System.err.println ("         Consider using a lookahead of " + la + " or more for nested expansion.");
+      PGPrinter.error ("         Expansion nested within construct and expansion following construct");
+      PGPrinter.error ("         have common prefixes, one of which is: " + _image (m1));
+      PGPrinter.error ("         Consider using a lookahead of " + la + " or more for nested expansion.");
     }
     else
       if (la > 1)
@@ -347,9 +356,9 @@ public final class LookaheadCalc
                               ", column " +
                               exp.getColumn () +
                               ".");
-        System.err.println ("         Expansion nested within construct and expansion following construct");
-        System.err.println ("         have common prefixes, one of which is: " + _image (m1));
-        System.err.println ("         Consider using a lookahead of " + la + " for nested expansion.");
+        PGPrinter.error ("         Expansion nested within construct and expansion following construct");
+        PGPrinter.error ("         have common prefixes, one of which is: " + _image (m1));
+        PGPrinter.error ("         Consider using a lookahead of " + la + " for nested expansion.");
       }
   }
 

@@ -33,10 +33,12 @@
  */
 package com.helger.pgcc.jjdoc;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.*;
 
 /**
@@ -44,7 +46,7 @@ import com.helger.pgcc.parser.*;
  */
 public final class JJDoc
 {
-  static void start ()
+  static void start () throws IOException
   {
     JJDocGlobals.s_generator = JJDocGlobals.getGenerator ();
     JJDocGlobals.s_generator.documentStart ();
@@ -63,7 +65,7 @@ public final class JJDoc
     return t != tok ? t : null;
   }
 
-  private static void _emitTopLevelSpecialTokens (final Token aTok, final IDocGenerator gen)
+  private static void _emitTopLevelSpecialTokens (final Token aTok, final IDocGenerator gen) throws IOException
   {
     if (aTok == null)
     {
@@ -92,7 +94,8 @@ public final class JJDoc
    * instanceof TokenProduction) ); }
    */
 
-  private static void _emitTokenProductions (final IDocGenerator gen, final List <TokenProduction> prods)
+  private static void _emitTokenProductions (final IDocGenerator gen,
+                                             final List <TokenProduction> prods) throws IOException
   {
     gen.tokensStart ();
     // FIXME there are many empty productions here
@@ -163,7 +166,8 @@ public final class JJDoc
     return token;
   }
 
-  private static void _emitNormalProductions (final IDocGenerator gen, final List <NormalProduction> prods)
+  private static void _emitNormalProductions (final IDocGenerator gen,
+                                              final List <NormalProduction> prods) throws IOException
   {
     gen.nonterminalsStart ();
     for (final NormalProduction np : prods)
@@ -206,7 +210,7 @@ public final class JJDoc
     gen.nonterminalsEnd ();
   }
 
-  private static void _emitExpansionTree (final Expansion exp, final IDocGenerator gen)
+  private static void _emitExpansionTree (final Expansion exp, final IDocGenerator gen) throws IOException
   {
     // gen.text("[->" + exp.getClass().getName() + "]");
     if (exp instanceof ExpAction)
@@ -260,7 +264,7 @@ public final class JJDoc
                       }
                       else
                       {
-                        JJDocGlobals.error ("Oops: Unknown expansion type.");
+                        PGPrinter.error ("Oops: Unknown expansion type.");
                       }
     // gen.text("[<-" + exp.getClass().getName() + "]");
   }
@@ -270,7 +274,7 @@ public final class JJDoc
     gen.doNothing (a);
   }
 
-  private static void _emitExpansionChoice (final ExpChoice c, final IDocGenerator gen)
+  private static void _emitExpansionChoice (final ExpChoice c, final IDocGenerator gen) throws IOException
   {
     for (final Iterator <Expansion> it = c.getChoices ().iterator (); it.hasNext ();)
     {
@@ -286,21 +290,22 @@ public final class JJDoc
     gen.doNothing (l);
   }
 
-  private static void _emitExpansionNonTerminal (final ExpNonTerminal nt, final IDocGenerator gen)
+  private static void _emitExpansionNonTerminal (final ExpNonTerminal nt, final IDocGenerator gen) throws IOException
   {
     gen.nonTerminalStart (nt);
     gen.text (nt.getName ());
     gen.nonTerminalEnd (nt);
   }
 
-  private static void _emitExpansionOneOrMore (final ExpOneOrMore o, final IDocGenerator gen)
+  private static void _emitExpansionOneOrMore (final ExpOneOrMore o, final IDocGenerator gen) throws IOException
   {
     gen.text ("( ");
     _emitExpansionTree (o.m_expansion, gen);
     gen.text (" )+");
   }
 
-  private static void _emitExpansionRegularExpression (final AbstractExpRegularExpression r, final IDocGenerator gen)
+  private static void _emitExpansionRegularExpression (final AbstractExpRegularExpression r,
+                                                       final IDocGenerator gen) throws IOException
   {
     final String reRendered = emitRE (r);
     if (StringHelper.hasText (reRendered))
@@ -311,7 +316,7 @@ public final class JJDoc
     }
   }
 
-  private static void _emitExpansionSequence (final ExpSequence s, final IDocGenerator gen)
+  private static void _emitExpansionSequence (final ExpSequence s, final IDocGenerator gen) throws IOException
   {
     boolean firstUnit = true;
     for (final Expansion e : s.units ())
@@ -338,7 +343,7 @@ public final class JJDoc
     }
   }
 
-  private static void _emitExpansionTryBlock (final ExpTryBlock t, final IDocGenerator gen)
+  private static void _emitExpansionTryBlock (final ExpTryBlock t, final IDocGenerator gen) throws IOException
   {
     final boolean needParens = t.m_exp instanceof ExpChoice;
     if (needParens)
@@ -352,14 +357,14 @@ public final class JJDoc
     }
   }
 
-  private static void _emitExpansionZeroOrMore (final ExpZeroOrMore z, final IDocGenerator gen)
+  private static void _emitExpansionZeroOrMore (final ExpZeroOrMore z, final IDocGenerator gen) throws IOException
   {
     gen.text ("( ");
     _emitExpansionTree (z.m_expansion, gen);
     gen.text (" )*");
   }
 
-  private static void _emitExpansionZeroOrOne (final ExpZeroOrOne z, final IDocGenerator gen)
+  private static void _emitExpansionZeroOrOne (final ExpZeroOrOne z, final IDocGenerator gen) throws IOException
   {
     gen.text ("( ");
     _emitExpansionTree (z.m_expansion, gen);
@@ -422,7 +427,7 @@ public final class JJDoc
           }
           else
           {
-            JJDocGlobals.error ("Oops: unknown character list element type.");
+            PGPrinter.error ("Oops: unknown character list element type.");
           }
         if (it.hasNext ())
         {
@@ -535,7 +540,7 @@ public final class JJDoc
                       }
                       else
                       {
-                        JJDocGlobals.error ("Oops: Unknown regular expression type.");
+                        PGPrinter.error ("Oops: Unknown regular expression type.");
                       }
     if (needBrackets)
     {

@@ -33,14 +33,15 @@
  */
 package com.helger.pgcc.jjdoc;
 
-import static com.helger.pgcc.jjdoc.JJDocGlobals.error;
-import static com.helger.pgcc.jjdoc.JJDocGlobals.info;
-
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.Reader;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.state.ESuccess;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.JavaCCParser;
@@ -59,48 +60,48 @@ public final class JJDocMain
 
   static void help_message ()
   {
-    info ("");
-    info ("    jjdoc option-settings - (to read from standard input)");
-    info ("OR");
-    info ("    jjdoc option-settings inputfile (to read from a file)");
-    info ("");
-    info ("WHERE");
-    info ("    \"option-settings\" is a sequence of settings separated by spaces.");
-    info ("");
+    PGPrinter.info ();
+    PGPrinter.info ("    jjdoc option-settings - (to read from standard input)");
+    PGPrinter.info ("OR");
+    PGPrinter.info ("    jjdoc option-settings inputfile (to read from a file)");
+    PGPrinter.info ();
+    PGPrinter.info ("WHERE");
+    PGPrinter.info ("    \"option-settings\" is a sequence of settings separated by spaces.");
+    PGPrinter.info ();
 
-    info ("Each option setting must be of one of the following forms:");
-    info ("");
-    info ("    -optionname=value (e.g., -TEXT=false)");
-    info ("    -optionname:value (e.g., -TEXT:false)");
-    info ("    -optionname       (equivalent to -optionname=true.  e.g., -TEXT)");
-    info ("    -NOoptionname     (equivalent to -optionname=false. e.g., -NOTEXT)");
-    info ("");
-    info ("Option settings are not case-sensitive, so one can say \"-nOtExT\" instead");
-    info ("of \"-NOTEXT\".  Option values must be appropriate for the corresponding");
-    info ("option, and must be either an integer, boolean or string value.");
-    info ("");
-    info ("The string valued options are:");
-    info ("");
-    info ("    OUTPUT_FILE");
-    info ("    CSS");
-    info ("");
-    info ("The boolean valued options are:");
-    info ("");
-    info ("    ONE_TABLE              (default true)");
-    info ("    TEXT                   (default false)");
-    info ("    BNF                    (default false)");
-    info ("");
+    PGPrinter.info ("Each option setting must be of one of the following forms:");
+    PGPrinter.info ();
+    PGPrinter.info ("    -optionname=value (e.g., -TEXT=false)");
+    PGPrinter.info ("    -optionname:value (e.g., -TEXT:false)");
+    PGPrinter.info ("    -optionname       (equivalent to -optionname=true.  e.g., -TEXT)");
+    PGPrinter.info ("    -NOoptionname     (equivalent to -optionname=false. e.g., -NOTEXT)");
+    PGPrinter.info ();
+    PGPrinter.info ("Option settings are not case-sensitive, so one can say \"-nOtExT\" instead");
+    PGPrinter.info ("of \"-NOTEXT\".  Option values must be appropriate for the corresponding");
+    PGPrinter.info ("option, and must be either an integer, boolean or string value.");
+    PGPrinter.info ();
+    PGPrinter.info ("The string valued options are:");
+    PGPrinter.info ();
+    PGPrinter.info ("    OUTPUT_FILE");
+    PGPrinter.info ("    CSS");
+    PGPrinter.info ();
+    PGPrinter.info ("The boolean valued options are:");
+    PGPrinter.info ();
+    PGPrinter.info ("    ONE_TABLE              (default true)");
+    PGPrinter.info ("    TEXT                   (default false)");
+    PGPrinter.info ("    BNF                    (default false)");
+    PGPrinter.info ();
 
-    info ("");
-    info ("EXAMPLES:");
-    info ("    jjdoc -ONE_TABLE=false mygrammar.jj");
-    info ("    jjdoc - < mygrammar.jj");
-    info ("");
-    info ("ABOUT JJDoc:");
-    info ("    JJDoc generates JavaDoc documentation from JavaCC grammar files.");
-    info ("");
-    info ("    For more information, see the online JJDoc documentation at");
-    info ("    https://javacc.dev.java.net/doc/JJDoc.html");
+    PGPrinter.info ();
+    PGPrinter.info ("EXAMPLES:");
+    PGPrinter.info ("    jjdoc -ONE_TABLE=false mygrammar.jj");
+    PGPrinter.info ("    jjdoc - < mygrammar.jj");
+    PGPrinter.info ();
+    PGPrinter.info ("ABOUT JJDoc:");
+    PGPrinter.info ("    JJDoc generates JavaDoc documentation from JavaCC grammar files.");
+    PGPrinter.info ();
+    PGPrinter.info ("    For more information, see the online JJDoc documentation at");
+    PGPrinter.info ("    https://javacc.dev.java.net/doc/JJDoc.html");
   }
 
   /**
@@ -113,8 +114,8 @@ public final class JJDocMain
    */
   public static void main (final String [] args) throws Exception
   {
-    final int errorcode = mainProgram (args);
-    System.exit (errorcode);
+    final ESuccess errorcode = mainProgram (args);
+    System.exit (errorcode.isFailure () ? 1 : 0);
   }
 
   /**
@@ -123,11 +124,12 @@ public final class JJDocMain
    *
    * @param args
    *        Cmdline args
-   * @return error code (0 == success)
+   * @return {@link ESuccess}
    * @throws Exception
    *         in case of error
    */
-  public static int mainProgram (final String [] args) throws Exception
+  @Nonnull
+  public static ESuccess mainProgram (final String [] args) throws Exception
   {
     Main.reInitAll ();
     JJDocOptions.init ();
@@ -138,62 +140,62 @@ public final class JJDocMain
     if (args.length == 0)
     {
       help_message ();
-      return 1;
+      return ESuccess.FAILURE;
     }
-    info ("(type \"jjdoc\" with no arguments for help)");
+    PGPrinter.info ("(type \"jjdoc\" with no arguments for help)");
 
     if (Options.isOption (args[args.length - 1]))
     {
-      error ("Last argument \"" + args[args.length - 1] + "\" is not a filename or \"-\".  ");
-      return 1;
+      PGPrinter.error ("Last argument \"" + args[args.length - 1] + "\" is not a filename or \"-\".  ");
+      return ESuccess.FAILURE;
     }
     for (int arg = 0; arg < args.length - 1; arg++)
     {
       if (!Options.isOption (args[arg]))
       {
-        error ("Argument \"" + args[arg] + "\" must be an option setting.");
-        return 1;
+        PGPrinter.error ("Argument \"" + args[arg] + "\" must be an option setting.");
+        return ESuccess.FAILURE;
       }
       Options.setCmdLineOption (args[arg]);
     }
 
     if (args[args.length - 1].equals ("-"))
     {
-      info ("Reading from standard input . . .");
+      PGPrinter.info ("Reading from standard input . . .");
       parser = new JavaCCParser (new DataInputStream (System.in));
       JJDocGlobals.s_input_file = JJDocGlobals.STANDARD_INPUT;
       JJDocGlobals.s_output_file = JJDocGlobals.STANDARD_OUTPUT;
     }
     else
     {
-      info ("Reading from file " + args[args.length - 1] + " . . .");
+      PGPrinter.info ("Reading from file " + args[args.length - 1] + " . . .");
       try
       {
         final File fp = new File (args[args.length - 1]);
         if (!fp.exists ())
         {
-          error ("File " + args[args.length - 1] + " not found.");
-          return 1;
+          PGPrinter.error ("File " + args[args.length - 1] + " not found.");
+          return ESuccess.FAILURE;
         }
         if (fp.isDirectory ())
         {
-          error (args[args.length - 1] + " is a directory. Please use a valid file name.");
-          return 1;
+          PGPrinter.error (args[args.length - 1] + " is a directory. Please use a valid file name.");
+          return ESuccess.FAILURE;
         }
         JJDocGlobals.s_input_file = fp.getName ();
         final Reader aReader = FileHelper.getBufferedReader (new File (args[args.length - 1]),
                                                              Options.getGrammarEncoding ());
         if (aReader == null)
         {
-          error ("File " + args[args.length - 1] + " not found.");
-          return 1;
+          PGPrinter.error ("File " + args[args.length - 1] + " not found.");
+          return ESuccess.FAILURE;
         }
         parser = new JavaCCParser (aReader);
       }
       catch (final SecurityException se)
       {
-        error ("Security violation while trying to open " + args[args.length - 1]);
-        return 1;
+        PGPrinter.error ("Security violation while trying to open " + args[args.length - 1]);
+        return ESuccess.FAILURE;
       }
     }
     try
@@ -205,41 +207,42 @@ public final class JJDocMain
       {
         if (JavaCCErrors.getWarningCount () == 0)
         {
-          info ("Grammar documentation generated successfully in " + JJDocGlobals.s_output_file);
+          PGPrinter.info ("Grammar documentation generated successfully in " + JJDocGlobals.s_output_file);
         }
         else
         {
-          info ("Grammar documentation generated with 0 errors and " + JavaCCErrors.getWarningCount () + " warnings.");
+          PGPrinter.info ("Grammar documentation generated with 0 errors and " +
+                          JavaCCErrors.getWarningCount () +
+                          " warnings.");
         }
-        return 0;
+        return ESuccess.SUCCESS;
       }
 
-      error ("Detected " +
-             JavaCCErrors.getErrorCount () +
-             " errors and " +
-             JavaCCErrors.getWarningCount () +
-             " warnings.");
-      return JavaCCErrors.getErrorCount () == 0 ? 0 : 1;
+      PGPrinter.error ("Detected " +
+                       JavaCCErrors.getErrorCount () +
+                       " errors and " +
+                       JavaCCErrors.getWarningCount () +
+                       " warnings.");
+      return ESuccess.valueOf (JavaCCErrors.getErrorCount () == 0);
     }
     catch (final MetaParseException e)
     {
-      error (e.toString ());
-      error ("Detected " +
-             JavaCCErrors.getErrorCount () +
-             " errors and " +
-             JavaCCErrors.getWarningCount () +
-             " warnings.");
-      return 1;
+      PGPrinter.error ("Detected " +
+                       JavaCCErrors.getErrorCount () +
+                       " errors and " +
+                       JavaCCErrors.getWarningCount () +
+                       " warnings.",
+                       e);
     }
     catch (final ParseException e)
     {
-      error (e.toString ());
-      error ("Detected " +
-             (JavaCCErrors.getErrorCount () + 1) +
-             " errors and " +
-             JavaCCErrors.getWarningCount () +
-             " warnings.");
-      return 1;
+      PGPrinter.error ("Detected " +
+                       (JavaCCErrors.getErrorCount () + 1) +
+                       " errors and " +
+                       JavaCCErrors.getWarningCount () +
+                       " warnings.",
+                       e);
     }
+    return ESuccess.FAILURE;
   }
 }

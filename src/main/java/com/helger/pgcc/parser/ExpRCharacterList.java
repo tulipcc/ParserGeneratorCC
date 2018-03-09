@@ -36,6 +36,8 @@ package com.helger.pgcc.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.helger.pgcc.PGPrinter;
+
 /**
  * Describes character lists.
  */
@@ -1742,29 +1744,54 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     {
       if (Options.isIgnoreCase () || ignoreCase)
       {
-        /*
-         * int i; System.out.println("Before:"); for (i = 0; i <
-         * descriptors.size(); i++) { if (descriptors.get(i) instanceof
-         * SingleCharacter) { char c = ((SingleCharacter)descriptors.get(i)).ch;
-         * System.out.print((int)c + " "); } else { char l =
-         * ((CharacterRange)descriptors.get(i)).left; char r =
-         * ((CharacterRange)descriptors.get(i)).right; System.out.print((int)l +
-         * "-" + (int)r + " "); } if ((i + 1) % 6 == 0) System.out.println("");
-         * } System.out.println("");
-         */
+        // Internal debug only
+        if (false)
+        {
+          final StringBuilder aSB = new StringBuilder ("Before:");
+          for (int i = 0; i < m_descriptors.size (); i++)
+          {
+            if (m_descriptors.get (i) instanceof SingleCharacter)
+            {
+              final char c = ((SingleCharacter) m_descriptors.get (i)).getChar ();
+              aSB.append ((int) c + " ");
+            }
+            else
+            {
+              final char l = ((CharacterRange) m_descriptors.get (i)).getLeft ();
+              final char r = ((CharacterRange) m_descriptors.get (i)).getRight ();
+              aSB.append ((int) l + "-" + (int) r + " ");
+            }
+            if ((i + 1) % 6 == 0)
+              aSB.append ("\n");
+          }
+          PGPrinter.info (aSB.toString ());
+        }
 
         toCaseNeutral ();
         sortDescriptors ();
 
-        /*
-         * System.out.println("After:"); for (i = 0; i < descriptors.size();
-         * i++) { if (descriptors.get(i) instanceof SingleCharacter) { char c =
-         * ((SingleCharacter)descriptors.get(i)).ch; System.out.print((int)c +
-         * " "); } else { char l = ((CharacterRange)descriptors.get(i)).left;
-         * char r = ((CharacterRange)descriptors.get(i)).right;
-         * System.out.print((int)l + "-" + (int)r + " "); } if ((i + 1) % 6 ==
-         * 0) System.out.println(""); } System.out.println("");
-         */
+        // Internal debug only
+        if (false)
+        {
+          final StringBuilder aSB = new StringBuilder ("After:");
+          for (int i = 0; i < m_descriptors.size (); i++)
+          {
+            if (m_descriptors.get (i) instanceof SingleCharacter)
+            {
+              final char c = ((SingleCharacter) m_descriptors.get (i)).getChar ();
+              aSB.append ((int) c + " ");
+            }
+            else
+            {
+              final char l = ((CharacterRange) m_descriptors.get (i)).getLeft ();
+              final char r = ((CharacterRange) m_descriptors.get (i)).getRight ();
+              aSB.append ((int) l + "-" + (int) r + " ");
+            }
+            if ((i + 1) % 6 == 0)
+              aSB.append ("\n");
+          }
+          PGPrinter.info (aSB.toString ());
+        }
       }
 
       if (m_negated_list)
@@ -1914,8 +1941,6 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
 
   void removeNegation ()
   {
-    int i;
-
     sortDescriptors ();
 
     /*
@@ -1929,9 +1954,10 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
      */
 
     final List <ICCCharacter> newDescriptors = new ArrayList <> ();
-    int lastRemoved = -1; // One less than the first valid character.
+    // One less than the first valid character.
+    int lastRemoved = -1;
 
-    for (i = 0; i < m_descriptors.size (); i++)
+    for (int i = 0; i < m_descriptors.size (); i++)
     {
       final ICCCharacter tmp = m_descriptors.get (i);
       if (tmp instanceof SingleCharacter)

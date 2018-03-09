@@ -181,7 +181,6 @@ public class LexGenJava extends CodeGenerator
               kind == JavaCCParserConstants.PRIVATE ||
               kind == JavaCCParserConstants.PROTECTED ||
               kind == JavaCCParserConstants.PUBLIC ||
-              kind == JavaCCParserConstants.STATIC ||
               kind == JavaCCParserConstants.CLASS ||
               kind == JavaCCParserConstants.INTERFACE ||
               kind == JavaCCParserConstants.ENUM)
@@ -268,8 +267,11 @@ public class LexGenJava extends CodeGenerator
     genCodeLine ();
     genCodeLine ("  /** Debug output. */");
     genCodeLine ("  public java.io.PrintStream debugStream = System.out;");
+    genCodeLine ();
     genCodeLine ("  /** Set debug output. */");
-    genCodeLine ("  public void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }");
+    genCodeLine ("  public void setDebugStream(final java.io.PrintStream ds) {");
+    genCodeLine ("    debugStream = ds;");
+    genCodeLine ("  }");
 
     if (Options.isTokenManagerUsesParser ())
     {

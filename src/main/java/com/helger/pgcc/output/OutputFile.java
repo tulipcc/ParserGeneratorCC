@@ -35,22 +35,25 @@ package com.helger.pgcc.output;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.WillCloseWhenClosed;
 
-import com.helger.commons.io.stream.NonBlockingBufferedOutputStream;
+import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.commons.io.stream.NullOutputStream;
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCGlobals;
@@ -82,7 +85,7 @@ public class OutputFile implements AutoCloseable
   private static final String MD5_LINE_PART_2 = " (do not edit this line) */";
   private static final String MD5_LINE_PART_2q = " \\(do not edit this line\\) \\*/";
 
-  private TrapClosePrintWriter m_pw;
+  private TrapClosePrintWriter m_aPW;
   private DigestOutputStream m_dos;
   private String m_sToolName = CPG.APP_NAME;
   private final File m_aFile;
@@ -111,10 +114,8 @@ public class OutputFile implements AutoCloseable
     if (file.exists ())
     {
       // Generate the checksum of the file, and compare with any value
-      // stored
-      // in the file.
-
-      try (final NonBlockingBufferedReader br = new NonBlockingBufferedReader (new FileReader (file)))
+      // stored in the file.
+      try (final NonBlockingBufferedReader br = FileHelper.getBufferedReader (file, Options.getOutputEncoding ()))
       {
         MessageDigest digest;
         try
@@ -142,7 +143,7 @@ public class OutputFile implements AutoCloseable
             }
           }
 
-          final String calculatedDigest = toHexString (digestStream.getMessageDigest ().digest ());
+          final String calculatedDigest = StringHelper.getHexEncoded (digestStream.getMessageDigest ().digest ());
 
           if (existingMD5 == null || !existingMD5.equals (calculatedDigest))
           {
@@ -151,20 +152,19 @@ public class OutputFile implements AutoCloseable
 
             if (compatibleVersion != null)
             {
-              checkVersion (file, compatibleVersion);
+              _checkVersion (file, compatibleVersion);
             }
 
             if (options != null)
             {
-              checkOptions (file, options);
+              _checkOptions (file, options);
             }
-
           }
           else
           {
             // The file has not been altered since JavaCC created it.
             // Rebuild it.
-            System.out.println ("File \"" + file.getName () + "\" is being rebuilt.");
+            PGPrinter.info ("File \"" + file.getName () + "\" is being rebuilt.");
             m_bNeedToWrite = true;
           }
         }
@@ -173,7 +173,7 @@ public class OutputFile implements AutoCloseable
     else
     {
       // File does not exist
-      System.out.println ("File \"" + file.getName () + "\" does not exist.  Will create one.");
+      PGPrinter.info ("File \"" + file.getName () + "\" does not exist.  Will create one.");
       m_bNeedToWrite = true;
     }
   }
@@ -190,11 +190,11 @@ public class OutputFile implements AutoCloseable
    * @param fileName
    * @param versionId
    */
-  private void checkVersion (final File file, final String versionId)
+  private void _checkVersion (final File file, final String versionId)
   {
     final String firstLine = "/* " + JavaCCGlobals.getIdString (m_sToolName, file.getName ()) + " Version ";
 
-    try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
+    try (final NonBlockingBufferedReader reader = FileHelper.getBufferedReader (file, Options.getOutputEncoding ()))
     {
       String line;
       while ((line = reader.readLine ()) != null)
@@ -231,9 +231,9 @@ public class OutputFile implements AutoCloseable
    * @param fileName
    * @param options
    */
-  private void checkOptions (final File file, final String [] options)
+  private void _checkOptions (final File file, final String [] options)
   {
-    try (final NonBlockingBufferedReader reader = new NonBlockingBufferedReader (new FileReader (file)))
+    try (final NonBlockingBufferedReader reader = FileHelper.getBufferedReader (file, Options.getOutputEncoding ()))
     {
       String line;
       while ((line = reader.readLine ()) != null)
@@ -273,7 +273,7 @@ public class OutputFile implements AutoCloseable
   @WillCloseWhenClosed
   public PrintWriter getPrintWriter () throws IOException
   {
-    if (m_pw == null)
+    if (m_aPW == null)
     {
       MessageDigest digest = EMessageDigestAlgorithm.MD5.createMessageDigest ();
       try
@@ -284,19 +284,23 @@ public class OutputFile implements AutoCloseable
       {
         throw new IOException ("No MD5 implementation", e);
       }
-      m_dos = new DigestOutputStream (new NonBlockingBufferedOutputStream (new FileOutputStream (m_aFile)), digest);
-      m_pw = new TrapClosePrintWriter (m_dos);
+      m_dos = new DigestOutputStream (FileHelper.getBufferedOutputStream (m_aFile), digest);
+      m_aPW = new TrapClosePrintWriter (m_dos, Options.getOutputEncoding ());
 
       // Write the headers....
       final String version = m_sCompatibleVersion == null ? PGVersion.VERSION_NUMBER : m_sCompatibleVersion;
-      m_pw.println ("/* " + JavaCCGlobals.getIdString (m_sToolName, m_aFile.getName ()) + " Version " + version + " */");
+      m_aPW.println ("/* " +
+                     JavaCCGlobals.getIdString (m_sToolName, m_aFile.getName ()) +
+                     " Version " +
+                     version +
+                     " */");
       if (m_aOptions != null)
       {
-        m_pw.println ("/* " + OPTIONS_PREFIX + ":" + Options.getOptionsString (m_aOptions) + " */");
+        m_aPW.println ("/* " + OPTIONS_PREFIX + ":" + Options.getOptionsString (m_aOptions) + " */");
       }
     }
 
-    return m_pw;
+    return m_aPW;
   }
 
   /**
@@ -307,53 +311,26 @@ public class OutputFile implements AutoCloseable
   {
     // Write the trailer (checksum).
     // Possibly rename the .java.tmp to .java??
-    if (m_pw != null)
+    if (m_aPW != null)
     {
-      m_pw.println (MD5_LINE_PART_1 + _getMD5sum () + MD5_LINE_PART_2);
-      m_pw.closePrintWriter ();
+      m_aPW.println (MD5_LINE_PART_1 + _getMD5sum () + MD5_LINE_PART_2);
+      m_aPW.closePrintWriter ();
       // file.renameTo(dest)
     }
   }
 
   private String _getMD5sum ()
   {
-    m_pw.flush ();
+    m_aPW.flush ();
     final byte [] digest = m_dos.getMessageDigest ().digest ();
-    return toHexString (digest);
-  }
-
-  private final static char [] HEX_DIGITS = new char [] { '0',
-                                                          '1',
-                                                          '2',
-                                                          '3',
-                                                          '4',
-                                                          '5',
-                                                          '6',
-                                                          '7',
-                                                          '8',
-                                                          '9',
-                                                          'a',
-                                                          'b',
-                                                          'c',
-                                                          'd',
-                                                          'e',
-                                                          'f' };
-
-  private static final String toHexString (final byte [] bytes)
-  {
-    final StringBuilder sb = new StringBuilder (bytes.length * 2);
-    for (final byte b : bytes)
-    {
-      sb.append (HEX_DIGITS[(b & 0xF0) >> 4]).append (HEX_DIGITS[b & 0x0F]);
-    }
-    return sb.toString ();
+    return StringHelper.getHexEncoded (digest);
   }
 
   private final class TrapClosePrintWriter extends PrintWriter
   {
-    public TrapClosePrintWriter (final OutputStream os)
+    public TrapClosePrintWriter (final OutputStream os, @Nonnull final Charset aCS)
     {
-      super (os);
+      super (new OutputStreamWriter (os, aCS));
     }
 
     void closePrintWriter ()

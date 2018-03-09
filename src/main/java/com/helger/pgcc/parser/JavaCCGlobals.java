@@ -35,9 +35,10 @@ package com.helger.pgcc.parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,7 +48,10 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
+import com.helger.pgcc.CPG;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 
@@ -86,10 +90,13 @@ public final class JavaCCGlobals
    */
   public static void bannerLine (final String fullName, final String ver)
   {
-    System.out.print ("ParserGenerator Version " + PGVersion.VERSION_NUMBER + " (" + fullName);
-    if (StringHelper.hasText (ver))
-      System.out.print (" Version " + ver);
-    System.out.println (")");
+    PGPrinter.info (CPG.APP_NAME +
+                    " Version " +
+                    PGVersion.VERSION_NUMBER +
+                    " (" +
+                    fullName +
+                    (StringHelper.hasText (ver) ? " Version " + ver : "") +
+                    ")");
   }
 
   /**
@@ -234,7 +241,7 @@ public final class JavaCCGlobals
 
     if (toolNamePrefix.length () > 200)
     {
-      System.out.println ("Tool names too long.");
+      PGPrinter.error ("Tool names too long.");
       throw new IllegalStateException ("Tool names too long: " + toolNamePrefix);
     }
 
@@ -309,10 +316,11 @@ public final class JavaCCGlobals
   @Nonnull
   public static List <String> getToolNames (final String fileName)
   {
+    final Charset aCS = Options.getOutputEncoding ();
     final char [] buf = new char [256];
     int total = 0;
 
-    try (final FileReader stream = new FileReader (fileName))
+    try (final Reader stream = FileHelper.getBufferedReader (new File (fileName), aCS))
     {
       int read;
       while (true)

@@ -1092,20 +1092,18 @@ public class NfaState
       else
       {
         // System.out.print(i + ", ");
-        String tmp;
-        Integer ind;
+        final String tmp = "{\n   " +
+                           eOutputLanguage.getLongHex (loBytes[i][0]) +
+                           ", " +
+                           eOutputLanguage.getLongHex (loBytes[i][1]) +
+                           ", " +
+                           eOutputLanguage.getLongHex (loBytes[i][2]) +
+                           ", " +
+                           eOutputLanguage.getLongHex (loBytes[i][3]) +
+                           "\n};";
 
-        tmp = "{\n   " +
-              eOutputLanguage.getLongHex (loBytes[i][0]) +
-              ", " +
-              eOutputLanguage.getLongHex (loBytes[i][1]) +
-              ", " +
-              eOutputLanguage.getLongHex (loBytes[i][2]) +
-              ", " +
-              eOutputLanguage.getLongHex (loBytes[i][3]) +
-              "\n};";
-
-        if ((ind = s_lohiByteTab.get (tmp)) == null)
+        Integer ind = s_lohiByteTab.get (tmp);
+        if (ind == null)
         {
           s_allBitVectors.add (tmp);
 

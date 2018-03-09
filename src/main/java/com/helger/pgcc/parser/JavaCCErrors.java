@@ -33,6 +33,11 @@
  */
 package com.helger.pgcc.parser;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.helger.pgcc.PGPrinter;
+
 /**
  * Output error messages and keep track of totals.
  */
@@ -45,57 +50,51 @@ public final class JavaCCErrors
   private JavaCCErrors ()
   {}
 
-  private static void _printLocationInfo (final Object node)
+  @Nonnull
+  private static String _getLocationInfo (@Nullable final Object node)
   {
     if (node instanceof NormalProduction)
     {
       final NormalProduction n = (NormalProduction) node;
-      System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
+      return "Line " + n.getLine () + ", Column " + n.getColumn () + ": ";
     }
-    else
-      if (node instanceof TokenProduction)
-      {
-        final TokenProduction n = (TokenProduction) node;
-        System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
-      }
-      else
-        if (node instanceof Expansion)
-        {
-          final Expansion n = (Expansion) node;
-          System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
-        }
-        else
-          if (node instanceof CharacterRange)
-          {
-            final CharacterRange n = (CharacterRange) node;
-            System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
-          }
-          else
-            if (node instanceof SingleCharacter)
-            {
-              final SingleCharacter n = (SingleCharacter) node;
-              System.err.print ("Line " + n.getLine () + ", Column " + n.getColumn () + ": ");
-            }
-            else
-              if (node instanceof Token)
-              {
-                final Token t = (Token) node;
-                System.err.print ("Line " + t.beginLine + ", Column " + t.beginColumn + ": ");
-              }
+    if (node instanceof TokenProduction)
+    {
+      final TokenProduction n = (TokenProduction) node;
+      return "Line " + n.getLine () + ", Column " + n.getColumn () + ": ";
+    }
+    if (node instanceof Expansion)
+    {
+      final Expansion n = (Expansion) node;
+      return "Line " + n.getLine () + ", Column " + n.getColumn () + ": ";
+    }
+    if (node instanceof CharacterRange)
+    {
+      final CharacterRange n = (CharacterRange) node;
+      return "Line " + n.getLine () + ", Column " + n.getColumn () + ": ";
+    }
+    if (node instanceof SingleCharacter)
+    {
+      final SingleCharacter n = (SingleCharacter) node;
+      return "Line " + n.getLine () + ", Column " + n.getColumn () + ": ";
+    }
+    if (node instanceof Token)
+    {
+      final Token t = (Token) node;
+      return "Line " + t.beginLine + ", Column " + t.beginColumn + ": ";
+    }
+    return "";
   }
 
   public static void parse_error (final Object node, final String mess)
   {
-    System.err.print ("Error: ");
-    _printLocationInfo (node);
-    System.err.println (mess);
+    PGPrinter.error ("Error: " + _getLocationInfo (node) + mess);
     s_parse_error_count++;
   }
 
   public static void parse_error (final String mess)
   {
-    System.err.print ("Error: ");
-    System.err.println (mess);
+    PGPrinter.error ("Error: " + mess);
     s_parse_error_count++;
   }
 
@@ -106,15 +105,19 @@ public final class JavaCCErrors
 
   public static void semantic_error (final Object node, final String mess)
   {
-    System.err.print ("Error: ");
-    _printLocationInfo (node);
-    System.err.println (mess);
+    PGPrinter.error ("Error: " + _getLocationInfo (node) + mess);
     s_semantic_error_count++;
   }
 
   public static void semantic_error (final String mess)
   {
-    System.err.println ("Error: " + mess);
+    PGPrinter.error ("Error: " + mess);
+    s_semantic_error_count++;
+  }
+
+  public static void semantic_error (final String mess, final Throwable t)
+  {
+    PGPrinter.error ("Error: " + mess, t);
     s_semantic_error_count++;
   }
 
@@ -125,15 +128,13 @@ public final class JavaCCErrors
 
   public static void warning (final Object node, final String mess)
   {
-    System.err.print ("Warning: ");
-    _printLocationInfo (node);
-    System.err.println (mess);
+    PGPrinter.error ("Warning: " + _getLocationInfo (node) + mess);
     s_warning_count++;
   }
 
   public static void warning (final String mess)
   {
-    System.err.println ("Warning: " + mess);
+    PGPrinter.error ("Warning: " + mess);
     s_warning_count++;
   }
 
@@ -149,7 +150,7 @@ public final class JavaCCErrors
 
   public static void fatal (final String message) throws IllegalStateException
   {
-    System.err.println ("Fatal Error: " + message);
+    PGPrinter.error ("Fatal Error: " + message);
     throw new IllegalStateException ("Fatal Error: " + message);
   }
 
@@ -160,7 +161,7 @@ public final class JavaCCErrors
 
   public static void note (final String mess)
   {
-    System.err.println ("Note: " + mess);
+    PGPrinter.info ("Note: " + mess);
   }
 
   public static void reInit ()

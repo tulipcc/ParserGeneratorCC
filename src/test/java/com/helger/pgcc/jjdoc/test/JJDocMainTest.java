@@ -33,10 +33,11 @@
  */
 package com.helger.pgcc.jjdoc.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.helger.commons.state.ESuccess;
 import com.helger.pgcc.AbstractJavaCCTestCase;
 import com.helger.pgcc.jjdoc.JJDocMain;
 
@@ -49,19 +50,19 @@ public class JJDocMainTest extends AbstractJavaCCTestCase
   @Test
   public void testMainProgramHTML () throws Exception
   {
-    final int result = JJDocMain.mainProgram (new String [] { "-OUTPUT_FILE:" +
-                                                              getJJDocOutputDirectory () +
-                                                              "JavaCC.html",
-                                                              getJJInputDirectory () + "JavaCC.jj" });
-    assertEquals (0, result);
+    final ESuccess result = JJDocMain.mainProgram (new String [] { "-OUTPUT_FILE:" +
+                                                                   getJJDocOutputDirectory () +
+                                                                   "JavaCC.html",
+                                                                   getJJInputDirectory () + "JavaCC.jj" });
+    assertTrue (result.isSuccess ());
   }
 
   @Test
   public void testMainProgramText () throws Exception
   {
-    assertEquals (0,
-                  JJDocMain.mainProgram (new String [] { "-OUTPUT_FILE:" + getJJDocOutputDirectory () + "JavaCC.txt",
-                                                         "-TEXT:true",
-                                                         getJJInputDirectory () + "JavaCC.jj" }));
+    assertTrue (JJDocMain.mainProgram (new String [] { "-OUTPUT_FILE:" + getJJDocOutputDirectory () + "JavaCC.txt",
+                                                       "-TEXT:true",
+                                                       getJJInputDirectory () + "JavaCC.jj" })
+                         .isSuccess ());
   }
 }

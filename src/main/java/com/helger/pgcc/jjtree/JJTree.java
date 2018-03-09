@@ -69,6 +69,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.state.ESuccess;
+import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.jjtree.output.JJTreeStateCpp;
 import com.helger.pgcc.jjtree.output.JJTreeStateJava;
 import com.helger.pgcc.jjtree.output.NodeFilesCpp;
@@ -80,67 +81,62 @@ public class JJTree
 {
   private JJTreeIO io;
 
-  private void _println (final String s)
-  {
-    io.getMsg ().println (s);
-  }
-
   private void help_message ()
   {
-    _println ("Usage:");
-    _println ("    jjtree option-settings inputfile");
-    _println ("");
-    _println ("\"option-settings\" is a sequence of settings separated by spaces.");
-    _println ("Each option setting must be of one of the following forms:");
-    _println ("");
-    _println ("    -optionname=value (e.g., -STATIC=false)");
-    _println ("    -optionname:value (e.g., -STATIC:false)");
-    _println ("    -optionname       (equivalent to -optionname=true.  e.g., -STATIC)");
-    _println ("    -NOoptionname     (equivalent to -optionname=false. e.g., -NOSTATIC)");
-    _println ("");
-    _println ("Option settings are not case-sensitive, so one can say \"-nOsTaTiC\" instead");
-    _println ("of \"-NOSTATIC\".  Option values must be appropriate for the corresponding");
-    _println ("option, and must be either an integer or a string value.");
-    _println ("");
+    PGPrinter.info ("Usage:");
+    PGPrinter.info ("    jjtree option-settings inputfile");
+    PGPrinter.info ("");
+    PGPrinter.info ("\"option-settings\" is a sequence of settings separated by spaces.");
+    PGPrinter.info ("Each option setting must be of one of the following forms:");
+    PGPrinter.info ("");
+    PGPrinter.info ("    -optionname=value (e.g., -STATIC=false)");
+    PGPrinter.info ("    -optionname:value (e.g., -STATIC:false)");
+    PGPrinter.info ("    -optionname       (equivalent to -optionname=true.  e.g., -STATIC)");
+    PGPrinter.info ("    -NOoptionname     (equivalent to -optionname=false. e.g., -NOSTATIC)");
+    PGPrinter.info ("");
+    PGPrinter.info ("Option settings are not case-sensitive, so one can say \"-nOsTaTiC\" instead");
+    PGPrinter.info ("of \"-NOSTATIC\".  Option values must be appropriate for the corresponding");
+    PGPrinter.info ("option, and must be either an integer or a string value.");
+    PGPrinter.info ("");
 
-    _println ("The boolean valued options are:");
-    _println ("");
-    _println ("    MULTI                    (default false)");
-    _println ("    NODE_DEFAULT_VOID        (default false)");
-    _println ("    NODE_SCOPE_HOOK          (default false)");
-    _println ("    NODE_USES_PARSER         (default false)");
-    _println ("    BUILD_NODE_FILES         (default true)");
-    _println ("    TRACK_TOKENS             (default false)");
-    _println ("    VISITOR                  (default false)");
-    _println ("");
-    _println ("The string valued options are:");
-    _println ("");
-    _println ("    JDK_VERSION              (default \"1.5\")");
-    _println ("    NODE_CLASS               (default \"\")");
-    _println ("    NODE_PREFIX              (default \"AST\")");
-    _println ("    NODE_PACKAGE             (default \"\")");
-    _println ("    NODE_EXTENDS             (default \"\")");
-    _println ("    NODE_FACTORY             (default \"\")");
-    _println ("    OUTPUT_FILE              (default remove input file suffix, add .jj)");
-    _println ("    OUTPUT_DIRECTORY         (default \"\")");
-    _println ("    JJTREE_OUTPUT_DIRECTORY  (default value of OUTPUT_DIRECTORY option)");
-    _println ("    VISITOR_DATA_TYPE        (default \"\")");
-    _println ("    VISITOR_RETURN_TYPE      (default \"Object\")");
-    _println ("    VISITOR_EXCEPTION        (default \"\")");
-    _println ("");
-    _println ("JJTree also accepts JavaCC options, which it inserts into the generated file.");
-    _println ("");
+    PGPrinter.info ("The boolean valued options are:");
+    PGPrinter.info ("");
+    PGPrinter.info ("    MULTI                    (default false)");
+    PGPrinter.info ("    NODE_DEFAULT_VOID        (default false)");
+    PGPrinter.info ("    NODE_SCOPE_HOOK          (default false)");
+    PGPrinter.info ("    NODE_USES_PARSER         (default false)");
+    PGPrinter.info ("    BUILD_NODE_FILES         (default true)");
+    PGPrinter.info ("    TRACK_TOKENS             (default false)");
+    PGPrinter.info ("    VISITOR                  (default false)");
+    PGPrinter.info ("");
+    PGPrinter.info ("The string valued options are:");
+    PGPrinter.info ("");
+    PGPrinter.info ("    JDK_VERSION              (default \"1.5\")");
+    PGPrinter.info ("    NODE_CLASS               (default \"\")");
+    PGPrinter.info ("    NODE_PREFIX              (default \"AST\")");
+    PGPrinter.info ("    NODE_PACKAGE             (default \"\")");
+    PGPrinter.info ("    NODE_EXTENDS             (default \"\")");
+    PGPrinter.info ("    NODE_FACTORY             (default \"\")");
+    PGPrinter.info ("    OUTPUT_FILE              (default remove input file suffix, add .jj)");
+    PGPrinter.info ("    OUTPUT_DIRECTORY         (default \"\")");
+    PGPrinter.info ("    JJTREE_OUTPUT_DIRECTORY  (default value of OUTPUT_DIRECTORY option)");
+    PGPrinter.info ("    VISITOR_DATA_TYPE        (default \"\")");
+    PGPrinter.info ("    VISITOR_RETURN_TYPE      (default \"Object\")");
+    PGPrinter.info ("    VISITOR_EXCEPTION        (default \"\")");
+    PGPrinter.info ("");
+    PGPrinter.info ("JJTree also accepts JavaCC options, which it inserts into the generated file.");
+    PGPrinter.info ("");
 
-    _println ("EXAMPLES:");
-    _println ("    jjtree -STATIC=false mygrammar.jjt");
-    _println ("");
-    _println ("ABOUT JJTree:");
-    _println ("    JJTree is a preprocessor for JavaCC that inserts actions into a");
-    _println ("    JavaCC grammar to build parse trees for the input.");
-    _println ("");
-    _println ("    For more information, see the online JJTree documentation at ");
-    _println ("    https://javacc.dev.java.net/doc/JJTree.html ");
-    _println ("");
+    PGPrinter.info ("EXAMPLES:");
+    PGPrinter.info ("    jjtree -STATIC=false mygrammar.jjt");
+    PGPrinter.info ("");
+    PGPrinter.info ("ABOUT JJTree:");
+    PGPrinter.info ("    JJTree is a preprocessor for JavaCC that inserts actions into a");
+    PGPrinter.info ("    JavaCC grammar to build parse trees for the input.");
+    PGPrinter.info ("");
+    PGPrinter.info ("    For more information, see the online JJTree documentation at ");
+    PGPrinter.info ("    https://javacc.dev.java.net/doc/JJTree.html ");
+    PGPrinter.info ("");
   }
 
   /**
@@ -164,23 +160,23 @@ public class JJTree
       initializeOptions ();
       if (args.length == 0)
       {
-        _println ("");
+        PGPrinter.info ("");
         help_message ();
         return ESuccess.FAILURE;
       }
-      _println ("(type \"jjtree\" with no arguments for help)");
+      PGPrinter.info ("(type \"jjtree\" with no arguments for help)");
 
       final String fn = args[args.length - 1];
       if (Options.isOption (fn))
       {
-        _println ("Last argument \"" + fn + "\" is not a filename");
+        PGPrinter.info ("Last argument \"" + fn + "\" is not a filename");
         return ESuccess.FAILURE;
       }
       for (int arg = 0; arg < args.length - 1; arg++)
       {
         if (!Options.isOption (args[arg]))
         {
-          _println ("Argument \"" + args[arg] + "\" must be an option setting.");
+          PGPrinter.info ("Argument \"" + args[arg] + "\" must be an option setting.");
           return ESuccess.FAILURE;
         }
         Options.setCmdLineOption (args[arg]);
@@ -194,10 +190,10 @@ public class JJTree
       }
       catch (final IOException ioe)
       {
-        _println ("Error setting input: " + ioe.getMessage ());
+        PGPrinter.info ("Error setting input: " + ioe.getMessage ());
         return ESuccess.FAILURE;
       }
-      _println ("Reading from file " + io.getInputFilename () + " . . .");
+      PGPrinter.info ("Reading from file " + io.getInputFilename () + " . . .");
 
       JJTreeGlobals.toolList.clear ();
       JJTreeGlobals.toolList.addAll (JavaCCGlobals.getToolNames (fn));
@@ -219,7 +215,7 @@ public class JJTree
         }
         catch (final IOException ioe)
         {
-          _println ("Error setting output: " + ioe.getMessage ());
+          PGPrinter.info ("Error setting output: " + ioe.getMessage ());
           return ESuccess.FAILURE;
         }
         root.generate (io);
@@ -241,21 +237,20 @@ public class JJTree
             JJTreeStateCpp.generateTreeState ();
             break;
           default:
-            _println ("Unsupported JJTree output language : " + Options.getOutputLanguage ());
+            PGPrinter.info ("Unsupported JJTree output language : " + Options.getOutputLanguage ());
             return ESuccess.FAILURE;
         }
 
-        _println ("Annotated grammar generated successfully in " + io.getOutputFilename ());
+        PGPrinter.info ("Annotated grammar generated successfully in " + io.getOutputFilename ());
         return ESuccess.SUCCESS;
       }
       catch (final ParseException pe)
       {
-        _println ("Error parsing input: " + pe.toString ());
+        PGPrinter.error ("Error parsing input: " + pe.toString ());
       }
       catch (final Exception e)
       {
-        _println ("Error parsing input: " + e.toString ());
-        e.printStackTrace (io.getMsg ());
+        PGPrinter.error ("Error parsing input", e);
       }
       return ESuccess.FAILURE;
     }
