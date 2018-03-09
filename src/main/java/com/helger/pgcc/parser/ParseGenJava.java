@@ -613,7 +613,7 @@ public class ParseGenJava extends CodeGenerator
           if (s_maskindex > 0)
           {
             genCodeLine ("   for (int i = 0; i < " + s_maskindex + "; i++)");
-            genCodeLine ("     j_la1[i] = -1;");
+            genCodeLine ("     jj_la1[i] = -1;");
           }
           if (s_jj2index != 0)
           {
