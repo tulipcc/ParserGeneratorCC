@@ -145,7 +145,7 @@ class SimpleCharStream extends AbstractCharStream
   /** Constructor. */
 #if AT_LEAST_JDK6
   public SimpleCharStream(final java.io.InputStream dstream, 
-                          final java.nio.Charset encoding, 
+                          final java.nio.charset.Charset encoding, 
                           final int startline,
                           final int startcolumn,
                           final int buffersize) 
@@ -163,7 +163,7 @@ class SimpleCharStream extends AbstractCharStream
   /** Constructor. */
 #if AT_LEAST_JDK6
   public SimpleCharStream(final java.io.InputStream dstream,
-                          final java.nio.Charset encoding, 
+                          final java.nio.charset.Charset encoding, 
                           final int startline,
                           final int startcolumn)
 #else
@@ -179,7 +179,7 @@ class SimpleCharStream extends AbstractCharStream
   /** Constructor. */
 #if AT_LEAST_JDK6
   public SimpleCharStream(final java.io.InputStream dstream, 
-                          final java.nio.Charset encoding)
+                          final java.nio.charset.Charset encoding)
 #else
   public SimpleCharStream(final java.io.InputStream dstream, 
                           final String encoding) throws java.io.UnsupportedEncodingException
@@ -191,7 +191,7 @@ class SimpleCharStream extends AbstractCharStream
   /** Reinitialise. */
 #if AT_LEAST_JDK6
   public void reInit(final java.io.InputStream dstream, 
-                     final java.nio.Charset encoding)
+                     final java.nio.charset.Charset encoding)
 #else                     
   public void reInit(final java.io.InputStream dstream, 
                      final String encoding) throws java.io.UnsupportedEncodingException
@@ -203,7 +203,7 @@ class SimpleCharStream extends AbstractCharStream
   /** Reinitialise. */
 #if AT_LEAST_JDK6
   public void reInit(final java.io.InputStream dstream, 
-                     final java.nio.Charset encoding, 
+                     final java.nio.charset.Charset encoding, 
                      final int startline,
                      final int startcolumn)
 #else                     
@@ -219,7 +219,7 @@ class SimpleCharStream extends AbstractCharStream
   /** Reinitialise. */
 #if AT_LEAST_JDK6
   public void reInit(final java.io.InputStream dstream, 
-                     final java.nio.Charset encoding, 
+                     final java.nio.charset.Charset encoding, 
                      final int startline,
                      final int startcolumn, 
                      final int buffersize)

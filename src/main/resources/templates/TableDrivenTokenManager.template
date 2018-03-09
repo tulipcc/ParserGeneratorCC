@@ -90,14 +90,13 @@ private final int jjRunStringLiteralMatch() {
     for (int i = 0; i < arr[1]; i++) {
       final int len = stringLiterals[index++];
 #if DEBUG_TOKEN_MANAGER
-      System.err.println(
-          "Looking for string literal match of kind: " +
-          stringLiterals[index + len] +
-          "; token image: " + tokenImage[stringLiterals[index + len]]);
+      PGPrinter.error("Looking for string literal match of kind: " +
+                      stringLiterals[index + len] +
+                      "; token image: " + tokenImage[stringLiterals[index + len]]);
 #fi
       do {
 #if DEBUG_TOKEN_MANAGER
-      System.err.println("Cur char: '" + (char)curChar + "'");
+        PGPrinter.error("Cur char: '" + (char)curChar + "'");
 #fi
         if (curChar != stringLiterals[index + curPos]) break;
         if (++curPos == len) break;
@@ -111,10 +110,9 @@ private final int jjRunStringLiteralMatch() {
         jjmatchedPos = curPos;
         startState = stringLiterals[index + len + 1];
 #if DEBUG_TOKEN_MANAGER
-        System.err.println(
-            "Currently matched the first: " + jjmatchedPos +
-            " chars as kind: " + stringLiterals[index + len] +
-            "; with image: " + tokenImage[jjmatchedKind]);
+        PGPrinter.error("Currently matched the first: " + jjmatchedPos +
+                        " chars as kind: " + stringLiterals[index + len] +
+                        "; with image: " + tokenImage[jjmatchedKind]);
 #fi
         if (!moveToNextChar()) {
           return curPos;
@@ -130,12 +128,12 @@ private final int jjRunStringLiteralMatch() {
         }
       }
     }
-  } else {
+  } 
 #if DEBUG_TOKEN_MANAGER
-      System.err.println(
-          "No string literal start with char: '" + (char)curChar + "'");
-#fi
+  else {
+    PGPrinter.error("No string literal start with char: '" + (char)curChar + "'");
   }
+#fi
   return jjMoveNfa(startState, curPos);
 }
 #fi
@@ -149,7 +147,7 @@ private final int jjMoveNfa(int startState, int curPos) {
 
   if (startState < 0) {
 #if DEBUG_TOKEN_MANAGER
-  System.err.println("No NFA state at pos: " + curPos);
+    PGPrinter.error("No NFA state at pos: " + curPos);
 #fi
     return curPos;
   }
@@ -181,11 +179,11 @@ private final int jjMoveNfa(int startState, int curPos) {
   }
 
 #if DEBUG_TOKEN_MANAGER
-  System.err.println("Starting NFA with start state: " + startState);
+  PGPrinter.error("Starting NFA with start state: " + startState);
 #fi
   do {
 #if DEBUG_TOKEN_MANAGER
-    System.err.println("Cur char: '" + (char)curChar + "'");
+    PGPrinter.error("Cur char: '" + (char)curChar + "'");
 #fi
     int newCnt = 0;
     if (++moveIndex == Long.MAX_VALUE) {
@@ -199,10 +197,8 @@ private final int jjMoveNfa(int startState, int curPos) {
       final int state = stateSet[--cnt];
 #if DEBUG_TOKEN_MANAGER
       // TODO(sreeni) : Fix it to give better error message instead of UNKNOWN.
-      System.err.println(
-         "Looking to move from state: " + state + "; for: " +
-         (jjmatchKinds[state] != Integer.MAX_VALUE
-              ? tokenImage[jjmatchKinds[state]] : " <UNKNOWN>"));
+      PGPrinter.error("Looking to move from state: " + state + "; for: " +
+                      (jjmatchKinds[state] != Integer.MAX_VALUE ? tokenImage[jjmatchKinds[state]] : " <UNKNOWN>"));
 #fi
       if ((jjChars[state][vectorIndex] & bitpattern) != 0L) {
         // Current input character can move this NFA state. So add all the
@@ -220,10 +216,9 @@ private final int jjMoveNfa(int startState, int curPos) {
           // what's already matched.
           kind = newKind;
 #if DEBUG_TOKEN_MANAGER
-          System.err.println(
-              "Found a match of kind: " + kind + "; kind: " +
-              tokenImage[kind] + " using the first: " + curPos +
-              " characters.");
+          PGPrinter.error("Found a match of kind: " + kind + "; kind: " + 
+                          tokenImage[kind] + " using the first: " + curPos +
+                          " characters.");
 #fi
         }
       }
@@ -248,7 +243,7 @@ private final int jjMoveNfa(int startState, int curPos) {
       // There were no transitions from any of the current states on the
       // current input. So we are done.
 #if DEBUG_TOKEN_MANAGER
-      System.err.println("Done with NFA at pos: " + curPos);
+      PGPrinter.error("Done with NFA at pos: " + curPos);
 #fi
       return curPos;
     }
@@ -256,7 +251,7 @@ private final int jjMoveNfa(int startState, int curPos) {
     if (!moveToNextChar()) {
       // EOF reached!
 #if DEBUG_TOKEN_MANAGER
-      System.err.println("Reached EOF here at pos: " + curPos);
+      PGPrinter.error("Reached EOF here at pos: " + curPos);
 #fi
       return curPos;
     }
@@ -346,7 +341,7 @@ protected  Token jjFillToken() {
 }
 
 /** Get the next Token. */
-public  Token getNextToken() {
+public Token getNextToken() {
   Token specialToken = null;
   Token matchedToken;
   int lastReadPosition = 0;
@@ -361,12 +356,10 @@ public  Token getNextToken() {
 #fi
     } catch(Exception e) {
 #if DEBUG_TOKEN_MANAGER
-    if (lexStateNames.length > 1) {
-      System.err.print("<" + lexStateNames[curLexState] + "> ");
-    }
-    System.err.println("Reached EOF at " +
-                       input_stream.getBeginLine() + ":" +
-                       input_stream.getBeginColumn());
+    PGPrinter.error((lexStateNames.length > 1 ? "<" + lexStateNames[curLexState] + "> " : "") +
+                    "Reached EOF at " +
+                    input_stream.getBeginLine() + ":" +
+                    input_stream.getBeginColumn());
 #fi
       // No input. So return EOF token.
       jjmatchedKind = EOF;
@@ -376,12 +369,10 @@ public  Token getNextToken() {
       return matchedToken;
     }
 #if DEBUG_TOKEN_MANAGER
-    if (lexStateNames.length > 1) {
-      System.err.print("<" + lexStateNames[curLexState] + "> ");
-    }
-    System.err.println("Current input char: '" + (char)curChar + "' at " +
-                       input_stream.getBeginLine() + ":" +
-                       input_stream.getBeginColumn());
+    PGPrinter.error((lexStateNames.length > 1 ? "<" + lexStateNames[curLexState] + "> " : "") +
+                    "Current input char: '" + (char)curChar + "' at " +
+                    input_stream.getBeginLine() + ":" +
+                    input_stream.getBeginColumn());
 #fi
 
     // Set matched kind to a MAX VALUE to implement largest, first occuring rule
@@ -394,12 +385,10 @@ public  Token getNextToken() {
       jjmatchedKind = Integer.MAX_VALUE;
       jjmatchedPos = 0;
 #if DEBUG_TOKEN_MANAGER
-    if (lexStateNames.length > 1) {
-      System.err.print("<" + lexStateNames[curLexState] + "> ");
-    }
-    System.err.println("Current input char: '" + (char)curChar + "' at " +
-                       input_stream.getBeginLine() + ":" +
-                       input_stream.getBeginColumn());
+      PGPrinter.error((lexStateNames.length > 1 ? "<" + lexStateNames[curLexState] + "> " : "") +
+                      "Current input char: '" + (char)curChar + "' at " +
+                      input_stream.getBeginLine() + ":" +
+                      input_stream.getBeginColumn());
 #fi
 #if !NO_DFA
       lastReadPosition = jjRunStringLiteralMatch();
@@ -409,9 +398,8 @@ public  Token getNextToken() {
       if (jjmatchedPos == 0 && jjmatchedKind > canMatchAnyChar[curLexState]) {
         jjmatchedKind = canMatchAnyChar[curLexState];
 #if DEBUG_TOKEN_MANAGER
-        System.err.println(
-            "Matched current char: '" + (char)curChar +
-            "' as a wildcard kind: " + jjmatchedKind);
+        PGPrinter.error("Matched current char: '" + (char)curChar +
+                        "' as a wildcard kind: " + jjmatchedKind);
 #fi
       }
 
@@ -422,7 +410,7 @@ public  Token getNextToken() {
         input_stream.backup(lastReadPosition - jjmatchedPos);
         if (isToken(jjmatchedKind)) {
 #if DEBUG_TOKEN_MANAGER
-          System.err.println("Returning token.");
+          PGPrinter.error("Returning token.");
 #fi
           // Matched kind is a real TOKEN.
           matchedToken = jjFillToken();
@@ -435,9 +423,11 @@ public  Token getNextToken() {
           CommonTokenAction(matchedToken);
 #fi
           return matchedToken;
-        } else if (isSkip(jjmatchedKind)) {
+        } 
+        else 
+        if (isSkip(jjmatchedKind)) {
 #if DEBUG_TOKEN_MANAGER
-          System.err.println("Found a SKIP match.");
+          PGPrinter.error("Found a SKIP match.");
 #fi
           // Matched kind is a SKIP or SPECIAL_TOKEN.
           if (isSpecial(jjmatchedKind)) {
@@ -458,7 +448,7 @@ public  Token getNextToken() {
           continue EOFLoop;
         }
 #if DEBUG_TOKEN_MANAGER
-        System.err.println("Found a MORE match.");
+        PGPrinter.error("Found a MORE match.");
 #fi
         // Here it's a MORE.
         MoreLexicalActions();
@@ -471,7 +461,9 @@ public  Token getNextToken() {
           curChar = input_stream.readChar();
           continue;
         }
-        catch (java.io.IOException e1) { }
+        catch (java.io.IOException e1) {
+          // ignore
+        }
       }
       reportError(lastReadPosition);
     }
@@ -486,15 +478,15 @@ protected void reportError(int lastReadPosition) {
   try {
     input_stream.readChar();
     input_stream.backup(1);
-  } catch (java.io.IOException e1) {
+  } catch (final java.io.IOException e1) {
     EOFSeen = true;
     error_after = lastReadPosition <= 1 ? "" : input_stream.GetImage();
     if (curChar == '\n' || curChar == '\r') {
-       error_line++;
-       error_column = 0;
+      error_line++;
+      error_column = 0;
     }
     else
-       error_column++;
+      error_column++;
   }
   if (!EOFSeen) {
     input_stream.backup(1);
