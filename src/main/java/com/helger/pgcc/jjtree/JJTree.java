@@ -201,7 +201,7 @@ public class JJTree
 
       try
       {
-        final JJTreeParser parser = new JJTreeParser (io.getIn ());
+        final JJTreeParser parser = new JJTreeParser (new StreamProvider (io.getIn ()));
         parser.javacc_input ();
 
         final ASTGrammar root = (ASTGrammar) parser.jjtree.rootNode ();

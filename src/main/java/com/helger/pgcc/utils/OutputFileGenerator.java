@@ -51,7 +51,6 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.file.SimpleFileIO;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
-import com.helger.commons.io.stream.NonBlockingStringReader;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.commons.system.ENewLineMode;
 import com.helger.commons.system.SystemHelper;
@@ -130,11 +129,11 @@ public class OutputFileGenerator
     return line;
   }
 
-  private boolean _evaluate (final String condition)
+  private boolean _evaluate (@Nonnull final String condition)
   {
-    try (final NonBlockingStringReader aReader = new NonBlockingStringReader (condition.trim ()))
+    try
     {
-      return new ConditionParser (aReader).CompilationUnit (m_options);
+      return new ConditionParser (condition.trim ()).CompilationUnit (m_options);
     }
     catch (final ParseException e)
     {

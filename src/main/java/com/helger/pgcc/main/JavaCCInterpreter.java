@@ -14,7 +14,6 @@ import com.helger.pgcc.parser.Main;
 import com.helger.pgcc.parser.MetaParseException;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.Semanticize;
-import com.helger.pgcc.parser.StringProvider;
 import com.helger.pgcc.parser.TokenizerData;
 
 public class JavaCCInterpreter
@@ -48,7 +47,7 @@ public class JavaCCInterpreter
   {
     try
     {
-      final JavaCCParser parser = new JavaCCParser (new StringProvider (grammar));
+      final JavaCCParser parser = new JavaCCParser (grammar);
       parser.javacc_input ();
       Semanticize.start ();
       final LexGenJava lg = new LexGenJava ();
@@ -62,20 +61,20 @@ public class JavaCCInterpreter
     }
     catch (final MetaParseException e)
     {
-      PGPrinter.info ("Detected " +
-                      JavaCCErrors.getErrorCount () +
-                      " errors and " +
-                      JavaCCErrors.getWarningCount () +
-                      " warnings.");
+      PGPrinter.error ("Detected " +
+                       JavaCCErrors.getErrorCount () +
+                       " errors and " +
+                       JavaCCErrors.getWarningCount () +
+                       " warnings.");
     }
     catch (final Exception e)
     {
-      PGPrinter.info (e.toString ());
-      PGPrinter.info ("Detected " +
-                      (JavaCCErrors.getErrorCount () + 1) +
-                      " errors and " +
-                      JavaCCErrors.getWarningCount () +
-                      " warnings.");
+      PGPrinter.error ("Detected " +
+                       (JavaCCErrors.getErrorCount () + 1) +
+                       " errors and " +
+                       JavaCCErrors.getWarningCount () +
+                       " warnings.",
+                       e);
     }
   }
 

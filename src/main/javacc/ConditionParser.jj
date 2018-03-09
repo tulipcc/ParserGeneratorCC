@@ -32,6 +32,7 @@ options {
   JAVA_UNICODE_ESCAPE = true;
   STATIC = false;
   LEAGCY_EXCEPTION_HANDLING = false;
+  JAVA_TEMPLATE_TYPE = "modern";
 }
 
 PARSER_BEGIN(ConditionParser)

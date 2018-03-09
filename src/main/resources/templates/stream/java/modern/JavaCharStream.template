@@ -123,7 +123,7 @@ class JavaCharStream extends AbstractCharStream
     if (c == '\\')
     {
 #if KEEP_LINE_COLUMN
-      if (trackLineColumn) 
+      if (isTrackLineColumn()) 
         updateLineColumn(c);
 #fi
 
@@ -142,7 +142,7 @@ class JavaCharStream extends AbstractCharStream
           if (c != '\\')
           {
 #if KEEP_LINE_COLUMN
-            if (trackLineColumn) 
+            if (isTrackLineColumn()) 
                updateLineColumn(c);
                
 #fi
@@ -169,7 +169,7 @@ class JavaCharStream extends AbstractCharStream
         }
 
 #if KEEP_LINE_COLUMN
-        if (trackLineColumn) 
+        if (isTrackLineColumn()) 
           updateLineColumn(c);
 #fi
         backSlashCnt++;
@@ -212,7 +212,7 @@ class JavaCharStream extends AbstractCharStream
 
     // Not a backslash
 #if KEEP_LINE_COLUMN
-    if (trackLineColumn) 
+    if (isTrackLineColumn()) 
       updateLineColumn(c);
 #fi
     return c;

@@ -27,12 +27,14 @@
  */
 
 options {
-  MULTI = true;
-  NODE_DEFAULT_VOID = true;
-  NODE_SCOPE_HOOK=true;
   JAVA_UNICODE_ESCAPE = true;
   LEGACY_EXCEPTION_HANDLING = false;
   STATIC = false;
+  JAVA_TEMPLATE_TYPE = "modern";
+
+  MULTI = true;
+  NODE_DEFAULT_VOID = true;
+  NODE_SCOPE_HOOK=true;
   NODE_CLASS = "JJTreeNode";
   VISITOR = true;
 }
@@ -42,17 +44,15 @@ PARSER_BEGIN(JJTreeParser)
 package com.helger.pgcc.jjtree;
 
 public class JJTreeParser {
-
-  void jjtreeOpenNodeScope(Node n)
+  void jjtreeOpenNodeScope(final Node n)
   {
-	((JJTreeNode)n).setFirstToken(getToken(1));
+	  ((JJTreeNode)n).setFirstToken(getToken(1));
   }
 
-  void jjtreeCloseNodeScope(Node n)
+  void jjtreeCloseNodeScope(final Node n)
   {
-	((JJTreeNode)n).setLastToken(getToken(0));
+	  ((JJTreeNode)n).setLastToken(getToken(0));
   }
-
 
   /**
    * Returns true if the next token is not in the FOLLOW list of "expansion".

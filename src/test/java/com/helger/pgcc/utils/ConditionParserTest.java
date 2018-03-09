@@ -2,7 +2,6 @@ package com.helger.pgcc.utils;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ public final class ConditionParserTest
 
   private static void _test (final String input, final boolean expectedValue) throws ParseException
   {
-    final ConditionParser cp = new ConditionParser (new StringReader (input));
+    final ConditionParser cp = new ConditionParser (input);
     final Map <String, Object> values = new HashMap <> ();
     values.put ("F", Boolean.FALSE);
     values.put ("T", Boolean.TRUE);

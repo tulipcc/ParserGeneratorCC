@@ -532,11 +532,7 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("   * Constructor with InputStream.");
           genCodeLine ("   * @param sDSL String representation to be parsed");
           genCodeLine ("   */");
-          genCodeLine ("  public " +
-                       s_cu_name +
-                       "(final String sDSL) throws ParseException, " +
-                       Options.getTokenMgrErrorClass () +
-                       " {");
+          genCodeLine ("  public " + s_cu_name + "(final String sDSL) {");
           genCodeLine ("	   this(new " + stringReaderClass + "(sDSL));");
           genCodeLine ("  }");
           genCodeLine ();
