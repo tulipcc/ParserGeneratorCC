@@ -1943,15 +1943,25 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
   {
     sortDescriptors ();
 
-    /*
-     * System.out.println("REM. NEG Before:"); for (i = 0; i <
-     * descriptors.size(); i++) { if (descriptors.get(i) instanceof
-     * SingleCharacter) { char c = ((SingleCharacter)descriptors.get(i)).ch;
-     * System.out.print((int)c + " "); } else { char l =
-     * ((CharacterRange)descriptors.get(i)).left; char r =
-     * ((CharacterRange)descriptors.get(i)).right; System.out.print((int)l + "-"
-     * + (int)r + " "); } } System.out.println("");
-     */
+    if (false)
+    {
+      final StringBuilder aSB = new StringBuilder ("REM. NEG Before:");
+      for (int i = 0; i < m_descriptors.size (); i++)
+      {
+        if (m_descriptors.get (i) instanceof SingleCharacter)
+        {
+          final char c = ((SingleCharacter) m_descriptors.get (i)).getChar ();
+          aSB.append ((int) c + " ");
+        }
+        else
+        {
+          final char l = ((CharacterRange) m_descriptors.get (i)).getLeft ();
+          final char r = ((CharacterRange) m_descriptors.get (i)).getRight ();
+          aSB.append ((int) l + "-" + (int) r + " ");
+        }
+      }
+      PGPrinter.info (aSB.toString ());
+    }
 
     final List <ICCCharacter> newDescriptors = new ArrayList <> ();
     // One less than the first valid character.
@@ -1970,8 +1980,8 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
           continue;
         }
 
-        // System.out.println("lastRemoved : " + (int)lastRemoved + "; char : "
-        // + (int)c);
+        if (false)
+          PGPrinter.info ("lastRemoved : " + lastRemoved + "; char : " + (int) c);
         newDescriptors.add (new CharacterRange ((char) (lastRemoved + 1), (char) ((lastRemoved = c) - 1)));
       }
       else
@@ -1985,14 +1995,16 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
           continue;
         }
 
-        // System.out.println("lastRemoved : " + (int)lastRemoved + "; left : "
-        // + l + "; right : " + (int)r);
+        if (false)
+          PGPrinter.info ("lastRemoved : " + lastRemoved + "; left : " + l + "; right : " + (int) r);
         newDescriptors.add (new CharacterRange ((char) (lastRemoved + 1), (char) (l - 1)));
         lastRemoved = r;
       }
     }
 
-    // System.out.println("lastRem : " + (int)lastRemoved);
+    if (false)
+      PGPrinter.info ("lastRem : " + lastRemoved);
+
     if (NfaState.s_unicodeWarningGiven || Options.isJavaUnicodeEscape ())
     {
       if (lastRemoved < (char) 0xffff)
@@ -2007,14 +2019,25 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     m_descriptors = newDescriptors;
     m_negated_list = false;
 
-    /*
-     * System.out.println("REM NEG After:"); for (i = 0; i < descriptors.size();
-     * i++) { if (descriptors.get(i) instanceof SingleCharacter) { char c =
-     * ((SingleCharacter)descriptors.get(i)).ch; System.out.print((int)c + " ");
-     * } else { char l = ((CharacterRange)descriptors.get(i)).left; char r =
-     * ((CharacterRange)descriptors.get(i)).right; System.out.print((int)l + "-"
-     * + (int)r + " "); } } System.out.println("");
-     */
+    if (false)
+    {
+      final StringBuilder aSB = new StringBuilder ("REM. NEG After:");
+      for (int i = 0; i < m_descriptors.size (); i++)
+      {
+        if (m_descriptors.get (i) instanceof SingleCharacter)
+        {
+          final char c = ((SingleCharacter) m_descriptors.get (i)).getChar ();
+          aSB.append ((int) c + " ");
+        }
+        else
+        {
+          final char l = ((CharacterRange) m_descriptors.get (i)).getLeft ();
+          final char r = ((CharacterRange) m_descriptors.get (i)).getRight ();
+          aSB.append ((int) l + "-" + (int) r + " ");
+        }
+      }
+      PGPrinter.info (aSB.toString ());
+    }
   }
 
   ExpRCharacterList ()

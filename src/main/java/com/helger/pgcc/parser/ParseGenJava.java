@@ -351,7 +351,7 @@ public class ParseGenJava extends CodeGenerator
           {
             genCodeLine ("  public " +
                          s_cu_name +
-                         "(final java.io.InputStream stream, final java.nio.Charset encoding) {");
+                         "(final java.io.InputStream stream, final java.nio.charset.Charset encoding) {");
             genCodeLine ("   jj_input_stream = new " +
                          (Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream") +
                          "(stream, encoding, 1, 1);");
@@ -416,7 +416,7 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("   */");
           if (bHasCharset)
           {
-            genCodeLine ("  public void ReInit(final java.io.InputStream stream, final java.nio.Charset encoding) {");
+            genCodeLine ("  public void ReInit(final java.io.InputStream stream, final java.nio.charset.Charset encoding) {");
             genCodeLine ("    jj_input_stream.reInit(stream, encoding, 1, 1);");
           }
           else
