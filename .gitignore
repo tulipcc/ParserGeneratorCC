@@ -2,3 +2,6 @@
 /bin/
 zz
 JavaCCParserTokenManager.java
+/.settings/
+/.project
+/.classpath
