@@ -39,7 +39,7 @@
   <parent>
     <groupId>com.helger</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>1.10.5</version>
+    <version>1.10.6</version>
   </parent>
   <groupId>com.helger</groupId>
   <artifactId>parser-generator-cc</artifactId>
@@ -135,7 +135,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>9.1.4</version>
+        <version>9.1.7</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -151,6 +151,10 @@
       <groupId>com.helger</groupId>
       <artifactId>ph-security</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-xml</artifactId>
+    </dependency>
     
     <dependency>
       <groupId>junit</groupId>
@@ -165,7 +169,7 @@
     <dependency>
       <groupId>com.github.javaparser</groupId>
       <artifactId>javaparser-core</artifactId>
-      <version>3.6.20</version>
+      <version>3.6.26</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
