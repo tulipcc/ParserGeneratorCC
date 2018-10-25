@@ -1,0 +1,26 @@
+PARSER_BEGIN(IssueParser)
+public class IssueParser {
+}
+PARSER_END(IssueParser)
+
+<DEFAULT> TOKEN :
+{
+< LITERAL_EXPRESSION:
+((~["\\", "$", "#"])
+| ("\\" ("\\" | "$" | "#"))
+| ("$" ~["{", "$"])
+| ("#" ~["{", "#"])
+)+
+| "$"
+| "#"
+>
+|
+< START_DYNAMIC_EXPRESSION: "${" > {stack.push(DEFAULT);}:
+IN_EXPRESSION
+|
+< START_DEFERRED_EXPRESSION: "#{" > {stack.push(DEFAULT);}:
+IN_EXPRESSION
+}
+<DEFAULT> SKIP : { "\\" }
+<IN_EXPRESSION> SKIP : { "#" }
+
