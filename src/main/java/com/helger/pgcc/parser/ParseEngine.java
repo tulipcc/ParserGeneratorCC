@@ -75,14 +75,15 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_names_of_tokens;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_production_table;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.CommonsHashMap;
+import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.collection.impl.ICommonsMap;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
@@ -112,9 +113,9 @@ public class ParseEngine
    * optimization and the hashtable makes it look like we do not need the flag
    * "phase3done" any more. But this has not been removed yet.
    */
-  private final List <ExpLookahead> m_phase2list = new ArrayList <> ();
-  private final List <Phase3Data> m_phase3list = new ArrayList <> ();
-  private final Map <Expansion, Phase3Data> m_phase3table = new HashMap <> ();
+  private final ICommonsList <ExpLookahead> m_phase2list = new CommonsArrayList <> ();
+  private final ICommonsList <Phase3Data> m_phase3list = new CommonsArrayList <> ();
+  private final ICommonsMap <Expansion, Phase3Data> m_phase3table = new CommonsHashMap <> ();
 
   public ParseEngine ()
   {}

@@ -226,7 +226,7 @@ public class Main
    * returns an error code. See how the main program above uses this method.
    */
   @Nonnull
-  public static ESuccess mainProgram (final String args[]) throws IOException
+  public static ESuccess mainProgram (final String... args) throws IOException
   {
     // Initialize all static state
     reInitAll ();

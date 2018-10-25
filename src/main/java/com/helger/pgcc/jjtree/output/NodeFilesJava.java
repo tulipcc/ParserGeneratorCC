@@ -73,6 +73,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.jjtree.ASTNodeDescriptor;
@@ -83,6 +85,7 @@ import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
+@Immutable
 public final class NodeFilesJava
 {
   private NodeFilesJava ()
@@ -92,9 +95,9 @@ public final class NodeFilesJava
    * ID of the latest version (of JJTree) in which one of the Node classes was
    * modified.
    */
-  static final String s_nodeVersion = PGVersion.MAJOR_DOT_MINOR;
+  private static final String s_nodeVersion = PGVersion.MAJOR_DOT_MINOR;
 
-  static final Set <String> s_nodesGenerated = new HashSet <> ();
+  private static final Set <String> s_nodesGenerated = new HashSet <> ();
 
   public static void ensure (final JJTreeIO io, final String nodeType)
   {

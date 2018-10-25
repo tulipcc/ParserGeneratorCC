@@ -38,28 +38,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 public class ASTProduction extends JJTreeNode
 {
+  String m_name;
+  List <String> m_throws_list = new ArrayList <> ();
+
   ASTProduction (final int id)
   {
     super (id);
   }
 
-  String m_name;
-  List <String> m_throws_list = new ArrayList <> ();
+  private final Map <NodeScope, Integer> m_aScopes = new HashMap <> ();
+  private int m_nNextNodeScopeNumber = 0;
 
-  private final Map <NodeScope, Integer> m_scopes = new HashMap <> ();
-  private int m_nextNodeScopeNumber = 0;
-
-  int getNodeScopeNumber (final NodeScope s)
+  int getNodeScopeNumber (@Nonnull final NodeScope s)
   {
-    Integer i = m_scopes.get (s);
-    if (i == null)
-    {
-      i = Integer.valueOf (m_nextNodeScopeNumber++);
-      m_scopes.put (s, i);
-    }
-    return i.intValue ();
+    final Integer ret = m_aScopes.computeIfAbsent (s, k -> Integer.valueOf (m_nNextNodeScopeNumber++));
+    return ret.intValue ();
   }
 
   /** Accept the visitor. **/
@@ -69,5 +66,3 @@ public class ASTProduction extends JJTreeNode
     return visitor.visit (this, data);
   }
 }
-
-/* end */

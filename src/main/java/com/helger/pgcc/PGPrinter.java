@@ -89,6 +89,9 @@ public class PGPrinter
   private static IPrinter s_aOut = new PSPrinter (System.out, false);
   private static IPrinter s_aErr = new PSPrinter (System.err, false);
 
+  private PGPrinter ()
+  {}
+
   public static void init (@Nonnull final IPrinter aPrinter)
   {
     init (aPrinter, aPrinter);
@@ -101,9 +104,6 @@ public class PGPrinter
     s_aOut = aPrinterInfo;
     s_aErr = aPrinterError;
   }
-
-  private PGPrinter ()
-  {}
 
   public static void debug (@Nonnull final String sMsg)
   {

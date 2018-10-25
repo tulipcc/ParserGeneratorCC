@@ -39,6 +39,7 @@ import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.pgcc.EJDKVersion;
@@ -51,9 +52,9 @@ import com.helger.pgcc.parser.Options;
 /**
  * Generate the State of a tree.
  */
+@Immutable
 public final class JJTreeStateJava
 {
-
   private JJTreeStateJava ()
   {}
 
@@ -73,9 +74,9 @@ public final class JJTreeStateJava
 
   public static void generateTreeState_java ()
   {
-    final File file = new File (JJTreeOptions.getJJTreeOutputDirectory (), _nameState () + ".java");
+    final File aFile = new File (JJTreeOptions.getJJTreeOutputDirectory (), _nameState () + ".java");
 
-    try (final OutputFile outputFile = new OutputFile (file); final PrintWriter ostr = outputFile.getPrintWriter ())
+    try (final OutputFile aOutputFile = new OutputFile (aFile); final PrintWriter ostr = aOutputFile.getPrintWriter ())
     {
       NodeFilesJava.generatePrologue (ostr);
       _insertState (ostr);
@@ -86,12 +87,12 @@ public final class JJTreeStateJava
     }
   }
 
-  private static void _insertState (final PrintWriter ostr)
+  private static void _insertState (@Nonnull final PrintWriter ostr)
   {
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
     final boolean bEmptyImplType = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_1_7);
 
-    ostr.println ("public class " + _nameState () + " {");
+    ostr.println ("public class " + _nameState () + " implements java.io.Serializable {");
 
     ostr.println ("  private java.util.List<Node> nodes;");
     ostr.println ("  private java.util.List<Integer> marks;");
@@ -114,7 +115,7 @@ public final class JJTreeStateJava
     ostr.println ();
     ostr.println ("  /* Determines whether the current node was actually closed and");
     ostr.println ("     pushed.  This should only be called in the final user action of a");
-    ostr.println ("     node scope.  */");
+    ostr.println ("     node scope. */");
     ostr.println ("  public boolean nodeCreated() {");
     ostr.println ("    return node_created;");
     ostr.println ("  }");
@@ -143,7 +144,8 @@ public final class JJTreeStateJava
     ostr.println ("  /* Returns the node on the top of the stack, and remove it from the");
     ostr.println ("     stack.  */");
     ostr.println ("  public Node popNode() {");
-    ostr.println ("    if (--sp < mk) {");
+    ostr.println ("   --sp;");
+    ostr.println ("    if (sp < mk) {");
     ostr.println ("      mk = marks.remove(marks.size()-1).intValue();");
     ostr.println ("    }");
     ostr.println ("    return nodes.remove(nodes.size()-1);");

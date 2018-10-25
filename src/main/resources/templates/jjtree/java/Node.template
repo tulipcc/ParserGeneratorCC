@@ -5,7 +5,7 @@
 #if SUPPORT_CLASS_VISIBILITY_PUBLIC
 public
 #fi
-interface Node {
+interface Node extends java.io.Serializable {
   /** This method is called after the node has been made the current
     node.  It indicates that child nodes can now be added to it. */
   void jjtOpen();

@@ -40,6 +40,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.annotation.concurrent.Immutable;
+
+import com.helger.commons.collection.ArrayHelper;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.jjtree.JJTreeGlobals;
 import com.helger.pgcc.jjtree.JJTreeOptions;
@@ -49,25 +52,28 @@ import com.helger.pgcc.parser.Options;
 /**
  * Generate the State of a tree.
  */
+@Immutable
 public final class JJTreeStateCpp
 {
-  static final String JJTStateVersion = PGVersion.MAJOR_DOT_MINOR;
+  private static final String JJTStateVersion = PGVersion.MAJOR_DOT_MINOR;
 
   private JJTreeStateCpp ()
   {}
 
   public static void generateTreeState () throws IOException
   {
-    final Map <String, Object> options = Options.getAllOptions ();
-    options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
+    final Map <String, Object> aOptions = Options.getAllOptions ();
+    aOptions.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
 
-    final String filePrefix = new File (JJTreeOptions.getJJTreeOutputDirectory (),
-                                        "JJT" + JJTreeGlobals.s_parserName + "State").getAbsolutePath ();
+    final String sFilePrefix = new File (JJTreeOptions.getJJTreeOutputDirectory (),
+                                         "JJT" + JJTreeGlobals.s_parserName + "State").getAbsolutePath ();
 
-    OutputFile outputFile = new OutputFile (new File (filePrefix + ".h"), JJTStateVersion, new String [0]);
-    NodeFilesCpp.generateFile (outputFile, "/templates/jjtree/cpp/JJTTreeState.h.template", options, true);
+    OutputFile aOutputFile = new OutputFile (new File (sFilePrefix + ".h"),
+                                             JJTStateVersion,
+                                             ArrayHelper.EMPTY_STRING_ARRAY);
+    NodeFilesCpp.generateFile (aOutputFile, "/templates/jjtree/cpp/JJTTreeState.h.template", aOptions, true);
 
-    outputFile = new OutputFile (new File (filePrefix + ".cc"), JJTStateVersion, new String [0]);
-    NodeFilesCpp.generateFile (outputFile, "/templates/jjtree/cpp/JJTTreeState.cc.template", options, true);
+    aOutputFile = new OutputFile (new File (sFilePrefix + ".cc"), JJTStateVersion, ArrayHelper.EMPTY_STRING_ARRAY);
+    NodeFilesCpp.generateFile (aOutputFile, "/templates/jjtree/cpp/JJTTreeState.cc.template", aOptions, true);
   }
 }

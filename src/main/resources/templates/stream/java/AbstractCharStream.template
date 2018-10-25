@@ -64,8 +64,8 @@ implements CharStream
   protected int available;
   protected int tokenBegin;
 #if KEEP_LINE_COLUMN
-  protected int bufline[];
-  protected int bufcolumn[];
+  protected int[] bufline;
+  protected int[] bufcolumn;
 
   protected int column = 0;
   protected int line = 1;
@@ -82,8 +82,6 @@ implements CharStream
   protected int nextCharInd = -1;
 #if KEEP_LINE_COLUMN
   private boolean trackLineColumn = true;
-#else
-  private final boolean trackLineColumn = false;
 #fi
 
   public void setTabSize(final int i)
@@ -282,22 +280,6 @@ implements CharStream
     return c;
   }
 
-  public int getEndColumn() {
-#if KEEP_LINE_COLUMN
-    return bufcolumn[bufpos];
-#else
-    return -1;
-#fi
-  }
-
-  public int getEndLine() {
-#if KEEP_LINE_COLUMN
-     return bufline[bufpos];
-#else
-    return -1;
-#fi
-  }
-
   public int getBeginColumn() {
 #if KEEP_LINE_COLUMN
     return bufcolumn[tokenBegin];
@@ -309,6 +291,22 @@ implements CharStream
   public int getBeginLine() {
 #if KEEP_LINE_COLUMN
     return bufline[tokenBegin];
+#else
+    return -1;
+#fi
+  }
+
+  public int getEndColumn() {
+#if KEEP_LINE_COLUMN
+    return bufcolumn[bufpos];
+#else
+    return -1;
+#fi
+  }
+
+  public int getEndLine() {
+#if KEEP_LINE_COLUMN
+     return bufline[bufpos];
 #else
     return -1;
 #fi
@@ -373,8 +371,12 @@ implements CharStream
 
   public String getImage()
   {
-    if (bufpos >= tokenBegin)
+    if (bufpos >= tokenBegin) {
+      // from tokenBegin to bufpos
       return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
+    }
+
+    // from tokenBegin to bufpos including wrap around
     return new String(buffer, tokenBegin, bufsize - tokenBegin) +
            new String(buffer, 0, bufpos + 1);
   }

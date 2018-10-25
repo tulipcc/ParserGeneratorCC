@@ -50,14 +50,14 @@ import com.helger.pgcc.parser.TokenProduction;
 
 public class BNFGenerator implements IDocGenerator
 {
-  private final Map <String, String> m_id_map = new HashMap <> ();
-  private int m_id = 1;
+  private final Map <String, String> m_aIDMap = new HashMap <> ();
+  private int m_nID = 1;
   protected Writer m_aPW;
   private boolean m_bPrinting = true;
 
   protected String get_id (final String nt)
   {
-    return m_id_map.computeIfAbsent (nt, k -> "prod" + m_id++);
+    return m_aIDMap.computeIfAbsent (nt, k -> "prod" + m_nID++);
   }
 
   protected static Writer create_output_stream ()
@@ -91,12 +91,6 @@ public class BNFGenerator implements IDocGenerator
   public void specialTokens (final String s)
   {}
 
-  // public void tokenStart(TokenProduction tp) {
-  // printing = false;
-  // }
-  // public void tokenEnd(TokenProduction tp) {
-  // printing = true;
-  // }
   public void nonterminalsStart ()
   {}
 
@@ -137,9 +131,9 @@ public class BNFGenerator implements IDocGenerator
     print ("\n");
   }
 
-  public void expansionStart (final Expansion e, final boolean first) throws IOException
+  public void expansionStart (final Expansion e, final boolean bFirst) throws IOException
   {
-    if (!first)
+    if (!bFirst)
     {
       print (" | ");
     }
@@ -162,8 +156,8 @@ public class BNFGenerator implements IDocGenerator
   public void handleTokenProduction (final TokenProduction tp) throws IOException
   {
     m_bPrinting = false;
-    final String text = JJDoc.getStandardTokenProductionText (tp);
-    text (text);
+    final String sText = JJDoc.getStandardTokenProductionText (tp);
+    text (sText);
     m_bPrinting = true;
   }
 }

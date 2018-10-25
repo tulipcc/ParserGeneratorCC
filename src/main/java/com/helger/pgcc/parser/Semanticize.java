@@ -55,27 +55,27 @@ import java.util.Map;
 
 public class Semanticize
 {
-  static List <List <RegExprSpec>> removeList = new ArrayList <> ();
-  static List <Object> itemList = new ArrayList <> ();
+  private static List <List <RegExprSpec>> s_aRemoveList = new ArrayList <> ();
+  private static List <Object> s_aItemList = new ArrayList <> ();
 
-  static void prepareToRemove (final List <RegExprSpec> vec, final Object item)
+  private static void prepareToRemove (final List <RegExprSpec> vec, final Object item)
   {
-    removeList.add (vec);
-    itemList.add (item);
+    s_aRemoveList.add (vec);
+    s_aItemList.add (item);
   }
 
-  static void removePreparedItems ()
+  private static void removePreparedItems ()
   {
-    for (int i = 0; i < removeList.size (); i++)
+    for (int i = 0; i < s_aRemoveList.size (); i++)
     {
-      final List <RegExprSpec> list = removeList.get (i);
-      list.remove (itemList.get (i));
+      final List <RegExprSpec> list = s_aRemoveList.get (i);
+      list.remove (s_aItemList.get (i));
     }
-    removeList.clear ();
-    itemList.clear ();
+    s_aRemoveList.clear ();
+    s_aItemList.clear ();
   }
 
-  static public void start () throws MetaParseException
+  public static void start () throws MetaParseException
   {
     if (JavaCCErrors.getErrorCount () != 0)
       throw new MetaParseException ("Error count is already present!");
@@ -1161,8 +1161,8 @@ public class Semanticize
 
   public static void reInit ()
   {
-    removeList.clear ();
-    itemList.clear ();
+    s_aRemoveList.clear ();
+    s_aItemList.clear ();
     other = null;
     s_loopString = null;
   }

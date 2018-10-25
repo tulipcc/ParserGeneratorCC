@@ -170,12 +170,12 @@ public class Token
   {
     switch (ofKind)
     {
-      default:
-        return new Token (ofKind, image);
       case JavaCCParserConstants.RUNSIGNEDSHIFT:
       case JavaCCParserConstants.RSIGNEDSHIFT:
       case JavaCCParserConstants.GT:
         return new GTToken (ofKind, image);
+      default:
+        return new Token (ofKind, image);
     }
   }
 

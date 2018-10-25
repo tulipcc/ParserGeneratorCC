@@ -63,7 +63,7 @@ public final class SingleCharacter implements ICCCharacter
    */
   void setLine (final int line)
   {
-    this.m_nLine = line;
+    m_nLine = line;
   }
 
   /**
@@ -80,7 +80,7 @@ public final class SingleCharacter implements ICCCharacter
    */
   void setColumn (final int column)
   {
-    this.m_nColumn = column;
+    m_nColumn = column;
   }
 
   /**

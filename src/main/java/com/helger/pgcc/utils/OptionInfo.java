@@ -77,9 +77,9 @@ public class OptionInfo implements IComparable <OptionInfo>
   }
 
   @Override
-  public int hashCode ()
+  public int compareTo (final OptionInfo o)
   {
-    return new HashCodeGenerator (this).append (m_name).append (m_type).append (m_default).getHashCode ();
+    return m_name.compareTo (o.m_name);
   }
 
   @Override
@@ -94,9 +94,8 @@ public class OptionInfo implements IComparable <OptionInfo>
   }
 
   @Override
-  public int compareTo (final OptionInfo o)
+  public int hashCode ()
   {
-    return m_name.compareTo (o.m_name);
+    return new HashCodeGenerator (this).append (m_name).append (m_type).append (m_default).getHashCode ();
   }
-
 }
