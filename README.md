@@ -10,12 +10,14 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
 
 # News and noteworthy
 
-* v1.1.0 - work in progress
+* v1.1.0 - 2018-10-25
   * Focus is on improving the quality and consistency of the template files - this may cause interoperability problem because names change etc.
   * This version assumes that the created code uses at least Java 1.5 - JDK versions below 1.5 are no longer supported!
   * The option `STATIC` was removed - it caused too many variations in the templates which decreases maintainability. STATIC is now always `false`!
   * Added new option `OUTPUT_ENCODING` to define the character set for the output files
-  * If JDK version is at least 1.6 than `java.nio.Charset encoding` is used and not `String encoding` in generated Streams. 
+  * If JDK version is at least 1.6 than `java.nio.Charset encoding` is used and not `String encoding` in generated Streams.
+  * The Java templates were modified so that the interface methods start with a lowercase character (`beginToken` instead of `BeginToken`) - the created code may need to be adopted!
+  * A masking issue for `'` and `\` characters was resolved (issue #20) 
 * v1.0.2 - 2018-01-08
   * Fixed an error in jump-patching that was originally only considered if legacy exception handling was enabled - now ParserGeneratorCC can create itself using itself!
 * v1.0.1 - 2018-01-05
@@ -37,7 +39,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>parser-generator-cc</artifactId>
-  <version>1.0.2</version>
+  <version>1.1.0</version>
 </dependency>
 ``` 
 
