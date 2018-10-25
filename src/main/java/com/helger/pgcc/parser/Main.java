@@ -210,12 +210,15 @@ public class Main
   }
 
   /**
-   * A main program that exercises the parser. Calls <code>System.exit</code>!
+   * A main program that exercises the parser. Calls <code>System.exit</code>
+   * with return code 0 for success and 1 for error!
    *
-   * @see #mainProgram(String[])(String[]) for a version that does NOT call
+   * @param args
+   *        arguments to main
+   * @see #mainProgram(String...) for a version that does NOT call
    *      <code>System.exit</code>
    */
-  public static void main (final String args[]) throws IOException
+  public static void main (final String... args) throws IOException
   {
     final ESuccess eSuccess = mainProgram (args);
     System.exit (eSuccess.isSuccess () ? 0 : 1);
