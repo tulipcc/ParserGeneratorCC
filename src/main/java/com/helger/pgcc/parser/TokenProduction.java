@@ -39,27 +39,14 @@ import java.util.List;
 /**
  * Describes the various regular expression productions.
  */
-
 public class TokenProduction
 {
-
-  /**
-   * Definitions of constants that identify the kind of regular expression
-   * production this is.
-   */
-  public static final int TOKEN = 0, SKIP = 1, MORE = 2, SPECIAL = 3;
-
-  /**
-   * The image of the above constants.
-   */
-  public static final String [] kindImage = { "TOKEN", "SKIP", "MORE", "SPECIAL" };
-
   /**
    * The starting line and column of this token production.
    */
-  private int m_column;
+  private int m_nColumn;
 
-  private int m_line;
+  private int m_nLine;
 
   /**
    * The states in which this regular expression production exists. If this
@@ -73,7 +60,7 @@ public class TokenProduction
   /**
    * The kind of this token production - TOKEN, SKIP, MORE, or SPECIAL.
    */
-  public int m_kind;
+  public ETokenKind m_kind;
 
   /**
    * The list of regular expression specifications that comprise this
@@ -105,9 +92,9 @@ public class TokenProduction
    * @param line
    *        the line to set
    */
-  public void setLine (final int line)
+  public void setLine (final int nLine)
   {
-    this.m_line = line;
+    m_nLine = nLine;
   }
 
   /**
@@ -115,16 +102,16 @@ public class TokenProduction
    */
   public int getLine ()
   {
-    return m_line;
+    return m_nLine;
   }
 
   /**
    * @param column
    *        the column to set
    */
-  public void setColumn (final int column)
+  public void setColumn (final int nColumn)
   {
-    this.m_column = column;
+    m_nColumn = nColumn;
   }
 
   /**
@@ -132,7 +119,7 @@ public class TokenProduction
    */
   public int getColumn ()
   {
-    return m_column;
+    return m_nColumn;
   }
 
 }

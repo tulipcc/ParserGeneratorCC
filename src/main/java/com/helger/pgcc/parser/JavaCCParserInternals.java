@@ -287,7 +287,7 @@ public abstract class JavaCCParserInternals
       final TokenProduction p = new TokenProduction ();
       p.m_isExplicit = false;
       p.m_lexStates = new String [] { "DEFAULT" };
-      p.m_kind = TokenProduction.TOKEN;
+      p.m_kind = ETokenKind.TOKEN;
       final RegExprSpec res = new RegExprSpec ();
       res.rexp = r;
       res.rexp.m_tpContext = p;

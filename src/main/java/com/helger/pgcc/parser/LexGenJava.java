@@ -106,7 +106,7 @@ public class LexGenJava extends CodeGenerator
   // Order is important!
   static final Map <String, List <TokenProduction>> s_allTpsForState = new LinkedHashMap <> ();
   public static int s_lexStateIndex = 0;
-  static int [] s_kinds;
+  static ETokenKind [] s_kinds;
   public static int s_maxOrdinal = 1;
   public static String s_lexStateSuffix;
   static String [] s_newLexState;
@@ -374,7 +374,7 @@ public class LexGenJava extends CodeGenerator
           s_maxOrdinal = re.m_ordinal + 1;
     }
 
-    s_kinds = new int [s_maxOrdinal];
+    s_kinds = new ETokenKind [s_maxOrdinal];
     s_toSkip = new long [s_maxOrdinal / 64 + 1];
     s_toSpecial = new long [s_maxOrdinal / 64 + 1];
     s_toMore = new long [s_maxOrdinal / 64 + 1];
@@ -465,7 +465,7 @@ public class LexGenJava extends CodeGenerator
       for (int i = 0; i < allTps.size (); i++)
       {
         final TokenProduction tp = allTps.get (i);
-        final int kind = tp.m_kind;
+        final ETokenKind kind = tp.m_kind;
         final boolean ignore = tp.m_ignoreCase;
         final List <RegExprSpec> rexps = tp.m_respecs;
 
@@ -483,7 +483,7 @@ public class LexGenJava extends CodeGenerator
 
           if (s_curRE.m_private_rexp)
           {
-            s_kinds[s_curRE.m_ordinal] = -1;
+            s_kinds[s_curRE.m_ordinal] = null;
             continue;
           }
 
@@ -518,7 +518,7 @@ public class LexGenJava extends CodeGenerator
 
           if (s_kinds.length < s_curRE.m_ordinal)
           {
-            final int [] tmp = new int [s_curRE.m_ordinal + 1];
+            final ETokenKind [] tmp = new ETokenKind [s_curRE.m_ordinal + 1];
 
             System.arraycopy (s_kinds, 0, tmp, 0, s_kinds.length);
             s_kinds = tmp;
@@ -535,18 +535,18 @@ public class LexGenJava extends CodeGenerator
 
           switch (kind)
           {
-            case TokenProduction.SPECIAL:
+            case SPECIAL:
               s_hasSkipActions |= (s_actions[s_curRE.m_ordinal] != null) || (s_newLexState[s_curRE.m_ordinal] != null);
               s_hasSpecial = true;
               s_toSpecial[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
               s_toSkip[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
               break;
-            case TokenProduction.SKIP:
+            case SKIP:
               s_hasSkipActions |= (s_actions[s_curRE.m_ordinal] != null);
               s_hasSkip = true;
               s_toSkip[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
               break;
-            case TokenProduction.MORE:
+            case MORE:
               s_hasMoreActions |= (s_actions[s_curRE.m_ordinal] != null);
               s_hasMore = true;
               s_toMore[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
@@ -556,7 +556,7 @@ public class LexGenJava extends CodeGenerator
               else
                 s_canReachOnMore[s_lexStateIndex] = true;
               break;
-            case TokenProduction.TOKEN:
+            case TOKEN:
               s_hasTokenActions |= (s_actions[s_curRE.m_ordinal] != null);
               s_toToken[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
               break;

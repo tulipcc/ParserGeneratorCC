@@ -84,6 +84,7 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.parser.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.ETokenKind;
 import com.helger.pgcc.parser.ExpRStringLiteral;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCParserConstants;
@@ -220,7 +221,7 @@ public class OtherFilesGenCPP
             }
             else
             {
-              if (re.m_tpContext.m_kind == TokenProduction.TOKEN)
+              if (re.m_tpContext.m_kind == ETokenKind.TOKEN)
               {
                 JavaCCErrors.warning (re, "Consider giving this non-string token a label for better error reporting.");
               }

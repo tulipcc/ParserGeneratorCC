@@ -864,7 +864,7 @@ void regular_expr_production() :
   ]
   regexpr_kind(p)
   {
-    if (p.m_kind != TokenProduction.TOKEN && Options.isUserTokenManager()) {
+    if (p.m_kind != ETokenKind.TOKEN && Options.isUserTokenManager()) {
       JavaCCErrors.warning(getToken(0), "Regular expression is being treated as if it were a TOKEN since option USER_TOKEN_MANAGER has been set to true.");
     }
   }
@@ -911,22 +911,22 @@ void regexpr_kind(TokenProduction p) :
 {
   "TOKEN"
   {
-    p.m_kind = TokenProduction.TOKEN;
+    p.m_kind = ETokenKind.TOKEN;
   }
 |
   "SPECIAL_TOKEN"
   {
-    p.m_kind = TokenProduction.SPECIAL;
+    p.m_kind = ETokenKind.SPECIAL;
   }
 |
   "SKIP"
   {
-    p.m_kind = TokenProduction.SKIP;
+    p.m_kind = ETokenKind.SKIP;
   }
 |
   "MORE"
   {
-    p.m_kind = TokenProduction.MORE;
+    p.m_kind = ETokenKind.MORE;
   }
 }
 

@@ -138,7 +138,7 @@ public final class JJDoc
         }
         token += "> ";
       }
-      token += TokenProduction.kindImage[tp.m_kind];
+      token += tp.m_kind.getImage ();
       if (tp.m_ignoreCase)
       {
         token += " [IGNORE_CASE]";

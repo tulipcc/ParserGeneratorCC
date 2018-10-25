@@ -147,7 +147,7 @@ public class Semanticize
             JavaCCErrors.semantic_error (res.rexp,
                                          "EOF action/state change must be specified for all states, " +
                                                    "i.e., <*>TOKEN:.");
-          if (tp.m_kind != TokenProduction.TOKEN)
+          if (tp.m_kind != ETokenKind.TOKEN)
             JavaCCErrors.semantic_error (res.rexp,
                                          "EOF action/state change can be specified only in a " +
                                                    "TOKEN specification.");
@@ -371,13 +371,13 @@ public class Semanticize
                       }
                     }
                     else
-                      if (re.m_tpContext.m_kind != TokenProduction.TOKEN)
+                      if (re.m_tpContext.m_kind != ETokenKind.TOKEN)
                       {
                         JavaCCErrors.semantic_error (sl,
                                                      "String token \"" +
                                                          sl.m_image +
                                                          "\" has been defined as a \"" +
-                                                         TokenProduction.kindImage[re.m_tpContext.m_kind] +
+                                                         re.m_tpContext.m_kind.getImage () +
                                                          "\" token.");
                       }
                       else
@@ -932,7 +932,7 @@ public class Semanticize
                                             "(with a #) regular expression.");
           }
           else
-            if (jn == m_root && !jn.m_tpContext.m_isExplicit && rexp.m_tpContext.m_kind != TokenProduction.TOKEN)
+            if (jn == m_root && !jn.m_tpContext.m_isExplicit && rexp.m_tpContext.m_kind != ETokenKind.TOKEN)
             {
               JavaCCErrors.semantic_error (e,
                                            "Token name \"" +
