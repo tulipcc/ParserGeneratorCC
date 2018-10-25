@@ -255,6 +255,8 @@
           <excludes>
             <exclude>**/*.txt</exclude>
             <exclude>**/*.template</exclude>
+            <exclude>examples/*</exclude>
+            <exclude>grammars/*</exclude>
           </excludes>
         </configuration>
       </plugin>
