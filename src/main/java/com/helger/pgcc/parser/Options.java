@@ -529,7 +529,7 @@ public class Options
    * Process a single command-line option. The option is parsed and stored in
    * the optionValues map.
    *
-   * @param arg
+   * @param sArg
    *        argument string to set. May not be <code>null</code>.
    */
   public static void setCmdLineOption (@Nonnull final String sArg)
