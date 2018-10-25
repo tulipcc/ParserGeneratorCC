@@ -179,10 +179,9 @@ public final class GrammarsParsingFuncTest
       final File fGrammarDest = new File (fDest, sBaseName);
       fGrammarDest.mkdirs ();
 
-      final ESuccess eSuccess = Main.mainProgram (new String [] { "-OUTPUT_DIRECTORY=" +
-                                                                  fGrammarDest.getAbsolutePath (),
-                                                                  "-JDK_VERSION=1.8",
-                                                                  f.getAbsolutePath () });
+      final ESuccess eSuccess = Main.mainProgram ("-OUTPUT_DIRECTORY=" + fGrammarDest.getAbsolutePath (),
+                                                  "-JDK_VERSION=1.8",
+                                                  f.getAbsolutePath ());
       assertTrue (eSuccess.isSuccess ());
 
       _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);

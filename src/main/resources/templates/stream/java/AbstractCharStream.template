@@ -336,6 +336,7 @@ implements CharStream
     bufline = new int[buffersize];
     bufcolumn = new int[buffersize];
 #fi
+    nextCharBuf = new char[4096];
   }
 
   /** Reinitialise. */
