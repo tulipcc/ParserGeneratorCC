@@ -89,7 +89,7 @@ public class TokenProduction
   public Token m_lastToken;
 
   /**
-   * @param line
+   * @param nLine
    *        the line to set
    */
   public void setLine (final int nLine)
@@ -106,7 +106,7 @@ public class TokenProduction
   }
 
   /**
-   * @param column
+   * @param nColumn
    *        the column to set
    */
   public void setColumn (final int nColumn)

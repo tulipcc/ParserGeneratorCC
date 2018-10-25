@@ -127,8 +127,8 @@ public class OutputFile implements AutoCloseable
           throw new IOException ("No MD5 implementation", e);
         }
         try (final DigestOutputStream digestStream = new DigestOutputStream (new NullOutputStream (), digest);
-             final PrintWriter pw = new PrintWriter (new OutputStreamWriter (digestStream,
-                                                                             Options.getOutputEncoding ())))
+            final PrintWriter pw = new PrintWriter (new OutputStreamWriter (digestStream,
+                                                                            Options.getOutputEncoding ())))
         {
           String line;
           String existingMD5 = null;
@@ -268,7 +268,7 @@ public class OutputFile implements AutoCloseable
    * Return a PrintWriter object that may be used to write to this file. Any
    * necessary header information is written by this method.
    *
-   * @return
+   * @return the {@link PrintWriter} to use.
    * @throws IOException
    */
   @WillCloseWhenClosed
