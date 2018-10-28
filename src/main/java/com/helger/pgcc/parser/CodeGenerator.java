@@ -126,20 +126,20 @@ public class CodeGenerator
     m_outputBuffer.append (c);
   }
 
-  public void genCode (final String s)
+  public final void genCode (final String s)
   {
     m_outputBuffer.append (s);
   }
 
-  public void genCodeLine ()
+  public final void genCodeNewLine ()
   {
     genCode ("\n");
   }
 
-  public void genCodeLine (final String s)
+  public final void genCodeLine (final String s)
   {
     genCode (s);
-    genCodeLine ();
+    genCodeNewLine ();
   }
 
   public void saveOutput (final String fileName)
@@ -255,12 +255,12 @@ public class CodeGenerator
     return retval;
   }
 
-  protected void printToken (final Token t)
+  protected void printToken (@Nonnull final Token t)
   {
     genCode (getStringToPrint (t));
   }
 
-  protected String getStringToPrint (final Token t)
+  protected String getStringToPrint (@Nonnull final Token t)
   {
     String retval = "";
     Token tt = t.specialToken;
@@ -278,7 +278,7 @@ public class CodeGenerator
     return retval + getStringForTokenOnly (t);
   }
 
-  protected void printLeadingComments (final Token t)
+  protected final void printLeadingComments (final Token t)
   {
     genCode (getLeadingComments (t));
   }
@@ -420,34 +420,34 @@ public class CodeGenerator
     generateMethodDefHeader (modsAndRetType, className, nameAndParams, null);
   }
 
-  public void generateMethodDefHeader (final String qualifiedModsAndRetType,
-                                       final String className,
-                                       final String nameAndParams,
-                                       final String exceptions)
+  public void generateMethodDefHeader (final String sQualifiedModsAndRetType,
+                                       final String sClassName,
+                                       final String sNameAndParams,
+                                       final String sExceptions)
   {
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     switch (eOutputLanguage)
     {
       case JAVA:
-        genCode (qualifiedModsAndRetType + " " + nameAndParams);
-        if (exceptions != null)
+        genCode (sQualifiedModsAndRetType + " " + sNameAndParams);
+        if (sExceptions != null)
         {
-          genCode (" throws " + exceptions);
+          genCode (" throws " + sExceptions);
         }
-        genCodeLine ();
+        genCodeNewLine ();
         break;
       case CPP:
         // for C++, we generate the signature in the header file and body in
         // main file
-        m_includeBuffer.append (qualifiedModsAndRetType + " " + nameAndParams);
+        m_includeBuffer.append (sQualifiedModsAndRetType + " " + sNameAndParams);
         // if (exceptions != null)
         // includeBuffer.append(" throw(" + exceptions + ")");
         m_includeBuffer.append (";\n");
 
         String modsAndRetType = null;
-        int i = qualifiedModsAndRetType.lastIndexOf (':');
+        int i = sQualifiedModsAndRetType.lastIndexOf (':');
         if (i >= 0)
-          modsAndRetType = qualifiedModsAndRetType.substring (i + 1);
+          modsAndRetType = sQualifiedModsAndRetType.substring (i + 1);
 
         if (modsAndRetType != null)
         {
@@ -456,11 +456,11 @@ public class CodeGenerator
             modsAndRetType = modsAndRetType.substring (i + "virtual".length ());
         }
 
-        String sNonVirtual = qualifiedModsAndRetType;
+        String sNonVirtual = sQualifiedModsAndRetType;
         i = sNonVirtual.lastIndexOf ("virtual");
         if (i >= 0)
           sNonVirtual = sNonVirtual.substring (i + "virtual".length ());
-        m_mainBuffer.append ("\n" + sNonVirtual + " " + getClassQualifier (className) + nameAndParams);
+        m_mainBuffer.append ("\n" + sNonVirtual + " " + getClassQualifier (sClassName) + sNameAndParams);
         // if (exceptions != null)
         // mainBuffer.append(" throw( " + exceptions + ")");
         switchToMainFile ();

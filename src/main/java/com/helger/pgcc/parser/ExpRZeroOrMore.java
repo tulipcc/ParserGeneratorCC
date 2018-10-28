@@ -48,9 +48,9 @@ public class ExpRZeroOrMore extends AbstractExpRegularExpression
 
   public ExpRZeroOrMore (final Token t, final AbstractExpRegularExpression r)
   {
-    this.setLine (t.beginLine);
-    this.setColumn (t.beginColumn);
-    this.m_regexpr = r;
+    setLine (t.beginLine);
+    setColumn (t.beginColumn);
+    m_regexpr = r;
   }
 
   @Override

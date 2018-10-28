@@ -69,11 +69,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 public class ASTNodeDescriptor extends JJTreeNode
 {
-  private static final List <String> s_nodeIds = new ArrayList <> ();
-  private static final List <String> s_nodeNames = new ArrayList <> ();
-  private static final Map <String, String> s_nodeSeen = new HashMap <> ();
+  private static final List <String> s_aNodeIds = new ArrayList <> ();
+  private static final List <String> s_aNodeNames = new ArrayList <> ();
+  private static final Map <String, String> s_aNodeSeen = new HashMap <> ();
 
   static ASTNodeDescriptor indefinite (final String s)
   {
@@ -84,22 +86,24 @@ public class ASTNodeDescriptor extends JJTreeNode
     return nd;
   }
 
+  @Nonnull
   public static List <String> getNodeIds ()
   {
-    return s_nodeIds;
+    return s_aNodeIds;
   }
 
+  @Nonnull
   public static List <String> getNodeNames ()
   {
-    return s_nodeNames;
+    return s_aNodeNames;
   }
 
   static void reInit ()
   {
     // initialize static state for allowing repeat runs without exiting
-    s_nodeIds.clear ();
-    s_nodeNames.clear ();
-    s_nodeSeen.clear ();
+    s_aNodeIds.clear ();
+    s_aNodeNames.clear ();
+    s_aNodeSeen.clear ();
   }
 
   private boolean m_faked = false;
@@ -107,19 +111,19 @@ public class ASTNodeDescriptor extends JJTreeNode
   boolean m_isGT;
   ASTNodeDescriptorExpression m_expression;
 
-  ASTNodeDescriptor (final int id)
+  ASTNodeDescriptor (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
   void setNodeIdValue ()
   {
     final String k = getNodeId ();
-    if (!s_nodeSeen.containsKey (k))
+    if (!s_aNodeSeen.containsKey (k))
     {
-      s_nodeSeen.put (k, k);
-      s_nodeNames.add (m_name);
-      s_nodeIds.add (k);
+      s_aNodeSeen.put (k, k);
+      s_aNodeNames.add (m_name);
+      s_aNodeIds.add (k);
     }
   }
 

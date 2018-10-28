@@ -35,9 +35,9 @@ package com.helger.pgcc.jjtree;
 
 public class ASTBNFAction extends JJTreeNode
 {
-  ASTBNFAction (final int id)
+  ASTBNFAction (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
   protected Node getScopingParent (final NodeScope ns)

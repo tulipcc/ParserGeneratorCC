@@ -35,9 +35,9 @@ package com.helger.pgcc.jjtree;
 
 public class ASTLHS extends JJTreeNode
 {
-  ASTLHS (final int id)
+  ASTLHS (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
   @Override

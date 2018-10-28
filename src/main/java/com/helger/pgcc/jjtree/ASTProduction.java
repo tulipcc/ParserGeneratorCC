@@ -42,16 +42,15 @@ import javax.annotation.Nonnull;
 
 public class ASTProduction extends JJTreeNode
 {
+  private final Map <NodeScope, Integer> m_aScopes = new HashMap <> ();
+  private int m_nNextNodeScopeNumber = 0;
   String m_name;
   List <String> m_throws_list = new ArrayList <> ();
 
-  ASTProduction (final int id)
+  ASTProduction (final int nID)
   {
-    super (id);
+    super (nID);
   }
-
-  private final Map <NodeScope, Integer> m_aScopes = new HashMap <> ();
-  private int m_nNextNodeScopeNumber = 0;
 
   int getNodeScopeNumber (@Nonnull final NodeScope s)
   {

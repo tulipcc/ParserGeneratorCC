@@ -173,7 +173,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         int i;
         s_charCnt = 0; // Set to zero in reInit() but just to be sure
 
-        codeGenerator.genCodeLine ();
+        codeGenerator.genCodeNewLine ();
         codeGenerator.genCodeLine ("/** Token literal values. */");
         int literalCount = 0;
         codeGenerator.switchToStaticsFile ();
@@ -200,7 +200,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
             s_allImages[i] = null;
             if ((s_charCnt += 6) > 80)
             {
-              codeGenerator.genCodeLine ();
+              codeGenerator.genCodeNewLine ();
               s_charCnt = 0;
             }
 
@@ -219,7 +219,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
           if ((s_charCnt += toPrint.length ()) >= 80)
           {
-            codeGenerator.genCodeLine ();
+            codeGenerator.genCodeNewLine ();
             s_charCnt = 0;
           }
 
@@ -230,7 +230,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         {
           if ((s_charCnt += 6) > 80)
           {
-            codeGenerator.genCodeLine ();
+            codeGenerator.genCodeNewLine ();
             s_charCnt = 0;
           }
 
@@ -258,7 +258,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     int i;
     s_charCnt = 0; // Set to zero in reInit() but just to be sure
 
-    codeGenerator.genCodeLine ();
+    codeGenerator.genCodeNewLine ();
     codeGenerator.genCodeLine ("/** Token literal values. */");
     codeGenerator.genCodeLine ("public static final String[] jjstrLiteralImages = {");
 
@@ -284,7 +284,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         s_allImages[i] = null;
         if ((s_charCnt += 6) > 80)
         {
-          codeGenerator.genCodeLine ();
+          codeGenerator.genCodeNewLine ();
           s_charCnt = 0;
         }
 
@@ -326,7 +326,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       if (s_charCnt > 80)
       {
         // Break after 80 chars
-        codeGenerator.genCodeLine ();
+        codeGenerator.genCodeNewLine ();
         s_charCnt = 0;
       }
 
@@ -339,7 +339,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       if (s_charCnt > 80)
       {
         // Break after 80 chars
-        codeGenerator.genCodeLine ();
+        codeGenerator.genCodeNewLine ();
         s_charCnt = 0;
       }
 

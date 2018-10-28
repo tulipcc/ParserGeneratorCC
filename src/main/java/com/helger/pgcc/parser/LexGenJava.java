@@ -194,7 +194,7 @@ public class LexGenJava extends CodeGenerator
             }
             if (kind == JavaCCParserConstants.SEMICOLON)
               printToken (s_cu_to_insertion_point_1.get (j));
-            genCodeLine ();
+            genCodeNewLine ();
             break;
           }
         }
@@ -205,7 +205,7 @@ public class LexGenJava extends CodeGenerator
         break;
     }
 
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("/** Token Manager. */");
 
     // Emit only if an import is present
@@ -244,7 +244,7 @@ public class LexGenJava extends CodeGenerator
         printToken (t);
       }
 
-      genCodeLine ();
+      genCodeNewLine ();
       if (commonTokenActionNeeded && !commonTokenActionSeen)
       {
         JavaCCErrors.warning ("You have the COMMON_TOKEN_ACTION option set. " +
@@ -266,17 +266,17 @@ public class LexGenJava extends CodeGenerator
 
     if (Options.isDebugTokenManager ())
     {
-      genCodeLine ();
+      genCodeNewLine ();
       genCodeLine ("  /** Debug output. */");
       genCodeLine ("  private java.io.PrintStream debugStream = System.out;");
-      genCodeLine ();
+      genCodeNewLine ();
       genCodeLine ("  /**");
       genCodeLine ("   * @return debug output");
       genCodeLine ("   */");
       genCodeLine ("  public java.io.PrintStream getDebugStream() {");
       genCodeLine ("    return debugStream;");
       genCodeLine ("  }");
-      genCodeLine ();
+      genCodeNewLine ();
       genCodeLine ("  /**");
       genCodeLine ("   * Set debug output");
       genCodeLine ("   * @param ds debug PrintStream. May not be <code>null</code>");
@@ -288,7 +288,7 @@ public class LexGenJava extends CodeGenerator
 
     if (Options.isTokenManagerUsesParser ())
     {
-      genCodeLine ();
+      genCodeNewLine ();
       genCodeLine ("  public " + s_cu_name + " parser = null;");
     }
   }
@@ -829,7 +829,7 @@ public class LexGenJava extends CodeGenerator
   {
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
 
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("/** Lexer state names. */");
     genCodeLine ("public static final String[] lexStateNames = {");
     for (int i = 0; i < s_maxLexStates; i++)
@@ -837,7 +837,7 @@ public class LexGenJava extends CodeGenerator
     genCodeLine ("};");
 
     {
-      genCodeLine ();
+      genCodeNewLine ();
       genCodeLine ("/** Lex State array. */");
       genCode ("public static final int[] jjnewLexState = {");
 
@@ -1004,14 +1004,14 @@ public class LexGenJava extends CodeGenerator
 
     if (s_keepLineCol)
     {
-      genCodeLine ();
+      genCodeNewLine ();
       genCodeLine ("   t.beginLine = beginLine;");
       genCodeLine ("   t.endLine = endLine;");
       genCodeLine ("   t.beginColumn = beginColumn;");
       genCodeLine ("   t.endColumn = endColumn;");
     }
 
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("   return t;");
     genCodeLine ("}");
   }
@@ -1020,14 +1020,14 @@ public class LexGenJava extends CodeGenerator
   {
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
 
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("int curLexState = " + s_defaultLexState + ";");
     genCodeLine ("int defaultLexState = " + s_defaultLexState + ";");
     genCodeLine ("int jjnewStateCnt;");
     genCodeLine ("int jjround;");
     genCodeLine ("int jjmatchedPos;");
     genCodeLine ("int jjmatchedKind;");
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("/** Get the next Token. */");
     genCodeLine ("public " + "Token getNextToken()" + " ");
     genCodeLine ("{");
@@ -1037,7 +1037,7 @@ public class LexGenJava extends CodeGenerator
     }
     genCodeLine ("  Token matchedToken;");
     genCodeLine ("  int curPos = 0;");
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("  EOFLoop:");
     genCodeLine ("  for (;;)");
     genCodeLine ("  {");
@@ -1074,7 +1074,7 @@ public class LexGenJava extends CodeGenerator
       genCodeLine ("   jjimageLen = 0;");
     }
 
-    genCodeLine ();
+    genCodeNewLine ();
 
     String prefix = "";
     if (s_hasMore)
@@ -1431,7 +1431,7 @@ public class LexGenJava extends CodeGenerator
 
     genCodeLine ("  }");
     genCodeLine ("}");
-    genCodeLine ();
+    genCodeNewLine ();
   }
 
   private void _dumpSkipActions ()
@@ -1496,7 +1496,7 @@ public class LexGenJava extends CodeGenerator
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
-        genCodeLine ();
+        genCodeNewLine ();
 
         break;
       }
@@ -1572,7 +1572,7 @@ public class LexGenJava extends CodeGenerator
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
-        genCodeLine ();
+        genCodeNewLine ();
 
         break;
       }
@@ -1659,7 +1659,7 @@ public class LexGenJava extends CodeGenerator
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
-        genCodeLine ();
+        genCodeNewLine ();
 
         break;
       }

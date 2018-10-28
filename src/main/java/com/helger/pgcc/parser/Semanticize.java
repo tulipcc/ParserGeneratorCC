@@ -243,6 +243,7 @@ public class Semanticize
         s_lexstate_I2S.values ().toArray (tp.m_lexStates);
       }
 
+      @SuppressWarnings ("unchecked")
       final Map <String, Map <String, AbstractExpRegularExpression>> table[] = new Map [tp.m_lexStates.length];
       for (int i = 0; i < tp.m_lexStates.length; i++)
       {

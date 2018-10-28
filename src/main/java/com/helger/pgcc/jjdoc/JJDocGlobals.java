@@ -33,8 +33,6 @@
  */
 package com.helger.pgcc.jjdoc;
 
-import com.helger.pgcc.PGPrinter;
-
 /**
  * Global variables for JJDoc.
  */

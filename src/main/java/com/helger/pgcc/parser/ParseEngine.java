@@ -635,7 +635,7 @@ public class ParseEngine
           }
           else
           {
-            m_codeGenerator.genCodeLine ();
+            m_codeGenerator.genCodeNewLine ();
           }
         }
         else
@@ -778,12 +778,19 @@ public class ParseEngine
       else
         default_return = "0"; // 0 converts to most (all?) basic types.
 
-    final StringBuilder ret_val = new StringBuilder ("\n#if !defined ERROR_RET_" + method_name + "\n");
-    ret_val.append ("#define ERROR_RET_" + method_name + " " + default_return + "\n");
-    ret_val.append ("#endif\n");
-    ret_val.append ("#define __ERROR_RET__ ERROR_RET_" + method_name + "\n");
-
-    return ret_val.toString ();
+    return "\n" +
+           "#if !defined ERROR_RET_" +
+           method_name +
+           "\n" +
+           "#define ERROR_RET_" +
+           method_name +
+           " " +
+           default_return +
+           "\n" +
+           "#endif\n" +
+           "#define __ERROR_RET__ ERROR_RET_" +
+           method_name +
+           "\n";
   }
 
   private void _genStackCheck (final boolean voidReturn)
@@ -816,12 +823,13 @@ public class ParseEngine
           m_codeGenerator.genCodeLine ("  errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;");
           if (!voidReturn)
           {
-            m_codeGenerator.genCodeLine ("  return __ERROR_RET__;"); // Non-recoverable
-            // error
+            // Non-recoverable error
+            m_codeGenerator.genCodeLine ("  return __ERROR_RET__;");
           }
           else
           {
-            m_codeGenerator.genCodeLine ("  return;"); // Non-recoverable error
+            // Non-recoverable error
+            m_codeGenerator.genCodeLine ("  return;");
           }
           m_codeGenerator.genCodeLine ("}");
           break;
@@ -932,7 +940,7 @@ public class ParseEngine
     m_indentamt = 4;
     if (Options.isDebugParser ())
     {
-      m_codeGenerator.genCodeLine ();
+      m_codeGenerator.genCodeNewLine ();
       switch (eOutputLanguage)
       {
         case JAVA:
@@ -967,7 +975,7 @@ public class ParseEngine
 
     final String code = _phase1ExpansionGen (p.getExpansion ());
     dumpFormattedString (code);
-    m_codeGenerator.genCodeLine ();
+    m_codeGenerator.genCodeNewLine ();
 
     if (p.isJumpPatched () && !voidReturn)
     {
@@ -1023,12 +1031,12 @@ public class ParseEngine
     }
     genStackCheckEnd ();
     m_codeGenerator.genCodeLine ("}");
-    m_codeGenerator.genCodeLine ();
+    m_codeGenerator.genCodeNewLine ();
   }
 
   void phase1NewLine ()
   {
-    m_codeGenerator.genCodeLine ();
+    m_codeGenerator.genCodeNewLine ();
     m_codeGenerator.genCode (StringHelper.getRepeated (' ', m_indentamt));
   }
 
@@ -1526,7 +1534,7 @@ public class ParseEngine
       }
     }
     m_codeGenerator.genCodeLine ("  }");
-    m_codeGenerator.genCodeLine ();
+    m_codeGenerator.genCodeNewLine ();
     final Phase3Data p3d = new Phase3Data (e, la.getAmount ());
     m_phase3list.add (p3d);
     m_phase3table.put (e, p3d);
@@ -1979,7 +1987,7 @@ public class ParseEngine
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
       m_codeGenerator.genCodeLine ("  }");
-      m_codeGenerator.genCodeLine ();
+      m_codeGenerator.genCodeNewLine ();
     }
   }
 
@@ -2159,7 +2167,7 @@ public class ParseEngine
         codeGenerator.genCodeLine (" {");
         if (Options.isDebugParser ())
         {
-          codeGenerator.genCodeLine ();
+          codeGenerator.genCodeNewLine ();
           switch (eOutputLanguage)
           {
             case JAVA:
@@ -2186,13 +2194,13 @@ public class ParseEngine
           s_cline--;
           codeGenerator.printTokenList (cp.getCodeTokens ());
         }
-        codeGenerator.genCodeLine ();
+        codeGenerator.genCodeNewLine ();
         if (Options.isDebugParser ())
         {
           codeGenerator.genCodeLine ("    } catch(...) { }");
         }
         codeGenerator.genCodeLine ("  }");
-        codeGenerator.genCodeLine ();
+        codeGenerator.genCodeNewLine ();
       }
       else
         if (p instanceof CodeProductionJava)
@@ -2252,7 +2260,7 @@ public class ParseEngine
           codeGenerator.genCode (" {");
           if (Options.isDebugParser ())
           {
-            codeGenerator.genCodeLine ();
+            codeGenerator.genCodeNewLine ();
             codeGenerator.genCodeLine ("    trace_call(\"" + JavaCCGlobals.addUnicodeEscapes (jp.getLhs ()) + "\");");
             codeGenerator.genCode ("    try {");
           }
@@ -2262,7 +2270,7 @@ public class ParseEngine
             s_cline--;
             codeGenerator.printTokenList (jp.getCodeTokens ());
           }
-          codeGenerator.genCodeLine ();
+          codeGenerator.genCodeNewLine ();
           if (Options.isDebugParser ())
           {
             codeGenerator.genCodeLine ("    } finally {");
@@ -2272,7 +2280,7 @@ public class ParseEngine
             codeGenerator.genCodeLine ("    }");
           }
           codeGenerator.genCodeLine ("  }");
-          codeGenerator.genCodeLine ();
+          codeGenerator.genCodeNewLine ();
         }
         else
         {

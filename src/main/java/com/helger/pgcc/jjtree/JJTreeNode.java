@@ -39,15 +39,15 @@ public class JJTreeNode extends SimpleNode
 {
   private int m_nMyOrdinal;
 
-  public JJTreeNode (final int id)
+  public JJTreeNode (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
-  public JJTreeNode (final JJTreeParser p, final int id)
+  public JJTreeNode (final JJTreeParser p, final int nID)
   {
     // Ignore parser - whysoever
-    this (id);
+    this (nID);
   }
 
   public static Node jjtCreate (final int id)

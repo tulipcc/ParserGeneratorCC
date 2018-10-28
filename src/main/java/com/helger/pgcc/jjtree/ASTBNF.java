@@ -35,9 +35,9 @@ package com.helger.pgcc.jjtree;
 
 public class ASTBNF extends ASTProduction
 {
-  ASTBNF (final int id)
+  ASTBNF (final int nID)
   {
-    super (id);
+    super (nID);
     m_throws_list.add ("ParseException");
     m_throws_list.add ("RuntimeException");
   }

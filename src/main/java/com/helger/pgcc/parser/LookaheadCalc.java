@@ -135,7 +135,9 @@ public final class LookaheadCalc
     // dbl[i] and dbr[i] are lists of size limited matches for choice i
     // of ch. dbl ignores matches with semantic lookaheads (when force_la_check
     // is false), while dbr ignores semantic lookahead.
+    @SuppressWarnings ("unchecked")
     final List <MatchInfo> [] dbl = new List [ch.getChoices ().size ()];
+    @SuppressWarnings ("unchecked")
     final List <MatchInfo> [] dbr = new List [ch.getChoices ().size ()];
     final int [] minLA = new int [ch.getChoices ().size () - 1];
     final MatchInfo [] overlapInfo = new MatchInfo [ch.getChoices ().size () - 1];

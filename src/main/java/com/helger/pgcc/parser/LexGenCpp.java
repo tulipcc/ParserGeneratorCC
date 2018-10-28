@@ -112,7 +112,7 @@ public class LexGenCpp extends LexGenJava
       genCodeLine ("#include \"" + Options.stringValue (Options.USEROPTION__CPP_TOKEN_MANAGER_INCLUDES) + "\"\n");
     }
 
-    genCodeLine ();
+    genCodeNewLine ();
 
     if (Options.stringValue (Options.USEROPTION__CPP_NAMESPACE).length () > 0)
     {
@@ -134,7 +134,7 @@ public class LexGenCpp extends LexGenJava
      * genCodeLine(""); break; } } l = ++i; } else break; }
      */
 
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("/** Token Manager. */");
     final String superClass = Options.stringValue (Options.USEROPTION__TOKEN_MANAGER_SUPER_CLASS);
     genClassStart (null,
@@ -174,7 +174,7 @@ public class LexGenCpp extends LexGenJava
         genCodeLine ("      this->parser = (" + s_cu_name + "*) parser;");
         genCodeLine ("  }");
       }
-      genCodeLine ();
+      genCodeNewLine ();
 
       if (commonTokenActionNeeded && !commonTokenActionSeen)
       {
@@ -195,7 +195,7 @@ public class LexGenCpp extends LexGenJava
                               "in your TOKEN_MGR_DECLS. The generated token manager will not compile.");
       }
 
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("  FILE *debugStream;");
 
     generateMethodDefHeader ("  void ", s_tokMgrClassName, "setDebugStream(FILE *ds)");
@@ -204,7 +204,7 @@ public class LexGenCpp extends LexGenJava
     switchToIncludeFile ();
     if (Options.isTokenManagerUsesParser ())
     {
-      genCodeLine ();
+      genCodeNewLine ();
       genCodeLine ("private:");
       genCodeLine ("  " + s_cu_name + "* parser = nullptr;");
     }
@@ -557,11 +557,11 @@ public class LexGenCpp extends LexGenJava
     genCodeLine ("#ifndef JAVACC_CHARSTREAM");
     genCodeLine ("#define JAVACC_CHARSTREAM CharStream");
     genCodeLine ("#endif");
-    genCodeLine ();
+    genCodeNewLine ();
 
     genCodeLine ("private:");
     genCodeLine ("  void ReInitRounds();");
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("public:");
     genCodeLine ("  " + s_tokMgrClassName + "(JAVACC_CHARSTREAM *stream, int lexState = " + s_defaultLexState + ");");
     genCodeLine ("  virtual ~" + s_tokMgrClassName + "();");
@@ -570,7 +570,7 @@ public class LexGenCpp extends LexGenJava
     genCodeLine ("  void clear();");
     genCodeLine ("  const JJSimpleString jjKindsForBitVector(int i, " + eOutputLanguage.getTypeLong () + " vec);");
     genCodeLine ("  const JJSimpleString jjKindsForStateVector(int lexState, int vec[], int start, int end);");
-    genCodeLine ();
+    genCodeNewLine ();
   }
 
   private void _dumpStaticVarDeclarations ()
@@ -579,13 +579,13 @@ public class LexGenCpp extends LexGenJava
 
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     switchToStaticsFile (); // remaining variables
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("/** Lexer state names. */");
     genStringLiteralArrayCPP ("lexStateNames", s_lexStateName);
 
     if (s_maxLexStates > 1)
     {
-      genCodeLine ();
+      genCodeNewLine ();
       genCodeLine ("/** Lex State array. */");
       genCode ("static const int jjnewLexState[] = {");
 
@@ -742,7 +742,7 @@ public class LexGenCpp extends LexGenJava
 
     if (s_keepLineCol)
     {
-      genCodeLine ();
+      genCodeNewLine ();
       genCodeLine ("   if (input_stream->getTrackLineColumn()) {");
       genCodeLine ("   t->beginLine = beginLine;");
       genCodeLine ("   t->endLine = endLine;");
@@ -751,7 +751,7 @@ public class LexGenCpp extends LexGenJava
       genCodeLine ("   }");
     }
 
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("   return t;");
     genCodeLine ("}");
   }
@@ -761,14 +761,14 @@ public class LexGenCpp extends LexGenJava
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
 
     switchToIncludeFile ();
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("public:");
     genCodeLine ("    int curLexState;");
     genCodeLine ("    int jjnewStateCnt;");
     genCodeLine ("    int jjround;");
     genCodeLine ("    int jjmatchedPos;");
     genCodeLine ("    int jjmatchedKind;");
-    genCodeLine ();
+    genCodeNewLine ();
     switchToMainFile ();
     genCodeLine ("const int defaultLexState = " + s_defaultLexState + ";");
     genCodeLine ("/** Get the next Token. */");
@@ -780,7 +780,7 @@ public class LexGenCpp extends LexGenJava
     }
     genCodeLine ("  Token *matchedToken = nullptr;");
     genCodeLine ("  int curPos = 0;");
-    genCodeLine ();
+    genCodeNewLine ();
     genCodeLine ("  for (;;)");
     genCodeLine ("  {");
     genCodeLine ("   EOFLoop: ");
@@ -818,7 +818,7 @@ public class LexGenCpp extends LexGenJava
       genCodeLine ("   jjimageLen = 0;");
     }
 
-    genCodeLine ();
+    genCodeNewLine ();
 
     String prefix = "";
     if (s_hasMore)
@@ -1143,7 +1143,7 @@ public class LexGenCpp extends LexGenJava
 
     genCodeLine ("  }");
     genCodeLine ("}");
-    genCodeLine ();
+    genCodeNewLine ();
   }
 
   private void _dumpSkipActions ()
@@ -1201,7 +1201,7 @@ public class LexGenCpp extends LexGenJava
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
-        genCodeLine ();
+        genCodeNewLine ();
 
         break;
       }
@@ -1271,7 +1271,7 @@ public class LexGenCpp extends LexGenJava
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
-        genCodeLine ();
+        genCodeNewLine ();
 
         break;
       }
@@ -1354,7 +1354,7 @@ public class LexGenCpp extends LexGenJava
 
         for (int j = 0; j < act.getActionTokens ().size (); j++)
           printToken (act.getActionTokens ().get (j));
-        genCodeLine ();
+        genCodeNewLine ();
 
         break;
       }

@@ -37,9 +37,9 @@ package com.helger.pgcc.jjtree;
 
 public class ASTOptions extends JJTreeNode
 {
-  public ASTOptions (final int id)
+  public ASTOptions (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
   /** Accept the visitor. **/

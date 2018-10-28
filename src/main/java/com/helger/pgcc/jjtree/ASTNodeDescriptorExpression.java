@@ -35,9 +35,9 @@ package com.helger.pgcc.jjtree;
 
 public class ASTNodeDescriptorExpression extends JJTreeNode
 {
-  ASTNodeDescriptorExpression (final int id)
+  ASTNodeDescriptorExpression (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
   @Override

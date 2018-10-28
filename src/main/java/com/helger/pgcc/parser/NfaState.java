@@ -2875,7 +2875,7 @@ public class NfaState
     codeGenerator.genCodeLine ("   jjCheckNAdd(state1);");
     codeGenerator.genCodeLine ("   jjCheckNAdd(state2);");
     codeGenerator.genCodeLine ("}");
-    codeGenerator.genCodeLine ();
+    codeGenerator.genCodeNewLine ();
 
     if (s_jjCheckNAddStatesDualNeeded)
     {
@@ -2885,7 +2885,7 @@ public class NfaState
       codeGenerator.genCodeLine ("      jjCheckNAdd(jjnextStates[start]);");
       codeGenerator.genCodeLine ("   } while (start++ != end);");
       codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeLine ();
+      codeGenerator.genCodeNewLine ();
     }
 
     if (s_jjCheckNAddStatesUnaryNeeded)
@@ -2895,7 +2895,7 @@ public class NfaState
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start]);");
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start + 1]);");
       codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeLine ();
+      codeGenerator.genCodeNewLine ();
     }
   }
 
@@ -2924,7 +2924,7 @@ public class NfaState
     codeGenerator.genCodeLine ("   jjCheckNAdd(state1);\\");
     codeGenerator.genCodeLine ("   jjCheckNAdd(state2);\\");
     codeGenerator.genCodeLine ("}");
-    codeGenerator.genCodeLine ();
+    codeGenerator.genCodeNewLine ();
 
     if (s_jjCheckNAddStatesDualNeeded)
     {
@@ -2934,7 +2934,7 @@ public class NfaState
       codeGenerator.genCodeLine ("      jjCheckNAdd(jjnextStates[x]);\\");
       codeGenerator.genCodeLine ("   } /*while (start++ != end);*/\\");
       codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeLine ();
+      codeGenerator.genCodeNewLine ();
     }
 
     if (s_jjCheckNAddStatesUnaryNeeded)
@@ -2944,7 +2944,7 @@ public class NfaState
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start]);\\");
       codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start + 1]);\\");
       codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeLine ();
+      codeGenerator.genCodeNewLine ();
     }
     codeGenerator.switchToMainFile ();
   }
@@ -3354,7 +3354,7 @@ public class NfaState
     {
       codeGenerator.genCodeLine ("   if (jjmatchedPos > strPos)");
       codeGenerator.genCodeLine ("      return curPos;");
-      codeGenerator.genCodeLine ();
+      codeGenerator.genCodeNewLine ();
       switch (eOutputLanguage)
       {
         case JAVA:
@@ -3366,7 +3366,7 @@ public class NfaState
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
-      codeGenerator.genCodeLine ();
+      codeGenerator.genCodeNewLine ();
       codeGenerator.genCodeLine ("   if (curPos < toRet)");
       switch (eOutputLanguage)
       {
@@ -3383,7 +3383,7 @@ public class NfaState
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
-      codeGenerator.genCodeLine ();
+      codeGenerator.genCodeNewLine ();
       codeGenerator.genCodeLine ("   if (jjmatchedPos < strPos)");
       codeGenerator.genCodeLine ("   {");
       codeGenerator.genCodeLine ("      jjmatchedKind = strKind;");
@@ -3391,7 +3391,7 @@ public class NfaState
       codeGenerator.genCodeLine ("   }");
       codeGenerator.genCodeLine ("   else if (jjmatchedPos == strPos && jjmatchedKind > strKind)");
       codeGenerator.genCodeLine ("      jjmatchedKind = strKind;");
-      codeGenerator.genCodeLine ();
+      codeGenerator.genCodeNewLine ();
       codeGenerator.genCodeLine ("   return toRet;");
     }
 

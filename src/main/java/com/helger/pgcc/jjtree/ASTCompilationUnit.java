@@ -35,9 +35,9 @@ package com.helger.pgcc.jjtree;
 
 public class ASTCompilationUnit extends JJTreeNode
 {
-  ASTCompilationUnit (final int id)
+  ASTCompilationUnit (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
   @Override

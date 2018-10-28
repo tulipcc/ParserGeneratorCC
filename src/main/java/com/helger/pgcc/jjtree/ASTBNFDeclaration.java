@@ -37,9 +37,9 @@ public class ASTBNFDeclaration extends JJTreeNode
 {
   NodeScope m_node_scope;
 
-  ASTBNFDeclaration (final int id)
+  ASTBNFDeclaration (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
   /** Accept the visitor. **/

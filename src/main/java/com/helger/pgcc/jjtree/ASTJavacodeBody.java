@@ -37,9 +37,9 @@ public class ASTJavacodeBody extends JJTreeNode
 {
   NodeScope m_node_scope;
 
-  ASTJavacodeBody (final int id)
+  ASTJavacodeBody (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
   /** Accept the visitor. **/

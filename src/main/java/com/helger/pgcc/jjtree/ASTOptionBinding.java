@@ -38,14 +38,14 @@ public class ASTOptionBinding extends JJTreeNode
   private boolean m_suppressed = false;
   private String m_name;
 
-  ASTOptionBinding (final int id)
+  ASTOptionBinding (final int nID)
   {
-    super (id);
+    super (nID);
   }
 
-  void initialize (final String n, final String v)
+  void initialize (final String sName, final String v)
   {
-    m_name = n;
+    m_name = sName;
 
     // If an option is specific to JJTree it should not be written out
     // to the output file for JavaCC.

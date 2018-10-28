@@ -35,12 +35,12 @@ package com.helger.pgcc.jjtree;
 
 public class ASTJavacode extends ASTProduction
 {
-  ASTJavacode (final int id)
-  {
-    super (id);
-  }
-
   Token stmBeginLoc;
+
+  ASTJavacode (final int nID)
+  {
+    super (nID);
+  }
 
   /** Accept the visitor. **/
   @Override
@@ -49,5 +49,3 @@ public class ASTJavacode extends ASTProduction
     return visitor.visit (this, data);
   }
 }
-
-/* end */
