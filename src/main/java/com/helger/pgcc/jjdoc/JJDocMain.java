@@ -164,8 +164,7 @@ public final class JJDocMain
     if (args[args.length - 1].equals ("-"))
     {
       PGPrinter.info ("Reading from standard input . . .");
-      parser = new JavaCCParser (new StreamProvider (new DataInputStream (System.in),
-                                                     Charset.defaultCharset ().name ()));
+      parser = new JavaCCParser (new StreamProvider (new DataInputStream (System.in), Charset.defaultCharset ()));
       JJDocGlobals.s_input_file = JJDocGlobals.STANDARD_INPUT;
       JJDocGlobals.s_output_file = JJDocGlobals.STANDARD_OUTPUT;
     }
