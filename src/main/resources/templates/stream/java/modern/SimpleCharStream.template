@@ -88,7 +88,7 @@ class SimpleCharStream extends AbstractCharStream
     char c = buffer[bufpos];
 
 #if KEEP_LINE_COLUMN
-    if (trackLineColumn)
+    if (isTrackLineColumn())
       updateLineColumn(c);
 #fi
     return c;

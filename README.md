@@ -10,6 +10,8 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
 
 # News and noteworthy
 
+* v1.1.1 - 2019-01-28
+    * Fixed an error in Java modern template `SimpleCharStream` - thanks to @nbauma109
 * v1.1.0 - 2018-10-25
     * Focus is on improving the quality and consistency of the template files - this may cause interoperability problem because names change etc.
     * This version assumes that the created code uses at least Java 1.5 - JDK versions below 1.5 are no longer supported!
