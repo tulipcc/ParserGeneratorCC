@@ -81,7 +81,7 @@ implements CharStream
   protected char[] nextCharBuf;
   protected int nextCharInd = -1;
 #if KEEP_LINE_COLUMN
-  private boolean trackLineColumn = true;
+  protected boolean trackLineColumn = true;
 #fi
 
   public void setTabSize(final int i)
