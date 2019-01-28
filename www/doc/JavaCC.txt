@@ -283,7 +283,7 @@ NON-TERMINALS
 	EnumDeclaration	:=	"enum" <IDENTIFIER> ( ImplementsList )? EnumBody
 	EnumBody	:=	"{" ( EnumConstant ( "," EnumConstant )* )? ( "," )? ( ";" ( ClassOrInterfaceBodyDeclaration )* )? "}"
 	EnumConstant	:=	Modifiers <IDENTIFIER> ( Arguments )? ( ClassOrInterfaceBody )?
-	TypeParameters	:=	"<" TypeParameter ( "," TypeParameter )* ">"
+	TypeParameters	:=	"<" ( TypeParameter ( "," TypeParameter )* )? ">"
 	TypeParameter	:=	<IDENTIFIER> ( TypeBound )?
 	TypeBound	:=	"extends" ClassOrInterfaceType ( "&" ClassOrInterfaceType )*
 	ClassOrInterfaceBody	:=	"{" ( ClassOrInterfaceBodyDeclaration )* "}"

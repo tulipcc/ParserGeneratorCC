@@ -41,7 +41,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>parser-generator-cc</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
 </dependency>
 ``` 
 
