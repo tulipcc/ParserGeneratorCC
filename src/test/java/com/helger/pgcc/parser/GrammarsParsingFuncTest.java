@@ -67,7 +67,7 @@ public final class GrammarsParsingFuncTest
     for (final File fJava : new FileSystemIterator (fGrammarDest).withFilter (IFileFilter.filenameEndsWith (".java")))
     {
       s_aLogger.info ("  Java Parsing " + fJava.getName () + " in " + aCharset.name ());
-      final CompilationUnit aCU = JavaParser.parse (fJava, aCharset);
+      final CompilationUnit aCU = new JavaParser ().parse (fJava, aCharset).getResult ().get ();
       assertNotNull (aCU);
     }
   }
