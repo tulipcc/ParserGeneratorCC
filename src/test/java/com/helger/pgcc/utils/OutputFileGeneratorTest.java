@@ -48,7 +48,7 @@ import com.helger.commons.io.stream.NonBlockingStringWriter;
 
 public final class OutputFileGeneratorTest
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (OutputFileGeneratorTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (OutputFileGeneratorTest.class);
 
   @Test
   public void testReadTemplates () throws IOException
@@ -59,7 +59,7 @@ public final class OutputFileGeneratorTest
                                                                    "templates/")).withFilter (IFileFilter.filenameEndsWith (".template")))
     {
       final String sTemplateName = f.getAbsolutePath ().substring (fBaseDir.getAbsolutePath ().length () + 1);
-      s_aLogger.info ("Parsing template file " + sTemplateName);
+      LOGGER.info ("Parsing template file " + sTemplateName);
       final Map <String, Object> aOptions = new HashMap <> ();
       aOptions.put ("AT_LEAST_JDK6", Boolean.TRUE);
       aOptions.put ("AT_LEAST_JDK7", Boolean.FALSE);

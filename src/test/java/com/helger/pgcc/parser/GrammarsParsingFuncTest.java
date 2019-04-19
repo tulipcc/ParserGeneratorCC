@@ -48,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.ast.CompilationUnit;
 import com.helger.commons.io.file.FileSystemIterator;
 import com.helger.commons.io.file.FileSystemRecursiveIterator;
@@ -58,7 +59,7 @@ import com.helger.pgcc.jjtree.JJTree;
 
 public final class GrammarsParsingFuncTest
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (GrammarsParsingFuncTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (GrammarsParsingFuncTest.class);
 
   private static void _parseCreatedJavaFiles (@Nonnull final File fGrammarDest,
                                               @Nonnull final Charset aCharset) throws FileNotFoundException
@@ -66,8 +67,9 @@ public final class GrammarsParsingFuncTest
     // Parse all created Java files
     for (final File fJava : new FileSystemIterator (fGrammarDest).withFilter (IFileFilter.filenameEndsWith (".java")))
     {
-      s_aLogger.info ("  Java Parsing " + fJava.getName () + " in " + aCharset.name ());
-      final CompilationUnit aCU = new JavaParser ().parse (fJava, aCharset).getResult ().get ();
+      LOGGER.info ("  Java Parsing " + fJava.getName () + " in " + aCharset.name ());
+      final ParserConfiguration aCfg = new ParserConfiguration ().setCharacterEncoding (aCharset);
+      final CompilationUnit aCU = new JavaParser (aCfg).parse (fJava).getResult ().get ();
       assertNotNull (aCU);
     }
   }
@@ -80,7 +82,7 @@ public final class GrammarsParsingFuncTest
 
     for (final File f : new FileSystemIterator (new File ("grammars")).withFilter (IFileFilter.filenameEndsWith (".jj")))
     {
-      s_aLogger.info ("Parsing " + f.getName ());
+      LOGGER.info ("Parsing " + f.getName ());
 
       final File fGrammarDest = new File (fDest, FilenameHelper.getBaseName (f));
       fGrammarDest.mkdirs ();
@@ -103,7 +105,7 @@ public final class GrammarsParsingFuncTest
 
     for (final File f : new FileSystemIterator (new File ("grammars")).withFilter (IFileFilter.filenameEndsWith (".jj")))
     {
-      s_aLogger.info ("Parsing " + f.getName ());
+      LOGGER.info ("Parsing " + f.getName ());
 
       final File fGrammarDest = new File (fDest, FilenameHelper.getBaseName (f));
       fGrammarDest.mkdirs ();
@@ -126,7 +128,7 @@ public final class GrammarsParsingFuncTest
 
     for (final File f : new FileSystemIterator (new File ("grammars")).withFilter (IFileFilter.filenameEndsWith (".jj")))
     {
-      s_aLogger.info ("Parsing " + f.getName ());
+      LOGGER.info ("Parsing " + f.getName ());
 
       final File fGrammarDest = new File (fDest, FilenameHelper.getBaseName (f));
       fGrammarDest.mkdirs ();
@@ -150,7 +152,7 @@ public final class GrammarsParsingFuncTest
 
     for (final File f : new FileSystemIterator (new File ("grammars")).withFilter (IFileFilter.filenameEndsWith (".jjt")))
     {
-      s_aLogger.info ("Parsing " + f.getName ());
+      LOGGER.info ("Parsing " + f.getName ());
 
       final File fGrammarDest = new File (fDest, FilenameHelper.getBaseName (f));
       fGrammarDest.mkdirs ();
@@ -174,7 +176,7 @@ public final class GrammarsParsingFuncTest
     for (final File f : new FileSystemRecursiveIterator (new File ("examples")).withFilter (IFileFilter.filenameEndsWith (".jj")))
     {
       final String sBaseName = FilenameHelper.getBaseName (f);
-      s_aLogger.info ("Parsing " + f.getParentFile ().getName () + "/" + f.getName ());
+      LOGGER.info ("Parsing " + f.getParentFile ().getName () + "/" + f.getName ());
 
       final File fGrammarDest = new File (fDest, sBaseName);
       fGrammarDest.mkdirs ();
