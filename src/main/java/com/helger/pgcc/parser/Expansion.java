@@ -35,6 +35,8 @@ package com.helger.pgcc.parser;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.string.StringHelper;
 
@@ -51,15 +53,15 @@ public class Expansion
    * The line and column number of the construct that corresponds most closely
    * to this node.
    */
-  private int m_line;
-  private int m_column;
+  private int m_nLine;
+  private int m_nColumn;
 
   /**
    * An internal name for this expansion. This is used to generate parser
    * routines.
    */
-  private String m_internal_name = "";
-  private int m_internal_index = -1;
+  private String m_sInternalName = "";
+  private int m_nInternalIndex = -1;
 
   /**
    * The parser routines are generated in three phases. The generation of the
@@ -111,37 +113,38 @@ public class Expansion
 
   void setInternalName (final String sPrefix, final int nIndex)
   {
-    m_internal_name = sPrefix + nIndex;
-    m_internal_index = nIndex;
+    m_sInternalName = sPrefix + nIndex;
+    m_nInternalIndex = nIndex;
   }
 
   void setInternalNameOnly (final String sName)
   {
-    m_internal_name = sName;
+    m_sInternalName = sName;
   }
 
   boolean hasNoInternalName ()
   {
-    return StringHelper.hasNoText (m_internal_name);
+    return StringHelper.hasNoText (m_sInternalName);
   }
 
   String getInternalName ()
   {
-    return m_internal_name;
+    return m_sInternalName;
   }
 
   int getInternalIndex ()
   {
-    return m_internal_index;
+    return m_nInternalIndex;
   }
 
   private String _getSimpleName ()
   {
-    final String name = getClass ().getName ();
+    final String sName = getClass ().getName ();
     // strip the package name
-    return name.substring (name.lastIndexOf (".") + 1);
+    return sName.substring (sName.lastIndexOf (".") + 1);
   }
 
+  @Nonnull
   protected static StringBuilder dumpPrefix (final int indent)
   {
     final StringBuilder sb = new StringBuilder (indent * 2);
@@ -174,7 +177,7 @@ public class Expansion
    */
   final void setColumn (final int column)
   {
-    this.m_column = column;
+    m_nColumn = column;
   }
 
   /**
@@ -182,7 +185,7 @@ public class Expansion
    */
   int getColumn ()
   {
-    return m_column;
+    return m_nColumn;
   }
 
   /**
@@ -191,7 +194,7 @@ public class Expansion
    */
   final void setLine (final int line)
   {
-    this.m_line = line;
+    m_nLine = line;
   }
 
   /**
@@ -199,7 +202,7 @@ public class Expansion
    */
   int getLine ()
   {
-    return m_line;
+    return m_nLine;
   }
 
   /**

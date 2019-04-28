@@ -212,7 +212,7 @@ public final class JavaCCGlobals
    */
   protected static int s_maskindex = 0;
   protected static int s_jj2index = 0;
-  public static boolean s_lookaheadNeeded;
+  private static boolean s_bLookAheadNeeded = false;
   protected static final List <int []> s_maskVals = new ArrayList <> ();
 
   static ExpAction s_actForEof;
@@ -221,6 +221,16 @@ public final class JavaCCGlobals
   static Token s_otherLanguageDeclTokenEnd;
 
   // Some general purpose utilities follow.
+
+  public static boolean isLookAheadNeeded ()
+  {
+    return s_bLookAheadNeeded;
+  }
+
+  public static void setLookAheadNeeded (final boolean bLookAheadNeeded)
+  {
+    s_bLookAheadNeeded = bLookAheadNeeded;
+  }
 
   /**
    * Returns the identifying string for the file name, given a toolname used to
@@ -649,6 +659,7 @@ public final class JavaCCGlobals
     s_simple_tokens_table.clear ();
     s_maskindex = 0;
     s_jj2index = 0;
+    s_bLookAheadNeeded = false;
     s_maskVals.clear ();
     s_cline = 0;
     s_ccol = 0;

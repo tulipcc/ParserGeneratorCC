@@ -68,7 +68,6 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_ccol;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cline;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_lookaheadNeeded;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskVals;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_names_of_tokens;
@@ -354,7 +353,7 @@ public class ParseEngine
   String buildLookaheadChecker (final ExpLookahead [] conds, final String [] actions)
   {
     // The state variables.
-    EState state = EState.NOOPENSTM;
+    EState eState = EState.NOOPENSTM;
     int indentAmt = 0;
     final boolean [] casedValues = new boolean [s_tokenCount];
     String retval = "";
@@ -396,7 +395,7 @@ public class ParseEngine
         // This case is when there is only semantic lookahead
         // (without any preceding syntactic lookahead). In this
         // case, an "if" statement is generated.
-        switch (state)
+        switch (eState)
         {
           case NOOPENSTM:
             retval += "\n" + "if (";
@@ -427,7 +426,7 @@ public class ParseEngine
         }
         retval += m_codeGenerator.getTrailingComments (t);
         retval += ") {" + INDENT_INC + actions[index];
-        state = EState.OPENIF;
+        eState = EState.OPENIF;
       }
       else
         if (la.getAmount () == 1 && la.getActionTokens ().size () == 0)
@@ -462,7 +461,7 @@ public class ParseEngine
              * lookahead is one (excluding the earlier cases such as JAVACODE,
              * etc.).
              */
-            switch (state)
+            switch (eState)
             {
               case OPENIF:
                 retval += INDENT_DEC + "\n" + "} else {" + INDENT_INC;
@@ -513,7 +512,7 @@ public class ParseEngine
             retval += "{";
             retval += actions[index];
             retval += "\nbreak;\n}";
-            state = EState.OPENSWITCH;
+            eState = EState.OPENSWITCH;
           }
         }
         else
@@ -528,7 +527,7 @@ public class ParseEngine
       if (m_bJJ2LA)
       {
         // In this case lookahead is determined by the jj2 methods.
-        switch (state)
+        switch (eState)
         {
           case NOOPENSTM:
             retval += "\nif (";
@@ -551,10 +550,12 @@ public class ParseEngine
           default:
             throw new IllegalStateException ();
         }
-        s_jj2index++;
+
+        final int nInternalIndex = ++s_jj2index;
         // At this point, la.la_expansion.internal_name must be "".
         assert la.getLaExpansion ().getInternalName ().equals ("");
-        la.getLaExpansion ().setInternalName ("_", s_jj2index);
+        la.getLaExpansion ().setInternalName ("_", nInternalIndex);
+
         m_phase2list.add (la);
         retval += "jj_2" + la.getLaExpansion ().getInternalName () + "(" + la.getAmount () + ")";
         if (la.getActionTokens ().size () != 0)
@@ -572,7 +573,7 @@ public class ParseEngine
           retval += ")";
         }
         retval += ") {" + INDENT_INC + actions[index];
-        state = EState.OPENIF;
+        eState = EState.OPENIF;
       }
 
       index++;
@@ -582,7 +583,7 @@ public class ParseEngine
     // be the last entry of "actions" if any condition can be
     // statically determined to be always "true".
 
-    switch (state)
+    switch (eState)
     {
       case NOOPENSTM:
         retval += actions[index];
@@ -1832,7 +1833,7 @@ public class ParseEngine
             if (la.getActionTokens ().size () != 0)
             {
               // We have semantic lookahead that must be evaluated.
-              s_lookaheadNeeded = true;
+              JavaCCGlobals.setLookAheadNeeded (true);
               m_codeGenerator.genCodeLine ("    jj_lookingAhead = true;");
               m_codeGenerator.genCode ("    jj_semLA = ");
               m_codeGenerator.printTokenSetup (la.getActionTokens ().get (0));

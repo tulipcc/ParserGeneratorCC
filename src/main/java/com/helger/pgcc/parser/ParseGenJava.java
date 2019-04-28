@@ -71,7 +71,6 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_lookaheadNeeded;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskVals;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
@@ -196,7 +195,7 @@ public class ParseGenJava extends CodeGenerator
     {
       genCodeLine ("  private Token jj_scanpos, jj_lastpos;");
       genCodeLine ("  private int jj_la;");
-      if (s_lookaheadNeeded)
+      if (JavaCCGlobals.isLookAheadNeeded ())
       {
         genCodeLine ("  /** Whether we are looking ahead. */");
         genCodeLine ("  private " + eOutputLanguage.getTypeBoolean () + " jj_lookingAhead = false;");
@@ -306,7 +305,7 @@ public class ParseGenJava extends CodeGenerator
         {
           genCodeLine ("    jj_depth = -1;");
         }
-        if (s_lookaheadNeeded)
+        if (JavaCCGlobals.isLookAheadNeeded ())
         {
           genCodeLine ("	 jj_lookingAhead = false;");
         }
@@ -850,7 +849,7 @@ public class ParseGenJava extends CodeGenerator
     genCodeLine ("   * @return the specific Token.");
     genCodeLine ("   */");
     genCodeLine ("  public final Token getToken(final int index) {");
-    if (s_lookaheadNeeded)
+    if (JavaCCGlobals.isLookAheadNeeded ())
       genCodeLine ("    Token t = jj_lookingAhead ? jj_scanpos : token;");
     else
       genCodeLine ("    Token t = token;");
@@ -1188,6 +1187,6 @@ public class ParseGenJava extends CodeGenerator
 
   public static void reInit ()
   {
-    s_lookaheadNeeded = false;
+    JavaCCGlobals.setLookAheadNeeded (false);
   }
 }

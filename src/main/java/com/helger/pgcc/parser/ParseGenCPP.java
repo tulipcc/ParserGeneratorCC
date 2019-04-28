@@ -42,7 +42,6 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_lookaheadNeeded;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskVals;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
@@ -59,8 +58,6 @@ import com.helger.pgcc.CPG;
  */
 public class ParseGenCPP extends ParseGenJava
 {
-
-  @SuppressWarnings ("unchecked")
   public void start () throws MetaParseException
   {
     if (JavaCCErrors.getErrorCount () != 0)
@@ -509,7 +506,7 @@ public class ParseGenCPP extends ParseGenJava
     genCodeLine ("/** Get the specific Token. */");
     generateMethodDefHeader ("Token *", s_cu_name, "getToken(int index)");
     genCodeLine ("{");
-    if (s_lookaheadNeeded)
+    if (JavaCCGlobals.isLookAheadNeeded ())
     {
       genCodeLine ("    Token *t = jj_lookingAhead ? jj_scanpos : token;");
     }
@@ -829,7 +826,6 @@ public class ParseGenCPP extends ParseGenJava
 
   public static void reInit ()
   {
-    s_lookaheadNeeded = false;
+    JavaCCGlobals.setLookAheadNeeded (false);
   }
-
 }
