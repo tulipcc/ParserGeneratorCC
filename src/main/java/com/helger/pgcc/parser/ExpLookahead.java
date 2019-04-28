@@ -33,9 +33,10 @@
  */
 package com.helger.pgcc.parser;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
+
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 
 /**
  * Describes lookahead rule for a particular expansion or expansion sequence
@@ -53,7 +54,7 @@ public class ExpLookahead extends Expansion
    * lookahead. In this case, the following fields "amount" and "la_expansion"
    * are ignored.
    */
-  private final List <Token> m_action_tokens = new ArrayList <> ();
+  private final ICommonsList <Token> m_action_tokens = new CommonsArrayList <> ();
 
   /**
    * The lookahead amount. Its default value essentially gives us infinite
@@ -88,7 +89,7 @@ public class ExpLookahead extends Expansion
   /**
    * @return the action_tokens
    */
-  public List <Token> getActionTokens ()
+  public ICommonsList <Token> getActionTokens ()
   {
     return m_action_tokens;
   }
@@ -99,7 +100,7 @@ public class ExpLookahead extends Expansion
    */
   public void setAmount (final int amount)
   {
-    this.m_amount = amount;
+    m_amount = amount;
   }
 
   /**
@@ -116,7 +117,7 @@ public class ExpLookahead extends Expansion
    */
   public void setLaExpansion (final Expansion la_expansion)
   {
-    this.m_la_expansion = la_expansion;
+    m_la_expansion = la_expansion;
   }
 
   /**
@@ -133,7 +134,7 @@ public class ExpLookahead extends Expansion
    */
   public void setExplicit (final boolean isExplicit)
   {
-    this.m_bIsExplicit = isExplicit;
+    m_bIsExplicit = isExplicit;
   }
 
   /**

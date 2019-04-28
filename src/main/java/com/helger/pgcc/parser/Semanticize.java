@@ -996,7 +996,7 @@ public class Semanticize
         ch.getChoices ().add (seq1);
         if (la.getAmount () != 0)
         {
-          if (la.getActionTokens ().size () != 0)
+          if (la.getActionTokens ().isNotEmpty ())
           {
             JavaCCErrors.warning (la,
                                   "Encountered LOOKAHEAD(...) at a non-choice location.  " +

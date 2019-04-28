@@ -91,8 +91,8 @@ import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 public class ParseEngine
 {
   private int m_nGenSymbolIndex = 0;
-  private int m_indentamt;
-  private boolean m_bJJ2LA;
+  private int m_nIndentCount = 0;
+  private boolean m_bJJ2LA = false;
   private CodeGenerator m_codeGenerator;
 
   /**
@@ -261,7 +261,7 @@ public class ParseEngine
           {
             final ExpSequence seq = (ExpSequence) exp;
             final Object obj = seq.m_units.get (0);
-            if ((obj instanceof ExpLookahead) && (((ExpLookahead) obj).getActionTokens ().size () != 0))
+            if (obj instanceof ExpLookahead && ((ExpLookahead) obj).getActionTokens ().isNotEmpty ())
             {
               m_bJJ2LA = true;
             }
@@ -366,26 +366,22 @@ public class ParseEngine
     int index = 0;
     while (index < conds.length)
     {
-
       la = conds[index];
       m_bJJ2LA = false;
 
-      if ((la.getAmount () == 0) ||
+      if (la.getAmount () == 0 ||
           Semanticize.emptyExpansionExists (la.getLaExpansion ()) ||
           _javaCodeCheck (la.getLaExpansion ()))
       {
 
         // This handles the following cases:
         // . If syntactic lookahead is not wanted (and hence explicitly
-        // specified
-        // as 0).
+        // specified as 0).
         // . If it is possible for the lookahead expansion to recognize the
-        // empty
-        // string - in which case the lookahead trivially passes.
+        // empty string - in which case the lookahead trivially passes.
         // . If the lookahead expansion has a JAVACODE production that it
-        // directly
-        // expands to - in which case the lookahead trivially passes.
-        if (la.getActionTokens ().size () == 0)
+        // directly expands to - in which case the lookahead trivially passes.
+        if (la.getActionTokens ().isEmpty ())
         {
           // In addition, if there is no semantic lookahead, then the
           // lookahead trivially succeeds. So break the main loop and
@@ -418,7 +414,7 @@ public class ParseEngine
           default:
             throw new IllegalStateException ();
         }
-        m_codeGenerator.printTokenSetup (la.getActionTokens ().get (0));
+        m_codeGenerator.printTokenSetup (la.getActionTokens ().getFirst ());
         for (final Token aElement : la.getActionTokens ())
         {
           t = aElement;
@@ -429,7 +425,7 @@ public class ParseEngine
         eState = EState.OPENIF;
       }
       else
-        if (la.getAmount () == 1 && la.getActionTokens ().size () == 0)
+        if (la.getAmount () == 1 && la.getActionTokens ().isEmpty ())
         {
           /*
            * Special optimal processing when the lookahead is exactly 1, and
@@ -558,12 +554,12 @@ public class ParseEngine
 
         m_phase2list.add (la);
         retval += "jj_2" + la.getLaExpansion ().getInternalName () + "(" + la.getAmount () + ")";
-        if (la.getActionTokens ().size () != 0)
+        if (la.getActionTokens ().isNotEmpty ())
         {
           // In addition, there is also a semantic lookahead. So concatenate
           // the semantic check with the syntactic one.
           retval += " && (";
-          m_codeGenerator.printTokenSetup (la.getActionTokens ().get (0));
+          m_codeGenerator.printTokenSetup (la.getActionTokens ().getFirst ());
           for (final Token aElement : la.getActionTokens ())
           {
             t = aElement;
@@ -642,12 +638,12 @@ public class ParseEngine
         else
           if (ch == INDENT_INC)
           {
-            m_indentamt += 2;
+            m_nIndentCount += 2;
           }
           else
             if (ch == INDENT_DEC)
             {
-              m_indentamt -= 2;
+              m_nIndentCount -= 2;
             }
             else
               if (ch == INDENT_OFF)
@@ -777,20 +773,22 @@ public class ParseEngine
       if (void_ret)
         default_return = "";
       else
-        default_return = "0"; // 0 converts to most (all?) basic types.
+      {
+        // 0 converts to most (all?) basic types.
+        default_return = "0";
+      }
 
-    return "\n" +
-           "#if !defined ERROR_RET_" +
-           method_name +
-           "\n" +
-           "#define ERROR_RET_" +
-           method_name +
+    final String sDefine = "ERROR_RET_" + method_name;
+    return "\n#if !defined " +
+           sDefine +
+           "\n#define " +
+           sDefine +
            " " +
            default_return +
            "\n" +
            "#endif\n" +
-           "#define __ERROR_RET__ ERROR_RET_" +
-           method_name +
+           "#define __ERROR_RET__ " +
+           sDefine +
            "\n";
   }
 
@@ -938,7 +936,7 @@ public class ParseEngine
     }
     _genStackCheck (voidReturn);
 
-    m_indentamt = 4;
+    m_nIndentCount = 4;
     if (Options.isDebugParser ())
     {
       m_codeGenerator.genCodeNewLine ();
@@ -959,7 +957,7 @@ public class ParseEngine
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
       m_codeGenerator.genCodeLine ("    try {");
-      m_indentamt = 6;
+      m_nIndentCount += 2;
     }
 
     if (!Options.booleanValue (Options.USEROPTION__CPP_IGNORE_ACTIONS) && p.getDeclarationTokens ().size () != 0)
@@ -1038,7 +1036,7 @@ public class ParseEngine
   void phase1NewLine ()
   {
     m_codeGenerator.genCodeNewLine ();
-    m_codeGenerator.genCode (StringHelper.getRepeated (' ', m_indentamt));
+    m_codeGenerator.genCode (StringHelper.getRepeated (' ', m_nIndentCount));
   }
 
   private String _phase1ExpansionGen (final Expansion e)
@@ -1830,13 +1828,13 @@ public class ParseEngine
           {
             nested_seq = (ExpSequence) (e_nrw.getChoices ().get (i));
             final ExpLookahead la = (ExpLookahead) (nested_seq.m_units.get (0));
-            if (la.getActionTokens ().size () != 0)
+            if (la.getActionTokens ().isNotEmpty ())
             {
               // We have semantic lookahead that must be evaluated.
               JavaCCGlobals.setLookAheadNeeded (true);
               m_codeGenerator.genCodeLine ("    jj_lookingAhead = true;");
               m_codeGenerator.genCode ("    jj_semLA = ");
-              m_codeGenerator.printTokenSetup (la.getActionTokens ().get (0));
+              m_codeGenerator.printTokenSetup (la.getActionTokens ().getFirst ());
               for (final Token aElement : la.getActionTokens ())
               {
                 t = aElement;
@@ -1847,7 +1845,7 @@ public class ParseEngine
               m_codeGenerator.genCodeLine ("    jj_lookingAhead = false;");
             }
             m_codeGenerator.genCode ("    if (");
-            if (la.getActionTokens ().size () != 0)
+            if (la.getActionTokens ().isNotEmpty ())
             {
               m_codeGenerator.genCode ("!jj_semLA || ");
             }
@@ -2326,7 +2324,7 @@ public class ParseEngine
   public void reInit ()
   {
     m_nGenSymbolIndex = 0;
-    m_indentamt = 0;
+    m_nIndentCount = 0;
     m_bJJ2LA = false;
     m_phase2list.clear ();
     m_phase3list.clear ();
@@ -2375,7 +2373,7 @@ public class ParseEngine
               PGPrinter.info ("\n|");
             final ExpSequence nested_seq = (ExpSequence) (e_nrw.getChoices ().get (i));
             final ExpLookahead la = (ExpLookahead) (nested_seq.m_units.get (0));
-            if (la.getActionTokens ().size () != 0)
+            if (la.getActionTokens ().isNotEmpty ())
             {
               PGPrinter.info ("SEMANTIC,");
             }

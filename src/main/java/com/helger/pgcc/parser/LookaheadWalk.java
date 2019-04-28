@@ -149,7 +149,7 @@ public final class LookaheadWalk
       return genFirstSet (partialMatches, ((ExpTryBlock) exp).m_exp);
     }
 
-    if (s_considerSemanticLA && exp instanceof ExpLookahead && ((ExpLookahead) exp).getActionTokens ().size () != 0)
+    if (s_considerSemanticLA && exp instanceof ExpLookahead && ((ExpLookahead) exp).getActionTokens ().isNotEmpty ())
     {
       return new ArrayList <> ();
     }
