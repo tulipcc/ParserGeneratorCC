@@ -396,34 +396,39 @@ TOKEN :
         <DECIMAL_LITERAL> (["l","L"])?
       | <HEX_LITERAL> (["l","L"])?
       | <OCTAL_LITERAL> (["l","L"])?
+      | <BINARY_LITERAL> (["l","L"])?
   >
 |
-  < #DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])* >
+  < #DECIMAL_LITERAL: ["1"-"9"] (("_")* ["0"-"9"])* >
 |
-  < #HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ >
+  < #HEX_LITERAL: "0" ["x","X"] ["0"-"9","a"-"f","A"-"F"] (("_")* ["0"-"9","a"-"f","A"-"F"])* >
 |
-  < #OCTAL_LITERAL: "0" (["0"-"7"])* >
+  < #OCTAL_LITERAL: "0" (("_")* ["0"-"7"])* >
+|
+  < #BINARY_LITERAL: "0" ["b","B"] ["0", "1"] (("_")* ["0","1"])* >
 |
   < FLOATING_POINT_LITERAL:
         <DECIMAL_FLOATING_POINT_LITERAL>
       | <HEXADECIMAL_FLOATING_POINT_LITERAL>
   >
 |
+  < #ZERO_NINE: ["0"-"9"] (("_")* ["0"-"9"])* >
+|
   < #DECIMAL_FLOATING_POINT_LITERAL:
-        (["0"-"9"])+ "." (["0"-"9"])* (<DECIMAL_EXPONENT>)? (["f","F","d","D"])?
-      | "." (["0"-"9"])+ (<DECIMAL_EXPONENT>)? (["f","F","d","D"])?
-      | (["0"-"9"])+ <DECIMAL_EXPONENT> (["f","F","d","D"])?
-      | (["0"-"9"])+ (<DECIMAL_EXPONENT>)? ["f","F","d","D"]
+        <ZERO_NINE> "." (<ZERO_NINE>)? (<DECIMAL_EXPONENT>)? (["f","F","d","D"])?
+      | "." <ZERO_NINE> (<DECIMAL_EXPONENT>)? (["f","F","d","D"])?
+      | <ZERO_NINE> <DECIMAL_EXPONENT> (["f","F","d","D"])?
+      | <ZERO_NINE> (<DECIMAL_EXPONENT>)? ["f","F","d","D"]
   >
 |
-  < #DECIMAL_EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+  < #DECIMAL_EXPONENT: ["e","E"] (["+","-"])? <ZERO_NINE> >
 |
   < #HEXADECIMAL_FLOATING_POINT_LITERAL:
-        "0" ["x", "X"] (["0"-"9","a"-"f","A"-"F"])+ (".")? <HEXADECIMAL_EXPONENT> (["f","F","d","D"])?
-      | "0" ["x", "X"] (["0"-"9","a"-"f","A"-"F"])* "." (["0"-"9","a"-"f","A"-"F"])+ <HEXADECIMAL_EXPONENT> (["f","F","d","D"])?
+        "0" ["x", "X"] ["0"-"9","a"-"f","A"-"F"] (("_")* ["0"-"9","a"-"f","A"-"F"])* (".")? <HEXADECIMAL_EXPONENT> (["f","F","d","D"])?
+      | "0" ["x", "X"] (["0"-"9","a"-"f","A"-"F"](("_")* ["0"-"9","a"-"f","A"-"F"])* )? "." ["0"-"9","a"-"f","A"-"F"] (("_")*["0"-"9","a"-"f","A"-"F"])* <HEXADECIMAL_EXPONENT> (["f","F","d","D"])?
   >
 |
-  < #HEXADECIMAL_EXPONENT: ["p","P"] (["+","-"])? (["0"-"9"])+ >
+  < #HEXADECIMAL_EXPONENT: ["p","P"] (["+","-"])? <ZERO_NINE> >
 |
   < CHARACTER_LITERAL:
       "'"
@@ -2019,7 +2024,7 @@ void TypeArguments(List tokens):
 }
 {
    "<"   { first = getToken(0); }
-   TypeArgument() ( "," TypeArgument() [ "..." ] )*
+   [ TypeArgument() ( "," TypeArgument() [ "..." ] )* ]
    ">"
    {
      last = getToken(0);
