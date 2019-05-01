@@ -284,9 +284,9 @@ public class ParseEngine
               }
               else
               {
-                _genFirstSet ((seq.m_units.get (i)));
+                _genFirstSet (seq.m_units.get (i));
               }
-              if (!Semanticize.emptyExpansionExists ((seq.m_units.get (i))))
+              if (!Semanticize.emptyExpansionExists (seq.m_units.get (i)))
               {
                 break;
               }
@@ -328,7 +328,6 @@ public class ParseEngine
     OPENSWITCH
   }
 
-  @SuppressWarnings ("unused")
   private void _dumpLookaheads (final ExpLookahead [] conds, final String [] actions)
   {
     for (int i = 0; i < conds.length; i++)
@@ -361,6 +360,7 @@ public class ParseEngine
     Token t = null;
     final int tokenMaskSize = (s_tokenCount - 1) / 32 + 1;
     int [] tokenMask = null;
+    final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
 
     // Iterate over all the conditions.
     int index = 0;
@@ -466,7 +466,19 @@ public class ParseEngine
               case NOOPENSTM:
                 retval += "\n" + "switch (";
                 if (Options.isCacheTokens ())
-                  retval += "jj_nt.kind";
+                {
+                  switch (eOutputLanguage)
+                  {
+                    case JAVA:
+                      retval += "jj_nt.kind";
+                      break;
+                    case CPP:
+                      retval += "jj_nt->kind";
+                      break;
+                    default:
+                      throw new UnsupportedOutputLanguageException (eOutputLanguage);
+                  }
+                }
                 else
                   retval += "jj_ntk == -1 ? jj_ntk_f() : jj_ntk";
                 retval += ") {" + INDENT_INC;
