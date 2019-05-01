@@ -2783,16 +2783,47 @@ void SynchronizedStatement():
   "synchronized" "(" Expression(null) ")" Block(null)
 }
 
+
+void ResourceDeclaration():
+{}
+{
+  Modifiers() Type() VariableDeclaratorId() "=" Expression(null)
+}
+
+void CatchParameter():
+{ Token t; }
+{
+  Modifiers() Type()
+  [ ( t = "&" | t = "*") { if (!isAllowed(t)) throw new ParseException(t.image + " is invalid in this context"); }
+    | "..."
+  ]
+  //Multiple exception catching in Java 7+
+  ("|" Type())*
+
+  VariableDeclaratorId()
+}
+
 void TryStatement():
 /*
  * Semantic check required here to make sure that at least one
  * finally/catch is present.
  */
-{}
+{ boolean empty = true; }
 {
-  "try" Block(null)
-  ( "catch" "(" FormalParameter() ")" Block(null) )*
-  [ "finally" Block(null) ]
+  "try" 
+  [
+    "(" ResourceDeclaration() (LOOKAHEAD(2) ";" ResourceDeclaration())* (";")? ")" { empty = false; }
+  ]
+  Block(null)
+  ( "catch" "(" CatchParameter() ")" Block(null) { empty = false; } )*
+  [
+    "finally" Block(null) { empty = false; } 
+  ]
+
+  {
+    if (empty)
+      throw new ParseException("At least one catch or finally block expected.");
+  }
 }
 
 /* We use productions to match >>>, >> and > so that we can keep the
