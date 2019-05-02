@@ -429,29 +429,29 @@ public class Options
                                          @Nonnull final String name,
                                          @Nonnull final Object aSrcValue)
   {
-    final String nameUpperCase = name.toUpperCase (Locale.US);
-    if (!s_optionValues.containsKey (nameUpperCase))
+    final String sNameUC = name.toUpperCase (Locale.US);
+    if (!s_optionValues.containsKey (sNameUC))
     {
       JavaCCErrors.warning (nameloc, "Bad option name \"" + name + "\".  Option setting will be ignored.");
       return;
     }
-    final Object aExistingValue = s_optionValues.get (nameUpperCase);
+    final Object aExistingValue = s_optionValues.get (sNameUC);
 
     final Object aRealSrc = _upgradeValue (name, aSrcValue);
 
     if (aExistingValue != null)
     {
-      Object object = null;
+      Object aObject = null;
       if (aRealSrc instanceof List)
       {
-        object = ((List <?>) aRealSrc).get (0);
+        aObject = ((List <?>) aRealSrc).get (0);
       }
       else
       {
-        object = aRealSrc;
+        aObject = aRealSrc;
       }
-      final boolean isValidInteger = object instanceof Integer && ((Integer) aRealSrc).intValue () <= 0;
-      if (aExistingValue.getClass () != object.getClass () || isValidInteger)
+      final boolean bIsInvalidInteger = aObject instanceof Integer && ((Integer) aRealSrc).intValue () <= 0;
+      if (aExistingValue.getClass () != aObject.getClass () || bIsInvalidInteger)
       {
         JavaCCErrors.warning (valueloc,
                               "Bad option value \"" +
@@ -462,13 +462,13 @@ public class Options
         return;
       }
 
-      if (s_inputFileSetting.contains (nameUpperCase))
+      if (s_inputFileSetting.contains (sNameUC))
       {
         JavaCCErrors.warning (nameloc, "Duplicate option setting for \"" + name + "\" will be ignored.");
         return;
       }
 
-      if (s_cmdLineSetting.contains (nameUpperCase))
+      if (s_cmdLineSetting.contains (sNameUC))
       {
         if (!aExistingValue.equals (aRealSrc))
         {
@@ -478,12 +478,12 @@ public class Options
       }
     }
 
-    s_optionValues.put (nameUpperCase, aRealSrc);
-    s_inputFileSetting.add (nameUpperCase);
+    s_optionValues.put (sNameUC, aRealSrc);
+    s_inputFileSetting.add (sNameUC);
 
     // Special case logic block here for setting indirect flags
 
-    if (nameUpperCase.equalsIgnoreCase (USEROPTION__JAVA_TEMPLATE_TYPE))
+    if (sNameUC.equalsIgnoreCase (USEROPTION__JAVA_TEMPLATE_TYPE))
     {
       final String templateType = (String) aRealSrc;
       if (!_isValidJavaTemplateType (templateType))
@@ -494,12 +494,12 @@ public class Options
                                         "\" for \"" +
                                         name +
                                         "\".  Option setting will be ignored. Valid options are: " +
-                                        StringHelper.getImploded (", ", s_supportedJavaTemplateTypes));
+                                        StringHelper.getImploded (", ", s_aSupportedJavaTemplateTypes));
         return;
       }
     }
     else
-      if (nameUpperCase.equalsIgnoreCase (USEROPTION__OUTPUT_LANGUAGE))
+      if (sNameUC.equalsIgnoreCase (USEROPTION__OUTPUT_LANGUAGE))
       {
         final String outputLanguage = (String) aRealSrc;
         final EOutputLanguage eOutLanguage = EOutputLanguage.getFromIDCaseInsensitiveOrNull (outputLanguage);
@@ -519,7 +519,7 @@ public class Options
         s_language = eOutLanguage;
       }
       else
-        if (nameUpperCase.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
+        if (sNameUC.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
         {
           processCPPNamespaceOption ((String) aRealSrc);
         }
@@ -995,16 +995,16 @@ public class Options
     return new File (stringValue (USEROPTION__OUTPUT_DIRECTORY));
   }
 
-  private static final Set <String> s_supportedJavaTemplateTypes = new HashSet <> ();
+  private static final Set <String> s_aSupportedJavaTemplateTypes = new HashSet <> ();
   static
   {
-    s_supportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_CLASSIC);
-    s_supportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_MODERN);
+    s_aSupportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_CLASSIC);
+    s_aSupportedJavaTemplateTypes.add (JAVA_TEMPLATE_TYPE_MODERN);
   }
 
-  private static boolean _isValidJavaTemplateType (@Nullable final String type)
+  private static boolean _isValidJavaTemplateType (@Nullable final String sType)
   {
-    return type == null ? false : s_supportedJavaTemplateTypes.contains (type.toLowerCase (Locale.US));
+    return sType == null ? false : s_aSupportedJavaTemplateTypes.contains (sType.toLowerCase (Locale.US));
   }
 
   @Nonnull

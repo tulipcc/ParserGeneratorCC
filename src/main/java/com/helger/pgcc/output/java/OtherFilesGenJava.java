@@ -165,7 +165,7 @@ public class OtherFilesGenJava
 
       ostr.println ("/* " + getIdString (tn, s_cu_name + CONSTANTS_FILENAME_SUFFIX) + " */");
 
-      if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
+      if (s_cu_to_insertion_point_1.isNotEmpty () && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
       {
         for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
         {

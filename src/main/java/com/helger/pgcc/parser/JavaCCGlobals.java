@@ -109,7 +109,7 @@ public final class JavaCCGlobals
    * This is a list of tokens that appear after "PARSER_BEGIN(name)" all the way
    * until (but not including) the opening brace "{" of the class "name".
    */
-  public static final List <Token> s_cu_to_insertion_point_1 = new ArrayList <> ();
+  public static final ICommonsList <Token> s_cu_to_insertion_point_1 = new CommonsArrayList <> ();
 
   /**
    * This is the list of all tokens that appear after the tokens in
