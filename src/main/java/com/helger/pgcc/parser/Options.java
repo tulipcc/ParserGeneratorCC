@@ -555,24 +555,24 @@ public class Options
           index = Math.min (index1, index2);
     }
 
-    String name;
+    String sNameUC;
     Object val;
     if (index < 0)
     {
       // No separator char (like in "DO_THIS_AND_THAT")
-      name = sRealArg.toUpperCase (Locale.US);
-      if (s_optionValues.containsKey (name))
+      sNameUC = sRealArg.toUpperCase (Locale.US);
+      if (s_optionValues.containsKey (sNameUC))
       {
         val = Boolean.TRUE;
       }
       else
-        if (name.length () > 2 &&
-            name.charAt (0) == 'N' &&
-            name.charAt (1) == 'O' &&
-            s_optionValues.containsKey (name.substring (2)))
+        if (sNameUC.length () > 2 &&
+            sNameUC.charAt (0) == 'N' &&
+            sNameUC.charAt (1) == 'O' &&
+            s_optionValues.containsKey (sNameUC.substring (2)))
         {
           val = Boolean.FALSE;
-          name = name.substring (2);
+          sNameUC = sNameUC.substring (2);
         }
         else
         {
@@ -583,7 +583,7 @@ public class Options
     else
     {
       // We have name and value as in "X=Y" or "X:Y"
-      name = sRealArg.substring (0, index).toUpperCase (Locale.US);
+      sNameUC = sRealArg.substring (0, index).toUpperCase (Locale.US);
       final String sRealValue = sRealArg.substring (index + 1);
       if (sRealValue.equalsIgnoreCase ("TRUE"))
       {
@@ -627,29 +627,29 @@ public class Options
         }
     }
 
-    if (!s_optionValues.containsKey (name))
+    if (!s_optionValues.containsKey (sNameUC))
     {
       PGPrinter.warn ("Warning: Bad option \"" + sArg + "\" will be ignored.");
       return;
     }
 
-    val = _upgradeValue (name, val);
+    val = _upgradeValue (sNameUC, val);
 
-    final Object valOrig = s_optionValues.get (name);
+    final Object valOrig = s_optionValues.get (sNameUC);
     if (val.getClass () != valOrig.getClass ())
     {
       PGPrinter.warn ("Warning: Bad option value in \"" + sArg + "\" will be ignored.");
       return;
     }
-    if (s_cmdLineSetting.contains (name))
+    if (s_cmdLineSetting.contains (sNameUC))
     {
       PGPrinter.warn ("Warning: Duplicate option setting \"" + sArg + "\" will be ignored.");
       return;
     }
 
-    s_optionValues.put (name, val);
-    s_cmdLineSetting.add (name);
-    if (name.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
+    s_optionValues.put (sNameUC, val);
+    s_cmdLineSetting.add (sNameUC);
+    if (sNameUC.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
     {
       processCPPNamespaceOption ((String) val);
     }

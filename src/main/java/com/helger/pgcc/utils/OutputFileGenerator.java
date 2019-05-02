@@ -50,6 +50,8 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.file.SimpleFileIO;
 import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.io.resource.FileSystemResource;
+import com.helger.commons.io.resource.IReadableResource;
 import com.helger.commons.io.stream.NonBlockingBufferedReader;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.commons.system.ENewLineMode;
@@ -65,11 +67,15 @@ import com.helger.commons.system.SystemHelper;
  */
 public class OutputFileGenerator
 {
-  private final String m_templateName;
-  private final Map <String, Object> m_options;
-  private ENewLineMode m_eNewLineMode = ENewLineMode.DEFAULT;
+  public static final Charset TEMPLATE_FILE_CHARSET = StandardCharsets.UTF_8;
 
-  private String m_currentLine;
+  private final String m_sTemplateName;
+  private final Map <String, Object> m_aOptions;
+  private ENewLineMode m_eNewLineMode = ENewLineMode.DEFAULT;
+  /** For testing, reading from file is necessary, to get the latest version */
+  private boolean m_bReadFromClasspath = true;
+
+  private String m_sCurrentLine;
 
   /**
    * @param templateName
@@ -79,8 +85,8 @@ public class OutputFileGenerator
    */
   public OutputFileGenerator (final String templateName, final Map <String, Object> options)
   {
-    m_templateName = templateName;
-    m_options = options;
+    m_sTemplateName = templateName;
+    m_aOptions = options;
   }
 
   @Nonnull
@@ -88,6 +94,13 @@ public class OutputFileGenerator
   {
     ValueEnforcer.notNull (eNewLineMode, "NewLineMode");
     m_eNewLineMode = eNewLineMode;
+    return this;
+  }
+
+  @Nonnull
+  public OutputFileGenerator setReadFromClasspath (final boolean bReadFromClasspath)
+  {
+    m_bReadFromClasspath = bReadFromClasspath;
     return this;
   }
 
@@ -99,12 +112,17 @@ public class OutputFileGenerator
    */
   public void generate (@WillNotClose final Writer out) throws IOException
   {
-    final InputStream is = ClassPathResource.getInputStream (m_templateName);
+    final IReadableResource aRes = m_bReadFromClasspath ? new ClassPathResource (m_sTemplateName)
+                                                        : new FileSystemResource ("src/main/resources" +
+                                                                                  m_sTemplateName);
+    System.out.println ("reading " + aRes.toString ());
+    final InputStream is = aRes.getInputStream ();
     if (is == null)
-      throw new IOException ("Invalid template name: " + m_templateName);
+      throw new IOException ("Invalid template name: " + m_sTemplateName);
 
-    try (final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is,
-                                                                                                    StandardCharsets.UTF_8)))
+    try (
+        final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is,
+                                                                                                   TEMPLATE_FILE_CHARSET)))
     {
       _process (in, out, false);
     }
@@ -112,16 +130,16 @@ public class OutputFileGenerator
 
   private String _peekLine (final NonBlockingBufferedReader in) throws IOException
   {
-    if (m_currentLine == null)
-      m_currentLine = in.readLine ();
+    if (m_sCurrentLine == null)
+      m_sCurrentLine = in.readLine ();
 
-    return m_currentLine;
+    return m_sCurrentLine;
   }
 
   private String _getLine (final NonBlockingBufferedReader in) throws IOException
   {
-    final String line = m_currentLine;
-    m_currentLine = null;
+    final String line = m_sCurrentLine;
+    m_sCurrentLine = null;
 
     if (line == null)
       in.readLine ();
@@ -133,7 +151,7 @@ public class OutputFileGenerator
   {
     try
     {
-      return new ConditionParser (condition.trim ()).CompilationUnit (m_options);
+      return new ConditionParser (condition.trim ()).CompilationUnit (m_aOptions);
     }
     catch (final ParseException e)
     {
@@ -150,24 +168,26 @@ public class OutputFileGenerator
     }
 
     // Find matching "}".
-    int braceDepth = 1;
-    int endPos = startPos + 2;
+    int nBraceDepth = 1;
+    int nEndPos = startPos + 2;
+    final int nTextLen = text.length ();
 
-    while (endPos < text.length () && braceDepth > 0)
+    while (nEndPos < nTextLen && nBraceDepth > 0)
     {
-      if (text.charAt (endPos) == '{')
-        braceDepth++;
+      final char c = text.charAt (nEndPos);
+      if (c == '{')
+        nBraceDepth++;
       else
-        if (text.charAt (endPos) == '}')
-          braceDepth--;
+        if (c == '}')
+          nBraceDepth--;
 
-      endPos++;
+      nEndPos++;
     }
 
-    if (braceDepth != 0)
+    if (nBraceDepth != 0)
       throw new IOException ("Mismatched \"{}\" in template string: " + text);
 
-    final String variableExpression = text.substring (startPos + 2, endPos - 1);
+    final String variableExpression = text.substring (startPos + 2, nEndPos - 1);
 
     // Find the end of the variable name
     String value = null;
@@ -197,7 +217,7 @@ public class OutputFileGenerator
       value = _substituteWithDefault (variableExpression, "");
     }
 
-    return text.substring (0, startPos) + value + text.substring (endPos);
+    return text.substring (0, startPos) + value + text.substring (nEndPos);
   }
 
   /**
@@ -227,7 +247,7 @@ public class OutputFileGenerator
    */
   private String _substituteWithDefault (final String variableName, final String defaultValue) throws IOException
   {
-    final Object obj = m_options.get (variableName.trim ());
+    final Object obj = m_aOptions.get (variableName.trim ());
     if (obj == null || obj.toString ().length () == 0)
       return _substitute (defaultValue);
 
