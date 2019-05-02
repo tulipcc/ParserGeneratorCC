@@ -62,7 +62,7 @@ import com.helger.pgcc.parser.StreamProvider;
  */
 public class NfaStateTest extends AbstractJavaCCTestCase
 {
-  private final String parserInput = getJJInputDirectory () + "JavaCC.jj";
+  private final String sParserInputFile = getJJInputDirectory () + "JavaCC.jj";
 
   @Before
   public void setUp () throws Exception
@@ -71,16 +71,16 @@ public class NfaStateTest extends AbstractJavaCCTestCase
     Main.reInitAll ();
   }
 
-  protected void setupState ()
+  private void _setupState ()
   {
     try
     {
-      final JavaCCParser parser = new JavaCCParser (new StreamProvider (FileHelper.getBufferedReader (new File (parserInput),
+      final JavaCCParser parser = new JavaCCParser (new StreamProvider (FileHelper.getBufferedReader (new File (sParserInputFile),
                                                                                                       Options.getGrammarEncoding ())));
       parser.javacc_input ();
-      JavaCCGlobals.s_fileName = JavaCCGlobals.s_origFileName = parserInput;
-      JavaCCGlobals.s_jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", parserInput);
-      JavaCCGlobals.s_toolNames = JavaCCGlobals.getToolNames (parserInput);
+      JavaCCGlobals.s_fileName = JavaCCGlobals.s_origFileName = sParserInputFile;
+      JavaCCGlobals.s_jjtreeGenerated = JavaCCGlobals.isGeneratedBy ("JJTree", sParserInputFile);
+      JavaCCGlobals.s_toolNames = JavaCCGlobals.getToolNames (sParserInputFile);
       Semanticize.start ();
       new LexGenJava ().start ();
     }
@@ -107,13 +107,16 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   public void testDumpStateSetsInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
-    setupState ();
+    _setupState ();
     NfaState.dumpStateSets (cg);
     assertEquals ("static final int[] jjnextStates = {\n" +
-                  "   34, 35, 12, 38, 39, 42, 43, 23, 24, 26, 14, 16, 49, 51, 6, 52, \n" +
-                  "   59, 8, 9, 12, 23, 24, 28, 26, 34, 35, 12, 44, 45, 12, 53, 54, \n" +
-                  "   60, 61, 62, 10, 11, 17, 18, 20, 25, 27, 29, 36, 37, 40, 41, 46, \n" +
-                  "   47, 55, 56, 57, 58, 63, 64, \n" +
+                  "   37, 38, 39, 15, 43, 44, 45, 49, 50, 51, 26, 27, 29, 17, 19, 5, \n" +
+                  "   6, 7, 59, 62, 63, 7, 64, 67, 77, 10, 9, 11, 15, 14, 13, 15, \n" +
+                  "   26, 27, 31, 29, 37, 38, 39, 15, 42, 41, 15, 43, 44, 45, 48, 47, \n" +
+                  "   15, 49, 50, 51, 52, 54, 15, 53, 52, 54, 15, 57, 56, 15, 61, 60, \n" +
+                  "   7, 62, 63, 7, 66, 65, 7, 69, 68, 70, 72, 71, 73, 76, 75, 15, \n" +
+                  "   79, 78, 80, 81, 84, 83, 15, 5, 6, 10, 9, 20, 21, 23, 28, 30, \n" +
+                  "   32, 37, 38, 43, 44, 49, 50, 53, 52, 62, 63, \n" +
                   "};",
                   cg.getGeneratedCode ().replaceAll ("\r", "").trim ());
   }
@@ -148,7 +151,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   public void testDumpCharAndRangeMovesInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
-    setupState ();
+    _setupState ();
     NfaState.dumpCharAndRangeMoves (cg);
     assertEquals (("         int hiByte = (curChar >> 8);\n" +
                    "         int i1 = hiByte >> 6;\n" +
@@ -186,7 +189,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   public void testDumpNonAsciiMoveMethodsInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
-    setupState ();
+    _setupState ();
     NfaState.dumpNonAsciiMoveMethods (cg);
     assertEquals ("private static final boolean jjCanMove_0(int hiByte, int i1, int i2, long l1, long l2)\n" +
                   "{\n" +
@@ -437,7 +440,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   public void testDumpMoveNfaInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
-    setupState ();
+    _setupState ();
     NfaState.dumpMoveNfa (cg);
     assertEquals ("private int jjMoveNfa_4(int startState, int curPos)\n" + "{\n" + "   return curPos;\n" + "}",
                   cg.getGeneratedCode ().replaceAll ("\r", "").trim ());
@@ -467,49 +470,49 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   public void testDumpStatesForStateInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
-    setupState ();
+    _setupState ();
     NfaState.dumpStatesForStateJava (cg);
-    final String result = cg.getGeneratedCode ().replaceAll ("\r", "");
+    final String result = cg.getGeneratedCode ();
     assertEquals ("protected static final class States {\n" +
                   "  protected static final int[][][] statesForState = {\n" +
                   " {\n" +
                   "   { 0 },\n" +
                   "   { 1 },\n" +
                   "   { 2 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 5 },\n" +
                   "   { 6 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 8 },\n" +
+                  "   { 7 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 9 },\n" +
                   "   { 10 },\n" +
                   "   { 11 },\n" +
                   "   { 12 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 13 },\n" +
                   "   { 14 },\n" +
                   "   { 15 },\n" +
-                  "   { 16 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 17 },\n" +
                   "   { 18 },\n" +
                   "   { 19 },\n" +
                   "   { 20 },\n" +
                   "   { 21 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 22 },\n" +
                   "   { 23 },\n" +
                   "   { 24 },\n" +
-                  "   { 25 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 26 },\n" +
                   "   { 27 },\n" +
                   "   { 28 },\n" +
                   "   { 29 },\n" +
                   "   { 30 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 31 },\n" +
                   "   { 32 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 34 },\n" +
+                  "   { 33 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 35 },\n" +
-                  "   { 36 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 37 },\n" +
                   "   { 38 },\n" +
                   "   { 39 },\n" +
@@ -521,7 +524,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
                   "   { 45 },\n" +
                   "   { 46 },\n" +
                   "   { 47 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 48 },\n" +
                   "   { 49 },\n" +
                   "   { 50 },\n" +
                   "   { 51 },\n" +
@@ -531,13 +534,33 @@ public class NfaStateTest extends AbstractJavaCCTestCase
                   "   { 55 },\n" +
                   "   { 56 },\n" +
                   "   { 57 },\n" +
-                  "   { 58 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 59 },\n" +
                   "   { 60 },\n" +
                   "   { 61 },\n" +
                   "   { 62 },\n" +
                   "   { 63 },\n" +
                   "   { 64 },\n" +
+                  "   { 65 },\n" +
+                  "   { 66 },\n" +
+                  "   { 67 },\n" +
+                  "   { 68 },\n" +
+                  "   { 69 },\n" +
+                  "   { 70 },\n" +
+                  "   { 71 },\n" +
+                  "   { 72 },\n" +
+                  "   { 73 },\n" +
+                  "   { 74 },\n" +
+                  "   { 75 },\n" +
+                  "   { 76 },\n" +
+                  "   { 77 },\n" +
+                  "   { 78 },\n" +
+                  "   { 79 },\n" +
+                  "   { 80 },\n" +
+                  "   { 81 },\n" +
+                  "   { 82 },\n" +
+                  "   { 83 },\n" +
+                  "   { 84 },\n" +
                   "},\n" +
                   " {},\n" +
                   " {\n" +
@@ -550,7 +573,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
                   "\n" +
                   "};\n" +
                   "}",
-                  result.trim ());
+                  result.replaceAll ("\r", "").trim ());
   }
 
   /**
@@ -580,49 +603,49 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   public void testDumpStatesForKindInitialised ()
   {
     final CodeGenerator cg = new CodeGenerator ();
-    setupState ();
+    _setupState ();
     NfaState.dumpStatesForKind (cg);
-    final String result = cg.getGeneratedCode ().replaceAll ("\r", "");
+    final String result = cg.getGeneratedCode ();
     assertEquals ("protected static final class States {\n" +
                   "  protected static final int[][][] statesForState = {\n" +
                   " {\n" +
                   "   { 0 },\n" +
                   "   { 1 },\n" +
                   "   { 2 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 5 },\n" +
                   "   { 6 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 8 },\n" +
+                  "   { 7 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 9 },\n" +
                   "   { 10 },\n" +
                   "   { 11 },\n" +
                   "   { 12 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 13 },\n" +
                   "   { 14 },\n" +
                   "   { 15 },\n" +
-                  "   { 16 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 17 },\n" +
                   "   { 18 },\n" +
                   "   { 19 },\n" +
                   "   { 20 },\n" +
                   "   { 21 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 22 },\n" +
                   "   { 23 },\n" +
                   "   { 24 },\n" +
-                  "   { 25 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 26 },\n" +
                   "   { 27 },\n" +
                   "   { 28 },\n" +
                   "   { 29 },\n" +
                   "   { 30 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 31 },\n" +
                   "   { 32 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
-                  "   { 34 },\n" +
+                  "   { 33 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 35 },\n" +
-                  "   { 36 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 37 },\n" +
                   "   { 38 },\n" +
                   "   { 39 },\n" +
@@ -634,7 +657,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
                   "   { 45 },\n" +
                   "   { 46 },\n" +
                   "   { 47 },\n" +
-                  "   { 3, 4, 7, 13, 22, 31, 33, 48, },\n" +
+                  "   { 48 },\n" +
                   "   { 49 },\n" +
                   "   { 50 },\n" +
                   "   { 51 },\n" +
@@ -644,13 +667,33 @@ public class NfaStateTest extends AbstractJavaCCTestCase
                   "   { 55 },\n" +
                   "   { 56 },\n" +
                   "   { 57 },\n" +
-                  "   { 58 },\n" +
+                  "   { 3, 4, 8, 16, 25, 34, 36, 58, },\n" +
                   "   { 59 },\n" +
                   "   { 60 },\n" +
                   "   { 61 },\n" +
                   "   { 62 },\n" +
                   "   { 63 },\n" +
                   "   { 64 },\n" +
+                  "   { 65 },\n" +
+                  "   { 66 },\n" +
+                  "   { 67 },\n" +
+                  "   { 68 },\n" +
+                  "   { 69 },\n" +
+                  "   { 70 },\n" +
+                  "   { 71 },\n" +
+                  "   { 72 },\n" +
+                  "   { 73 },\n" +
+                  "   { 74 },\n" +
+                  "   { 75 },\n" +
+                  "   { 76 },\n" +
+                  "   { 77 },\n" +
+                  "   { 78 },\n" +
+                  "   { 79 },\n" +
+                  "   { 80 },\n" +
+                  "   { 81 },\n" +
+                  "   { 82 },\n" +
+                  "   { 83 },\n" +
+                  "   { 84 },\n" +
                   "},\n" +
                   " {},\n" +
                   " {\n" +
@@ -673,64 +716,84 @@ public class NfaStateTest extends AbstractJavaCCTestCase
                   "  89, \n" +
                   "  89, \n" +
                   "  89, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  98, \n" +
-                  "  98, \n" +
-                  "  98, \n" +
-                  "  98, \n" +
-                  "  98, \n" +
-                  "  98, \n" +
-                  "  98, \n" +
-                  "  98, \n" +
-                  "  98, \n" +
-                  "  99, \n" +
-                  "  99, \n" +
-                  "  99, \n" +
-                  "  99, \n" +
-                  "  99, \n" +
-                  "  99, \n" +
-                  "  99, \n" +
-                  "  99, \n" +
-                  "  99, \n" +
-                  "  150, \n" +
-                  "  150, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
+                  "  89, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  100, \n" +
+                  "  100, \n" +
+                  "  100, \n" +
+                  "  100, \n" +
+                  "  100, \n" +
+                  "  100, \n" +
+                  "  100, \n" +
+                  "  100, \n" +
+                  "  100, \n" +
+                  "  101, \n" +
+                  "  101, \n" +
+                  "  101, \n" +
+                  "  101, \n" +
+                  "  101, \n" +
+                  "  101, \n" +
+                  "  101, \n" +
+                  "  101, \n" +
+                  "  101, \n" +
+                  "  152, \n" +
+                  "  152, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
                   "  89, \n" +
                   "  89, \n" +
                   "  89, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, \n" +
-                  "  93, },\n" +
+                  "  89, \n" +
+                  "  89, \n" +
+                  "  89, \n" +
+                  "  89, \n" +
+                  "  89, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, \n" +
+                  "  94, },\n" +
                   "{}\n" +
                   ",\n" +
                   "{ \n" +
@@ -739,9 +802,10 @@ public class NfaStateTest extends AbstractJavaCCTestCase
                   "  30, },\n" +
                   "{}\n" +
                   ",\n" +
-                  "{}\n\n" +
+                  "{}\n" +
+                  "\n" +
                   "};\n" +
                   "}",
-                  result.trim ());
+                  result.replaceAll ("\r", "").trim ());
   }
 }
