@@ -11,7 +11,7 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
 # News and noteworthy
 
 * v1.1.2 - 2019-05-02
-    * JavaCC grammar can parse Java 7 language features (JavaCC PR 71)
+    * JavaCC grammar can parse Java 7 language features ([JavaCC PR 71](https://github.com/javacc/javacc/pull/71))
     * Backported a CPP output fix from JavaCC
     * Fixed an error in `JavaCharStream.template` if `KEEP_LINE_COLUMN` is turned off
 * v1.1.1 - 2019-01-28
@@ -40,8 +40,10 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
 * v1.0.0 - 2018-01-05 - had a regression and was therefore never released binary
 
 ## Maven usage
+
 Add the following to your pom.xml to use this artifact:
-```
+
+```xml
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>parser-generator-cc</artifactId>
