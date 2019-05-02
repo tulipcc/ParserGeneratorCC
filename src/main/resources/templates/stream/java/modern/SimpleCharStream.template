@@ -50,7 +50,7 @@ class SimpleCharStream extends AbstractCharStream
     }
 
     try {
-      int i = inputStream.read(buffer, maxNextCharInd, available - maxNextCharInd);
+      final int i = inputStream.read(buffer, maxNextCharInd, available - maxNextCharInd);
       if (i == -1)
       {
         inputStream.close();
@@ -66,32 +66,6 @@ class SimpleCharStream extends AbstractCharStream
         tokenBegin = bufpos;
       throw e;
     }
-  }
-
-  /** Read a character. */
-  public char readChar() throws java.io.IOException
-  {
-    if (inBuf > 0)
-    {
-      --inBuf;
-
-      if (++bufpos == bufsize)
-        bufpos = 0;
-
-      return buffer[bufpos];
-    }
-
-    ++bufpos;
-    if (bufpos >= maxNextCharInd)
-      fillBuff();
-
-    char c = buffer[bufpos];
-
-#if KEEP_LINE_COLUMN
-    if (isTrackLineColumn())
-      updateLineColumn(c);
-#fi
-    return c;
   }
 
   /** Constructor. */

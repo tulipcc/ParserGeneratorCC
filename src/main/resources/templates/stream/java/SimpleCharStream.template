@@ -59,7 +59,7 @@ class SimpleCharStream extends AbstractCharStream
       maxNextCharInd += i;
       return;
     }
-    catch(java.io.IOException e) {
+    catch(final java.io.IOException e) {
       --bufpos;
       backup(0);
       if (tokenBegin == -1)
@@ -93,9 +93,13 @@ class SimpleCharStream extends AbstractCharStream
   }
 
   /** Reinitialise. */
-  public void reInit(final java.io.Reader dstream)
+  public void reInit(final java.io.Reader dstream, 
+                     final int startline,
+                     final int startcolumn, 
+                     final int buffersize)
   {
-    reInit(dstream, 1, 1, 4096);
+    inputStream = dstream;
+    super.reInit (startline, startcolumn, buffersize);
   }
 
   /** Reinitialise. */
@@ -107,13 +111,9 @@ class SimpleCharStream extends AbstractCharStream
   }
 
   /** Reinitialise. */
-  public void reInit(final java.io.Reader dstream, 
-                     final int startline,
-                     final int startcolumn, 
-                     final int buffersize)
+  public void reInit(final java.io.Reader dstream)
   {
-    inputStream = dstream;
-    super.reInit (startline, startcolumn, buffersize);
+    reInit(dstream, 1, 1, 4096);
   }
   
   /** Constructor. */
