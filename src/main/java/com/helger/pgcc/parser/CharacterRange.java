@@ -33,10 +33,11 @@
  */
 package com.helger.pgcc.parser;
 
+import javax.annotation.Nonnull;
+
 /**
  * Describes character range descriptors in a character list.
  */
-
 public class CharacterRange implements ICCCharacter
 {
   /**
@@ -141,7 +142,7 @@ public class CharacterRange implements ICCCharacter
     return c >= m_nLeft && c <= m_nRight;
   }
 
-  public boolean isSubRangeOf (final CharacterRange r2)
+  public boolean isSubRangeOf (@Nonnull final CharacterRange r2)
   {
     return m_nLeft >= r2.getLeft () && m_nRight <= r2.getRight ();
   }

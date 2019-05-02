@@ -786,10 +786,10 @@ public class ParseGenCPP extends ParseGenJava
       genCodeNewLine ();
     }
 
-    if (s_cu_from_insertion_point_2.size () != 0)
+    if (s_cu_from_insertion_point_2.isNotEmpty ())
     {
       printTokenSetup (s_cu_from_insertion_point_2.get (0));
-      m_ccol = 1;
+      setColToStart ();
       Token t = null;
       for (final Token name : s_cu_from_insertion_point_2)
       {

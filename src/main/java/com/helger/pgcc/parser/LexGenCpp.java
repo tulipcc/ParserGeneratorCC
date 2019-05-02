@@ -142,23 +142,23 @@ public class LexGenCpp extends LexGenJava
                    new String [] {},
                    new String [] { "public TokenManager" + (superClass == null ? "" : ", public " + superClass) });
 
-    if (s_token_mgr_decls != null && s_token_mgr_decls.size () > 0)
+    if (s_token_mgr_decls != null && s_token_mgr_decls.isNotEmpty ())
     {
       Token t = s_token_mgr_decls.get (0);
-      boolean commonTokenActionSeen = false;
-      final boolean commonTokenActionNeeded = Options.isCommonTokenAction ();
+      boolean bCommonTokenActionSeen = false;
+      final boolean bCommonTokenActionNeeded = Options.isCommonTokenAction ();
 
       printTokenSetup (s_token_mgr_decls.get (0));
-      m_ccol = 1;
+      setColToStart ();
 
       switchToMainFile ();
       for (int j = 0; j < s_token_mgr_decls.size (); j++)
       {
         t = s_token_mgr_decls.get (j);
-        if (t.kind == JavaCCParserConstants.IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
+        if (t.kind == JavaCCParserConstants.IDENTIFIER && bCommonTokenActionNeeded && !bCommonTokenActionSeen)
         {
-          commonTokenActionSeen = t.image.equals ("CommonTokenAction");
-          if (commonTokenActionSeen)
+          bCommonTokenActionSeen = t.image.equals ("CommonTokenAction");
+          if (bCommonTokenActionSeen)
             t.image = s_cu_name + "TokenManager::" + t.image;
         }
 
@@ -176,7 +176,7 @@ public class LexGenCpp extends LexGenJava
       }
       genCodeNewLine ();
 
-      if (commonTokenActionNeeded && !commonTokenActionSeen)
+      if (bCommonTokenActionNeeded && !bCommonTokenActionSeen)
       {
         JavaCCErrors.warning ("You have the COMMON_TOKEN_ACTION option set. " +
                               "But it appears you have not defined the method :\n" +
@@ -1197,10 +1197,10 @@ public class LexGenCpp extends LexGenJava
         }
 
         printTokenSetup (act.getActionTokens ().get (0));
-        m_ccol = 1;
+        setColToStart ();
 
-        for (int j = 0; j < act.getActionTokens ().size (); j++)
-          printToken (act.getActionTokens ().get (j));
+        for (final Token t : act.getActionTokens ())
+          printToken (t);
         genCodeNewLine ();
 
         break;
@@ -1267,10 +1267,10 @@ public class LexGenCpp extends LexGenJava
 
         genCodeLine ("         jjimageLen = 0;");
         printTokenSetup (act.getActionTokens ().get (0));
-        m_ccol = 1;
+        setColToStart ();
 
-        for (int j = 0; j < act.getActionTokens ().size (); j++)
-          printToken (act.getActionTokens ().get (j));
+        for (final Token t : act.getActionTokens ())
+          printToken (t);
         genCodeNewLine ();
 
         break;
@@ -1350,10 +1350,10 @@ public class LexGenCpp extends LexGenJava
         }
 
         printTokenSetup (act.getActionTokens ().get (0));
-        m_ccol = 1;
+        setColToStart ();
 
-        for (int j = 0; j < act.getActionTokens ().size (); j++)
-          printToken (act.getActionTokens ().get (j));
+        for (final Token t : act.getActionTokens ())
+          printToken (t);
         genCodeNewLine ();
 
         break;

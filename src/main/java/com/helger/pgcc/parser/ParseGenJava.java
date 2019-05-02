@@ -109,32 +109,32 @@ public class ParseGenJava extends CodeGenerator
     // the generated parser
     genCodeLine ("/* " + getIdString (tn, s_cu_name + ".java") + " */");
 
-    boolean implementsExists = false;
+    boolean bImplementsExists = false;
 
     if (s_cu_to_insertion_point_1.size () != 0)
     {
       final Token firstToken = s_cu_to_insertion_point_1.get (0);
       printTokenSetup (firstToken);
-      m_ccol = 1;
+      setColToStart ();
       Token t;
       for (final Token aToken : s_cu_to_insertion_point_1)
       {
         t = aToken;
         if (t.kind == JavaCCParserConstants.IMPLEMENTS)
         {
-          implementsExists = true;
+          bImplementsExists = true;
         }
         else
           if (t.kind == JavaCCParserConstants.CLASS)
           {
-            implementsExists = false;
+            bImplementsExists = false;
           }
 
         printToken (t);
       }
     }
 
-    if (implementsExists)
+    if (bImplementsExists)
     {
       genCode (", ");
     }
@@ -143,7 +143,7 @@ public class ParseGenJava extends CodeGenerator
       genCode (" implements ");
     }
     genCode (s_cu_name + "Constants ");
-    if (s_cu_to_insertion_point_2.size () != 0)
+    if (s_cu_to_insertion_point_2.isNotEmpty ())
     {
       printTokenSetup (s_cu_to_insertion_point_2.get (0));
       for (final Token aToken : s_cu_to_insertion_point_2)
@@ -1168,10 +1168,10 @@ public class ParseGenJava extends CodeGenerator
       genCodeNewLine ();
     }
 
-    if (s_cu_from_insertion_point_2.size () != 0)
+    if (s_cu_from_insertion_point_2.isNotEmpty ())
     {
-      printTokenSetup (s_cu_from_insertion_point_2.get (0));
-      m_ccol = 1;
+      printTokenSetup (s_cu_from_insertion_point_2.getFirst ());
+      setColToStart ();
       Token t = null;
       for (final Token aElement : s_cu_from_insertion_point_2)
       {

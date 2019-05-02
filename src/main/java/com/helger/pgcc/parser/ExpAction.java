@@ -33,9 +33,13 @@
  */
 package com.helger.pgcc.parser;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
+
+import com.helger.commons.annotation.ReturnsMutableObject;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 
 /**
  * Describes actions that may occur on the right hand side of productions.
@@ -46,7 +50,7 @@ public class ExpAction extends Expansion
    * Contains the list of tokens that make up the action. This list does not
    * include the surrounding braces.
    */
-  private final List <Token> m_action_tokens = new ArrayList <> ();
+  private final ICommonsList <Token> m_action_tokens = new CommonsArrayList <> ();
 
   public ExpAction ()
   {}
@@ -54,7 +58,9 @@ public class ExpAction extends Expansion
   /**
    * @return the action_tokens
    */
-  public List <Token> getActionTokens ()
+  @Nonnull
+  @ReturnsMutableObject
+  public final ICommonsList <Token> getActionTokens ()
   {
     return m_action_tokens;
   }

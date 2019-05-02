@@ -166,33 +166,33 @@ public class LexGenJava extends CodeGenerator
       if (s_cu_to_insertion_point_1.size () <= nIndex)
         break;
 
-      int kind = s_cu_to_insertion_point_1.get (nIndex).kind;
-      if (kind == JavaCCParserConstants.PACKAGE || kind == JavaCCParserConstants.IMPORT)
+      int nKind = s_cu_to_insertion_point_1.get (nIndex).kind;
+      if (nKind == JavaCCParserConstants.PACKAGE || nKind == JavaCCParserConstants.IMPORT)
       {
-        if (kind == JavaCCParserConstants.IMPORT)
+        if (nKind == JavaCCParserConstants.IMPORT)
           bHasImport = true;
 
         for (; i < s_cu_to_insertion_point_1.size (); i++)
         {
-          kind = s_cu_to_insertion_point_1.get (i).kind;
-          if (kind == JavaCCParserConstants.SEMICOLON ||
-              kind == JavaCCParserConstants.ABSTRACT ||
-              kind == JavaCCParserConstants.FINAL ||
-              kind == JavaCCParserConstants.PRIVATE ||
-              kind == JavaCCParserConstants.PROTECTED ||
-              kind == JavaCCParserConstants.PUBLIC ||
-              kind == JavaCCParserConstants.CLASS ||
-              kind == JavaCCParserConstants.INTERFACE ||
-              kind == JavaCCParserConstants.ENUM)
+          nKind = s_cu_to_insertion_point_1.get (i).kind;
+          if (nKind == JavaCCParserConstants.SEMICOLON ||
+              nKind == JavaCCParserConstants.ABSTRACT ||
+              nKind == JavaCCParserConstants.FINAL ||
+              nKind == JavaCCParserConstants.PRIVATE ||
+              nKind == JavaCCParserConstants.PROTECTED ||
+              nKind == JavaCCParserConstants.PUBLIC ||
+              nKind == JavaCCParserConstants.CLASS ||
+              nKind == JavaCCParserConstants.INTERFACE ||
+              nKind == JavaCCParserConstants.ENUM)
           {
-            m_cline = s_cu_to_insertion_point_1.get (nIndex).beginLine;
-            m_ccol = s_cu_to_insertion_point_1.get (nIndex).beginColumn;
+            setLineAndCol (s_cu_to_insertion_point_1.get (nIndex).beginLine,
+                           s_cu_to_insertion_point_1.get (nIndex).beginColumn);
             int j = nIndex;
             for (; j < i; j++)
             {
               printToken (s_cu_to_insertion_point_1.get (j));
             }
-            if (kind == JavaCCParserConstants.SEMICOLON)
+            if (nKind == JavaCCParserConstants.SEMICOLON)
               printToken (s_cu_to_insertion_point_1.get (j));
             genCodeNewLine ();
             break;
@@ -226,26 +226,26 @@ public class LexGenJava extends CodeGenerator
     genClassStart (null, s_tokMgrClassName, new String [] {}, new String [] { s_cu_name + "Constants" });
     // genCodeLine("{"); // }
 
-    if (s_token_mgr_decls != null && s_token_mgr_decls.size () > 0)
+    if (s_token_mgr_decls != null && s_token_mgr_decls.isNotEmpty ())
     {
-      Token t = s_token_mgr_decls.get (0);
-      boolean commonTokenActionSeen = false;
-      final boolean commonTokenActionNeeded = Options.isCommonTokenAction ();
+      boolean bCommonTokenActionSeen = false;
+      final boolean bCommonTokenActionNeeded = Options.isCommonTokenAction ();
+      Token t = s_token_mgr_decls.getFirst ();
 
-      printTokenSetup (s_token_mgr_decls.get (0));
-      m_ccol = 1;
+      printTokenSetup (t);
+      setColToStart ();
 
       for (int j = 0; j < s_token_mgr_decls.size (); j++)
       {
         t = s_token_mgr_decls.get (j);
-        if (t.kind == JavaCCParserConstants.IDENTIFIER && commonTokenActionNeeded && !commonTokenActionSeen)
-          commonTokenActionSeen = t.image.equals ("CommonTokenAction");
+        if (t.kind == JavaCCParserConstants.IDENTIFIER && bCommonTokenActionNeeded && !bCommonTokenActionSeen)
+          bCommonTokenActionSeen = t.image.equals ("CommonTokenAction");
 
         printToken (t);
       }
 
       genCodeNewLine ();
-      if (commonTokenActionNeeded && !commonTokenActionSeen)
+      if (bCommonTokenActionNeeded && !bCommonTokenActionSeen)
       {
         JavaCCErrors.warning ("You have the COMMON_TOKEN_ACTION option set. " +
                               "But it appears you have not defined the method :\n" +
@@ -365,7 +365,7 @@ public class LexGenJava extends CodeGenerator
         tps.add (tp);
       }
 
-      if (respecs == null || respecs.size () == 0)
+      if (respecs == null || respecs.isEmpty ())
         continue;
 
       AbstractExpRegularExpression re;
@@ -530,7 +530,7 @@ public class LexGenJava extends CodeGenerator
           if (respec.nextState != null && !respec.nextState.equals (s_lexStateName[s_lexStateIndex]))
             s_newLexState[s_curRE.m_ordinal] = respec.nextState;
 
-          if (respec.act != null && respec.act.getActionTokens () != null && respec.act.getActionTokens ().size () > 0)
+          if (respec.act != null && respec.act.getActionTokens ().isNotEmpty ())
             s_actions[s_curRE.m_ordinal] = respec.act;
 
           switch (kind)
@@ -634,15 +634,13 @@ public class LexGenJava extends CodeGenerator
       NfaState.buildTokenizerData (s_tokenizerData);
       ExpRStringLiteral.BuildTokenizerData (s_tokenizerData);
       final int [] newLexStateIndices = new int [s_maxOrdinal];
+
       final StringBuilder tokenMgrDecls = new StringBuilder ();
-      if (s_token_mgr_decls != null && s_token_mgr_decls.size () > 0)
-      {
-        for (int j = 0; j < s_token_mgr_decls.size (); j++)
-        {
-          tokenMgrDecls.append (s_token_mgr_decls.get (j).image + " ");
-        }
-      }
+      if (s_token_mgr_decls != null)
+        for (final Token t : s_token_mgr_decls)
+          tokenMgrDecls.append (t.image).append (' ');
       s_tokenizerData.setDecls (tokenMgrDecls.toString ());
+
       final Map <Integer, String> actionStrings = new HashMap <> ();
       for (int i = 0; i < s_maxOrdinal; i++)
       {
@@ -659,12 +657,10 @@ public class LexGenJava extends CodeGenerator
         final ExpAction act = s_actions[i];
         if (act == null)
           continue;
+
         final StringBuilder sb = new StringBuilder ();
-        for (int k = 0; k < act.getActionTokens ().size (); k++)
-        {
-          sb.append (act.getActionTokens ().get (k).image);
-          sb.append (' ');
-        }
+        for (final Token t : act.getActionTokens ())
+          sb.append (t.image).append (' ');
         actionStrings.put (i, sb.toString ());
       }
       s_tokenizerData.setDefaultLexState (s_defaultLexState);
@@ -1450,8 +1446,8 @@ public class LexGenJava extends CodeGenerator
 
       for (;;)
       {
-        if (((act = s_actions[i]) == null || act.getActionTokens () == null || act.getActionTokens ().size () == 0) &&
-            !s_canLoop[s_lexStates[i]])
+        act = s_actions[i];
+        if ((act == null || act.getActionTokens ().isEmpty ()) && !s_canLoop[s_lexStates[i]])
           continue Outer;
 
         genCodeLine ("      case " + i + " :");
@@ -1477,7 +1473,7 @@ public class LexGenJava extends CodeGenerator
           genCodeLine ("         }");
         }
 
-        if ((act = s_actions[i]) == null || act.getActionTokens ().size () == 0)
+        if ((act = s_actions[i]) == null || act.getActionTokens ().isEmpty ())
           break;
 
         genCode ("         image.append");
@@ -1492,10 +1488,10 @@ public class LexGenJava extends CodeGenerator
         }
 
         printTokenSetup (act.getActionTokens ().get (0));
-        m_ccol = 1;
+        setColToStart ();
 
-        for (int j = 0; j < act.getActionTokens ().size (); j++)
-          printToken (act.getActionTokens ().get (j));
+        for (final Token t : act.getActionTokens ())
+          printToken (t);
         genCodeNewLine ();
 
         break;
@@ -1527,8 +1523,8 @@ public class LexGenJava extends CodeGenerator
 
       for (;;)
       {
-        if (((act = s_actions[i]) == null || act.getActionTokens () == null || act.getActionTokens ().size () == 0) &&
-            !s_canLoop[s_lexStates[i]])
+        act = s_actions[i];
+        if ((act == null || act.getActionTokens ().isEmpty ()) && !s_canLoop[s_lexStates[i]])
           continue Outer;
 
         genCodeLine ("      case " + i + " :");
@@ -1554,7 +1550,8 @@ public class LexGenJava extends CodeGenerator
           genCodeLine ("         }");
         }
 
-        if ((act = s_actions[i]) == null || act.getActionTokens ().size () == 0)
+        act = s_actions[i];
+        if (act == null || act.getActionTokens ().isEmpty ())
         {
           break;
         }
@@ -1568,10 +1565,10 @@ public class LexGenJava extends CodeGenerator
 
         genCodeLine ("         jjimageLen = 0;");
         printTokenSetup (act.getActionTokens ().get (0));
-        m_ccol = 1;
+        setColToStart ();
 
-        for (int j = 0; j < act.getActionTokens ().size (); j++)
-          printToken (act.getActionTokens ().get (j));
+        for (final Token t : act.getActionTokens ())
+          printToken (t);
         genCodeNewLine ();
 
         break;
@@ -1604,8 +1601,8 @@ public class LexGenJava extends CodeGenerator
 
       for (;;)
       {
-        if (((act = s_actions[i]) == null || act.getActionTokens () == null || act.getActionTokens ().size () == 0) &&
-            !s_canLoop[s_lexStates[i]])
+        act = s_actions[i];
+        if ((act == null || act.getActionTokens ().isEmpty ()) && !s_canLoop[s_lexStates[i]])
           continue Outer;
 
         genCodeLine ("      case " + i + " :");
@@ -1631,13 +1628,14 @@ public class LexGenJava extends CodeGenerator
           genCodeLine ("         }");
         }
 
-        if ((act = s_actions[i]) == null || act.getActionTokens ().size () == 0)
+        act = s_actions[i];
+        if (act == null || act.getActionTokens ().isEmpty ())
           break;
 
         if (i == 0)
         {
-          genCodeLine ("      image.setLength(0);"); // For EOF no image is
-                                                     // there
+          // For EOF no image is there
+          genCodeLine ("      image.setLength(0);");
         }
         else
         {
@@ -1655,10 +1653,10 @@ public class LexGenJava extends CodeGenerator
         }
 
         printTokenSetup (act.getActionTokens ().get (0));
-        m_ccol = 1;
+        setColToStart ();
 
-        for (int j = 0; j < act.getActionTokens ().size (); j++)
-          printToken (act.getActionTokens ().get (j));
+        for (final Token t : act.getActionTokens ())
+          printToken (t);
         genCodeNewLine ();
 
         break;

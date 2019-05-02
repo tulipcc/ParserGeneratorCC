@@ -57,13 +57,16 @@ import com.helger.pgcc.utils.OutputFileGenerator;
 
 public class CodeGenerator
 {
-  protected StringBuilder m_mainBuffer = new StringBuilder ();
-  protected StringBuilder m_includeBuffer = new StringBuilder ();
-  protected StringBuilder m_staticsBuffer = new StringBuilder ();
-  protected StringBuilder m_outputBuffer = m_mainBuffer;
+  private final StringBuilder m_aMainBuffer = new StringBuilder ();
+  private final StringBuilder m_aIncludeBuffer = new StringBuilder ();
+  private final StringBuilder m_aStaticsBuffer = new StringBuilder ();
+  private StringBuilder m_aOutputBuffer = m_aMainBuffer;
 
-  protected int m_cline;
-  protected int m_ccol;
+  private int m_nLine;
+  private int m_nCol;
+
+  public CodeGenerator ()
+  {}
 
   @Nonnull
   protected final EOutputLanguage getOutputLanguage ()
@@ -71,28 +74,49 @@ public class CodeGenerator
     return Options.getOutputLanguage ();
   }
 
-  public void switchToMainFile ()
+  public final void switchToMainFile ()
   {
-    m_outputBuffer = m_mainBuffer;
+    m_aOutputBuffer = m_aMainBuffer;
   }
 
-  public void switchToStaticsFile ()
+  public final void switchToStaticsFile ()
   {
     if (getOutputLanguage ().hasStaticsFile ())
     {
-      m_outputBuffer = m_staticsBuffer;
+      m_aOutputBuffer = m_aStaticsBuffer;
     }
   }
 
-  public void switchToIncludeFile ()
+  public final void switchToIncludeFile ()
   {
     if (getOutputLanguage ().hasIncludeFile ())
     {
-      m_outputBuffer = m_includeBuffer;
+      m_aOutputBuffer = m_aIncludeBuffer;
     }
   }
 
-  public void genStringLiteralArrayCPP (final String varName, final String [] arr)
+  protected final int getCol ()
+  {
+    return m_nCol;
+  }
+
+  protected final int getLine ()
+  {
+    return m_nLine;
+  }
+
+  protected final void setColToStart ()
+  {
+    m_nCol = 1;
+  }
+
+  protected final void setLineAndCol (final int nLine, final int nCol)
+  {
+    m_nLine = nLine;
+    m_nCol = nCol;
+  }
+
+  public final void genStringLiteralArrayCPP (final String varName, final String [] arr)
   {
     // First generate char array vars
     for (int i = 0; i < arr.length; i++)
@@ -110,25 +134,25 @@ public class CodeGenerator
     genCodeLine ("};");
   }
 
-  public void genStringLiteralInCPP (final String s)
+  public final void genStringLiteralInCPP (final String s)
   {
     // String literals in CPP become char arrays
-    m_outputBuffer.append ("{");
+    m_aOutputBuffer.append ("{");
     for (final char c : s.toCharArray ())
     {
-      m_outputBuffer.append ("0x").append (Integer.toHexString (c)).append (", ");
+      m_aOutputBuffer.append ("0x").append (Integer.toHexString (c)).append (", ");
     }
-    m_outputBuffer.append ("0}");
+    m_aOutputBuffer.append ("0}");
   }
 
-  public void genCode (final char c)
+  public final void genCode (final char c)
   {
-    m_outputBuffer.append (c);
+    m_aOutputBuffer.append (c);
   }
 
   public final void genCode (final String s)
   {
-    m_outputBuffer.append (s);
+    m_aOutputBuffer.append (s);
   }
 
   public final void genCodeNewLine ()
@@ -142,7 +166,7 @@ public class CodeGenerator
     genCodeNewLine ();
   }
 
-  public void saveOutput (final String fileName)
+  public final void saveOutput (final String fileName)
   {
     if (getOutputLanguage ().hasIncludeFile ())
     {
@@ -150,37 +174,37 @@ public class CodeGenerator
       final String incfileName = new File (incfilePath).getName ();
 
       final String sDefine = incfileName.replace ('.', '_').toUpperCase (Locale.US);
-      m_includeBuffer.insert (0, "#define " + sDefine + "\n");
-      m_includeBuffer.insert (0, "#ifndef " + sDefine + "\n");
+      m_aIncludeBuffer.insert (0, "#define " + sDefine + "\n");
+      m_aIncludeBuffer.insert (0, "#ifndef " + sDefine + "\n");
 
       // dump the statics into the main file with the code.
-      m_mainBuffer.insert (0, m_staticsBuffer);
+      m_aMainBuffer.insert (0, m_aStaticsBuffer);
 
       // Finally enclose the whole thing in the namespace, if specified.
       if (Options.stringValue (Options.USEROPTION__CPP_NAMESPACE).length () > 0)
       {
-        m_mainBuffer.insert (0, "namespace " + Options.stringValue ("NAMESPACE_OPEN") + "\n");
-        m_mainBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
-        m_includeBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
+        m_aMainBuffer.insert (0, "namespace " + Options.stringValue ("NAMESPACE_OPEN") + "\n");
+        m_aMainBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
+        m_aIncludeBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
       }
 
       if (s_jjtreeGenerated)
       {
-        m_mainBuffer.insert (0, "#include \"SimpleNode.h\"\n");
+        m_aMainBuffer.insert (0, "#include \"SimpleNode.h\"\n");
       }
       if (Options.isTokenManagerUsesParser ())
-        m_mainBuffer.insert (0, "#include \"" + s_cu_name + ".h\"\n");
-      m_mainBuffer.insert (0, "#include \"TokenMgrError.h\"\n");
-      m_mainBuffer.insert (0, "#include \"" + incfileName + "\"\n");
-      m_includeBuffer.append ("#endif\n");
-      saveOutput (incfilePath, m_includeBuffer);
+        m_aMainBuffer.insert (0, "#include \"" + s_cu_name + ".h\"\n");
+      m_aMainBuffer.insert (0, "#include \"TokenMgrError.h\"\n");
+      m_aMainBuffer.insert (0, "#include \"" + incfileName + "\"\n");
+      m_aIncludeBuffer.append ("#endif\n");
+      saveOutput (incfilePath, m_aIncludeBuffer);
     }
 
-    m_mainBuffer.insert (0, "/* " + new File (fileName).getName () + " */\n");
-    saveOutput (fileName, m_mainBuffer);
+    m_aMainBuffer.insert (0, "/* " + new File (fileName).getName () + " */\n");
+    saveOutput (fileName, m_aMainBuffer);
   }
 
-  public void saveOutput (final String fileName, final StringBuilder sb)
+  public final void saveOutput (final String fileName, final StringBuilder sb)
   {
     try (final NonBlockingBufferedWriter fw = FileHelper.getBufferedWriter (new File (fileName),
                                                                             Options.getOutputEncoding ()))
@@ -193,7 +217,7 @@ public class CodeGenerator
     }
   }
 
-  protected void printTokenSetup (final Token t)
+  protected final void printTokenSetup (final Token t)
   {
     Token tt = t;
 
@@ -202,11 +226,11 @@ public class CodeGenerator
       tt = tt.specialToken;
     }
 
-    m_cline = tt.beginLine;
-    m_ccol = tt.beginColumn;
+    m_nLine = tt.beginLine;
+    m_nCol = tt.beginColumn;
   }
 
-  protected void printTokenList (final List <Token> list)
+  protected final void printTokenList (final List <Token> list)
   {
     Token t = null;
     for (final Token aToken : list)
@@ -219,20 +243,20 @@ public class CodeGenerator
       printTrailingComments (t);
   }
 
-  protected void printTokenOnly (final Token t)
+  protected final void printTokenOnly (final Token t)
   {
     genCode (getStringForTokenOnly (t));
   }
 
-  protected String getStringForTokenOnly (final Token t)
+  protected final String getStringForTokenOnly (final Token t)
   {
     String retval = "";
-    for (; m_cline < t.beginLine; m_cline++)
+    for (; m_nLine < t.beginLine; m_nLine++)
     {
       retval += "\n";
-      m_ccol = 1;
+      m_nCol = 1;
     }
-    for (; m_ccol < t.beginColumn; m_ccol++)
+    for (; m_nCol < t.beginColumn; m_nCol++)
     {
       retval += " ";
     }
@@ -240,27 +264,27 @@ public class CodeGenerator
       retval += addUnicodeEscapes (t.image);
     else
       retval += t.image;
-    m_cline = t.endLine;
-    m_ccol = t.endColumn + 1;
+    m_nLine = t.endLine;
+    m_nCol = t.endColumn + 1;
     if (t.image.length () > 0)
     {
       final char last = t.image.charAt (t.image.length () - 1);
       if (last == '\n' || last == '\r')
       {
-        m_cline++;
-        m_ccol = 1;
+        m_nLine++;
+        m_nCol = 1;
       }
     }
 
     return retval;
   }
 
-  protected void printToken (@Nonnull final Token t)
+  protected final void printToken (@Nonnull final Token t)
   {
     genCode (getStringToPrint (t));
   }
 
-  protected String getStringToPrint (@Nonnull final Token t)
+  protected final String getStringToPrint (@Nonnull final Token t)
   {
     String retval = "";
     Token tt = t.specialToken;
@@ -283,7 +307,7 @@ public class CodeGenerator
     genCode (getLeadingComments (t));
   }
 
-  protected String getLeadingComments (final Token t)
+  protected final String getLeadingComments (final Token t)
   {
     String retval = "";
     if (t.specialToken == null)
@@ -296,22 +320,22 @@ public class CodeGenerator
       retval += getStringForTokenOnly (tt);
       tt = tt.next;
     }
-    if (m_ccol != 1 && m_cline != t.beginLine)
+    if (m_nCol != 1 && m_nLine != t.beginLine)
     {
       retval += "\n";
-      m_cline++;
-      m_ccol = 1;
+      m_nLine++;
+      m_nCol = 1;
     }
 
     return retval;
   }
 
-  protected void printTrailingComments (final Token t)
+  protected final void printTrailingComments (final Token t)
   {
-    m_outputBuffer.append (getTrailingComments (t));
+    m_aOutputBuffer.append (getTrailingComments (t));
   }
 
-  protected String getTrailingComments (final Token t)
+  protected final String getTrailingComments (final Token t)
   {
     if (t.next == null)
       return "";
@@ -321,15 +345,15 @@ public class CodeGenerator
   /**
    * for testing
    */
-  public String getGeneratedCode ()
+  public final String getGeneratedCode ()
   {
-    return m_outputBuffer.toString () + "\n";
+    return m_aOutputBuffer.toString () + "\n";
   }
 
   /**
    * Generate annotation. @XX syntax for java, comments in C++
    */
-  public void genAnnotation (final String ann)
+  public final void genAnnotation (final String ann)
   {
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     switch (eOutputLanguage)
@@ -349,7 +373,7 @@ public class CodeGenerator
   /**
    * Generate a modifier
    */
-  public void genModifier (final String mod)
+  public final void genModifier (final String mod)
   {
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     switch (eOutputLanguage)
@@ -370,12 +394,12 @@ public class CodeGenerator
 
   /**
    * Generate a class with a given name, an array of superclass and another
-   * array of super interfaes
+   * array of super interfaces
    */
-  public void genClassStart (final String mod,
-                             final String name,
-                             final String [] superClasses,
-                             final String [] superInterfaces)
+  public final void genClassStart (final String mod,
+                                   final String name,
+                                   final String [] superClasses,
+                                   final String [] superInterfaces)
   {
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     switch (eOutputLanguage)
@@ -415,15 +439,17 @@ public class CodeGenerator
     }
   }
 
-  public void generateMethodDefHeader (final String modsAndRetType, final String className, final String nameAndParams)
+  public final void generateMethodDefHeader (final String modsAndRetType,
+                                             final String className,
+                                             final String nameAndParams)
   {
     generateMethodDefHeader (modsAndRetType, className, nameAndParams, null);
   }
 
-  public void generateMethodDefHeader (final String sQualifiedModsAndRetType,
-                                       final String sClassName,
-                                       final String sNameAndParams,
-                                       final String sExceptions)
+  public final void generateMethodDefHeader (final String sQualifiedModsAndRetType,
+                                             final String sClassName,
+                                             final String sNameAndParams,
+                                             final String sExceptions)
   {
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     switch (eOutputLanguage)
@@ -439,10 +465,10 @@ public class CodeGenerator
       case CPP:
         // for C++, we generate the signature in the header file and body in
         // main file
-        m_includeBuffer.append (sQualifiedModsAndRetType + " " + sNameAndParams);
+        m_aIncludeBuffer.append (sQualifiedModsAndRetType + " " + sNameAndParams);
         // if (exceptions != null)
         // includeBuffer.append(" throw(" + exceptions + ")");
-        m_includeBuffer.append (";\n");
+        m_aIncludeBuffer.append (";\n");
 
         String modsAndRetType = null;
         int i = sQualifiedModsAndRetType.lastIndexOf (':');
@@ -460,7 +486,7 @@ public class CodeGenerator
         i = sNonVirtual.lastIndexOf ("virtual");
         if (i >= 0)
           sNonVirtual = sNonVirtual.substring (i + "virtual".length ());
-        m_mainBuffer.append ("\n" + sNonVirtual + " " + getClassQualifier (sClassName) + sNameAndParams);
+        m_aMainBuffer.append ("\n" + sNonVirtual + " " + getClassQualifier (sClassName) + sNameAndParams);
         // if (exceptions != null)
         // mainBuffer.append(" throw( " + exceptions + ")");
         switchToMainFile ();
@@ -470,7 +496,7 @@ public class CodeGenerator
     }
   }
 
-  protected String getClassQualifier (final String className)
+  protected final String getClassQualifier (final String className)
   {
     return className == null ? "" : className + "::";
   }
@@ -485,7 +511,7 @@ public class CodeGenerator
     return Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream";
   }
 
-  protected void writeTemplate (final String name, final Map <String, Object> options) throws IOException
+  protected final void writeTemplate (final String name, final Map <String, Object> options) throws IOException
   {
     final OutputFileGenerator gen = new OutputFileGenerator (name, options);
     try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())

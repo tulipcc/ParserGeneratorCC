@@ -43,7 +43,6 @@ import com.helger.commons.annotation.ReturnsMutableObject;
 /**
  * Describes BNF productions.
  */
-
 public class BNFProduction extends NormalProduction
 {
   /**

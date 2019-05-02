@@ -33,8 +33,11 @@
  */
 package com.helger.pgcc.parser;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nonnull;
+
+import com.helger.commons.annotation.ReturnsMutableObject;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 
 /**
  * Describes a CODE productions.
@@ -45,13 +48,15 @@ public abstract class AbstractCodeProduction extends NormalProduction
   /**
    * The tokens that implement this JAVACODE/CPPCODE production.
    */
-  private final List <Token> m_code_tokens = new ArrayList <> ();
+  private final ICommonsList <Token> m_aCodeTokens = new CommonsArrayList <> ();
 
   /**
    * @return the code_tokens
    */
-  public List <Token> getCodeTokens ()
+  @Nonnull
+  @ReturnsMutableObject
+  public final ICommonsList <Token> getCodeTokens ()
   {
-    return m_code_tokens;
+    return m_aCodeTokens;
   }
 }

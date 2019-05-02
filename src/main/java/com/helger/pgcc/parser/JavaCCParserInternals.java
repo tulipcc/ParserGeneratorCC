@@ -47,6 +47,8 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 import java.util.HashMap;
 import java.util.List;
 
+import com.helger.commons.collection.impl.CommonsArrayList;
+
 /**
  * Utilities.
  */
@@ -270,7 +272,7 @@ public abstract class JavaCCParserInternals
     }
     else
     {
-      s_token_mgr_decls = decls;
+      s_token_mgr_decls = new CommonsArrayList <> (decls);
       if (Options.isUserTokenManager ())
       {
         JavaCCErrors.warning (t,

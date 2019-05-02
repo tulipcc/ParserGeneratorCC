@@ -37,10 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 /**
  * Describes regular expressions.
  */
-
 public abstract class AbstractExpRegularExpression extends Expansion
 {
   /**
@@ -78,7 +79,7 @@ public abstract class AbstractExpRegularExpression extends Expansion
    * If this is a top-level regular expression (nested directly within a
    * TokenProduction), then this field point to that TokenProduction object.
    */
-  public TokenProduction m_tpContext = null;
+  public TokenProduction m_tpContext;
 
   public abstract Nfa generateNfa (boolean ignoreCase);
 
@@ -97,11 +98,12 @@ public abstract class AbstractExpRegularExpression extends Expansion
   int m_walkStatus = 0;
 
   @Override
-  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  @OverridingMethodsMustInvokeSuper
+  public StringBuilder dump (final int nIndent, final Set <? super Expansion> aAlreadyDumped)
   {
-    final StringBuilder sb = super.dump (indent, alreadyDumped);
-    alreadyDumped.add (this);
-    sb.append (' ').append (m_label);
-    return sb;
+    aAlreadyDumped.add (this);
+    final StringBuilder aSB = super.dump (nIndent, aAlreadyDumped);
+    aSB.append (' ').append (m_label);
+    return aSB;
   }
 }

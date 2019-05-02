@@ -48,6 +48,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
@@ -115,13 +116,13 @@ public final class JavaCCGlobals
    * "cu_to_insertion_point_1" and until (but not including) the closing brace
    * "}" of the class "name".
    */
-  public static final List <Token> s_cu_to_insertion_point_2 = new ArrayList <> ();
+  public static final ICommonsList <Token> s_cu_to_insertion_point_2 = new CommonsArrayList <> ();
 
   /**
    * This is the list of all tokens that appear after the tokens in
    * "cu_to_insertion_point_2" and until "PARSER_END(name)".
    */
-  public static final List <Token> s_cu_from_insertion_point_2 = new ArrayList <> ();
+  public static final ICommonsList <Token> s_cu_from_insertion_point_2 = new CommonsArrayList <> ();
 
   /**
    * A list of all grammar productions - normal and JAVACODE - in the order they
@@ -152,7 +153,7 @@ public final class JavaCCGlobals
   /**
    * The declarations to be inserted into the TokenManager class.
    */
-  public static List <Token> s_token_mgr_decls;
+  public static ICommonsList <Token> s_token_mgr_decls;
 
   /**
    * The list of all TokenProductions from the input file. This list includes
