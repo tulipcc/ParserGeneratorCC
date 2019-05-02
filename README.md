@@ -13,6 +13,7 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
 * v1.1.2 - work in progress
     * JavaCC grammar can parse Java 7 language features (JavaCC PR 71)
     * Backported a CPP output fix from JavaCC
+    * Fixed an error in `JavaCharStream.template` if `KEEP_LINE_COLUMN` is turned off
 * v1.1.1 - 2019-01-28
     * Fixed an error in Java modern template `SimpleCharStream` - thanks to @nbauma109
 * v1.1.0 - 2018-10-25
