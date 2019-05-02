@@ -25,7 +25,7 @@ class JavaCharStream extends AbstractCharStream
       maxNextCharInd = nextCharInd = 0;
 
     try {
-      int i = inputStream.read(nextCharBuf, maxNextCharInd, 4096 - maxNextCharInd);
+      final int i = inputStream.read(nextCharBuf, maxNextCharInd, 4096 - maxNextCharInd);
       if (i == -1)
       {
         inputStream.close();
@@ -59,7 +59,7 @@ class JavaCharStream extends AbstractCharStream
     return nextCharBuf[nextCharInd];
   }
 
-/** @return starting character for token. */
+  /** @return starting character for token. */
   public char beginToken() throws java.io.IOException
   {
     if (inBuf > 0)
@@ -199,7 +199,7 @@ class JavaCharStream extends AbstractCharStream
 #if KEEP_LINE_COLUMN
         throw new IllegalStateException("Invalid escape character at line " + line + " column " + column + ".");
 #else
-        throw new IllegalStateException(\"Invalid escape character in input\");
+        throw new IllegalStateException("Invalid escape character in input");
 #fi
       }
 

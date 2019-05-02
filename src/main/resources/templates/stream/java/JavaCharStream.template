@@ -60,6 +60,7 @@ class JavaCharStream extends AbstractCharStream
     return nextCharBuf[nextCharInd];
   }
 
+  /** @return starting character for token. */
   public char beginToken() throws java.io.IOException
   {
     if (inBuf > 0)
@@ -161,7 +162,7 @@ class JavaCharStream extends AbstractCharStream
         }
         catch(final java.io.IOException e)
         {
-	      // We are returning one backslash so we should only backup (count-1)
+	        // We are returning one backslash so we should only backup (count-1)
           if (backSlashCnt > 1)
             backup(backSlashCnt-1);
 
@@ -178,13 +179,12 @@ class JavaCharStream extends AbstractCharStream
       // Here, we have seen an odd number of backslash's followed by a 'u'
       try
       {
-        while ((c = readByte()) == 'u') {
+        while ((c = readByte()) == 'u')
 #if KEEP_LINE_COLUMN
           ++column;
 #else
-          ;
+        { /* empty */ }
 #fi
-        }
         
         buffer[bufpos] = c = (char)(hexval(c) << 12 |
                                     hexval(readByte()) << 8 |
@@ -200,7 +200,7 @@ class JavaCharStream extends AbstractCharStream
 #if KEEP_LINE_COLUMN
         throw new IllegalStateException("Invalid escape character at line " + line + " column " + column + ".");
 #else
-        throw new IllegalStateException(\"Invalid escape character in input\");
+        throw new IllegalStateException("Invalid escape character in input");
 #fi
       }
 
