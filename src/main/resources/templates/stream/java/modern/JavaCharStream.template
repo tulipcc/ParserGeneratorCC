@@ -7,34 +7,42 @@ public
 #fi
 class JavaCharStream extends AbstractCharStream
 {
+  /** Predefined buffer size */
+  protected static final int NEXTCHAR_BUF_SIZE = 4096;
+
+  protected char[] nextCharBuf;
+  protected int nextCharInd = -1;
   protected Provider inputStream;
 
   @Override
-  protected int streamRead(final char[] buffer, final int offset, final int len) throws java.io.IOException {
+  protected int streamRead(final char[] buffer, final int offset, final int len) throws java.io.IOException
+  {
     return inputStream.read (buffer, offset, len); 
   }
   
   @Override
-  protected void streamClose() throws java.io.IOException {
+  protected void streamClose() throws java.io.IOException
+  {
     inputStream.close (); 
   }
 
   protected void fillBuff() throws java.io.IOException
   {
-    if (maxNextCharInd == 4096)
+    if (maxNextCharInd == NEXTCHAR_BUF_SIZE)
       maxNextCharInd = nextCharInd = 0;
 
-    try {
-      final int i = inputStream.read(nextCharBuf, maxNextCharInd, 4096 - maxNextCharInd);
+    try
+    {
+      final int i = inputStream.read(nextCharBuf, maxNextCharInd, NEXTCHAR_BUF_SIZE - maxNextCharInd);
       if (i == -1)
       {
         inputStream.close();
         throw new java.io.IOException();
       }
       maxNextCharInd += i;
-      return;
     }
-    catch(final java.io.IOException e) {
+    catch(final java.io.IOException ex)
+    {
       if (bufpos != 0)
       {
         --bufpos;
@@ -47,13 +55,14 @@ class JavaCharStream extends AbstractCharStream
         bufcolumn[bufpos] = column;
       }
 #fi
-      throw e;
+      throw ex;
     }
   }
 
   protected char readByte() throws java.io.IOException
   {
-    if (++nextCharInd >= maxNextCharInd)
+    ++nextCharInd;
+    if (nextCharInd >= maxNextCharInd)
       fillBuff();
 
     return nextCharBuf[nextCharInd];
@@ -92,13 +101,13 @@ class JavaCharStream extends AbstractCharStream
         expandBuff(false);
     }
     else
-    if (available > tokenBegin)
-      available = bufsize;
-    else
-    if ((tokenBegin - available) < 2048)
-      expandBuff(true);
-    else
-      available = tokenBegin;
+      if (available > tokenBegin)
+        available = bufsize;
+      else
+        if ((tokenBegin - available) < 2048)
+          expandBuff(true);
+        else
+          available = tokenBegin;
   }
 
 /** Read a character. */
@@ -194,7 +203,7 @@ class JavaCharStream extends AbstractCharStream
         column += 4;
 #fi
       }
-      catch(final java.io.IOException e)
+      catch(final java.io.IOException ex)
       {
 #if KEEP_LINE_COLUMN
         throw new IllegalStateException("Invalid escape character at line " + line + " column " + column + ".");
@@ -225,6 +234,7 @@ class JavaCharStream extends AbstractCharStream
                         final int buffersize)
   {
     super (startline, startcolumn, buffersize);
+    nextCharBuf = new char[NEXTCHAR_BUF_SIZE];
     inputStream = dstream;
   }
 
@@ -233,19 +243,19 @@ class JavaCharStream extends AbstractCharStream
                         final int startline,
                         final int startcolumn)
   {
-    this(dstream, startline, startcolumn, 4096);
+    this(dstream, startline, startcolumn, DEFAULT_BUF_SIZE);
   }
 
   /** Constructor. */
   public JavaCharStream(final Provider dstream)
   {
-    this(dstream, 1, 1, 4096);
+    this(dstream, 1, 1, DEFAULT_BUF_SIZE);
   }
   
   /** Reinitialise. */
   public void reInit(final Provider dstream)
   {
-    reInit(dstream, 1, 1, 4096);
+    reInit(dstream, 1, 1, DEFAULT_BUF_SIZE);
   }
 
   /** Reinitialise. */
@@ -253,7 +263,7 @@ class JavaCharStream extends AbstractCharStream
                      final int startline,
                      final int startcolumn)
   {
-    reInit(dstream, startline, startcolumn, 4096);
+    reInit(dstream, startline, startcolumn, DEFAULT_BUF_SIZE);
   }
   
   /** Reinitialise. */
@@ -262,7 +272,16 @@ class JavaCharStream extends AbstractCharStream
                      final int startcolumn,
                      final int buffersize)
   {
+    nextCharBuf = new char[NEXTCHAR_BUF_SIZE];
+    nextCharInd = -1;
     inputStream = dstream;
     super.reInit (startline, startcolumn, buffersize);
+  }
+  
+  @Override
+  public void done ()
+  {
+    nextCharBuf = null;
+    super.done ();
   }
 }

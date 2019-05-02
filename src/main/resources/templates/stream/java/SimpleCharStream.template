@@ -10,62 +10,15 @@ class SimpleCharStream extends AbstractCharStream
   protected java.io.Reader inputStream;
 
   @Override
-  protected int streamRead(final char[] buffer, final int offset, final int len) throws java.io.IOException {
-    return inputStream.read (buffer, offset, len); 
+  protected int streamRead (final char[] aBuf, final int nOfs, final int nLen) throws java.io.IOException
+  {
+    return inputStream.read (aBuf, nOfs, nLen); 
   }
   
   @Override
-  protected void streamClose() throws java.io.IOException {
-    inputStream.close (); 
-  }
-
-  protected void fillBuff() throws java.io.IOException
+  protected void streamClose () throws java.io.IOException
   {
-    if (maxNextCharInd == available)
-    {
-      if (available == bufsize)
-      {
-        if (tokenBegin > 2048)
-        {
-          maxNextCharInd = 0;
-          bufpos = 0;
-          available = tokenBegin;
-        }
-        else
-        if (tokenBegin < 0) {
-          maxNextCharInd = 0;
-          bufpos = 0;
-        }
-        else
-          expandBuff(false);
-      }
-      else
-      if (available > tokenBegin)
-        available = bufsize;
-      else
-      if ((tokenBegin - available) < 2048)
-        expandBuff(true);
-      else
-        available = tokenBegin;
-    }
-
-    try {
-      final int i = inputStream.read(buffer, maxNextCharInd, available - maxNextCharInd);
-      if (i == -1)
-      {
-        inputStream.close();
-        throw new java.io.IOException();
-      }
-      maxNextCharInd += i;
-      return;
-    }
-    catch(final java.io.IOException e) {
-      --bufpos;
-      backup(0);
-      if (tokenBegin == -1)
-        tokenBegin = bufpos;
-      throw e;
-    }
+    inputStream.close (); 
   }
 
   /** Constructor. */
@@ -83,13 +36,13 @@ class SimpleCharStream extends AbstractCharStream
                           final int startline,
                           final int startcolumn)
   {
-    this(dstream, startline, startcolumn, 4096);
+    this(dstream, startline, startcolumn, DEFAULT_BUF_SIZE);
   }
 
   /** Constructor. */
   public SimpleCharStream(final java.io.Reader dstream)
   {
-    this(dstream, 1, 1, 4096);
+    this(dstream, 1, 1, DEFAULT_BUF_SIZE);
   }
 
   /** Reinitialise. */
@@ -107,13 +60,13 @@ class SimpleCharStream extends AbstractCharStream
                      final int startline,
                      final int startcolumn)
   {
-    reInit(dstream, startline, startcolumn, 4096);
+    reInit(dstream, startline, startcolumn, DEFAULT_BUF_SIZE);
   }
 
   /** Reinitialise. */
   public void reInit(final java.io.Reader dstream)
   {
-    reInit(dstream, 1, 1, 4096);
+    reInit(dstream, 1, 1, DEFAULT_BUF_SIZE);
   }
   
   /** Constructor. */
@@ -147,7 +100,7 @@ class SimpleCharStream extends AbstractCharStream
                           final int startcolumn) throws java.io.UnsupportedEncodingException
 #fi
   {
-    this(dstream, encoding, startline, startcolumn, 4096);
+    this(dstream, encoding, startline, startcolumn, DEFAULT_BUF_SIZE);
   }
 
   /** Constructor. */
@@ -159,7 +112,7 @@ class SimpleCharStream extends AbstractCharStream
                           final String encoding) throws java.io.UnsupportedEncodingException
 #fi
   {
-    this(dstream, encoding, 1, 1, 4096);
+    this(dstream, encoding, 1, 1, DEFAULT_BUF_SIZE);
   }
 
   /** Reinitialise. */
@@ -171,7 +124,7 @@ class SimpleCharStream extends AbstractCharStream
                      final String encoding) throws java.io.UnsupportedEncodingException
 #fi                     
   {
-    reInit(dstream, encoding, 1, 1, 4096);
+    reInit(dstream, encoding, 1, 1, DEFAULT_BUF_SIZE);
   }
 
   /** Reinitialise. */
@@ -187,7 +140,7 @@ class SimpleCharStream extends AbstractCharStream
                      final int startcolumn) throws java.io.UnsupportedEncodingException
 #fi                     
   {
-    reInit(dstream, encoding, startline, startcolumn, 4096);
+    reInit(dstream, encoding, startline, startcolumn, DEFAULT_BUF_SIZE);
   }
 
   /** Reinitialise. */

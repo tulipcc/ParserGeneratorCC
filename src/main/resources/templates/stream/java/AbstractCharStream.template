@@ -9,7 +9,10 @@ public
 abstract class AbstractCharStream
 implements CharStream
 {
+  /** Default buffer size if nothing is specified */
   public static final int DEFAULT_BUF_SIZE = 4096;
+  /** By how much should the buffer be increase? */
+  protected static final int BUFFER_INCREASE = 2048;
 
   static final int hexval(final char c) throws java.io.IOException {
     switch(c)
@@ -65,11 +68,9 @@ implements CharStream
   protected int tokenBegin;
 
   protected char[] buffer;
-  protected int maxNextCharInd = 0;
   protected int inBuf = 0;
   private int tabSize = 1;
-  protected char[] nextCharBuf;
-  protected int nextCharInd = -1;
+  protected int maxNextCharInd = 0;
 
 #if KEEP_LINE_COLUMN
   protected int[] bufline;
@@ -95,10 +96,10 @@ implements CharStream
 
   protected void expandBuff(final boolean wrapAround)
   {
-    final char[] newbuffer = new char[bufsize + 2048];
+    final char[] newbuffer = new char[bufsize + BUFFER_INCREASE];
 #if KEEP_LINE_COLUMN
-    final int newbufline[] = new int[bufsize + 2048];
-    final int newbufcolumn[] = new int[bufsize + 2048];
+    final int newbufline[] = new int[bufsize + BUFFER_INCREASE];
+    final int newbufcolumn[] = new int[bufsize + BUFFER_INCREASE];
 #fi
 
     try
@@ -120,7 +121,8 @@ implements CharStream
 #fi
 
         bufpos += (bufsize - tokenBegin);
-        maxNextCharInd = bufpos;
+        // https://github.com/phax/ParserGeneratorCC/pull/23
+        // maxNextCharInd = bufpos;
       }
       else
       {
@@ -136,7 +138,8 @@ implements CharStream
 #fi
 
         bufpos -= tokenBegin;
-        maxNextCharInd = bufpos;
+        // https://github.com/phax/ParserGeneratorCC/pull/23
+        // maxNextCharInd = bufpos;
       }
     }
     catch (final Exception ex)
@@ -144,12 +147,12 @@ implements CharStream
       throw new IllegalStateException(ex);
     }
 
-    bufsize += 2048;
+    bufsize += BUFFER_INCREASE;
     available = bufsize;
     tokenBegin = 0;
   }
 
-  protected abstract int streamRead(char[] buf, int offset, int len) throws java.io.IOException;
+  protected abstract int streamRead(char[] aBuf, int nOfs, int nLen) throws java.io.IOException;
   
   protected abstract void streamClose() throws java.io.IOException;
 
@@ -161,26 +164,31 @@ implements CharStream
       {
         if (tokenBegin > 2048)
         {
-          bufpos = maxNextCharInd = 0;
+          bufpos = 0;
+          maxNextCharInd = 0;
           available = tokenBegin;
         }
         else
-        if (tokenBegin < 0)
-          bufpos = maxNextCharInd = 0;
-        else
-          expandBuff(false);
+          if (tokenBegin < 0)
+          {
+            bufpos = 0;
+            maxNextCharInd = 0;
+          }  
+          else
+            expandBuff(false);
       }
       else
-      if (available > tokenBegin)
-        available = bufsize;
-      else
-      if ((tokenBegin - available) < 2048)
-        expandBuff(true);
-      else
-        available = tokenBegin;
+        if (available > tokenBegin)
+          available = bufsize;
+        else
+          if ((tokenBegin - available) < 2048)
+            expandBuff(true);
+          else
+            available = tokenBegin;
     }
 
-    try {
+    try
+    {
       final int i = streamRead(buffer, maxNextCharInd, available - maxNextCharInd);
       if (i == -1) 
       {
@@ -188,23 +196,22 @@ implements CharStream
         throw new java.io.IOException();
       }
       maxNextCharInd += i;
-      return;
     }
-    catch (final java.io.IOException e) {
+    catch (final java.io.IOException ex)
+    {
       --bufpos;
       backup(0);
       if (tokenBegin == -1)
         tokenBegin = bufpos;
-      throw e;
+      throw ex;
     }
   }
 
   public char beginToken() throws java.io.IOException
   {
     tokenBegin = -1;
-    char c = readChar();
+    final char c = readChar();
     tokenBegin = bufpos;
-
     return c;
   }
 #if KEEP_LINE_COLUMN
@@ -260,7 +267,8 @@ implements CharStream
     {
       --inBuf;
 
-      if (++bufpos == bufsize)
+      ++bufpos;
+      if (bufpos == bufsize)
         bufpos = 0;
 
       return buffer[bufpos];
@@ -335,7 +343,6 @@ implements CharStream
     bufline = new int[buffersize];
     bufcolumn = new int[buffersize];
 #fi
-    nextCharBuf = new char[4096];
   }
 
   /** Reinitialise. */
@@ -346,6 +353,8 @@ implements CharStream
 #if KEEP_LINE_COLUMN
     line = startline;
     column = startcolumn - 1;
+    prevCharIsCR = false;
+    prevCharIsLF = false;
 #fi
     if (buffer == null || buffersize != buffer.length)
     {
@@ -356,22 +365,17 @@ implements CharStream
       bufline = new int[buffersize];
       bufcolumn = new int[buffersize];
 #fi
-      nextCharBuf = new char[4096];
     }
-#if KEEP_LINE_COLUMN
-    prevCharIsCR = false;
-    prevCharIsLF = false;
-#fi
     maxNextCharInd = 0;
     inBuf = 0;
     tokenBegin = 0;
     bufpos = -1;
-    nextCharInd = -1;
   }
 
   public String getImage()
   {
-    if (bufpos >= tokenBegin) {
+    if (bufpos >= tokenBegin)
+    {
       // from tokenBegin to bufpos
       return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
     }
@@ -381,7 +385,7 @@ implements CharStream
            new String(buffer, 0, bufpos + 1);
   }
 
-  public char[] getSuffix(int len)
+  public char[] getSuffix(final int len)
   {
     char[] ret = new char[len];
     if ((bufpos + 1) >= len)
@@ -396,7 +400,6 @@ implements CharStream
 
   public void done()
   {
-    nextCharBuf = null;
     buffer = null;
 #if KEEP_LINE_COLUMN
     bufline = null;
