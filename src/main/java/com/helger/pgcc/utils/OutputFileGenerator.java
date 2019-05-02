@@ -115,7 +115,6 @@ public class OutputFileGenerator
     final IReadableResource aRes = m_bReadFromClasspath ? new ClassPathResource (m_sTemplateName)
                                                         : new FileSystemResource ("src/main/resources" +
                                                                                   m_sTemplateName);
-    System.out.println ("reading " + aRes.toString ());
     final InputStream is = aRes.getInputStream ();
     if (is == null)
       throw new IOException ("Invalid template name: " + m_sTemplateName);
