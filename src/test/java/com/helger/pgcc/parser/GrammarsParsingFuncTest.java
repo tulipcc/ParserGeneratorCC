@@ -91,7 +91,7 @@ public final class GrammarsParsingFuncTest
                                                                   fGrammarDest.getAbsolutePath (),
                                                                   "-JDK_VERSION=1.8",
                                                                   f.getAbsolutePath () });
-      assertTrue (eSuccess.isSuccess ());
+      assertTrue ("Failed to parse " + f.getName (), eSuccess.isSuccess ());
 
       _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
     }
@@ -114,7 +114,7 @@ public final class GrammarsParsingFuncTest
                                                                   fGrammarDest.getAbsolutePath (),
                                                                   "-JDK_VERSION=1.5",
                                                                   f.getAbsolutePath () });
-      assertTrue (eSuccess.isSuccess ());
+      assertTrue ("Failed to parse " + f.getName (), eSuccess.isSuccess ());
 
       _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
     }
@@ -138,7 +138,7 @@ public final class GrammarsParsingFuncTest
                                                                   "-JDK_VERSION=1.8",
                                                                   "-JAVA_TEMPLATE_TYPE=modern",
                                                                   f.getAbsolutePath () });
-      assertTrue (eSuccess.isSuccess ());
+      assertTrue ("Failed to parse " + f.getName (), eSuccess.isSuccess ());
 
       _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
     }
@@ -161,7 +161,7 @@ public final class GrammarsParsingFuncTest
                                                                     fGrammarDest.getAbsolutePath (),
                                                                     "-JDK_VERSION=1.8",
                                                                     f.getAbsolutePath () });
-      assertTrue (eSuccess.isSuccess ());
+      assertTrue ("Failed to parse " + f.getName (), eSuccess.isSuccess ());
 
       _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
     }
@@ -176,7 +176,8 @@ public final class GrammarsParsingFuncTest
     for (final File f : new FileSystemRecursiveIterator (new File ("examples")).withFilter (IFileFilter.filenameEndsWith (".jj")))
     {
       final String sBaseName = FilenameHelper.getBaseName (f);
-      LOGGER.info ("Parsing " + f.getParentFile ().getName () + "/" + f.getName ());
+      final String sLogName = f.getParentFile ().getName () + "/" + f.getName ();
+      LOGGER.info ("Parsing " + sLogName);
 
       final File fGrammarDest = new File (fDest, sBaseName);
       fGrammarDest.mkdirs ();
@@ -184,7 +185,7 @@ public final class GrammarsParsingFuncTest
       final ESuccess eSuccess = Main.mainProgram ("-OUTPUT_DIRECTORY=" + fGrammarDest.getAbsolutePath (),
                                                   "-JDK_VERSION=1.8",
                                                   f.getAbsolutePath ());
-      assertTrue (eSuccess.isSuccess ());
+      assertTrue ("Failed to parse " + sLogName, eSuccess.isSuccess ());
 
       _parseCreatedJavaFiles (fGrammarDest, StandardCharsets.UTF_8);
     }
