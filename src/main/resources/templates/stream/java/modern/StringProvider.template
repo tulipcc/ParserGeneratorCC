@@ -6,9 +6,9 @@ public class StringProvider implements Provider {
   private int m_nPos = 0;
   private final int m_nLen;
   
-  public StringProvider(final String string) {
-    m_sStr = string;
-    m_nLen = string.length();
+  public StringProvider(final String sStr) {
+    m_sStr = sStr;
+    m_nLen = sStr.length();
   }
   
   public int read(final char[] aDest, final int nOfs, final int nLen) throws IOException {
