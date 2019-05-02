@@ -2,33 +2,33 @@
 import java.io.IOException;
   
 public class StringProvider implements Provider {
-  private String _string;
-  private int _position = 0;
-  private final int _size;
+  private String m_sStr;
+  private int m_nPos = 0;
+  private final int m_nLen;
   
   public StringProvider(final String string) {
-    _string = string;
-    _size = string.length();
+    m_sStr = string;
+    m_nLen = string.length();
   }
   
   public int read(final char[] aDest, final int nOfs, final int nLen) throws IOException {
-    final int numCharsOutstandingInString = _size - _position;
-    if (numCharsOutstandingInString == 0)
+    final int nLeft = m_nLen - m_nPos;
+    if (nLeft <= 0)
       return -1;
     
-    int numBytesToRead = aDest.length - nOfs;
-    if (nLen < numBytesToRead)
-      numBytesToRead = nLen;
-    if (numCharsOutstandingInString < numBytesToRead)
-      numBytesToRead = numCharsOutstandingInString;
+    int nCharsRead = aDest.length - nOfs;
+    if (nLen < nCharsRead)
+      nCharsRead = nLen;
+    if (nLeft < nCharsRead)
+      nCharsRead = nLeft;
     
-    _string.getChars(_position, _position + numBytesToRead, aDest, nOfs);
-    _position += numBytesToRead;
+    m_sStr.getChars(m_nPos, m_nPos + nCharsRead, aDest, nOfs);
+    m_nPos += nCharsRead;
     
-    return numBytesToRead;
+    return nCharsRead;
   }
 
   public void close() {
-    _string = null;
+    m_sStr = null;
   }
 }

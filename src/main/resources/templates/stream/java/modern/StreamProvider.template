@@ -9,7 +9,7 @@ import java.io.Reader;
  * NOTE : This generated class can be safely deleted if installing in a GWT installation (use StringProvider instead)
  */
 public class StreamProvider implements Provider {
-	private Reader _reader;
+	private Reader m_aReader;
 	
 #if AT_LEAST_JDK6
   @Deprecated
@@ -23,11 +23,11 @@ public class StreamProvider implements Provider {
   }
 
   public StreamProvider(final Reader reader) {
-    _reader = reader;
+    m_aReader = reader;
   }
 
   public int read(final char[] aDest, final int nOfs, final int nLen) throws IOException {
-    int result = _reader.read(aDest, nOfs, nLen);
+    int result = m_aReader.read(aDest, nOfs, nLen);
 
     /* CBA -- Added 2014/03/29 -- 
        This logic allows the generated Java code to be easily translated to C# (via sharpen) -
@@ -43,6 +43,6 @@ public class StreamProvider implements Provider {
 	}
 
 	public void close() throws IOException {
-    _reader.close();
+    m_aReader.close();
 	}
 }
