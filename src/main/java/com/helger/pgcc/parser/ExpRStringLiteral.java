@@ -85,12 +85,12 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 {
   private static final class KindInfo
   {
-    final long [] m_validKinds;
-    final long [] m_finalKinds;
-    int m_validKindCnt = 0;
-    int m_finalKindCnt = 0;
-    final Set <Integer> m_finalKindSet = new HashSet <> ();
-    final Set <Integer> m_validKindSet = new HashSet <> ();
+    private final long [] m_validKinds;
+    private final long [] m_finalKinds;
+    private int m_validKindCnt = 0;
+    private int m_finalKindCnt = 0;
+    private final Set <Integer> m_finalKindSet = new HashSet <> ();
+    private final Set <Integer> m_validKindSet = new HashSet <> ();
 
     KindInfo (final int maxKind)
     {
@@ -1134,9 +1134,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       codeGenerator.genCodeLine ("   switch(curChar)");
       codeGenerator.genCodeLine ("   {");
 
-      CaseLoop: for (int q = 0; q < keys.length; q++)
+      CaseLoop: for (final String aKey : keys)
       {
-        key = keys[q];
+        key = aKey;
         info = tab.get (key);
         ifGenerated = false;
         final char c = key.charAt (0);

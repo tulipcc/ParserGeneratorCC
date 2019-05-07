@@ -77,7 +77,6 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -85,12 +84,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.OutputHelper;
-import com.helger.pgcc.utils.OutputFileGenerator;
 
 /**
  * Generate lexer.
@@ -293,7 +290,8 @@ public class LexGenJava extends CodeGenerator
     }
   }
 
-  protected void writeTemplate (final String name, final String... additionalOptions) throws IOException
+  @Override
+  protected void writeTemplate (final String name, final Map <String, Object> additionalOptions) throws IOException
   {
     final Map <String, Object> options = Options.getAllOptions ();
     options.put ("maxOrdinal", Integer.valueOf (s_maxOrdinal));
@@ -315,28 +313,15 @@ public class LexGenJava extends CodeGenerator
     options.put ("cu_name", s_cu_name);
 
     // options.put("", .valueOf(maxOrdinal));
+    if (additionalOptions != null)
+      options.putAll (additionalOptions);
 
-    for (int i = 0; i < additionalOptions.length; i++)
-    {
-      final String o = additionalOptions[i];
-      if (i == additionalOptions.length - 1)
-        throw new IllegalArgumentException ("Must supply pairs of [name value] args");
-
-      options.put (o, additionalOptions[i + 1]);
-      i++;
-    }
-
-    final OutputFileGenerator gen = new OutputFileGenerator (name, options);
-    try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())
-    {
-      gen.generate (new PrintWriter (sw));
-      genCode (sw.getAsString ());
-    }
+    super.writeTemplate (name, options);
   }
 
   private void _dumpDebugMethods () throws IOException
   {
-    writeTemplate (DUMP_DEBUG_METHODS_TEMPLATE_RESOURCE_URL);
+    writeTemplate (DUMP_DEBUG_METHODS_TEMPLATE_RESOURCE_URL, null);
   }
 
   private static void _buildLexStatesTable ()
@@ -722,17 +707,13 @@ public class LexGenJava extends CodeGenerator
 
     final String charStreamName = CodeGenerator.getCharStreamName ();
 
-    writeTemplate (BOILERPLATER_METHOD_RESOURCE_URL,
-                   "charStreamName",
-                   charStreamName,
-                   "lexStateNameLength",
-                   Integer.toString (s_lexStateName.length),
-                   "defaultLexState",
-                   Integer.toString (s_defaultLexState),
-                   "noDfa",
-                   Boolean.toString (Options.isNoDfa ()),
-                   "generatedStates",
-                   Integer.toString (s_totalNumStates));
+    final Map <String, Object> aOpts = new HashMap <> ();
+    aOpts.put ("charStreamName", charStreamName);
+    aOpts.put ("lexStateNameLength", Integer.toString (s_lexStateName.length));
+    aOpts.put ("defaultLexState", Integer.toString (s_defaultLexState));
+    aOpts.put ("noDfa", Boolean.toString (Options.isNoDfa ()));
+    aOpts.put ("generatedStates", Integer.toString (s_totalNumStates));
+    writeTemplate (BOILERPLATER_METHOD_RESOURCE_URL, aOpts);
 
     _dumpStaticVarDeclarations (charStreamName);
     genCodeLine (/* { */ "}");
@@ -898,17 +879,13 @@ public class LexGenJava extends CodeGenerator
       genCodeLine ("\n};");
     }
 
-    writeTemplate (DUMP_STATIC_VAR_DECLARATIONS_TEMPLATE_RESOURCE_URL,
-                   "charStreamName",
-                   charStreamName,
-                   "protected",
-                   "protected",
-                   "private",
-                   "private",
-                   "final",
-                   "final",
-                   "lexStateNameLength",
-                   Integer.toString (s_lexStateName.length));
+    final Map <String, Object> aOpts = new HashMap <> ();
+    aOpts.put ("charStreamName", charStreamName);
+    aOpts.put ("protected", "protected");
+    aOpts.put ("private", "private");
+    aOpts.put ("final", "final");
+    aOpts.put ("lexStateNameLength", Integer.toString (s_lexStateName.length));
+    writeTemplate (DUMP_STATIC_VAR_DECLARATIONS_TEMPLATE_RESOURCE_URL, aOpts);
   }
 
   // Assumes l != 0L

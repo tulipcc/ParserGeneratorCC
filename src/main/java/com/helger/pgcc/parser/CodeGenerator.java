@@ -511,7 +511,7 @@ public class CodeGenerator
     return Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream";
   }
 
-  protected final void writeTemplate (final String name, final Map <String, Object> options) throws IOException
+  protected void writeTemplate (final String name, final Map <String, Object> options) throws IOException
   {
     final OutputFileGenerator gen = new OutputFileGenerator (name, options);
     try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())

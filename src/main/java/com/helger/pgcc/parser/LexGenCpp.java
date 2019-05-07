@@ -76,6 +76,7 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -213,11 +214,10 @@ public class LexGenCpp extends LexGenJava
 
   private void _dumpDebugMethods () throws IOException
   {
-    writeTemplate ("/templates/cpp/DumpDebugMethods.template",
-                   "maxOrdinal",
-                   Integer.toString (s_maxOrdinal),
-                   "stateSetSize",
-                   Integer.toString (s_stateSetSize));
+    final Map <String, Object> aOpts = new HashMap <> ();
+    aOpts.put ("maxOrdinal", Integer.toString (s_maxOrdinal));
+    aOpts.put ("stateSetSize", Integer.toString (s_stateSetSize));
+    writeTemplate ("/templates/cpp/DumpDebugMethods.template", aOpts);
   }
 
   private static void _buildLexStatesTable ()
@@ -519,27 +519,29 @@ public class LexGenCpp extends LexGenJava
 
     NfaState.printBoilerPlateCPP (this);
 
-    writeTemplate ("/templates/cpp/TokenManagerBoilerPlateMethods.template",
-                   "charStreamName",
-                   "CharStream",
-                   "parserClassName",
-                   s_cu_name,
-                   "defaultLexState",
-                   "defaultLexState",
-                   "lexStateNameLength",
-                   Integer.toString (s_lexStateName.length));
+    {
+      final Map <String, Object> aOpts = new HashMap <> ();
+      aOpts.put ("charStreamName", "CharStream");
+      aOpts.put ("parserClassName", s_cu_name);
+      aOpts.put ("defaultLexState", "defaultLexState");
+      aOpts.put ("lexStateNameLength", Integer.toString (s_lexStateName.length));
+      writeTemplate ("/templates/cpp/TokenManagerBoilerPlateMethods.template", aOpts);
+    }
 
     _dumpBoilerPlateInHeader ();
 
-    // in the include file close the class signature
-    _dumpStaticVarDeclarations (); // static vars actually inst
+    // in the include file close the class signature´
+    // static vars actually inst
+    _dumpStaticVarDeclarations ();
 
-    switchToIncludeFile (); // remaining variables
-    writeTemplate ("/templates/cpp/DumpVarDeclarations.template",
-                   "charStreamName",
-                   "CharStream",
-                   "lexStateNameLength",
-                   Integer.toString (s_lexStateName.length));
+    // remaining variables
+    switchToIncludeFile ();
+    {
+      final Map <String, Object> aOpts = new HashMap <> ();
+      aOpts.put ("charStreamName", "CharStream");
+      aOpts.put ("lexStateNameLength", Integer.toString (s_lexStateName.length));
+      writeTemplate ("/templates/cpp/DumpVarDeclarations.template", aOpts);
+    }
     genCodeLine (/* { */ "};");
 
     switchToStaticsFile ();

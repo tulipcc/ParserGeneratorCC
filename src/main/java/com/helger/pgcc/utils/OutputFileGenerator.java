@@ -83,7 +83,7 @@ public class OutputFileGenerator
    * @param options
    *        the processing options in force, such as "STATIC=yes"
    */
-  public OutputFileGenerator (final String templateName, final Map <String, Object> options)
+  public OutputFileGenerator (final String templateName, @Nonnull final Map <String, Object> options)
   {
     m_sTemplateName = templateName;
     m_aOptions = options;
