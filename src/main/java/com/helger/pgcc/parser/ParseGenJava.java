@@ -1017,10 +1017,6 @@ public class ParseGenJava extends CodeGenerator
     if (Options.isDebugParser ())
     {
       genCodeLine ("  private int trace_indent = 0;");
-    }
-
-    if (Options.isDebugParser ())
-    {
       genCodeLine ("  private " +
                    eOutputLanguage.getTypeBoolean () +
                    " trace_enabled = " +
