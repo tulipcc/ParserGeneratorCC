@@ -1198,6 +1198,7 @@ void expansion_unit(Container c) :
   }
   t0="try" "{" expansion_choices(expch) "}"
   ("catch" "("
+    [ "final" ]
     {
       if (!isJavaLanguage()) {
         while (getToken(1).kind != RPAREN) getNextToken();
@@ -1222,14 +1223,14 @@ void expansion_unit(Container c) :
   }
   )*
   [
-  {
-    m_bInAction = true;
-  }
+    {
+      m_bInAction = true;
+    }
     "finally" Block(vec)
-  {
-    m_bInAction = false;
-    finallyblk = vec;
-  }
+    {
+      m_bInAction = false;
+      finallyblk = vec;
+    }
   ]
   {
     makeTryBlock(t0, c, expch, types, ids, catchblks, finallyblk);

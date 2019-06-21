@@ -1,0 +1,49 @@
+PARSER_BEGIN(IssueParser)
+public class IssueParser{}
+PARSER_END(IssueParser)
+
+TOKEN :
+{
+  < A: "true" >
+| < B: "false" >
+}
+
+void start() : {}
+{
+   <A> 
+   {
+     try {
+       Boolean.valueOf (token.image);
+     }
+     catch (RuntimeException ex)
+     {
+       System.out.println ("nonfinal");
+     }
+     catch (final Exception ex)
+     {
+       System.out.println ("final");
+     }
+     finally
+     {
+       System.out.println ("finally");
+     }
+   }  
+ | <B> 
+   {
+     try {
+       Boolean.valueOf (token.image);
+     }
+     catch (final RuntimeException | java.io.IOException ex)
+     {
+       System.out.println ("multi final");
+     }
+     catch (final Exception  ex)
+     {
+       System.out.println ("final");
+     }
+     finally
+     {
+       System.out.println ("finally");
+     }
+   }
+}

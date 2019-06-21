@@ -50,12 +50,10 @@ import java.util.Map;
 
 public class ConditionParser
 {
-    private Map<String, Object> options;
+  private Map<String, Object> options;
 }
 
 PARSER_END(ConditionParser)
-
-
 
 /* WHITE SPACE */
 
@@ -66,7 +64,6 @@ SKIP :
 | "\n"
 | "\r"
 | "\f"
-
 }
 
 /* COMMENTS */
@@ -122,7 +119,7 @@ TOKEN :
 boolean CompilationUnit(Map<String,Object> options):
 {
 	boolean value;
-    this.options = options;
+  this.options = options;
 }
 {
   value = ConditionalExpression()
@@ -152,11 +149,11 @@ boolean ConditionalAndExpression():
 }
 {
   value = UnaryExpressionNotPlusMinus()
-  	{ if (!value) return false; }
+  { if (!value) return false; }
   
   ( "&&"
     value = UnaryExpressionNotPlusMinus()
-  	    { if (!value) return false; }
+  	{ if (!value) return false; }
   )*
   
   { return true; }
