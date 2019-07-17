@@ -12,6 +12,7 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
 
 * v1.1.3 - work in progress
     * Allow `final` when catching exceptions (issue #24)
+    * Changed Automatic-Module-Name to `com.helger.pgcc`
 * v1.1.2 - 2019-05-02
     * JavaCC grammar can parse Java 7 language features ([JavaCC PR 71](https://github.com/javacc/javacc/pull/71))
     * Backported a CPP output fix from JavaCC
