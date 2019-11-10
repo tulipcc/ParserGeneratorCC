@@ -31,18 +31,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.table;
+
+import com.helger.pgcc.parser.TokenizerData;
 
 public interface TokenManagerCodeGenerator
 {
   /**
    * Genrate the code for the token manager. Note that the code generator just
    * produces a buffer.
+   * 
+   * @param tokenizerData
+   *        data
    */
   void generateCode (TokenizerData tokenizerData);
 
   /**
    * Complete the code generation and save any output file(s).
+   * 
+   * @param tokenizerData
+   *        data
    */
   void finish (TokenizerData tokenizerData);
 }

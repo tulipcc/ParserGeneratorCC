@@ -102,14 +102,14 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     {
       m_validKinds[kind / 64] |= (1L << (kind % 64));
       m_validKindCnt++;
-      m_validKindSet.add (kind);
+      m_validKindSet.add (Integer.valueOf (kind));
     }
 
     public void insertFinalKind (final int kind)
     {
       m_finalKinds[kind / 64] |= (1L << (kind % 64));
       m_finalKindCnt++;
-      m_finalKindSet.add (kind);
+      m_finalKindSet.add (Integer.valueOf (kind));
     }
   }
 
@@ -1937,35 +1937,35 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       {
         actualKind = kind;
       }
-      kindToLexicalState.put (actualKind, lexStateIndex);
+      kindToLexicalState.put (Integer.valueOf (actualKind), Integer.valueOf (lexStateIndex));
       if (Options.isIgnoreCase ())
       {
         s = s.toLowerCase (Locale.US);
       }
       final char c = s.charAt (0);
       final int key = LexGenJava.s_lexStateIndex << 16 | c;
-      List <String> l = literalsByLength.get (key);
-      List <Integer> kinds = literalKinds.get (key);
+      List <String> l = literalsByLength.get (Integer.valueOf (key));
+      List <Integer> kinds = literalKinds.get (Integer.valueOf (key));
       int j = 0;
       if (l == null)
       {
-        literalsByLength.put (key, l = new ArrayList <> ());
+        literalsByLength.put (Integer.valueOf (key), l = new ArrayList <> ());
         assert (kinds == null);
         kinds = new ArrayList <> ();
-        literalKinds.put (key, kinds = new ArrayList <> ());
+        literalKinds.put (Integer.valueOf (key), kinds = new ArrayList <> ());
       }
       while (j < l.size () && l.get (j).length () > s.length ())
         j++;
       l.add (j, s);
-      kinds.add (j, actualKind);
+      kinds.add (j, Integer.valueOf (actualKind));
       final int stateIndex = _getStateSetForKind (s.length () - 1, kind);
       if (stateIndex != -1)
       {
-        nfaStateMap.put (actualKind, NfaState.getNfaState (stateIndex));
+        nfaStateMap.put (Integer.valueOf (actualKind), NfaState.getNfaState (stateIndex));
       }
       else
       {
-        nfaStateMap.put (actualKind, null);
+        nfaStateMap.put (Integer.valueOf (actualKind), null);
       }
     }
   }
@@ -1975,13 +1975,14 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     final Map <Integer, Integer> nfaStateIndices = new HashMap <> ();
     for (final int kind : nfaStateMap.keySet ())
     {
-      if (nfaStateMap.get (kind) != null)
+      if (nfaStateMap.get (Integer.valueOf (kind)) != null)
       {
-        nfaStateIndices.put (kind, nfaStateMap.get (kind).m_stateName);
+        nfaStateIndices.put (Integer.valueOf (kind),
+                             Integer.valueOf (nfaStateMap.get (Integer.valueOf (kind)).m_stateName));
       }
       else
       {
-        nfaStateIndices.put (kind, -1);
+        nfaStateIndices.put (Integer.valueOf (kind), Integer.valueOf (-1));
       }
     }
     tokenizerData.setLiteralSequence (literalsByLength);

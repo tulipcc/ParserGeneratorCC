@@ -69,7 +69,7 @@ public class CodeGenerator
   {}
 
   @Nonnull
-  protected final EOutputLanguage getOutputLanguage ()
+  public final EOutputLanguage getOutputLanguage ()
   {
     return Options.getOutputLanguage ();
   }
@@ -344,6 +344,8 @@ public class CodeGenerator
 
   /**
    * for testing
+   *
+   * @return the generated code + newline
    */
   public final String getGeneratedCode ()
   {
@@ -352,6 +354,9 @@ public class CodeGenerator
 
   /**
    * Generate annotation. @XX syntax for java, comments in C++
+   *
+   * @param ann
+   *        annotation name
    */
   public final void genAnnotation (final String ann)
   {
@@ -372,6 +377,9 @@ public class CodeGenerator
 
   /**
    * Generate a modifier
+   *
+   * @param mod
+   *        modifier
    */
   public final void genModifier (final String mod)
   {
@@ -395,6 +403,15 @@ public class CodeGenerator
   /**
    * Generate a class with a given name, an array of superclass and another
    * array of super interfaces
+   *
+   * @param mod
+   *        modifier
+   * @param name
+   *        name
+   * @param superClasses
+   *        super classes
+   * @param superInterfaces
+   *        super interfaces
    */
   public final void genClassStart (final String mod,
                                    final String name,
@@ -511,7 +528,7 @@ public class CodeGenerator
     return Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream";
   }
 
-  protected void writeTemplate (final String name, final Map <String, Object> options) throws IOException
+  public void writeTemplate (final String name, final Map <String, Object> options) throws IOException
   {
     final OutputFileGenerator gen = new OutputFileGenerator (name, options);
     try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())

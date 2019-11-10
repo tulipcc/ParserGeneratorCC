@@ -47,6 +47,16 @@ import org.junit.Test;
  */
 public final class ConditionParserTest
 {
+  private static void _test (final String input, final boolean expectedValue) throws ParseException
+  {
+    final ConditionParser cp = new ConditionParser (input);
+    final Map <String, Object> values = new HashMap <> ();
+    values.put ("F", Boolean.FALSE);
+    values.put ("T", Boolean.TRUE);
+    final boolean value = cp.CompilationUnit (values);
+    assertEquals (Boolean.valueOf (expectedValue), Boolean.valueOf (value));
+  }
+
   @Test
   public void testBasic () throws ParseException
   {
@@ -58,15 +68,5 @@ public final class ConditionParserTest
     _test ("F && T", false);
     _test ("T && T", true);
     _test ("unknown", false);
-  }
-
-  private static void _test (final String input, final boolean expectedValue) throws ParseException
-  {
-    final ConditionParser cp = new ConditionParser (input);
-    final Map <String, Object> values = new HashMap <> ();
-    values.put ("F", Boolean.FALSE);
-    values.put ("T", Boolean.TRUE);
-    final boolean value = cp.CompilationUnit (values);
-    assertEquals (expectedValue, value);
   }
 }

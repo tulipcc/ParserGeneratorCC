@@ -93,7 +93,7 @@ public final class JavaTemplateValidityFuncTest
 
       for (int nKeepLineColumn = 0; nKeepLineColumn <= 1; ++nKeepLineColumn)
       {
-        final boolean bKeepLineColumn = Boolean.valueOf (nKeepLineColumn != 0);
+        final boolean bKeepLineColumn = nKeepLineColumn != 0;
         Options.setStringOption (Options.USEROPTION__KEEP_LINE_COLUMN, Boolean.toString (bKeepLineColumn));
         final String sKeepLineColumn = bKeepLineColumn ? "[keep line/col] " : "";
 

@@ -124,13 +124,13 @@ public class JavaCCInterpreter
       final int beg = curPos;
       int matchedPos = beg;
       int matchedKind = Integer.MAX_VALUE;
-      int nfaStartState = td.m_initialStates.get (curLexState);
+      int nfaStartState = td.m_initialStates.get (Integer.valueOf (curLexState)).intValue ();
 
       char c = input.charAt (curPos);
       if (Options.isIgnoreCase ())
         c = Character.toLowerCase (c);
       final int key = curLexState << 16 | c;
-      final List <String> literals = td.m_literalSequence.get (key);
+      final List <String> literals = td.m_literalSequence.get (Integer.valueOf (key));
       if (literals != null)
       {
         // We need to go in order so that the longest match works.
@@ -151,9 +151,9 @@ public class JavaCCInterpreter
           if (index == s.length ())
           {
             // Found a string literal match.
-            matchedKind = td.m_literalKinds.get (key).get (litIndex);
+            matchedKind = td.m_literalKinds.get (Integer.valueOf (key)).get (litIndex).intValue ();
             matchedPos = curPos + index - 1;
-            nfaStartState = td.m_kindToNfaStartState.get (matchedKind);
+            nfaStartState = td.m_kindToNfaStartState.get (Integer.valueOf (matchedKind)).intValue ();
             curPos += index;
             break;
           }
@@ -165,8 +165,8 @@ public class JavaCCInterpreter
       {
         // We need to add the composite states first.
         int kind = Integer.MAX_VALUE;
-        curStates.add (nfaStartState);
-        curStates.addAll (td.m_nfa.get (nfaStartState).m_compositeStates);
+        curStates.add (Integer.valueOf (nfaStartState));
+        curStates.addAll (td.m_nfa.get (Integer.valueOf (nfaStartState)).m_compositeStates);
         do
         {
           c = input.charAt (curPos);
@@ -174,13 +174,11 @@ public class JavaCCInterpreter
             c = Character.toLowerCase (c);
           for (final int state : curStates)
           {
-            final TokenizerData.NfaState nfaState = td.m_nfa.get (state);
-            if (nfaState.m_characters.contains (c))
+            final TokenizerData.NfaState nfaState = td.m_nfa.get (Integer.valueOf (state));
+            if (nfaState.m_characters.contains (Character.valueOf (c)))
             {
               if (kind > nfaState.m_kind)
-              {
                 kind = nfaState.m_kind;
-              }
               newStates.addAll (nfaState.m_nextStates);
             }
           }
@@ -196,13 +194,13 @@ public class JavaCCInterpreter
           }
         } while (!curStates.isEmpty () && ++curPos < input_size);
       }
-      if (matchedPos == beg && matchedKind > td.m_wildcardKind.get (curLexState))
+      if (matchedPos == beg && matchedKind > td.m_wildcardKind.get (Integer.valueOf (curLexState)).intValue ())
       {
-        matchedKind = td.m_wildcardKind.get (curLexState);
+        matchedKind = td.m_wildcardKind.get (Integer.valueOf (curLexState)).intValue ();
       }
       if (matchedKind != Integer.MAX_VALUE)
       {
-        final TokenizerData.MatchInfo matchInfo = td.m_allMatches.get (matchedKind);
+        final TokenizerData.MatchInfo matchInfo = td.m_allMatches.get (Integer.valueOf (matchedKind));
         if (matchInfo.m_action != null)
         {
           PGPrinter.error ("Actions not implemented (yet) in intererpreted mode");

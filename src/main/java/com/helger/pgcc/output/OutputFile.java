@@ -104,6 +104,7 @@ public class OutputFile implements AutoCloseable
    *        if the file already exists, and cannot be overwritten, this is a
    *        list of options (such s STATIC=false) to check for changes.
    * @throws IOException
+   *         on error
    */
   public OutputFile (final File file, final String compatibleVersion, final String [] options) throws IOException
   {
@@ -127,8 +128,8 @@ public class OutputFile implements AutoCloseable
           throw new IOException ("No MD5 implementation", e);
         }
         try (final DigestOutputStream digestStream = new DigestOutputStream (new NullOutputStream (), digest);
-            final PrintWriter pw = new PrintWriter (new OutputStreamWriter (digestStream,
-                                                                            Options.getOutputEncoding ())))
+             final OutputStreamWriter osw = new OutputStreamWriter (digestStream, Options.getOutputEncoding ());
+             final PrintWriter pw = new PrintWriter (osw))
         {
           String line;
           String existingMD5 = null;
@@ -270,6 +271,7 @@ public class OutputFile implements AutoCloseable
    *
    * @return the {@link PrintWriter} to use.
    * @throws IOException
+   *         on IO error
    */
   @WillCloseWhenClosed
   public PrintWriter getPrintWriter () throws IOException

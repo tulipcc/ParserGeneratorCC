@@ -75,7 +75,7 @@ public abstract class JavaCCParserInternals
     private ModifierSet ()
     {}
 
-    /**
+    /*
      * A set of accessors that indicate whether the specified modifier is in the
      * set.
      */

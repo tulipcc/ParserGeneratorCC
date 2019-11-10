@@ -34,6 +34,8 @@
 package com.helger.pgcc.parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -63,23 +65,23 @@ public final class OptionsTest
   {
     assertEquals (44, Options.s_optionValues.size ());
 
-    assertEquals (true, Options.isBuildParser ());
-    assertEquals (true, Options.isBuildTokenManager ());
-    assertEquals (false, Options.isCacheTokens ());
-    assertEquals (false, Options.isCommonTokenAction ());
-    assertEquals (false, Options.isDebugLookahead ());
-    assertEquals (false, Options.isDebugParser ());
-    assertEquals (false, Options.isDebugTokenManager ());
-    assertEquals (true, Options.isErrorReporting ());
-    assertEquals (false, Options.isForceLaCheck ());
-    assertEquals (false, Options.isIgnoreCase ());
-    assertEquals (false, Options.isJavaUnicodeEscape ());
-    assertEquals (true, Options.isKeepLineColumn ());
-    assertEquals (true, Options.isSanityCheck ());
-    assertEquals (false, Options.isUnicodeInput ());
-    assertEquals (false, Options.isJavaUserCharStream ());
-    assertEquals (false, Options.isUserTokenManager ());
-    assertEquals (false, Options.isTokenManagerUsesParser ());
+    assertTrue (Options.isBuildParser ());
+    assertTrue (Options.isBuildTokenManager ());
+    assertFalse (Options.isCacheTokens ());
+    assertFalse (Options.isCommonTokenAction ());
+    assertFalse (Options.isDebugLookahead ());
+    assertFalse (Options.isDebugParser ());
+    assertFalse (Options.isDebugTokenManager ());
+    assertTrue (Options.isErrorReporting ());
+    assertFalse (Options.isForceLaCheck ());
+    assertFalse (Options.isIgnoreCase ());
+    assertFalse (Options.isJavaUnicodeEscape ());
+    assertTrue (Options.isKeepLineColumn ());
+    assertTrue (Options.isSanityCheck ());
+    assertFalse (Options.isUnicodeInput ());
+    assertFalse (Options.isJavaUserCharStream ());
+    assertFalse (Options.isUserTokenManager ());
+    assertFalse (Options.isTokenManagerUsesParser ());
 
     assertEquals (2, Options.getChoiceAmbiguityCheck ());
     assertEquals (1, Options.getLookahead ());
@@ -161,13 +163,13 @@ public final class OptionsTest
   @Test
   public void testSetBooleanOption ()
   {
-    assertEquals (false, Options.isJavaUnicodeEscape ());
+    assertFalse (Options.isJavaUnicodeEscape ());
     Options.setCmdLineOption ("-JAVA_UNICODE_ESCAPE:true");
-    assertEquals (true, Options.isJavaUnicodeEscape ());
+    assertTrue (Options.isJavaUnicodeEscape ());
 
-    assertEquals (true, Options.isSanityCheck ());
+    assertTrue (Options.isSanityCheck ());
     Options.setCmdLineOption ("-SANITY_CHECK=false");
-    assertEquals (false, Options.isSanityCheck ());
+    assertFalse (Options.isSanityCheck ());
 
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());
@@ -244,14 +246,14 @@ public final class OptionsTest
   @Test
   public void testNormalize ()
   {
-    assertEquals (false, Options.isDebugLookahead ());
-    assertEquals (false, Options.isDebugParser ());
+    assertFalse (Options.isDebugLookahead ());
+    assertFalse (Options.isDebugParser ());
 
     Options.setCmdLineOption ("-DEBUG_LOOKAHEAD=TRUE");
     Options.normalize ();
 
-    assertEquals (true, Options.isDebugLookahead ());
-    assertEquals (true, Options.isDebugParser ());
+    assertTrue (Options.isDebugLookahead ());
+    assertTrue (Options.isDebugParser ());
 
     assertEquals (0, JavaCCErrors.getWarningCount ());
     assertEquals (0, JavaCCErrors.getErrorCount ());

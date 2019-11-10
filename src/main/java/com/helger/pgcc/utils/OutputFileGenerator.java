@@ -108,7 +108,9 @@ public class OutputFileGenerator
    * Generate the output file.
    *
    * @param out
+   *        writer
    * @throws IOException
+   *         on IO error
    */
   public void generate (@WillNotClose final Writer out) throws IOException
   {
@@ -119,9 +121,8 @@ public class OutputFileGenerator
     if (is == null)
       throw new IOException ("Invalid template name: " + m_sTemplateName);
 
-    try (
-        final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is,
-                                                                                                   TEMPLATE_FILE_CHARSET)))
+    try (final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is,
+                                                                                                    TEMPLATE_FILE_CHARSET)))
     {
       _process (in, out, false);
     }

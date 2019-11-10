@@ -100,8 +100,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpStateSets(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpStateSets(CodeGenerator)}
    */
   @Test
   public void testDumpStateSetsInitialised ()
@@ -122,8 +121,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState# DumpCharAndRangeMoves(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpCharAndRangeMoves(CodeGenerator)}
    */
   @Test
   public void testDumpCharAndRangeMoves ()
@@ -144,8 +142,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpCharAndRangeMoves(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpCharAndRangeMoves(CodeGenerator)}
    */
   @Test
   public void testDumpCharAndRangeMovesInitialised ()
@@ -169,8 +166,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpNonAsciiMoveMethods(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpNonAsciiMoveMethods(CodeGenerator)}
    */
   @Test
   public void testDumpNonAsciiMoveMethods ()
@@ -182,8 +178,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpNonAsciiMoveMethods(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpNonAsciiMoveMethods(CodeGenerator)}
    */
   @Test
   public void testDumpNonAsciiMoveMethodsInitialised ()
@@ -375,8 +370,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpMoveNfa(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpMoveNfa(CodeGenerator)}
    */
   @Test
   public void testDumpMoveNfa ()
@@ -433,8 +427,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpMoveNfa(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpMoveNfa(CodeGenerator)}.
    */
   @Test
   public void testDumpMoveNfaInitialised ()
@@ -447,8 +440,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpStatesForState(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpStatesForStateJava(CodeGenerator)}.
    */
   @Test
   public void testDumpStatesForState ()
@@ -463,8 +455,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpStatesForState(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpStatesForStateJava(CodeGenerator)}.
    */
   @Test
   public void testDumpStatesForStateInitialised ()
@@ -577,8 +568,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpStatesForKind(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpStatesForKind(CodeGenerator)}.
    */
   @Test
   public void testDumpStatesForKind ()
@@ -596,8 +586,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
   }
 
   /**
-   * Test method for
-   * {@link org.javacc.parser.NfaState#DumpStatesForKind(CodeGenerator)}.
+   * Test method for {@link NfaState#dumpStatesForKind(CodeGenerator)}.
    */
   @Test
   public void testDumpStatesForKindInitialised ()

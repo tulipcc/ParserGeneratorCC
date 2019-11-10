@@ -88,6 +88,7 @@ import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.OutputHelper;
+import com.helger.pgcc.parser.table.TokenManagerCodeGenerator;
 
 /**
  * Generate lexer.
@@ -232,9 +233,9 @@ public class LexGenJava extends CodeGenerator
       printTokenSetup (t);
       setColToStart ();
 
-      for (int j = 0; j < s_token_mgr_decls.size (); j++)
+      for (final Token s_token_mgr_decl : s_token_mgr_decls)
       {
-        t = s_token_mgr_decls.get (j);
+        t = s_token_mgr_decl;
         if (t.kind == JavaCCParserConstants.IDENTIFIER && bCommonTokenActionNeeded && !bCommonTokenActionSeen)
           bCommonTokenActionSeen = t.image.equals ("CommonTokenAction");
 
@@ -291,7 +292,7 @@ public class LexGenJava extends CodeGenerator
   }
 
   @Override
-  protected void writeTemplate (final String name, final Map <String, Object> additionalOptions) throws IOException
+  public void writeTemplate (final String name, final Map <String, Object> additionalOptions) throws IOException
   {
     final Map <String, Object> options = Options.getAllOptions ();
     options.put ("maxOrdinal", Integer.valueOf (s_maxOrdinal));
@@ -303,13 +304,13 @@ public class LexGenJava extends CodeGenerator
     options.put ("hasMoreActions", Boolean.valueOf (s_hasMoreActions));
     options.put ("hasSkipActions", Boolean.valueOf (s_hasSkipActions));
     options.put ("hasTokenActions", Boolean.valueOf (s_hasTokenActions));
-    options.put ("stateSetSize", s_stateSetSize);
-    options.put ("hasActions", s_hasMoreActions || s_hasSkipActions || s_hasTokenActions);
+    options.put ("stateSetSize", Integer.valueOf (s_stateSetSize));
+    options.put ("hasActions", Boolean.valueOf (s_hasMoreActions || s_hasSkipActions || s_hasTokenActions));
     options.put ("tokMgrClassName", s_tokMgrClassName);
     int x = 0;
     for (final int l : s_maxLongsReqd)
       x = Math.max (x, l);
-    options.put ("maxLongs", x);
+    options.put ("maxLongs", Integer.valueOf (x));
     options.put ("cu_name", s_cu_name);
 
     // options.put("", .valueOf(maxOrdinal));
@@ -457,9 +458,8 @@ public class LexGenJava extends CodeGenerator
         if (i == 0)
           ignoring = ignore;
 
-        for (int j = 0; j < rexps.size (); j++)
+        for (final RegExprSpec respec : rexps)
         {
-          final RegExprSpec respec = rexps.get (j);
           s_curRE = respec.rexp;
 
           s_rexprs[s_curKind = s_curRE.m_ordinal] = s_curRE;
@@ -646,7 +646,7 @@ public class LexGenJava extends CodeGenerator
         final StringBuilder sb = new StringBuilder ();
         for (final Token t : act.getActionTokens ())
           sb.append (t.image).append (' ');
-        actionStrings.put (i, sb.toString ());
+        actionStrings.put (Integer.valueOf (i), sb.toString ());
       }
       s_tokenizerData.setDefaultLexState (s_defaultLexState);
       s_tokenizerData.setLexStateNames (s_lexStateName);

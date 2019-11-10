@@ -44,7 +44,7 @@ public class JJTreeNode extends SimpleNode
     super (nID);
   }
 
-  public JJTreeNode (final JJTreeParser p, final int nID)
+  public JJTreeNode (@SuppressWarnings ("unused") final JJTreeParser p, final int nID)
   {
     // Ignore parser - whysoever
     this (nID);

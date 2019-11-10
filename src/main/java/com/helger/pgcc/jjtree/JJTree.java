@@ -142,6 +142,8 @@ public class JJTree
   /**
    * A main program that exercises the parser.
    *
+   * @param args
+   *        commandline arguments
    * @return {@link ESuccess}
    */
   @Nonnull

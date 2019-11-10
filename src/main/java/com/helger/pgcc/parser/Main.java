@@ -215,6 +215,8 @@ public class Main
    *
    * @param args
    *        arguments to main
+   * @throws IOException
+   *         on IO error
    * @see #mainProgram(String...) for a version that does NOT call
    *      <code>System.exit</code>
    */
@@ -227,6 +229,12 @@ public class Main
   /**
    * The method to call to exercise the parser from other Java programs. It
    * returns an error code. See how the main program above uses this method.
+   * 
+   * @param args
+   *        main arguments
+   * @return {@link ESuccess}
+   * @throws IOException
+   *         on IO error
    */
   @Nonnull
   public static ESuccess mainProgram (final String... args) throws IOException

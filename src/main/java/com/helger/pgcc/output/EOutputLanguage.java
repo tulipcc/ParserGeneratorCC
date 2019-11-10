@@ -103,7 +103,6 @@ public enum EOutputLanguage implements IHasID <String>
 
   /**
    * @return The native data type for "long" values.
-   * @see #getLongValueSuffix()
    */
   @Nonnull
   @Nonempty

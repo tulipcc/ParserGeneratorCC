@@ -43,7 +43,15 @@ public class ASTOptionBinding extends JJTreeNode
     super (nID);
   }
 
-  void initialize (final String sName, final String v)
+  /**
+   * init
+   * 
+   * @param sName
+   *        name
+   * @param sValue
+   *        value
+   */
+  void initialize (final String sName, final String sValue)
   {
     m_name = sName;
 

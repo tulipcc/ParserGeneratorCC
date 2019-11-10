@@ -88,6 +88,11 @@ public final class JavaCCGlobals
   /**
    * This prints the banner line when the various tools are invoked. This takes
    * as argument the tool's full name and its version.
+   *
+   * @param fullName
+   *        full application name
+   * @param ver
+   *        version string
    */
   public static void bannerLine (final String fullName, final String ver)
   {
@@ -236,6 +241,12 @@ public final class JavaCCGlobals
   /**
    * Returns the identifying string for the file name, given a toolname used to
    * generate it.
+   *
+   * @param toolName
+   *        tool name
+   * @param fileName
+   *        file name
+   * @return ID string
    */
   public static String getIdString (final String toolName, final String fileName)
   {
@@ -244,7 +255,13 @@ public final class JavaCCGlobals
 
   /**
    * Returns the identifying string for the file name, given a set of tool names
-   * that are used to generate it.
+   * that are used to generate it. Total name may not exceed 200 characters.
+   *
+   * @param toolNames
+   *        tool names
+   * @param fileName
+   *        file names
+   * @return ID string
    */
   public static String getIdString (final List <String> toolNames, final String fileName)
   {
@@ -260,15 +277,19 @@ public final class JavaCCGlobals
   }
 
   /**
-   * Returns true if tool name passed is one of the tool names returned by
-   * getToolNames(fileName).
+   * @param toolName
+   *        tool name
+   * @param fileName
+   *        file name
+   * @return <code>true</code> if tool name passed is one of the tool names
+   *         returned by getToolNames(fileName).
    */
   public static boolean isGeneratedBy (final String toolName, final String fileName)
   {
     final List <String> v = getToolNames (fileName);
 
-    for (int i = 0; i < v.size (); i++)
-      if (toolName.equals (v.get (i)))
+    for (final String element : v)
+      if (toolName.equals (element))
         return true;
 
     return false;
@@ -323,6 +344,10 @@ public final class JavaCCGlobals
   /**
    * Returns a List of names of the tools that have been used to generate the
    * given file.
+   *
+   * @param fileName
+   *        file name
+   * @return tool names
    */
   @Nonnull
   public static List <String> getToolNames (final String fileName)
@@ -682,7 +707,11 @@ public final class JavaCCGlobals
   }
 
   /**
-   * Replaces all backslahes with double backslashes.
+   * Replaces all backslashes with double backslashes.
+   *
+   * @param str
+   *        source string
+   * @return result string
    */
   public static String replaceBackslash (final String str)
   {
@@ -692,13 +721,12 @@ public final class JavaCCGlobals
       return str;
     }
 
-    final StringBuilder b = new StringBuilder (str.length () * 2);
+    final StringBuilder aSB = new StringBuilder (str.length () * 2);
     for (final char c : str.toCharArray ())
       if (c == '\\')
-        b.append ("\\\\");
+        aSB.append ("\\\\");
       else
-        b.append (c);
-
-    return b.toString ();
+        aSB.append (c);
+    return aSB.toString ();
   }
 }

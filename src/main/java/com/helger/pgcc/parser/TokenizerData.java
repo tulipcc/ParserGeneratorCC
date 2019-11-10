@@ -181,7 +181,7 @@ public class TokenizerData
                            final int kind)
   {
     final NfaState nfaState = new NfaState (index, characters, nextStates, compositeStates, kind);
-    m_nfa.put (index, nfaState);
+    m_nfa.put (Integer.valueOf (index), nfaState);
   }
 
   public void setInitialStates (final Map <Integer, Integer> initialStates)
@@ -239,8 +239,8 @@ public class TokenizerData
                                                  i,
                                                  matchType,
                                                  newLexStateIndices[i],
-                                                 actions.get (i));
-      m_allMatches.put (i, matchInfo);
+                                                 actions.get (Integer.valueOf (i)));
+      m_allMatches.put (Integer.valueOf (i), matchInfo);
     }
   }
 }

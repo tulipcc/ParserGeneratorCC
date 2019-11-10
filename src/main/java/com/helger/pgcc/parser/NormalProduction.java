@@ -345,6 +345,7 @@ public abstract class NormalProduction
   /**
    * @param firstToken
    *        the firstToken to set
+   * @return parameter token
    */
   public Token setFirstToken (final Token firstToken)
   {
