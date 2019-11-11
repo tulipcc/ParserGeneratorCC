@@ -774,8 +774,9 @@ public class ParseGenJava extends CodeGenerator
     genCodeNewLine ();
     if (s_jj2index != 0)
     {
-      genCodeLine ("  @SuppressWarnings(\"serial\")");
-      genCodeLine ("  private static final class LookaheadSuccess extends IllegalStateException { }");
+      if (false)
+        genCodeLine ("  @SuppressWarnings(\"serial\")");
+      genCodeLine ("  private static final class LookaheadSuccess extends IllegalStateException {}");
       genCodeLine ("  private final LookaheadSuccess jj_ls = new LookaheadSuccess();");
       genCodeLine ("  private " + eOutputLanguage.getTypeBoolean () + " jj_scan_token(int kind) {");
       genCodeLine ("	 if (jj_scanpos == jj_lastpos) {");

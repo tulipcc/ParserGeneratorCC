@@ -85,7 +85,6 @@ package com.helger.pgcc.parser;
 
 import java.util.List;
 import java.util.ArrayList;
-import com.helger.pgcc.output.*;
 import com.helger.pgcc.parser.Options;
 
 public class JavaCCParser extends JavaCCParserInternals {
@@ -685,8 +684,8 @@ void javacode_production() :
     String lhs;
     Token t = getToken(1);
     p.setFirstToken(t);
-    List excName;
-    p.setThrowsList(new ArrayList());
+    List<Token> excName;
+    p.setThrowsList(new ArrayList<List<Token>>());
     p.setLine(t.beginLine);
     p.setColumn(t.beginColumn);
   }
@@ -698,7 +697,7 @@ void javacode_production() :
   FormalParameters(p.getParameterListTokens())
   [ "throws"
   {
-    excName = new ArrayList();
+    excName = new ArrayList<Token>();
   }
     Name(excName)
   {
@@ -706,7 +705,7 @@ void javacode_production() :
   }
     (
   {
-    excName = new ArrayList();
+    excName = new ArrayList<Token>();
   }
       "," Name(excName)
   {
@@ -727,8 +726,8 @@ void cppcode_production() :
     String lhs;
     Token t = getToken(1);
     p.setFirstToken(t);
-    List excName;
-    p.setThrowsList(new ArrayList());
+    List<Token> excName;
+    p.setThrowsList(new ArrayList<List<Token>>());
     p.setLine(t.beginLine);
     p.setColumn(t.beginColumn);
   }
@@ -740,7 +739,7 @@ void cppcode_production() :
   FormalParameters(p.getParameterListTokens())
   [ "throws"
   {
-    excName = new ArrayList();
+    excName = new ArrayList<Token>();
   }
     Name(excName)
   {
@@ -748,7 +747,7 @@ void cppcode_production() :
   }
     (
   {
-    excName = new ArrayList();
+    excName = new ArrayList<Token>();
   }
       "," Name(excName)
   {
@@ -767,11 +766,11 @@ void bnf_production() :
   {
     Container c = new Container();
     Token t = getToken(1);
-    List excName;
+    List<Token> excName;
     String lhs;
     BNFProduction p = new BNFProduction();
     p.setFirstToken(t);
-    p.setThrowsList(new ArrayList());
+    p.setThrowsList(new ArrayList<List<Token>>());
     p.setLine(t.beginLine);
     p.setColumn(t.beginColumn);
     m_bJumpPatched = false;
@@ -783,7 +782,7 @@ void bnf_production() :
   FormalParameters(p.getParameterListTokens())
   [ "throws"
   {
-    excName = new ArrayList();
+    excName = new ArrayList<Token>();
   }
     Name(excName)
   {
@@ -791,7 +790,7 @@ void bnf_production() :
   }
     (
   {
-    excName = new ArrayList();
+    excName = new ArrayList<Token>();
   }
       "," Name(excName)
   {
@@ -817,9 +816,8 @@ void AccessModifier(NormalProduction p) :
 {
   ( t = "public" | t = "protected" | t = "private" )?
   {
-    if(t != null){
+    if(t != null)
       p.setAccessMod(t.image);
-    }
   }
 }
 
@@ -890,7 +888,7 @@ void regular_expr_production() :
 
 void token_manager_decls() :
   {
-    List decls = new ArrayList();
+    List<Token> decls = new ArrayList<Token>();
     Token t;
   }
 {
@@ -1189,11 +1187,11 @@ void expansion_unit(Container c) :
 |
   {
     Container expch = new Container();
-    List types = new ArrayList();
-    List ids = new ArrayList();
-    List catchblks = new ArrayList();
-    List finallyblk = null;
-    List vec = new ArrayList();
+    List<List<Token>> types = new ArrayList<List<Token>>();
+    List<Token> ids = new ArrayList<Token>();
+    List<List<Token>> catchblks = new ArrayList<List<Token>>();
+    List<Token> finallyblk = null;
+    List<Token> vec = new ArrayList<Token>();
     Token t0;
   }
   t0="try" "{" expansion_choices(expch) "}"
@@ -1201,7 +1199,8 @@ void expansion_unit(Container c) :
     [ "final" ]
     {
       if (!isJavaLanguage()) {
-        while (getToken(1).kind != RPAREN) getNextToken();
+        while (getToken(1).kind != RPAREN) 
+          getNextToken();
       }
       t = getToken(0);
       t.kind = IDENTIFIER;
@@ -1212,14 +1211,14 @@ void expansion_unit(Container c) :
   {
     types.add(vec);
     ids.add(t);
-    vec = new ArrayList();
+    vec = new ArrayList<Token>();
     m_bInAction = true;
   }
     Block(vec)
   {
     m_bInAction = false;
     catchblks.add(vec);
-    vec = new ArrayList();
+    vec = new ArrayList<Token>();
   }
   )*
   [
@@ -1686,14 +1685,14 @@ void TypeDeclaration():
 }
 
 
-void ClassOrInterfaceDeclaration(int modifiers, List tokens):
+void ClassOrInterfaceDeclaration(int modifiers, List<Token> tokens):
 {
    boolean isInterface = false;
     m_nClassNesting++;
     Token t;
     boolean is_parser_class = false;
   if (tokens == null)
-    tokens = new ArrayList();
+    tokens = new ArrayList<Token>();
 }
 {
   ( "class" | "interface" { isInterface = true; } )
@@ -1785,7 +1784,7 @@ void TypeBound():
    "extends" ClassOrInterfaceType() ( "&" ClassOrInterfaceType() )*
 }
 
-void ClassOrInterfaceBody(boolean isInterface, List tokens):
+void ClassOrInterfaceBody(boolean isInterface, List<Token> tokens):
 /*
  * Parsing this fills "tokens" with all tokens of the block
  * excluding the braces at each end.
@@ -1793,7 +1792,7 @@ void ClassOrInterfaceBody(boolean isInterface, List tokens):
   {
     Token first, last;
     if (tokens == null)
-      tokens = new ArrayList();
+      tokens = new ArrayList<Token>();
   }
 {
   "{"
@@ -1897,7 +1896,7 @@ void MethodDeclarator():
   <IDENTIFIER> FormalParameters(null) ( "[" "]" )*
 }
 
-void FormalParameters(List tokens) :
+void FormalParameters(List<Token> tokens) :
 /*
  * Parsing this fills "tokens" with all tokens of the formal
  * parameters excluding the parentheses at each end.
@@ -1905,7 +1904,7 @@ void FormalParameters(List tokens) :
   {
     Token first, last;
     if (tokens == null)
-      tokens = new ArrayList();
+      tokens = new ArrayList<Token>();
   }
 {
   "("
@@ -2013,7 +2012,7 @@ void ClassOrInterfaceType():
   ( LOOKAHEAD(2) ( "." | "::" ) <IDENTIFIER> [ LOOKAHEAD(2) TypeArguments(null) ] )*
 }
 
-void TypeArguments(List tokens):
+void TypeArguments(List<Token> tokens):
 /*
  * Parsing this fills "tokens" with all tokens of the arguments
  * excluding the parentheses at each end.
@@ -2021,7 +2020,7 @@ void TypeArguments(List tokens):
 {
   Token first, last;
   if (tokens == null)
-   tokens = new ArrayList();
+   tokens = new ArrayList<Token>();
 }
 {
    "<"   { first = getToken(0); }
@@ -2079,11 +2078,11 @@ void PrimitiveType():
 }
 
 
-void ResultType(List tokens) :
+void ResultType(List<Token> tokens) :
   {
     Token first = getToken(1);
     if (tokens == null)
-      tokens = new ArrayList();
+      tokens = new ArrayList<Token>();
   }
 {
 (
@@ -2108,14 +2107,14 @@ void ResultType(List tokens) :
   }
 }
 
-void Name(List tokens) :
+void Name(List<Token> tokens) :
 /*
  * A lookahead of 2 is required below since "Name" can be followed
  * by a ".*" when used in the context of an "ImportDeclaration".
  */
   {
     if (tokens == null)
-      tokens = new ArrayList();
+      tokens = new ArrayList<Token>();
     Token first = getToken(1);
   }
 {
@@ -2127,7 +2126,8 @@ void Name(List tokens) :
     Token t = first;
     while (true) {
       tokens.add(t);
-      if (t == last) break;
+      if (t == last)
+        break;
       t = t.next;
     }
   }
@@ -2145,7 +2145,7 @@ void NameList():
  * Expression syntax follows.
  */
 
-void Expression(List tokens) :
+void Expression(List<Token> tokens) :
 /*
  * This expansion has been written this way instead of:
  *   Assignment() | ConditionalExpression()
@@ -2158,7 +2158,7 @@ void Expression(List tokens) :
   {
     Token first = getToken(1);
     if (tokens == null)
-      tokens = new ArrayList();
+      tokens = new ArrayList<Token>();
   }
 {
   ConditionalExpression()
@@ -2432,7 +2432,7 @@ void NullLiteral() :
   "null"
 }
 
-void Arguments(List tokens) :
+void Arguments(List<Token> tokens) :
 /*
  * Parsing this fills "tokens" with all tokens of the arguments
  * excluding the parentheses at each end.
@@ -2440,7 +2440,7 @@ void Arguments(List tokens) :
   {
     Token first, last;
     if (tokens == null)
-      tokens = new ArrayList();
+      tokens = new ArrayList<Token>();
   }
 {
   "("
@@ -2556,7 +2556,7 @@ void LabeledStatement():
   <IDENTIFIER> ":" Statement()
 }
 
-void Block(List tokens) :
+void Block(List<Token> tokens) :
 /*
  * Parsing this fills "tokens" with all tokens of the block
  * excluding the braces at each end.
@@ -2564,7 +2564,7 @@ void Block(List tokens) :
   {
     Token first, last;
     if (tokens == null)
-      tokens = new ArrayList();
+      tokens = new ArrayList<Token>();
   }
 {
   "{"
