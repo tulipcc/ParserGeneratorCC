@@ -45,7 +45,6 @@ PARSER_BEGIN(ConditionParser)
 
 package com.helger.pgcc.utils;
 
-import java.io.StringReader;
 import java.util.Map;
 
 public class ConditionParser
