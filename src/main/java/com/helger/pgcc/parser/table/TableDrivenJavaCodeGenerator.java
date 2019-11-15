@@ -45,9 +45,6 @@ import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.TokenizerData;
-import com.helger.pgcc.parser.TokenizerData.EMatchType;
-import com.helger.pgcc.parser.TokenizerData.MatchInfo;
-import com.helger.pgcc.parser.TokenizerData.NfaState;
 
 /**
  * Class that implements a table driven code generator for the token manager in
