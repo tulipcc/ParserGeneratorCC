@@ -1,5 +1,5 @@
 /**
- * Copyright 2017-2019 Philip Helger, pgcc@helger.com
+ * Copyright 2017-2020 Philip Helger, pgcc@helger.com
  *
  * Copyright 2011 Google Inc. All Rights Reserved.
  * Author: sreeni@google.com (Sreeni Viswanadha)
@@ -31,7 +31,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.helger.pgcc.output.java;
 
 import static org.junit.Assert.assertTrue;
