@@ -130,6 +130,7 @@ public final class JJDocMain
    * @throws Exception
    *         in case of error
    */
+  @SuppressWarnings ("resource")
   @Nonnull
   public static ESuccess mainProgram (final String [] args) throws Exception
   {
