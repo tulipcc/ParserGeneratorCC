@@ -121,6 +121,7 @@ implements CharStream
 #fi
 
         bufpos += (bufsize - tokenBegin);
+        // https://github.com/phax/ParserGeneratorCC/pull/23
         maxNextCharInd = bufpos;
       }
       else
@@ -137,6 +138,7 @@ implements CharStream
 #fi
 
         bufpos -= tokenBegin;
+        // https://github.com/phax/ParserGeneratorCC/pull/23
         maxNextCharInd = bufpos;
       }
     }
