@@ -236,7 +236,7 @@ NON-TERMINALS
 	expansion_unit	:=	"LOOKAHEAD" "(" local_lookahead ")"
 		|	Block
 		|	"[" expansion_choices "]"
-		|	"try" "{" expansion_choices "}" ( "catch" "(" ( Name <IDENTIFIER> )? ")" Block )* ( "finally" Block )?
+		|	"try" "{" expansion_choices "}" ( "catch" "(" ( "final" )? ( Name <IDENTIFIER> )? ")" Block )* ( "finally" Block )?
 		|	( PrimaryExpression "=" )? ( identifier ( TypeArguments )? Arguments | regular_expression ( "." <IDENTIFIER> )? )
 		|	"(" expansion_choices ")" ( "+" | "*" | "?" )?
 	regular_expression	:=	StringLiteral
