@@ -35,6 +35,7 @@ package com.helger.pgcc.utils;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,10 +50,14 @@ public final class ConditionParserTest
 {
   private static void _test (final String input, final boolean expectedValue) throws ParseException
   {
-    final ConditionParser cp = new ConditionParser (input);
     final Map <String, Object> values = new HashMap <> ();
     values.put ("F", Boolean.FALSE);
     values.put ("T", Boolean.TRUE);
+    _test(input, values, expectedValue);
+  }
+
+  private static void _test(String input, Map<String, Object> values, boolean expectedValue) throws ParseException {
+    final ConditionParser cp = new ConditionParser (input);
     final boolean value = cp.CompilationUnit (values);
     assertEquals (Boolean.valueOf (expectedValue), Boolean.valueOf (value));
   }
@@ -68,5 +73,15 @@ public final class ConditionParserTest
     _test ("F && T", false);
     _test ("T && T", true);
     _test ("unknown", false);
+  }
+
+  @Test
+  public void testBufferExpansion () throws ParseException
+  {
+    char[] a = new char[2048 - 4 /* open + close of the comment */];
+    Arrays.fill(a, 'a');
+    char[] b = new char[4096 - 4 + 1 /* force the buffer to expand and wrap around */];
+    Arrays.fill(b, 'b');
+    _test (String.format("/*%s*/\n/*%s*/\nT || F", String.valueOf(a), String.valueOf(b)), true);
   }
 }
