@@ -62,15 +62,22 @@ implements CharStream
   /** Tab size for formatting. Usually in the range 1 to 8. */
   private int m_nTabSize = 1;
 
-  /** Position in buffer. */
-  protected int bufpos;
+  /** Internal circular buffer */
+  protected char[] buffer;
+
+  /** Overall buffer size - same as buffer.length */
   protected int bufsize;
+
+  /** Current read position in buffer. */
+  protected int bufpos;
+  
+  /** The number of unoccupied buffer array positions */
   protected int available;
+  
+  /** The first array index (of `buffer`) that the current token starts */
   protected int tokenBegin;
 
-  /** Internal backup buffer */
-  protected char[] buffer;
-  /** Characters in the backup buffer */
+  /** Characters in the backup/pushBack buffer */
   protected int inBuf;
   protected int maxNextCharInd;
 
@@ -166,14 +173,19 @@ implements CharStream
     
     if (bWrapAround)
     {
-       // From offset "tokenBegin" to offset 0
- 
-     // src, srcPos, dest, destPos, length
-      System.arraycopy(buffer, tokenBegin, newbuffer, 0, nPreservedChars);
-      System.arraycopy(buffer, 0, newbuffer, nPreservedChars, bufpos);
-      buffer = newbuffer;
-#if KEEP_LINE_COLUMN
+      // Move from offset "tokenBegin" to offset 0
+      // arraycopy(src, srcPos, dest, destPos, length)
 
+      // copy the "tail end" to the "start" (index 0) of the new buffer array 
+      System.arraycopy(buffer, tokenBegin, newbuffer, 0, nPreservedChars);
+      
+      // copy the remaining "wrap around" content of the buffer from the start of the original buffer (starting at srcPos index 0) 
+      System.arraycopy(buffer, 0, newbuffer, nPreservedChars, bufpos);
+      
+      // swap the new buffer in place of the old buffer
+      buffer = newbuffer;
+      
+#if KEEP_LINE_COLUMN
       System.arraycopy(m_aBufLine, tokenBegin, newbufline, 0, nPreservedChars);
       System.arraycopy(m_aBufLine, 0, newbufline, nPreservedChars, bufpos);
       m_aBufLine = newbufline;
@@ -181,14 +193,14 @@ implements CharStream
       System.arraycopy(m_aBufColumn, tokenBegin, newbufcolumn, 0, nPreservedChars);
       System.arraycopy(m_aBufColumn, 0, newbufcolumn, nPreservedChars, bufpos);
       m_aBufColumn = newbufcolumn;
-#fi
 
+#fi
       bufpos += nPreservedChars;
       maxNextCharInd = bufpos;
     }
     else
     {
-      // From offset "tokenBegin" to offset 0
+      // Move from offset "tokenBegin" to offset 0
       
       System.arraycopy(buffer, tokenBegin, newbuffer, 0, nPreservedChars);
       buffer = newbuffer;
@@ -213,32 +225,50 @@ implements CharStream
 
   protected final void internalAdjustBuffSize()
   {
+    final int nHalfBufferSize = bufsize / 2; 
     if (available == bufsize)
     {
-      // ?What is the reason for this?
-      if (tokenBegin > 2048)
+      if (tokenBegin < 0)
       {
+        // If this method is called from "beginToken()"
+        // Just refill the buffer from the start
         bufpos = 0;
         maxNextCharInd = 0;
-        available = tokenBegin;
       }
       else
-        if (tokenBegin < 0)
+        if (tokenBegin > nHalfBufferSize)
         {
+          // The token started in the second half - fill the front part 
           bufpos = 0;
           maxNextCharInd = 0;
-        }  
+
+          // Available bytes are > 50%
+          available = tokenBegin;
+        }
         else
-          expandBuff(false);
+        {
+          // Token starts in the first half
+          // just append to existing buffer
+          expandBuff (false);
+        }
     }
     else
+    {
+      // A token was read across array boundaries 
       if (available > tokenBegin)
+      {
         available = bufsize;
+      }
       else
-        if ((tokenBegin - available) < 2048)
-          expandBuff(true);
+        if ((tokenBegin - available) < nHalfBufferSize)
+        {
+          expandBuff (true);
+        }
         else
+        {
           available = tokenBegin;
+        }
+    }
   }
 
   protected void fillBuff() throws java.io.IOException
@@ -263,18 +293,18 @@ implements CharStream
     catch (final java.io.IOException ex)
     {
       --bufpos;
-      // ?What is the reason of this?
+      // ?What is the reason of this? Backup of 0 does nothing
       backup (0);
       if (tokenBegin == -1)
       {
-        // Error occurred in beginToken()
+        // Error occurred in "beginToken()"
         tokenBegin = bufpos;
       }
       throw ex;
     }
   }
 #if KEEP_LINE_COLUMN
-  
+
   protected final void internalSetBufLineColumn (final int nLine, final int nColumn)
   {
     m_aBufLine[bufpos] = nLine;
@@ -402,9 +432,11 @@ implements CharStream
 #fi
   }
 
-  // Backup amount characters
   public void backup (final int nAmount)
   {
+    if (nAmount > bufsize)
+      throw new IllegalStateException ("Cannot back " + nAmount + " chars which is larger than the internal buffer size (" + bufsize + ")");
+  
     inBuf += nAmount;
     bufpos -= nAmount;
     if (bufpos < 0)
