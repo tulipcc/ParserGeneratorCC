@@ -211,37 +211,40 @@ implements CharStream
     tokenBegin = 0;
   }
 
-  protected void fillBuff() throws java.io.IOException
+  protected final void internalAdjustBuffSize()
   {
-    if (maxNextCharInd == available)
+    if (available == bufsize)
     {
-      if (available == bufsize)
+      // ?What is the reason for this?
+      if (tokenBegin > 2048)
       {
-        // ?What is the reason for this?
-        if (tokenBegin > 2048)
+        bufpos = 0;
+        maxNextCharInd = 0;
+        available = tokenBegin;
+      }
+      else
+        if (tokenBegin < 0)
         {
           bufpos = 0;
           maxNextCharInd = 0;
-          available = tokenBegin;
-        }
+        }  
         else
-          if (tokenBegin < 0)
-          {
-            bufpos = 0;
-            maxNextCharInd = 0;
-          }  
-          else
-            expandBuff(false);
-      }
-      else
-        if (available > tokenBegin)
-          available = bufsize;
-        else
-          if ((tokenBegin - available) < 2048)
-            expandBuff(true);
-          else
-            available = tokenBegin;
+          expandBuff(false);
     }
+    else
+      if (available > tokenBegin)
+        available = bufsize;
+      else
+        if ((tokenBegin - available) < 2048)
+          expandBuff(true);
+        else
+          available = tokenBegin;
+  }
+
+  protected void fillBuff() throws java.io.IOException
+  {
+    if (maxNextCharInd == available)
+      internalAdjustBuffSize();
 
     try
     {

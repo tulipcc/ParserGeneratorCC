@@ -89,28 +89,6 @@ class JavaCharStream extends AbstractCharStream
     return readChar();
   }
 
-  private final void adjustBuffSize()
-  {
-    if (available == bufsize)
-    {
-      if (tokenBegin > 2048)
-      {
-        bufpos = 0;
-        available = tokenBegin;
-      }
-      else
-        expandBuff(false);
-    }
-    else
-      if (available > tokenBegin)
-        available = bufsize;
-      else
-        if ((tokenBegin - available) < 2048)
-          expandBuff(true);
-        else
-          available = tokenBegin;
-  }
-
   @Override
   public char readChar() throws java.io.IOException
   {
@@ -129,7 +107,7 @@ class JavaCharStream extends AbstractCharStream
 
     ++bufpos;
     if (bufpos == available)
-      adjustBuffSize();
+      internalAdjustBuffSize();
 
     char c = readByte();
     buffer[bufpos] = c;
@@ -155,7 +133,7 @@ class JavaCharStream extends AbstractCharStream
     {
       ++bufpos;
       if (bufpos == available)
-        adjustBuffSize();
+        internalAdjustBuffSize();
 
       try
       {
