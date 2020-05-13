@@ -4,15 +4,29 @@ Fork of JavaCC 7.0.3 because the original code base has poor quality and PRs are
 The overall goal is to maintain compatibility to JavaCC but
 * The code itself should be better maintainable
 * The code itself should conform to best-practices
-* Because this is NOT JavaCC the class names are similar, but the base package name changed from `net.javacc` to `com.helger.pgcc`  
+* Because this is NOT JavaCC the class names are similar, but the base package name changed from `net.javacc` to `com.helger.pgcc`
+* The created code requires Java 1.5  
 
 See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses this CC.
 
+## Maven usage
+
+Add the following to your pom.xml to use this artifact:
+
+```xml
+<dependency>
+  <groupId>com.helger</groupId>
+  <artifactId>parser-generator-cc</artifactId>
+  <version>1.1.3</version>
+</dependency>
+``` 
+
 # News and noteworthy
 
-* v1.1.3 - work in progress
-    * Allow `final` when catching exceptions (issue #24)
+* v1.1.3 - 2020-05-13
+    * Allow `final` when catching exceptions - [issue #24](https://github.com/phax/ParserGeneratorCC/issues/24)
     * Changed Automatic-Module-Name to `com.helger.pgcc`
+    * Fixed internal buffer corruption in generated code - [issue #26](https://github.com/phax/ParserGeneratorCC/issues/26)
 * v1.1.2 - 2019-05-02
     * JavaCC grammar can parse Java 7 language features ([JavaCC PR 71](https://github.com/javacc/javacc/pull/71))
     * Backported a CPP output fix from JavaCC
@@ -41,18 +55,6 @@ See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses
     * https://github.com/phax/ph-javacc-maven-plugin/ starting from v4 will use this package instead of JavaCC.
     * No pure `RuntimeException` or `Error` classes are thrown inside the code
 * v1.0.0 - 2018-01-05 - had a regression and was therefore never released binary
-
-## Maven usage
-
-Add the following to your pom.xml to use this artifact:
-
-```xml
-<dependency>
-  <groupId>com.helger</groupId>
-  <artifactId>parser-generator-cc</artifactId>
-  <version>1.1.2</version>
-</dependency>
-``` 
 
 ---
 
