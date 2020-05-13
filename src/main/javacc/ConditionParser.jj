@@ -31,6 +31,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+ 
 /*
  * This file contains a simple parser to evaluate simple boolean conditions,
  * such as
@@ -121,9 +122,7 @@ boolean CompilationUnit(Map<String,Object> options):
   this.options = options;
 }
 {
-  value = ConditionalExpression()
-  
-  { return value; }
+  value = ConditionalExpression()    { return value; }
 }
 
 boolean ConditionalExpression():
@@ -131,12 +130,10 @@ boolean ConditionalExpression():
 	boolean value;
 }
 {
-  value = ConditionalAndExpression() 
-  	{ if (value) return true; }
+  value = ConditionalAndExpression()    { if (value) return true; }
   	
   ( "||" 
-  	value = ConditionalAndExpression()
-  	    { if (value) return true; }
+  	value = ConditionalAndExpression() 	{ if (value) return true; }
   )*
   
   { return false; }
@@ -147,12 +144,10 @@ boolean ConditionalAndExpression():
 	boolean value;
 }
 {
-  value = UnaryExpressionNotPlusMinus()
-  { if (!value) return false; }
+  value = UnaryExpressionNotPlusMinus()    { if (!value) return false; }
   
   ( "&&"
-    value = UnaryExpressionNotPlusMinus()
-  	{ if (!value) return false; }
+    value = UnaryExpressionNotPlusMinus()  { if (!value) return false; }
   )*
   
   { return true; }
@@ -203,21 +198,21 @@ boolean Name() :
 	<IDENTIFIER>
 	
 	{
-	    name = getToken(0).image.trim();
+	  name = getToken(0).image.trim();
 	    
-	    Object obj = options.get(name);
-	    
-	    if (obj instanceof Boolean)
-	    {
-	      return ((Boolean)obj).booleanValue();
-	    }
-	    else if (obj instanceof String)
-	    {
-	      String string = ((String)obj).trim();
-	      return string.length() > 0 && !string.equalsIgnoreCase("false") && !string.equalsIgnoreCase("no");
-	    }
-	    
-	    return false;
+	  final Object obj = options.get(name);
+	  if (obj instanceof Boolean)
+	  {
+	    return ((Boolean)obj).booleanValue();
+	  }
+	  if (obj instanceof String)
+	  {
+	    final String string = ((String)obj).trim();
+	    return string.length() > 0 && !string.equalsIgnoreCase("false") && !string.equalsIgnoreCase("no");
+	  }
+	  
+	  // Unsupported data type in options map
+    return false;
 	}
 }
 

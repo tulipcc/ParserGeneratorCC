@@ -80,7 +80,7 @@ public final class ConditionParserTest
   @Test
   public void testBufferExpansion () throws ParseException
   {
-    // open + close of the comment
+    // 4 = open + close of the comment
     final String a = StringHelper.getRepeated ('a', 2048 - 4);
     // force the buffer to expand and wrap around
     final String b = StringHelper.getRepeated ('b', 4096 - 4 + 1);
@@ -90,10 +90,9 @@ public final class ConditionParserTest
   @Test
   public void testBufferExpansion2 () throws ParseException
   {
-    // open + close of the comment
-    final String a = StringHelper.getRepeated ('a', 20480);
-    // force the buffer to expand and wrap around
-    final String b = StringHelper.getRepeated ('b', 1024 * 1024);
+    // Large tokens
+    final String a = StringHelper.getRepeated ('a', 1024 * 1024 * 4);
+    final String b = StringHelper.getRepeated ('b', 1024 * 1024 * 4);
     _test ("/*" + a + "*/\n/*" + b + "*/\nT || F", true);
   }
 }
