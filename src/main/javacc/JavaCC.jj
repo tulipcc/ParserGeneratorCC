@@ -198,11 +198,12 @@ TOKEN_MGR_DECLS :
   {
     if (depth == size)
     {
-      size += 5;
+      // Double the size for scaling
+      size *= 2;
       
       // Increase array size
-      int[] tmpbeginLine = new int[size];
-      int[] tmpbeginCol = new int[size];
+      final int[] tmpbeginLine = new int[size];
+      final int[] tmpbeginCol = new int[size];
 
       System.arraycopy(beginLine, 0, tmpbeginLine, 0, depth);
       System.arraycopy(beginCol, 0, tmpbeginCol, 0, depth);
