@@ -95,28 +95,30 @@ interface CharStream {
    * affect the lexer's operation.
    */
   void done();
+  
+  // Getters and setters
+  
+  /**
+   * @return Current tab size.
+   */
+  int getTabSize();
 
   /**
    * Set the tab size to use.
    * @param i spaces per tab
    */
   void setTabSize(int i);
-  
-  /**
-   * @return Current tab size.
-   */
-  int getTabSize();
 #if KEEP_LINE_COLUMN
+
+  /**
+   * @return <code>true</code> if line number and column numbers should be tracked.
+   */
+  boolean isTrackLineColumn();
 
   /**
    * Enable or disable line number and column number tracking.
    * @param trackLineColumn <code>true</code> to track it, <code>false</code> to not do it.
    */
   void setTrackLineColumn(boolean trackLineColumn);
-
-  /**
-   * @return <code>true</code> if line number and column numbers should be tracked.
-   */
-  boolean isTrackLineColumn();
 #fi
 }

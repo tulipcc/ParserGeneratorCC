@@ -7,7 +7,7 @@ public
 #fi
 class SimpleCharStream extends AbstractCharStream
 {
-  protected Provider inputStream;
+  private Provider inputStream;
 
   @Override
   protected int streamRead (final char[] aBuf, final int nOfs, final int nLen) throws java.io.IOException

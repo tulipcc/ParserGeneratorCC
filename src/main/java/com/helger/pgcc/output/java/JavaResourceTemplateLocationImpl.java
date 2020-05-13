@@ -33,8 +33,14 @@
  */
 package com.helger.pgcc.output.java;
 
+import javax.annotation.Nonnull;
+
+import com.helger.commons.annotation.Nonempty;
+
 public class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
 {
+  @Nonnull
+  @Nonempty
   public String getTokenTemplateResourceUrl ()
   {
     return "/templates/Token.template";

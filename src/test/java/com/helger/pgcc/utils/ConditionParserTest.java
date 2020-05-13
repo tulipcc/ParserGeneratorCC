@@ -86,4 +86,14 @@ public final class ConditionParserTest
     final String b = StringHelper.getRepeated ('b', 4096 - 4 + 1);
     _test ("/*" + a + "*/\n/*" + b + "*/\nT || F", true);
   }
+
+  @Test
+  public void testBufferExpansion2 () throws ParseException
+  {
+    // open + close of the comment
+    final String a = StringHelper.getRepeated ('a', 20480);
+    // force the buffer to expand and wrap around
+    final String b = StringHelper.getRepeated ('b', 1024 * 1024);
+    _test ("/*" + a + "*/\n/*" + b + "*/\nT || F", true);
+  }
 }

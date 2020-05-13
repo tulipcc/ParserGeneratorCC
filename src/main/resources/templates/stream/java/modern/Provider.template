@@ -18,7 +18,7 @@ extends java.io.Closeable
    * @return The number of characters read, or -1 if all read
    * @exception IOException if reading fails
    */
-  int read(char[] aDest, int nOfs, int nLen) throws IOException;
+  int read (char [] aDest, int nOfs, int nLen) throws IOException;
 #if AT_LEAST_JDK7
 #else
     

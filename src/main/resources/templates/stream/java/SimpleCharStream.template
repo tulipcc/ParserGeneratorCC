@@ -7,19 +7,7 @@ public
 #fi
 class SimpleCharStream extends AbstractCharStream
 {
-  protected java.io.Reader inputStream;
-
-  @Override
-  protected int streamRead (final char[] aBuf, final int nOfs, final int nLen) throws java.io.IOException
-  {
-    return inputStream.read (aBuf, nOfs, nLen); 
-  }
-  
-  @Override
-  protected void streamClose () throws java.io.IOException
-  {
-    inputStream.close (); 
-  }
+  private java.io.Reader m_aIS;
 
   /** Constructor. */
   public SimpleCharStream(final java.io.Reader dstream,
@@ -28,7 +16,7 @@ class SimpleCharStream extends AbstractCharStream
                           final int buffersize)
   {
     super (startline, startcolumn, buffersize);
-    inputStream = dstream;
+    m_aIS = dstream;
   }
 
   /** Constructor. */
@@ -51,7 +39,7 @@ class SimpleCharStream extends AbstractCharStream
                      final int startcolumn, 
                      final int buffersize)
   {
-    inputStream = dstream;
+    m_aIS = dstream;
     super.reInit (startline, startcolumn, buffersize);
   }
 
@@ -159,5 +147,18 @@ class SimpleCharStream extends AbstractCharStream
 #fi
   {
     reInit(new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
+  }
+
+  @Override
+  protected int streamRead (final char[] aBuf, final int nOfs, final int nLen) throws java.io.IOException
+  {
+    return m_aIS.read (aBuf, nOfs, nLen); 
+  }
+  
+  @Override
+  protected void streamClose () throws java.io.IOException
+  {
+    if (m_aIS != null)
+      m_aIS.close (); 
   }
 }

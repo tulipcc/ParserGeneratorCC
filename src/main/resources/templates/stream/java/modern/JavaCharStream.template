@@ -10,36 +10,40 @@ class JavaCharStream extends AbstractCharStream
   /** Predefined buffer size */
   protected static final int NEXTCHAR_BUF_SIZE = 4096;
 
-  protected char[] nextCharBuf;
-  protected int nextCharInd = -1;
-  protected Provider inputStream;
+  private char[] m_aNextCharBuf;
+  private int nextCharInd = -1;
+  private Provider m_aIS;
 
   @Override
   protected int streamRead(final char[] buffer, final int offset, final int len) throws java.io.IOException
   {
-    return inputStream.read (buffer, offset, len); 
+    return m_aIS.read (buffer, offset, len); 
   }
   
   @Override
   protected void streamClose() throws java.io.IOException
   {
-    inputStream.close (); 
+    m_aIS.close (); 
   }
 
+  @Override
   protected void fillBuff() throws java.io.IOException
   {
     if (maxNextCharInd == NEXTCHAR_BUF_SIZE)
-      maxNextCharInd = nextCharInd = 0;
+    {
+      maxNextCharInd = 0;
+      nextCharInd = 0;
+    }
 
     try
     {
-      final int i = inputStream.read(nextCharBuf, maxNextCharInd, NEXTCHAR_BUF_SIZE - maxNextCharInd);
-      if (i == -1)
+      final int nCharsRead = streamRead (m_aNextCharBuf, maxNextCharInd, NEXTCHAR_BUF_SIZE - maxNextCharInd);
+      if (nCharsRead == -1)
       {
-        inputStream.close();
-        throw new java.io.IOException();
+        streamClose ();
+        throw new java.io.IOException ();
       }
-      maxNextCharInd += i;
+      maxNextCharInd += nCharsRead;
     }
     catch(final java.io.IOException ex)
     {
@@ -50,25 +54,22 @@ class JavaCharStream extends AbstractCharStream
       }
 #if KEEP_LINE_COLUMN
       else
-      {
-        bufline[bufpos] = line;
-        bufcolumn[bufpos] = column;
-      }
+        internalSetBufLineColumn (getLine (), getColumn ());
 #fi
       throw ex;
     }
   }
 
-  protected char readByte() throws java.io.IOException
+  private char readByte() throws java.io.IOException
   {
     ++nextCharInd;
     if (nextCharInd >= maxNextCharInd)
       fillBuff();
 
-    return nextCharBuf[nextCharInd];
+    return m_aNextCharBuf[nextCharInd];
   }
 
-  /** @return starting character for token. */
+  @Override
   public char beginToken() throws java.io.IOException
   {
     if (inBuf > 0)
@@ -88,7 +89,7 @@ class JavaCharStream extends AbstractCharStream
     return readChar();
   }
 
-  protected void adjustBuffSize()
+  private final void adjustBuffSize()
   {
     if (available == bufsize)
     {
@@ -110,15 +111,18 @@ class JavaCharStream extends AbstractCharStream
           available = tokenBegin;
   }
 
-/** Read a character. */
+  @Override
   public char readChar() throws java.io.IOException
   {
     if (inBuf > 0)
     {
       --inBuf;
-
-      if (++bufpos == bufsize)
+      ++bufpos;
+      if (bufpos == bufsize)
+      {
+        // Buffer overflow
         bufpos = 0;
+      }  
 
       return buffer[bufpos];
     }
@@ -129,102 +133,126 @@ class JavaCharStream extends AbstractCharStream
 
     char c = readByte();
     buffer[bufpos] = c;
-    if (c == '\\')
+    if (c != '\\')
     {
+      // Not a backslash
 #if KEEP_LINE_COLUMN
       if (isTrackLineColumn()) 
-        updateLineColumn(c);
+        internalUpdateLineColumn(c);
 #fi
-
-      int backSlashCnt = 1;
-
-      for (;;) // Read all the backslashes
-      {
-        ++bufpos;
-        if (bufpos == available)
-          adjustBuffSize();
-
-        try
-        {
-          c = readByte();
-          buffer[bufpos] = c;
-          if (c != '\\')
-          {
-#if KEEP_LINE_COLUMN
-            if (isTrackLineColumn()) 
-               updateLineColumn(c);
-               
-#fi
-            // found a non-backslash char.
-            if ((c == 'u') && ((backSlashCnt & 1) == 1))
-            {
-              if (--bufpos < 0)
-                bufpos = bufsize - 1;
-
-              break;
-            }
-
-            backup(backSlashCnt);
-            return '\\';
-          }
-        }
-        catch(final java.io.IOException e)
-        {
-	        // We are returning one backslash so we should only backup (count-1)
-          if (backSlashCnt > 1)
-            backup(backSlashCnt-1);
-
-          return '\\';
-        }
-
-#if KEEP_LINE_COLUMN
-        if (isTrackLineColumn()) 
-          updateLineColumn(c);
-#fi
-        backSlashCnt++;
-      }
-
-      // Here, we have seen an odd number of backslash's followed by a 'u'
-      try
-      {
-        while ((c = readByte()) == 'u')
-#if KEEP_LINE_COLUMN
-          ++column;
-#else
-        { /* empty */ }
-#fi
-
-        buffer[bufpos] = c = (char)(hexval(c) << 12 |
-                                    hexval(readByte()) << 8 |
-                                    hexval(readByte()) << 4 |
-                                    hexval(readByte()));
-
-#if KEEP_LINE_COLUMN
-        column += 4;
-#fi
-      }
-      catch(final java.io.IOException ex)
-      {
-#if KEEP_LINE_COLUMN
-        throw new IllegalStateException("Invalid escape character at line " + line + " column " + column + ".");
-#else
-        throw new IllegalStateException("Invalid escape character in input");
-#fi
-      }
-
-      if (backSlashCnt == 1)
-        return c;
-
-      backup(backSlashCnt - 1);
-      return '\\';
+      return c;
     }
-
-    // Not a backslash
+    
 #if KEEP_LINE_COLUMN
     if (isTrackLineColumn()) 
-      updateLineColumn(c);
+      internalUpdateLineColumn(c);
 #fi
-    return c;
+
+    int backSlashCnt = 1;
+
+    // Read all the backslashes
+    for (;;) 
+    {
+      ++bufpos;
+      if (bufpos == available)
+        adjustBuffSize();
+
+      try
+      {
+        c = readByte();
+        buffer[bufpos] = c;
+        if (c != '\\')
+        {
+          // found a non-backslash char.
+#if KEEP_LINE_COLUMN
+          if (isTrackLineColumn()) 
+             internalUpdateLineColumn(c);
+             
+#fi
+          if (c == 'u' && (backSlashCnt & 1) == 1)
+          {
+            --bufpos;
+            if (bufpos < 0)
+            {
+              // Buffer underflow
+              bufpos = bufsize - 1;
+            }
+
+            // Found the start of a Unicode sequence
+            break;
+          }
+
+          // Unsupported escape sequence
+          backup(backSlashCnt);
+          return '\\';
+        }
+      }
+      catch (final java.io.IOException e)
+      {
+        // We are returning one backslash so we should only backup (count-1)
+        if (backSlashCnt > 1)
+          backup (backSlashCnt - 1);
+
+        return '\\';
+      }
+      
+      // We read another backslash
+
+#if KEEP_LINE_COLUMN
+      if (isTrackLineColumn()) 
+        internalUpdateLineColumn (c);
+#fi
+      backSlashCnt++;
+    }
+
+    // Here, we have seen an odd number of backslash's followed by a 'u'
+    try
+    {
+      // Skip all 'u' as in '\uuuuuu1234'
+      while ((c = readByte()) == 'u')
+      {
+#if KEEP_LINE_COLUMN
+        if (isTrackLineColumn()) 
+          internalUpdateLineColumn(c);
+#else
+        /* empty */
+#fi
+      }
+      
+      final char c1 = c;
+      final char c2 = readByte();
+      final char c3 = readByte();
+      final char c4 = readByte();
+      c = (char) (hexval(c1) << 12 |
+                  hexval(c2) << 8 |
+                  hexval(c3) << 4 |
+                  hexval(c4));
+      buffer[bufpos] = c;
+
+#if KEEP_LINE_COLUMN
+      if (isTrackLineColumn())
+      {
+        internalUpdateLineColumn(c1);
+        internalUpdateLineColumn(c2);
+        internalUpdateLineColumn(c3);
+        internalUpdateLineColumn(c4);
+      }  
+#fi
+    }
+    catch (final java.io.IOException ex)
+    {
+#if KEEP_LINE_COLUMN
+      throw new IllegalStateException("Invalid escape character at line " + getLine () + " column " + getColumn () + ".");
+#else
+      throw new IllegalStateException("Invalid escape character in input");
+#fi
+    }
+
+    if (backSlashCnt == 1)
+      return c;
+
+    backup(backSlashCnt - 1);
+    return '\\';
   }
 
   /** Constructor. */
@@ -234,8 +262,8 @@ class JavaCharStream extends AbstractCharStream
                         final int buffersize)
   {
     super (startline, startcolumn, buffersize);
-    nextCharBuf = new char[NEXTCHAR_BUF_SIZE];
-    inputStream = dstream;
+    m_aNextCharBuf = new char[NEXTCHAR_BUF_SIZE];
+    m_aIS = dstream;
   }
 
   /** Constructor. */
@@ -272,16 +300,16 @@ class JavaCharStream extends AbstractCharStream
                      final int startcolumn,
                      final int buffersize)
   {
-    nextCharBuf = new char[NEXTCHAR_BUF_SIZE];
+    m_aNextCharBuf = new char[NEXTCHAR_BUF_SIZE];
     nextCharInd = -1;
-    inputStream = dstream;
+    m_aIS = dstream;
     super.reInit (startline, startcolumn, buffersize);
   }
   
   @Override
   public void done ()
   {
-    nextCharBuf = null;
+    m_aNextCharBuf = null;
     super.done ();
   }
 }
