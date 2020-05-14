@@ -85,7 +85,6 @@ package com.helger.pgcc.parser;
 
 import java.util.List;
 import java.util.ArrayList;
-import com.helger.pgcc.parser.Options;
 
 public class JavaCCParser extends JavaCCParserInternals {
   /**
