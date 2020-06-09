@@ -258,9 +258,9 @@ public class Semanticize
               // There are no case variants of "sl.image" earlier than the
               // current one.
               // So go ahead and insert this item.
-              if (sl.m_ordinal == 0)
+              if (sl.getOrdinal () == 0)
               {
-                sl.m_ordinal = s_tokenCount++;
+                sl.setOrdinal (s_tokenCount++);
               }
               table2 = new HashMap <> ();
               table2.put (sl.m_image, sl);
@@ -316,9 +316,9 @@ public class Semanticize
                     JavaCCErrors.warning (sl, "String with IGNORE_CASE is partially superceded by strings at" + pos + ".");
                   }
                   // This entry is legitimate. So insert it.
-                  if (sl.m_ordinal == 0)
+                  if (sl.getOrdinal () == 0)
                   {
-                    sl.m_ordinal = s_tokenCount++;
+                    sl.setOrdinal (s_tokenCount++);
                   }
                   table2.put (sl.m_image, sl);
                   // The above "put" may override an existing entry (that is not
@@ -331,9 +331,9 @@ public class Semanticize
                   final AbstractExpRegularExpression re = table2.get (sl.m_image);
                   if (re == null)
                   {
-                    if (sl.m_ordinal == 0)
+                    if (sl.getOrdinal () == 0)
                     {
-                      sl.m_ordinal = s_tokenCount++;
+                      sl.setOrdinal (s_tokenCount++);
                     }
                     table2.put (sl.m_image, sl);
                   }
@@ -388,7 +388,7 @@ public class Semanticize
                           // inline within the
                           // BNF. Hence, it belongs to only one lexical state -
                           // namely "DEFAULT".
-                          sl.m_ordinal = re.m_ordinal;
+                          sl.setOrdinal (re.getOrdinal ());
                           prepareToRemove (respecs, res);
                         }
                 }
@@ -397,15 +397,15 @@ public class Semanticize
         else
           if (!(res.rexp instanceof ExpRJustName))
           {
-            res.rexp.m_ordinal = s_tokenCount++;
+            res.rexp.setOrdinal (s_tokenCount++);
           }
         if (!(res.rexp instanceof ExpRJustName) && res.rexp.hasLabel ())
         {
-          s_names_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp.getLabel ());
+          s_names_of_tokens.put (Integer.valueOf (res.rexp.getOrdinal ()), res.rexp.getLabel ());
         }
         if (!(res.rexp instanceof ExpRJustName))
         {
-          s_rexps_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp);
+          s_rexps_of_tokens.put (Integer.valueOf (res.rexp.getOrdinal ()), res.rexp);
         }
       }
     }
@@ -470,14 +470,14 @@ public class Semanticize
             final AbstractExpRegularExpression rexp = s_named_tokens_table.get (jn.getLabel ());
             if (rexp == null)
             {
-              jn.m_ordinal = s_tokenCount++;
+              jn.setOrdinal (s_tokenCount++);
               s_named_tokens_table.put (jn.getLabel (), jn);
               s_ordered_named_tokens.add (jn);
-              s_names_of_tokens.put (Integer.valueOf (jn.m_ordinal), jn.getLabel ());
+              s_names_of_tokens.put (Integer.valueOf (jn.getOrdinal ()), jn.getLabel ());
             }
             else
             {
-              jn.m_ordinal = rexp.m_ordinal;
+              jn.setOrdinal (rexp.getOrdinal ());
               prepareToRemove (respecs, res);
             }
           }
@@ -503,7 +503,7 @@ public class Semanticize
         for (final RegExprSpec aRegExprSpec : respecs)
         {
           final RegExprSpec res = (aRegExprSpec);
-          final Integer ii = Integer.valueOf (res.rexp.m_ordinal);
+          final Integer ii = Integer.valueOf (res.rexp.getOrdinal ());
           if (s_names_of_tokens.get (ii) == null)
           {
             JavaCCErrors.warning (res.rexp, "Unlabeled regular expression cannot be referred to by " + "user generated token manager.");
@@ -922,7 +922,7 @@ public class Semanticize
             }
             else
             {
-              jn.m_ordinal = rexp.m_ordinal;
+              jn.setOrdinal (rexp.getOrdinal ());
               jn.m_regexpr = rexp;
             }
       }

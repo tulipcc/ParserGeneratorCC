@@ -69,7 +69,7 @@ public final class LookaheadWalk
           mnew.m_match[j] = m.m_match[j];
         }
         mnew.m_firstFreeLoc = m.m_firstFreeLoc;
-        mnew.m_match[mnew.m_firstFreeLoc++] = ((AbstractExpRegularExpression) exp).m_ordinal;
+        mnew.m_match[mnew.m_firstFreeLoc++] = ((AbstractExpRegularExpression) exp).getOrdinal ();
         if (mnew.m_firstFreeLoc == MatchInfo.s_laLimit)
         {
           s_sizeLimitedMatches.add (mnew);

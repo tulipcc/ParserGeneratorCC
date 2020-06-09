@@ -201,7 +201,7 @@ public class OtherFilesGenJava
       for (final AbstractExpRegularExpression re : s_ordered_named_tokens)
       {
         ostr.println ("  /** RegularExpression Id. */");
-        ostr.println ("  int " + re.getLabel () + " = " + re.m_ordinal + ";");
+        ostr.println ("  int " + re.getLabel () + " = " + re.getOrdinal () + ";");
       }
       ostr.println ();
       if (!Options.isUserTokenManager () && Options.isBuildTokenManager ())
@@ -241,7 +241,7 @@ public class OtherFilesGenJava
               {
                 JavaCCErrors.warning (re, "Consider giving this non-string token a label for better error reporting.");
               }
-              ostr.println ("\"<token of kind " + re.m_ordinal + ">\",");
+              ostr.println ("\"<token of kind " + re.getOrdinal () + ">\",");
             }
 
         }

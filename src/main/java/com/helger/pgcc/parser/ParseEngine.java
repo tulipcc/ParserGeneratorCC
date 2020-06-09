@@ -248,7 +248,7 @@ public class ParseEngine
   {
     if (exp instanceof AbstractExpRegularExpression)
     {
-      m_firstSet[((AbstractExpRegularExpression) exp).m_ordinal] = true;
+      m_firstSet[((AbstractExpRegularExpression) exp).getOrdinal ()] = true;
     }
     else
       if (exp instanceof ExpNonTerminal)
@@ -1101,14 +1101,14 @@ public class ParseEngine
       }
       else
       {
-        final String label = s_names_of_tokens.get (Integer.valueOf (e_nrw.m_ordinal));
+        final String label = s_names_of_tokens.get (Integer.valueOf (e_nrw.getOrdinal ()));
         if (label != null)
         {
           retval += "jj_consume_token(" + label + tail;
         }
         else
         {
-          retval += "jj_consume_token(" + e_nrw.m_ordinal + tail;
+          retval += "jj_consume_token(" + e_nrw.getOrdinal () + tail;
         }
       }
 
@@ -1605,7 +1605,7 @@ public class ParseEngine
 
       if (seq instanceof AbstractExpRegularExpression)
       {
-        e.setInternalNameOnly ("jj_scan_token(" + ((AbstractExpRegularExpression) seq).m_ordinal + ")");
+        e.setInternalNameOnly ("jj_scan_token(" + ((AbstractExpRegularExpression) seq).getOrdinal () + ")");
         return;
       }
 
@@ -1783,14 +1783,14 @@ public class ParseEngine
       }
       else
       {
-        final Object label = s_names_of_tokens.get (Integer.valueOf (e_nrw.m_ordinal));
+        final Object label = s_names_of_tokens.get (Integer.valueOf (e_nrw.getOrdinal ()));
         if (label != null)
         {
           m_codeGenerator.genCodeLine ("    if (jj_scan_token(" + (String) label + ")) " + _genReturn (true));
         }
         else
         {
-          m_codeGenerator.genCodeLine ("    if (jj_scan_token(" + e_nrw.m_ordinal + ")) " + _genReturn (true));
+          m_codeGenerator.genCodeLine ("    if (jj_scan_token(" + e_nrw.getOrdinal () + ")) " + _genReturn (true));
         }
       }
       // codeGenerator.genCodeLine(" if (jj_la == 0 && jj_scanpos == jj_lastpos)
@@ -2337,7 +2337,7 @@ public class ParseEngine
     if (e instanceof AbstractExpRegularExpression)
     {
       final AbstractExpRegularExpression e_nrw = (AbstractExpRegularExpression) e;
-      PGPrinter.info ("TOKEN, " + e_nrw.m_ordinal);
+      PGPrinter.info ("TOKEN, " + e_nrw.getOrdinal ());
     }
     else
       if (e instanceof ExpNonTerminal)

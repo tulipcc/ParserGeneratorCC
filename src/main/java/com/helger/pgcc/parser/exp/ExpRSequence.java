@@ -62,7 +62,7 @@ public class ExpRSequence extends AbstractExpRegularExpression
 
   ExpRSequence (final List <AbstractExpRegularExpression> seq)
   {
-    m_ordinal = Integer.MAX_VALUE;
+    setOrdinal (Integer.MAX_VALUE);
     m_units = seq;
   }
 

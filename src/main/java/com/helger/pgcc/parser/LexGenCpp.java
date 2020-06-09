@@ -256,8 +256,8 @@ public class LexGenCpp extends LexGenJava
       for (i = 0; i < respecs.size (); i++)
       {
         final AbstractExpRegularExpression re = respecs.get (i).rexp;
-        if (s_maxOrdinal <= re.m_ordinal)
-          s_maxOrdinal = re.m_ordinal + 1;
+        if (s_maxOrdinal <= re.getOrdinal ())
+          s_maxOrdinal = re.getOrdinal () + 1;
       }
     }
 
@@ -354,13 +354,13 @@ public class LexGenCpp extends LexGenJava
         {
           s_curRE = respec.rexp;
 
-          s_rexprs[s_curKind = s_curRE.m_ordinal] = s_curRE;
-          s_lexStates[s_curRE.m_ordinal] = s_lexStateIndex;
-          s_ignoreCase[s_curRE.m_ordinal] = ignore;
+          s_rexprs[s_curKind = s_curRE.getOrdinal ()] = s_curRE;
+          s_lexStates[s_curRE.getOrdinal ()] = s_lexStateIndex;
+          s_ignoreCase[s_curRE.getOrdinal ()] = ignore;
 
           if (s_curRE.m_private_rexp)
           {
-            s_kinds[s_curRE.m_ordinal] = null;
+            s_kinds[s_curRE.getOrdinal ()] = null;
             continue;
           }
 
@@ -373,8 +373,8 @@ public class LexGenCpp extends LexGenJava
           else
             if (s_curRE.canMatchAnyChar ())
             {
-              if (s_canMatchAnyChar[s_lexStateIndex] == -1 || s_canMatchAnyChar[s_lexStateIndex] > s_curRE.m_ordinal)
-                s_canMatchAnyChar[s_lexStateIndex] = s_curRE.m_ordinal;
+              if (s_canMatchAnyChar[s_lexStateIndex] == -1 || s_canMatchAnyChar[s_lexStateIndex] > s_curRE.getOrdinal ())
+                s_canMatchAnyChar[s_lexStateIndex] = s_curRE.getOrdinal ();
             }
             else
             {
@@ -385,54 +385,54 @@ public class LexGenCpp extends LexGenJava
 
               temp = s_curRE.generateNfa (ignore);
               temp.end ().m_isFinal = true;
-              temp.end ().m_kind = s_curRE.m_ordinal;
+              temp.end ().m_kind = s_curRE.getOrdinal ();
               s_initialState.addMove (temp.start ());
             }
 
-          if (s_kinds.length < s_curRE.m_ordinal)
+          if (s_kinds.length < s_curRE.getOrdinal ())
           {
-            final ETokenKind [] tmp = new ETokenKind [s_curRE.m_ordinal + 1];
+            final ETokenKind [] tmp = new ETokenKind [s_curRE.getOrdinal () + 1];
 
             System.arraycopy (s_kinds, 0, tmp, 0, s_kinds.length);
             s_kinds = tmp;
           }
           // System.out.println(" ordina : " + curRE.ordinal);
 
-          s_kinds[s_curRE.m_ordinal] = kind;
+          s_kinds[s_curRE.getOrdinal ()] = kind;
 
           if (respec.nextState != null && !respec.nextState.equals (s_lexStateName[s_lexStateIndex]))
-            s_newLexState[s_curRE.m_ordinal] = respec.nextState;
+            s_newLexState[s_curRE.getOrdinal ()] = respec.nextState;
 
           if (respec.act != null && respec.act.getActionTokens () != null && respec.act.getActionTokens ().size () > 0)
-            s_actions[s_curRE.m_ordinal] = respec.act;
+            s_actions[s_curRE.getOrdinal ()] = respec.act;
 
           switch (kind)
           {
             case SPECIAL:
-              s_hasSkipActions |= (s_actions[s_curRE.m_ordinal] != null) || (s_newLexState[s_curRE.m_ordinal] != null);
+              s_hasSkipActions |= (s_actions[s_curRE.getOrdinal ()] != null) || (s_newLexState[s_curRE.getOrdinal ()] != null);
               s_hasSpecial = true;
-              s_toSpecial[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
-              s_toSkip[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
+              s_toSpecial[s_curRE.getOrdinal () / 64] |= 1L << (s_curRE.getOrdinal () % 64);
+              s_toSkip[s_curRE.getOrdinal () / 64] |= 1L << (s_curRE.getOrdinal () % 64);
               break;
             case SKIP:
-              s_hasSkipActions |= (s_actions[s_curRE.m_ordinal] != null);
+              s_hasSkipActions |= (s_actions[s_curRE.getOrdinal ()] != null);
               s_hasSkip = true;
-              s_toSkip[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
+              s_toSkip[s_curRE.getOrdinal () / 64] |= 1L << (s_curRE.getOrdinal () % 64);
               break;
             case MORE:
-              s_hasMoreActions |= (s_actions[s_curRE.m_ordinal] != null);
+              s_hasMoreActions |= (s_actions[s_curRE.getOrdinal ()] != null);
               s_hasMore = true;
-              s_toMore[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
+              s_toMore[s_curRE.getOrdinal () / 64] |= 1L << (s_curRE.getOrdinal () % 64);
 
-              if (s_newLexState[s_curRE.m_ordinal] != null)
-                s_canReachOnMore[_getIndex (s_newLexState[s_curRE.m_ordinal])] = true;
+              if (s_newLexState[s_curRE.getOrdinal ()] != null)
+                s_canReachOnMore[_getIndex (s_newLexState[s_curRE.getOrdinal ()])] = true;
               else
                 s_canReachOnMore[s_lexStateIndex] = true;
 
               break;
             case TOKEN:
-              s_hasTokenActions |= (s_actions[s_curRE.m_ordinal] != null);
-              s_toToken[s_curRE.m_ordinal / 64] |= 1L << (s_curRE.m_ordinal % 64);
+              s_hasTokenActions |= (s_actions[s_curRE.getOrdinal ()] != null);
+              s_toToken[s_curRE.getOrdinal () / 64] |= 1L << (s_curRE.getOrdinal () % 64);
               break;
             default:
               throw new IllegalStateException ();

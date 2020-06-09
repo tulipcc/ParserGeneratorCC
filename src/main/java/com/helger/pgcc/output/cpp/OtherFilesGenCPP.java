@@ -182,7 +182,7 @@ public class OtherFilesGenCPP
       {
         re = it.next ();
         s_ostr.println ("  /** RegularExpression Id. */");
-        s_ostr.println (constPrefix + "  int " + re.getLabel () + " = " + re.m_ordinal + ";");
+        s_ostr.println (constPrefix + "  int " + re.getLabel () + " = " + re.getOrdinal () + ";");
       }
       s_ostr.println ("");
 
@@ -223,7 +223,7 @@ public class OtherFilesGenCPP
               {
                 JavaCCErrors.warning (re, "Consider giving this non-string token a label for better error reporting.");
               }
-              printCharArray (s_ostr, "\"<token of kind " + re.m_ordinal + ">\"");
+              printCharArray (s_ostr, "\"<token of kind " + re.getOrdinal () + ">\"");
             }
           s_ostr.println (";");
         }

@@ -366,8 +366,8 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     String s;
     Map <String, KindInfo> temp;
 
-    if (s_maxStrKind <= m_ordinal)
-      s_maxStrKind = m_ordinal + 1;
+    if (s_maxStrKind <= getOrdinal ())
+      s_maxStrKind = getOrdinal () + 1;
 
     final int len = m_image.length ();
     if (len > s_maxLen)
@@ -401,11 +401,11 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       KindInfo info = temp.computeIfAbsent (s, k -> new KindInfo (LexGenJava.s_maxOrdinal));
 
       if (i + 1 == len)
-        info.insertFinalKind (m_ordinal);
+        info.insertFinalKind (getOrdinal ());
       else
-        info.insertValidKind (m_ordinal);
+        info.insertValidKind (getOrdinal ());
 
-      if (!Options.isIgnoreCase () && LexGenJava.s_ignoreCase[m_ordinal] && c != Character.toLowerCase (c))
+      if (!Options.isIgnoreCase () && LexGenJava.s_ignoreCase[getOrdinal ()] && c != Character.toLowerCase (c))
       {
         s = Character.toString (Character.toLowerCase (c));
 
@@ -420,12 +420,12 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         info = temp.computeIfAbsent (s, k -> new KindInfo (LexGenJava.s_maxOrdinal));
 
         if (i + 1 == len)
-          info.insertFinalKind (m_ordinal);
+          info.insertFinalKind (getOrdinal ());
         else
-          info.insertValidKind (m_ordinal);
+          info.insertValidKind (getOrdinal ());
       }
 
-      if (!Options.isIgnoreCase () && LexGenJava.s_ignoreCase[m_ordinal] && c != Character.toUpperCase (c))
+      if (!Options.isIgnoreCase () && LexGenJava.s_ignoreCase[getOrdinal ()] && c != Character.toUpperCase (c))
       {
         s = Character.toString (Character.toUpperCase (c));
 
@@ -441,14 +441,14 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         info = temp.computeIfAbsent (s, k -> new KindInfo (LexGenJava.s_maxOrdinal));
 
         if (i + 1 == len)
-          info.insertFinalKind (m_ordinal);
+          info.insertFinalKind (getOrdinal ());
         else
-          info.insertValidKind (m_ordinal);
+          info.insertValidKind (getOrdinal ());
       }
     }
 
-    s_maxLenForActive[m_ordinal / 64] = Math.max (s_maxLenForActive[m_ordinal / 64], len - 1);
-    s_allImages[m_ordinal] = m_image;
+    s_maxLenForActive[getOrdinal () / 64] = Math.max (s_maxLenForActive[getOrdinal () / 64], len - 1);
+    s_allImages[getOrdinal ()] = m_image;
   }
 
   @Override

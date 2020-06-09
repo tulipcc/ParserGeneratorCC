@@ -160,9 +160,9 @@ public class ExpRChoice extends AbstractExpRegularExpression
     {
       if (!curRE.m_private_rexp &&
           // curRE instanceof RJustName &&
-          curRE.m_ordinal > 0 &&
-          curRE.m_ordinal < m_ordinal &&
-          LexGenJava.s_lexStates[curRE.m_ordinal] == LexGenJava.s_lexStates[m_ordinal])
+          curRE.getOrdinal () > 0 &&
+          curRE.getOrdinal () < getOrdinal () &&
+          LexGenJava.s_lexStates[curRE.getOrdinal ()] == LexGenJava.s_lexStates[getOrdinal ()])
       {
         if (hasLabel ())
           JavaCCErrors.warning (this, "Regular Expression choice : " + curRE.getLabel () + " can never be matched as : " + getLabel ());
@@ -171,7 +171,7 @@ public class ExpRChoice extends AbstractExpRegularExpression
                                 "Regular Expression choice : " +
                                       curRE.getLabel () +
                                       " can never be matched as token of kind : " +
-                                      m_ordinal);
+                                      getOrdinal ());
       }
 
       if (!curRE.m_private_rexp && curRE instanceof ExpRStringLiteral)

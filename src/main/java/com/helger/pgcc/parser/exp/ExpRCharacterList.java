@@ -2054,7 +2054,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     m_descriptors = new ArrayList <> ();
     m_descriptors.add (new SingleCharacter (c));
     m_negated_list = false;
-    m_ordinal = Integer.MAX_VALUE;
+    setOrdinal (Integer.MAX_VALUE);
   }
 
   @Override

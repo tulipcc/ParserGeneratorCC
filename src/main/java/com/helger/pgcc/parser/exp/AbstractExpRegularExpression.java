@@ -60,7 +60,7 @@ public abstract class AbstractExpRegularExpression extends Expansion
    * internal processing and passing information between the parser and the
    * lexical analyzer.
    */
-  public int m_ordinal;
+  private int m_ordinal;
 
   /**
    * The LHS to which the token value of the regular expression is assigned. In
@@ -110,6 +110,16 @@ public abstract class AbstractExpRegularExpression extends Expansion
   public final void setLabel (final String s)
   {
     m_label = s;
+  }
+
+  public final int getOrdinal ()
+  {
+    return m_ordinal;
+  }
+
+  public final void setOrdinal (final int n)
+  {
+    m_ordinal = n;
   }
 
   public final int getWalkStatus ()
