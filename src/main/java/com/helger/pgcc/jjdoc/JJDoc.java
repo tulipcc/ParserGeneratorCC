@@ -285,12 +285,14 @@ public final class JJDoc
 
   private static void _emitExpansionChoice (final ExpChoice c, final IDocGenerator gen) throws IOException
   {
-    for (final Iterator <Expansion> it = c.getChoices ().iterator (); it.hasNext ();)
+    boolean first = true;
+    for (final Expansion e : c.getChoices ())
     {
-      final Expansion e = it.next ();
-      _emitExpansionTree (e, gen);
-      if (it.hasNext ())
+      if (first)
+        first = false;
+      else
         gen.text (" | ");
+      _emitExpansionTree (e, gen);
     }
   }
 
@@ -327,7 +329,7 @@ public final class JJDoc
   private static void _emitExpansionSequence (final ExpSequence s, final IDocGenerator gen) throws IOException
   {
     boolean firstUnit = true;
-    for (final Expansion e : s.units ())
+    for (final Expansion e : s.getUnits ())
     {
       if (e instanceof ExpLookahead || e instanceof ExpAction)
       {
@@ -475,34 +477,27 @@ public final class JJDoc
             {
               final ExpROneOrMore om = (ExpROneOrMore) re;
               returnString += "(";
-              returnString += emitRE (om.m_regexpr);
+              returnString += emitRE (om.getRegExpr ());
               returnString += ")+";
             }
             else
               if (re instanceof ExpRSequence)
               {
                 final ExpRSequence s = (ExpRSequence) re;
-                for (final Iterator <AbstractExpRegularExpression> it = s.iterator (); it.hasNext ();)
+                boolean bFirst = true;
+                for (final AbstractExpRegularExpression sub : s.getUnits ())
                 {
-                  final AbstractExpRegularExpression sub = (it.next ());
-                  boolean needParens = false;
-                  if (sub instanceof ExpRChoice)
-                  {
-                    needParens = true;
-                  }
+                  if (bFirst)
+                    bFirst = false;
+                  else
+                    returnString += " ";
+
+                  final boolean needParens = sub instanceof ExpRChoice;
                   if (needParens)
-                  {
                     returnString += "(";
-                  }
                   returnString += emitRE (sub);
                   if (needParens)
-                  {
                     returnString += ")";
-                  }
-                  if (it.hasNext ())
-                  {
-                    returnString += " ";
-                  }
                 }
               }
               else
@@ -516,7 +511,7 @@ public final class JJDoc
                   {
                     final ExpRZeroOrMore zm = (ExpRZeroOrMore) re;
                     returnString += "(";
-                    returnString += emitRE (zm.m_regexpr);
+                    returnString += emitRE (zm.getRegExpr ());
                     returnString += ")*";
                   }
                   else
@@ -524,7 +519,7 @@ public final class JJDoc
                     {
                       final ExpRZeroOrOne zo = (ExpRZeroOrOne) re;
                       returnString += "(";
-                      returnString += emitRE (zo.m_regexpr);
+                      returnString += emitRE (zo.getRegExpr ());
                       returnString += ")?";
                     }
                     else
@@ -532,18 +527,14 @@ public final class JJDoc
                       {
                         final ExpRRepetitionRange zo = (ExpRRepetitionRange) re;
                         returnString += "(";
-                        returnString += emitRE (zo.m_regexpr);
+                        returnString += emitRE (zo.getRegExpr ());
                         returnString += ")";
                         returnString += "{";
-                        if (zo.m_hasMax)
+                        returnString += zo.getMin ();
+                        if (zo.hasMax ())
                         {
-                          returnString += zo.m_min;
                           returnString += ",";
-                          returnString += zo.m_max;
-                        }
-                        else
-                        {
-                          returnString += zo.m_min;
+                          returnString += zo.getMax ();
                         }
                         returnString += "}";
                       }

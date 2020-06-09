@@ -89,37 +89,36 @@ public class TokenProduction
   public Token m_lastToken;
 
   /**
-   * @param nLine
-   *        the line to set
+   * @return the column
    */
-  public void setLine (final int nLine)
+  public final int getColumn ()
   {
-    m_nLine = nLine;
-  }
-
-  /**
-   * @return the line
-   */
-  public int getLine ()
-  {
-    return m_nLine;
+    return m_nColumn;
   }
 
   /**
    * @param nColumn
    *        the column to set
    */
-  public void setColumn (final int nColumn)
+  public final void setColumn (final int nColumn)
   {
     m_nColumn = nColumn;
   }
 
   /**
-   * @return the column
+   * @return the line
    */
-  public int getColumn ()
+  public final int getLine ()
   {
-    return m_nColumn;
+    return m_nLine;
   }
 
+  /**
+   * @param nLine
+   *        the line to set
+   */
+  public final void setLine (final int nLine)
+  {
+    m_nLine = nLine;
+  }
 }

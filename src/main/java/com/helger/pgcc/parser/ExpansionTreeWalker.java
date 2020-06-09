@@ -33,6 +33,7 @@
  */
 package com.helger.pgcc.parser;
 
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.exp.ExpChoice;
 import com.helger.pgcc.parser.exp.ExpLookahead;
 import com.helger.pgcc.parser.exp.ExpOneOrMore;
@@ -68,17 +69,13 @@ public final class ExpansionTreeWalker
       if (node instanceof ExpChoice)
       {
         for (final Expansion aElement : ((ExpChoice) node).getChoices ())
-        {
           preOrderWalk (aElement, opObj);
-        }
       }
       else
         if (node instanceof ExpSequence)
         {
-          for (final Expansion aElement : ((ExpSequence) node).m_units)
-          {
+          for (final Expansion aElement : ((ExpSequence) node).getUnits ())
             preOrderWalk (aElement, opObj);
-          }
         }
         else
           if (node instanceof ExpOneOrMore)
@@ -99,10 +96,8 @@ public final class ExpansionTreeWalker
                 if (node instanceof ExpLookahead)
                 {
                   final Expansion nested_e = ((ExpLookahead) node).getLaExpansion ();
-                  if (!(nested_e instanceof ExpSequence && (((ExpSequence) nested_e).m_units.get (0)) == node))
-                  {
+                  if (!(nested_e instanceof ExpSequence && (((ExpSequence) nested_e).getUnitAt (0)) == node))
                     preOrderWalk (nested_e, opObj);
-                  }
                 }
                 else
                   if (node instanceof ExpTryBlock)
@@ -112,38 +107,34 @@ public final class ExpansionTreeWalker
                   else
                     if (node instanceof ExpRChoice)
                     {
-                      for (final Expansion aExpansion : ((ExpRChoice) node).getChoices ())
-                      {
+                      for (final AbstractExpRegularExpression aExpansion : ((ExpRChoice) node).getChoices ())
                         preOrderWalk (aExpansion, opObj);
-                      }
                     }
                     else
                       if (node instanceof ExpRSequence)
                       {
-                        for (final Expansion aElement : ((ExpRSequence) node).m_units)
-                        {
+                        for (final AbstractExpRegularExpression aElement : ((ExpRSequence) node).getUnits ())
                           preOrderWalk (aElement, opObj);
-                        }
                       }
                       else
                         if (node instanceof ExpROneOrMore)
                         {
-                          preOrderWalk (((ExpROneOrMore) node).m_regexpr, opObj);
+                          preOrderWalk (((ExpROneOrMore) node).getRegExpr (), opObj);
                         }
                         else
                           if (node instanceof ExpRZeroOrMore)
                           {
-                            preOrderWalk (((ExpRZeroOrMore) node).m_regexpr, opObj);
+                            preOrderWalk (((ExpRZeroOrMore) node).getRegExpr (), opObj);
                           }
                           else
                             if (node instanceof ExpRZeroOrOne)
                             {
-                              preOrderWalk (((ExpRZeroOrOne) node).m_regexpr, opObj);
+                              preOrderWalk (((ExpRZeroOrOne) node).getRegExpr (), opObj);
                             }
                             else
                               if (node instanceof ExpRRepetitionRange)
                               {
-                                preOrderWalk (((ExpRRepetitionRange) node).m_regexpr, opObj);
+                                preOrderWalk (((ExpRRepetitionRange) node).getRegExpr (), opObj);
                               }
     }
   }
@@ -159,17 +150,13 @@ public final class ExpansionTreeWalker
       if (node instanceof ExpChoice)
       {
         for (final Expansion aElement : ((ExpChoice) node).getChoices ())
-        {
           postOrderWalk (aElement, opObj);
-        }
       }
       else
         if (node instanceof ExpSequence)
         {
-          for (final Expansion aElement : ((ExpSequence) node).m_units)
-          {
+          for (final Expansion aElement : ((ExpSequence) node).getUnits ())
             postOrderWalk (aElement, opObj);
-          }
         }
         else
           if (node instanceof ExpOneOrMore)
@@ -190,10 +177,8 @@ public final class ExpansionTreeWalker
                 if (node instanceof ExpLookahead)
                 {
                   final Expansion nested_e = ((ExpLookahead) node).getLaExpansion ();
-                  if (!(nested_e instanceof ExpSequence && (((ExpSequence) nested_e).m_units.get (0)) == node))
-                  {
+                  if (!(nested_e instanceof ExpSequence && (((ExpSequence) nested_e).getUnitAt (0)) == node))
                     postOrderWalk (nested_e, opObj);
-                  }
                 }
                 else
                   if (node instanceof ExpTryBlock)
@@ -203,38 +188,34 @@ public final class ExpansionTreeWalker
                   else
                     if (node instanceof ExpRChoice)
                     {
-                      for (final Expansion aElement : ((ExpRChoice) node).getChoices ())
-                      {
+                      for (final AbstractExpRegularExpression aElement : ((ExpRChoice) node).getChoices ())
                         postOrderWalk (aElement, opObj);
-                      }
                     }
                     else
                       if (node instanceof ExpRSequence)
                       {
-                        for (final Expansion aElement : ((ExpRSequence) node).m_units)
-                        {
+                        for (final AbstractExpRegularExpression aElement : ((ExpRSequence) node).getUnits ())
                           postOrderWalk (aElement, opObj);
-                        }
                       }
                       else
                         if (node instanceof ExpROneOrMore)
                         {
-                          postOrderWalk (((ExpROneOrMore) node).m_regexpr, opObj);
+                          postOrderWalk (((ExpROneOrMore) node).getRegExpr (), opObj);
                         }
                         else
                           if (node instanceof ExpRZeroOrMore)
                           {
-                            postOrderWalk (((ExpRZeroOrMore) node).m_regexpr, opObj);
+                            postOrderWalk (((ExpRZeroOrMore) node).getRegExpr (), opObj);
                           }
                           else
                             if (node instanceof ExpRZeroOrOne)
                             {
-                              postOrderWalk (((ExpRZeroOrOne) node).m_regexpr, opObj);
+                              postOrderWalk (((ExpRZeroOrOne) node).getRegExpr (), opObj);
                             }
                             else
                               if (node instanceof ExpRRepetitionRange)
                               {
-                                postOrderWalk (((ExpRRepetitionRange) node).m_regexpr, opObj);
+                                postOrderWalk (((ExpRRepetitionRange) node).getRegExpr (), opObj);
                               }
     }
     opObj.action (node);

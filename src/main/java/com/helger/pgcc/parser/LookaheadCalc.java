@@ -140,12 +140,12 @@ public final class LookaheadCalc
     // of ch. dbl ignores matches with semantic lookaheads (when force_la_check
     // is false), while dbr ignores semantic lookahead.
     @SuppressWarnings ("unchecked")
-    final List <MatchInfo> [] dbl = new List [ch.getChoices ().size ()];
+    final List <MatchInfo> [] dbl = new List [ch.getChoiceCount ()];
     @SuppressWarnings ("unchecked")
-    final List <MatchInfo> [] dbr = new List [ch.getChoices ().size ()];
-    final int [] minLA = new int [ch.getChoices ().size () - 1];
-    final MatchInfo [] overlapInfo = new MatchInfo [ch.getChoices ().size () - 1];
-    final int [] other = new int [ch.getChoices ().size () - 1];
+    final List <MatchInfo> [] dbr = new List [ch.getChoiceCount ()];
+    final int [] minLA = new int [ch.getChoiceCount () - 1];
+    final MatchInfo [] overlapInfo = new MatchInfo [ch.getChoiceCount () - 1];
+    final int [] other = new int [ch.getChoiceCount () - 1];
     MatchInfo m;
     List <MatchInfo> v;
     boolean overlapDetected;
@@ -153,32 +153,32 @@ public final class LookaheadCalc
     {
       MatchInfo.s_laLimit = la;
       LookaheadWalk.s_considerSemanticLA = !Options.isForceLaCheck ();
-      for (int i = first; i < ch.getChoices ().size () - 1; i++)
+      for (int i = first; i < ch.getChoiceCount () - 1; i++)
       {
         LookaheadWalk.s_sizeLimitedMatches = new ArrayList <> ();
         m = new MatchInfo ();
         m.m_firstFreeLoc = 0;
         v = new ArrayList <> ();
         v.add (m);
-        LookaheadWalk.genFirstSet (v, ch.getChoices ().get (i));
+        LookaheadWalk.genFirstSet (v, ch.getChoiceAt (i));
         dbl[i] = LookaheadWalk.s_sizeLimitedMatches;
       }
       LookaheadWalk.s_considerSemanticLA = false;
-      for (int i = first + 1; i < ch.getChoices ().size (); i++)
+      for (int i = first + 1; i < ch.getChoiceCount (); i++)
       {
         LookaheadWalk.s_sizeLimitedMatches = new ArrayList <> ();
         m = new MatchInfo ();
         m.m_firstFreeLoc = 0;
         v = new ArrayList <> ();
         v.add (m);
-        LookaheadWalk.genFirstSet (v, ch.getChoices ().get (i));
+        LookaheadWalk.genFirstSet (v, ch.getChoiceAt (i));
         dbr[i] = LookaheadWalk.s_sizeLimitedMatches;
       }
       if (la == 1)
       {
-        for (int i = first; i < ch.getChoices ().size () - 1; i++)
+        for (int i = first; i < ch.getChoiceCount () - 1; i++)
         {
-          final Expansion exp = ch.getChoices ().get (i);
+          final Expansion exp = ch.getChoiceAt (i);
           if (Semanticize.emptyExpansionExists (exp))
           {
             JavaCCErrors.warning (exp,
@@ -197,9 +197,9 @@ public final class LookaheadCalc
         }
       }
       overlapDetected = false;
-      for (int i = first; i < ch.getChoices ().size () - 1; i++)
+      for (int i = first; i < ch.getChoiceCount () - 1; i++)
       {
-        for (int j = i + 1; j < ch.getChoices ().size (); j++)
+        for (int j = i + 1; j < ch.getChoiceCount (); j++)
         {
           if ((m = _overlap (dbl[i], dbr[j])) != null)
           {
@@ -216,9 +216,9 @@ public final class LookaheadCalc
         break;
       }
     }
-    for (int i = first; i < ch.getChoices ().size () - 1; i++)
+    for (int i = first; i < ch.getChoiceCount () - 1; i++)
     {
-      final Expansion exp = ch.getChoices ().get (i);
+      final Expansion exp = ch.getChoiceAt (i);
       if (_explicitLA (exp) && !Options.isForceLaCheck ())
       {
         continue;
@@ -231,9 +231,9 @@ public final class LookaheadCalc
                          ", column " +
                          exp.getColumn () +
                          " and line " +
-                         ch.getChoices ().get (other[i]).getLine () +
+                         ch.getChoiceAt (other[i]).getLine () +
                          ", column " +
-                         ch.getChoices ().get (other[i]).getColumn () +
+                         ch.getChoiceAt (other[i]).getColumn () +
                          " respectively.");
         PGPrinter.error ("         A common prefix is: " + _image (overlapInfo[i]));
         PGPrinter.error ("         Consider using a lookahead of " + minLA[i] + " or more for earlier expansion.");
@@ -247,9 +247,9 @@ public final class LookaheadCalc
                            ", column " +
                            exp.getColumn () +
                            " and line " +
-                           ch.getChoices ().get (other[i]).getLine () +
+                           ch.getChoiceAt (other[i]).getLine () +
                            ", column " +
-                           ch.getChoices ().get (other[i]).getColumn () +
+                           ch.getChoiceAt (other[i]).getColumn () +
                            " respectively.");
           PGPrinter.error ("         A common prefix is: " + _image (overlapInfo[i]));
           PGPrinter.error ("         Consider using a lookahead of " + minLA[i] + " for earlier expansion.");
@@ -259,18 +259,17 @@ public final class LookaheadCalc
 
   private static boolean _explicitLA (final Expansion exp)
   {
-    if (!(exp instanceof ExpSequence))
+    if (exp instanceof ExpSequence)
     {
-      return false;
+      final ExpSequence seq = (ExpSequence) exp;
+      final Object obj = seq.getUnitAt (0);
+      if (obj instanceof ExpLookahead)
+      {
+        final ExpLookahead la = (ExpLookahead) obj;
+        return la.isExplicit ();
+      }
     }
-    final ExpSequence seq = (ExpSequence) exp;
-    final Object obj = seq.m_units.get (0);
-    if (!(obj instanceof ExpLookahead))
-    {
-      return false;
-    }
-    final ExpLookahead la = (ExpLookahead) obj;
-    return la.isExplicit ();
+    return false;
   }
 
   private static int _firstChoice (final ExpChoice ch)
@@ -278,11 +277,15 @@ public final class LookaheadCalc
     if (Options.isForceLaCheck ())
       return 0;
 
-    for (int i = 0; i < ch.getChoices ().size (); i++)
-      if (!_explicitLA (ch.getChoices ().get (i)))
-        return i;
+    int idx = 0;
+    for (final Expansion element : ch.getChoices ())
+    {
+      if (!_explicitLA (element))
+        return idx;
+      idx++;
+    }
 
-    return ch.getChoices ().size ();
+    return ch.getChoiceCount ();
   }
 
   @Nonnull

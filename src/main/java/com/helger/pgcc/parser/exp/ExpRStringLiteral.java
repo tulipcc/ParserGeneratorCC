@@ -129,9 +129,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
   public ExpRStringLiteral (final Token t, final String image)
   {
-    this.setLine (t.beginLine);
-    this.setColumn (t.beginColumn);
-    this.m_image = image;
+    setLine (t.beginLine);
+    setColumn (t.beginColumn);
+    m_image = image;
   }
 
   private static int s_maxStrKind = 0;

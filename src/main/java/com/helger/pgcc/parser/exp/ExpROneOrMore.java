@@ -33,6 +33,8 @@
  */
 package com.helger.pgcc.parser.exp;
 
+import javax.annotation.Nonnull;
+
 import com.helger.pgcc.parser.Nfa;
 import com.helger.pgcc.parser.NfaState;
 import com.helger.pgcc.parser.Token;
@@ -45,16 +47,24 @@ public class ExpROneOrMore extends AbstractExpRegularExpression
   /**
    * The regular expression which is repeated one or more times.
    */
-  public AbstractExpRegularExpression m_regexpr;
+  private final AbstractExpRegularExpression m_regexpr;
 
-  public ExpROneOrMore ()
-  {}
+  public ExpROneOrMore (final AbstractExpRegularExpression re)
+  {
+    m_regexpr = re;
+  }
 
   public ExpROneOrMore (final Token t, final AbstractExpRegularExpression re)
   {
-    this.setLine (t.beginLine);
-    this.setColumn (t.beginColumn);
-    this.m_regexpr = re;
+    this (re);
+    setLine (t.beginLine);
+    setColumn (t.beginColumn);
+  }
+
+  @Nonnull
+  public final AbstractExpRegularExpression getRegExpr ()
+  {
+    return m_regexpr;
   }
 
   @Override

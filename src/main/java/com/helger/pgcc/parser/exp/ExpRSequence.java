@@ -34,8 +34,9 @@
 package com.helger.pgcc.parser.exp;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.pgcc.parser.Nfa;
@@ -53,7 +54,7 @@ public class ExpRSequence extends AbstractExpRegularExpression
    * The list of units in this regular expression sequence. Each list component
    * will narrow to RegularExpression.
    */
-  public final List <AbstractExpRegularExpression> m_units;
+  private final List <AbstractExpRegularExpression> m_units;
 
   public ExpRSequence ()
   {
@@ -66,15 +67,16 @@ public class ExpRSequence extends AbstractExpRegularExpression
     m_units = seq;
   }
 
-  public void addUnit (final AbstractExpRegularExpression ex)
+  @Nonnull
+  public final List <AbstractExpRegularExpression> getUnits ()
+  {
+    return m_units;
+  }
+
+  public final void addUnit (final AbstractExpRegularExpression ex)
   {
     ValueEnforcer.notNull (ex, "RegEx");
     m_units.add (ex);
-  }
-
-  public Iterator <AbstractExpRegularExpression> iterator ()
-  {
-    return m_units.iterator ();
   }
 
   @Override

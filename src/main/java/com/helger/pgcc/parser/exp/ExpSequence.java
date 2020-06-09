@@ -40,6 +40,7 @@ import java.util.Set;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.pgcc.parser.Token;
 
 /**
@@ -51,7 +52,7 @@ public class ExpSequence extends Expansion
    * The list of units in this expansion sequence. Each List component will
    * narrow to Expansion.
    */
-  public final List <Expansion> m_units = new ArrayList <> ();
+  private final List <Expansion> m_units = new ArrayList <> ();
 
   public ExpSequence ()
   {}
@@ -63,21 +64,40 @@ public class ExpSequence extends Expansion
     m_units.add (lookahead);
   }
 
-  public void addUnit (final Expansion aObj)
-  {
-    m_units.add (aObj);
-  }
-
   @Nonnull
-  public Iterable <Expansion> units ()
+  public final Iterable <Expansion> getUnits ()
   {
     return m_units;
   }
 
   @Nonnegative
-  public int getUnitCount ()
+  public final int getUnitCount ()
   {
     return m_units.size ();
+  }
+
+  @Nonnull
+  public final Expansion getUnitAt (final int nIndex)
+  {
+    return m_units.get (nIndex);
+  }
+
+  public final void addUnit (final Expansion aObj)
+  {
+    ValueEnforcer.notNull (aObj, "Obj");
+    m_units.add (aObj);
+  }
+
+  public final void addUnit (final int n, final Expansion aObj)
+  {
+    ValueEnforcer.notNull (aObj, "Obj");
+    m_units.add (n, aObj);
+  }
+
+  public final void setUnit (final int n, final Expansion aObj)
+  {
+    ValueEnforcer.notNull (aObj, "Obj");
+    m_units.set (n, aObj);
   }
 
   @Override

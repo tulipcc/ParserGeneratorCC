@@ -33,6 +33,8 @@
  */
 package com.helger.pgcc.parser.exp;
 
+import javax.annotation.Nonnull;
+
 import com.helger.pgcc.parser.Nfa;
 import com.helger.pgcc.parser.NfaState;
 import com.helger.pgcc.parser.Token;
@@ -45,16 +47,24 @@ public class ExpRZeroOrMore extends AbstractExpRegularExpression
   /**
    * The regular expression which is repeated zero or more times.
    */
-  public AbstractExpRegularExpression m_regexpr;
+  private final AbstractExpRegularExpression m_regexpr;
 
-  public ExpRZeroOrMore ()
-  {}
+  public ExpRZeroOrMore (final AbstractExpRegularExpression r)
+  {
+    m_regexpr = r;
+  }
 
   public ExpRZeroOrMore (final Token t, final AbstractExpRegularExpression r)
   {
+    this (r);
     setLine (t.beginLine);
     setColumn (t.beginColumn);
-    m_regexpr = r;
+  }
+
+  @Nonnull
+  public final AbstractExpRegularExpression getRegExpr ()
+  {
+    return m_regexpr;
   }
 
   @Override

@@ -33,8 +33,11 @@
  */
 package com.helger.pgcc.parser.exp;
 
+import javax.annotation.Nonnull;
+
 import com.helger.pgcc.parser.Nfa;
 import com.helger.pgcc.parser.NfaState;
+import com.helger.pgcc.parser.Token;
 
 /**
  * Describes zero-or-one regular expressions (&lt;foo?&gt;).
@@ -44,7 +47,25 @@ public class ExpRZeroOrOne extends AbstractExpRegularExpression
   /**
    * The regular expression which is repeated zero or one times.
    */
-  public AbstractExpRegularExpression m_regexpr;
+  private final AbstractExpRegularExpression m_regexpr;
+
+  public ExpRZeroOrOne (final AbstractExpRegularExpression r)
+  {
+    m_regexpr = r;
+  }
+
+  public ExpRZeroOrOne (final Token t, final AbstractExpRegularExpression r)
+  {
+    this (r);
+    setLine (t.beginLine);
+    setColumn (t.beginColumn);
+  }
+
+  @Nonnull
+  public final AbstractExpRegularExpression getRegExpr ()
+  {
+    return m_regexpr;
+  }
 
   @Override
   public Nfa generateNfa (final boolean ignoreCase)

@@ -1,7 +1,6 @@
 package com.helger.pgcc.parser.exp;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,10 +29,10 @@ public final class ExpChoiceTest
     ExpChoice c = new ExpChoice (m_aToken);
     assertEquals (m_aToken.beginColumn, c.getColumn ());
     assertEquals (m_aToken.beginLine, c.getLine ());
-    assertTrue (c.getChoices ().isEmpty ());
+    assertEquals (0, c.getChoiceCount ());
     c = new ExpChoice (m_aExp);
     assertEquals (m_aExp.getColumn (), c.getColumn ());
     assertEquals (m_aExp.getLine (), c.getLine ());
-    assertEquals (m_aExp, c.getChoices ().get (0));
+    assertEquals (m_aExp, c.getChoiceAt (0));
   }
 }

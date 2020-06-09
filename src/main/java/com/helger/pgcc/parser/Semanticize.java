@@ -684,7 +684,7 @@ public class Semanticize
 
     if (exp instanceof ExpSequence)
     {
-      for (final Expansion aElement : ((ExpSequence) exp).m_units)
+      for (final Expansion aElement : ((ExpSequence) exp).getUnits ())
         if (!emptyExpansionExists (aElement))
           return false;
       return true;
@@ -737,22 +737,17 @@ public class Semanticize
           else
             if (exp instanceof ExpChoice)
             {
-              for (final Object aObject : ((ExpChoice) exp).getChoices ())
-              {
-                _addLeftMost (prod, (Expansion) aObject);
-              }
+              for (final Expansion aObject : ((ExpChoice) exp).getChoices ())
+                _addLeftMost (prod, aObject);
             }
             else
               if (exp instanceof ExpSequence)
               {
-                for (final Object aObject : ((ExpSequence) exp).m_units)
+                for (final Expansion aObject : ((ExpSequence) exp).getUnits ())
                 {
-                  final Expansion e = (Expansion) aObject;
-                  _addLeftMost (prod, e);
-                  if (!emptyExpansionExists (e))
-                  {
+                  _addLeftMost (prod, aObject);
+                  if (!emptyExpansionExists (aObject))
                     break;
-                  }
                 }
               }
               else
@@ -853,7 +848,7 @@ public class Semanticize
 
     if (rexp instanceof ExpRSequence)
     {
-      for (final AbstractExpRegularExpression aElement : ((ExpRSequence) rexp).m_units)
+      for (final AbstractExpRegularExpression aElement : ((ExpRSequence) rexp).getUnits ())
         if (_rexpWalk (aElement))
           return true;
       return false;
@@ -861,22 +856,22 @@ public class Semanticize
 
     if (rexp instanceof ExpROneOrMore)
     {
-      return _rexpWalk (((ExpROneOrMore) rexp).m_regexpr);
+      return _rexpWalk (((ExpROneOrMore) rexp).getRegExpr ());
     }
 
     if (rexp instanceof ExpRZeroOrMore)
     {
-      return _rexpWalk (((ExpRZeroOrMore) rexp).m_regexpr);
+      return _rexpWalk (((ExpRZeroOrMore) rexp).getRegExpr ());
     }
 
     if (rexp instanceof ExpRZeroOrOne)
     {
-      return _rexpWalk (((ExpRZeroOrOne) rexp).m_regexpr);
+      return _rexpWalk (((ExpRZeroOrOne) rexp).getRegExpr ());
     }
 
     if (rexp instanceof ExpRRepetitionRange)
     {
-      return _rexpWalk (((ExpRRepetitionRange) rexp).m_regexpr);
+      return _rexpWalk (((ExpRRepetitionRange) rexp).getRegExpr ());
     }
 
     return false;
@@ -951,11 +946,10 @@ public class Semanticize
           return;
         }
         final ExpSequence seq = (ExpSequence) e;
-        final ExpLookahead la = (ExpLookahead) (seq.m_units.get (0));
+        final ExpLookahead la = (ExpLookahead) (seq.getUnitAt (0));
         if (!la.isExplicit ())
-        {
           return;
-        }
+
         // Create a singleton choice with an empty action.
         final ExpChoice ch = new ExpChoice ();
         ch.setLine (la.getLine ());
@@ -966,7 +960,7 @@ public class Semanticize
         seq1.setLine (la.getLine ());
         seq1.setColumn (la.getColumn ());
         seq1.setParent (ch);
-        seq1.m_units.add (la);
+        seq1.addUnit (la);
         la.setParent (seq1);
 
         final ExpAction act = new ExpAction ();
@@ -974,8 +968,8 @@ public class Semanticize
         act.setColumn (la.getColumn ());
         act.setParent (seq1);
 
-        seq1.m_units.add (act);
-        ch.getChoices ().add (seq1);
+        seq1.addUnit (act);
+        ch.addChoice (seq1);
         if (la.getAmount () != 0)
         {
           if (la.getActionTokens ().isNotEmpty ())
@@ -1002,8 +996,8 @@ public class Semanticize
         // (we use EOF).
         la.setLaExpansion (new ExpREndOfFile ());
         la1.setLaExpansion (new ExpREndOfFile ());
-        seq.m_units.set (0, la1);
-        seq.m_units.add (1, ch);
+        seq.setUnit (0, la1);
+        seq.addUnit (1, ch);
       }
     }
 
@@ -1129,15 +1123,13 @@ public class Semanticize
     static boolean implicitLA (final Expansion exp)
     {
       if (!(exp instanceof ExpSequence))
-      {
         return true;
-      }
+
       final ExpSequence seq = (ExpSequence) exp;
-      final Object obj = seq.m_units.get (0);
+      final Object obj = seq.getUnitAt (0);
       if (!(obj instanceof ExpLookahead))
-      {
         return true;
-      }
+
       final ExpLookahead la = (ExpLookahead) obj;
       return !la.isExplicit ();
     }

@@ -108,7 +108,7 @@ public final class LookaheadWalk
     {
       List <MatchInfo> v = partialMatches;
       final ExpSequence seq = (ExpSequence) exp;
-      for (final Expansion element : seq.m_units)
+      for (final Expansion element : seq.getUnits ())
       {
         v = genFirstSet (v, element);
         if (v.size () == 0)
@@ -219,21 +219,21 @@ public final class LookaheadWalk
     {
       final ExpSequence seq = (ExpSequence) exp.getParent ();
       List <MatchInfo> v = partialMatches;
-      for (int i = exp.getOrdinalBase () + 1; i < seq.m_units.size (); i++)
+      for (int i = exp.getOrdinalBase () + 1; i < seq.getUnitCount (); i++)
       {
-        v = genFirstSet (v, seq.m_units.get (i));
-        if (v.size () == 0)
+        v = genFirstSet (v, seq.getUnitAt (i));
+        if (v.isEmpty ())
           return v;
       }
       List <MatchInfo> v1 = new ArrayList <> ();
       List <MatchInfo> v2 = new ArrayList <> ();
       _listSplit (v, partialMatches, v1, v2);
-      if (v1.size () != 0)
+      if (!v1.isEmpty ())
       {
         // System.out.println("2; gen: " + generation + "; exp: " + exp);
         v1 = genFollowSet (v1, seq, generation);
       }
-      if (v2.size () != 0)
+      if (!v2.isEmpty ())
       {
         // System.out.println("3; gen: " + generation + "; exp: " + exp);
         v2 = genFollowSet (v2, seq, Expansion.getNextGenerationIndex ());

@@ -37,6 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
+import com.helger.commons.ValueEnforcer;
 import com.helger.pgcc.parser.Token;
 
 /**
@@ -67,20 +71,39 @@ public class ExpChoice extends Expansion
   }
 
   /**
-   * @param choices
-   *        the choices to set
+   * @return the choices
    */
-  public final void setChoices (final List <Expansion> choices)
+  @Nonnull
+  public final Iterable <Expansion> getChoices ()
   {
-    m_choices = choices;
+    return m_choices;
+  }
+
+  @Nonnegative
+  public final int getChoiceCount ()
+  {
+    return m_choices.size ();
+  }
+
+  @Nonnull
+  public final Expansion getChoiceAt (final int nIndex)
+  {
+    return m_choices.get (nIndex);
+  }
+
+  public final void addChoice (@Nonnull final Expansion a)
+  {
+    ValueEnforcer.notNull (a, "Expansion");
+    m_choices.add (a);
   }
 
   /**
-   * @return the choices
+   * @param choices
+   *        the choices to set
    */
-  public final List <Expansion> getChoices ()
+  public final void setChoices (@Nonnull final List <Expansion> choices)
   {
-    return m_choices;
+    m_choices = choices;
   }
 
   @Override

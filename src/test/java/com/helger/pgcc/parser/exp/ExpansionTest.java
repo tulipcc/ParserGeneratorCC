@@ -84,7 +84,7 @@ public final class ExpansionTest
     final ExpRZeroOrMore rzom = new ExpRZeroOrMore (m_aToken, r);
     assertEquals (m_aToken.beginColumn, rzom.getColumn ());
     assertEquals (m_aToken.beginLine, rzom.getLine ());
-    assertEquals (r, rzom.m_regexpr);
+    assertEquals (r, rzom.getRegExpr ());
   }
 
   @Test
@@ -94,7 +94,7 @@ public final class ExpansionTest
     final ExpROneOrMore room = new ExpROneOrMore (m_aToken, r);
     assertEquals (m_aToken.beginColumn, room.getColumn ());
     assertEquals (m_aToken.beginLine, room.getLine ());
-    assertEquals (r, room.m_regexpr);
+    assertEquals (r, room.getRegExpr ());
   }
 
   @Test
@@ -133,6 +133,6 @@ public final class ExpansionTest
     final ExpSequence s = new ExpSequence (m_aToken, la);
     assertEquals (m_aToken.beginColumn, s.getColumn ());
     assertEquals (m_aToken.beginLine, s.getLine ());
-    assertSame (la, s.m_units.get (0));
+    assertSame (la, s.getUnitAt (0));
   }
 }

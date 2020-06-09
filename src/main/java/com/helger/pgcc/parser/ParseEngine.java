@@ -160,33 +160,26 @@ public class ParseEngine
     {
       final NormalProduction prod = ((ExpNonTerminal) exp).getProd ();
       if (prod instanceof AbstractCodeProduction)
-      {
         return true;
-      }
       return _javaCodeCheck (prod.getExpansion ());
     }
 
     if (exp instanceof ExpChoice)
     {
       final ExpChoice ch = (ExpChoice) exp;
-      final List <Expansion> choices = ch.getChoices ();
-      for (final Expansion choice : choices)
-      {
+      for (final Expansion choice : ch.getChoices ())
         if (_javaCodeCheck (choice))
-        {
           return true;
-        }
-      }
       return false;
     }
 
     if (exp instanceof ExpSequence)
     {
       final ExpSequence seq = (ExpSequence) exp;
-      for (int i = 0; i < seq.m_units.size (); i++)
+      for (int i = 0; i < seq.getUnitCount (); i++)
       {
-        final Expansion [] units = seq.m_units.toArray (new Expansion [seq.m_units.size ()]);
-        if (units[i] instanceof ExpLookahead && ((ExpLookahead) units[i]).isExplicit ())
+        final Expansion unit = seq.getUnitAt (i);
+        if (unit instanceof ExpLookahead && ((ExpLookahead) unit).isExplicit ())
         {
           // An explicit lookahead (rather than one generated implicitly).
           // Assume
@@ -194,14 +187,10 @@ public class ParseEngine
           // "A" ( "B" | LOOKAHEAD("X") jcode() | "C" )* "D"
           return false;
         }
-        if (_javaCodeCheck ((units[i])))
-        {
+        if (_javaCodeCheck (unit))
           return true;
-        }
-        if (!Semanticize.emptyExpansionExists (units[i]))
-        {
+        if (!Semanticize.emptyExpansionExists (unit))
           return false;
-        }
       }
       return false;
     }
@@ -271,14 +260,14 @@ public class ParseEngine
           if (exp instanceof ExpSequence)
           {
             final ExpSequence seq = (ExpSequence) exp;
-            final Object obj = seq.m_units.get (0);
+            final Object obj = seq.getUnitAt (0);
             if (obj instanceof ExpLookahead && ((ExpLookahead) obj).getActionTokens ().isNotEmpty ())
             {
               m_bJJ2LA = true;
             }
-            for (int i = 0; i < seq.m_units.size (); i++)
+            for (int i = 0; i < seq.getUnitCount (); i++)
             {
-              final Expansion unit = seq.m_units.get (i);
+              final Expansion unit = seq.getUnitAt (i);
               // Javacode productions can not have FIRST sets. Instead we
               // generate the FIRST set
               // for the preceding LOOKAHEAD (the semantic checks should have
@@ -286,17 +275,17 @@ public class ParseEngine
               // the LOOKAHEAD is suitable).
               if (unit instanceof ExpNonTerminal && ((ExpNonTerminal) unit).getProd () instanceof AbstractCodeProduction)
               {
-                if (i > 0 && seq.m_units.get (i - 1) instanceof ExpLookahead)
+                if (i > 0 && seq.getUnitAt (i - 1) instanceof ExpLookahead)
                 {
-                  final ExpLookahead la = (ExpLookahead) seq.m_units.get (i - 1);
+                  final ExpLookahead la = (ExpLookahead) seq.getUnitAt (i - 1);
                   _genFirstSet (la.getLaExpansion ());
                 }
               }
               else
               {
-                _genFirstSet (seq.m_units.get (i));
+                _genFirstSet (seq.getUnitAt (i));
               }
-              if (!Semanticize.emptyExpansionExists (seq.m_units.get (i)))
+              if (!Semanticize.emptyExpansionExists (seq.getUnitAt (i)))
               {
                 break;
               }
@@ -1192,8 +1181,8 @@ public class ParseEngine
           if (e instanceof ExpChoice)
           {
             final ExpChoice e_nrw = (ExpChoice) e;
-            conds = new ExpLookahead [e_nrw.getChoices ().size ()];
-            actions = new String [e_nrw.getChoices ().size () + 1];
+            conds = new ExpLookahead [e_nrw.getChoiceCount ()];
+            actions = new String [e_nrw.getChoiceCount () + 1];
 
             String sChoice;
             switch (eOutputLanguage)
@@ -1210,16 +1199,16 @@ public class ParseEngine
               default:
                 throw new UnsupportedOutputLanguageException (eOutputLanguage);
             }
-            actions[e_nrw.getChoices ().size ()] = sChoice;
+            actions[e_nrw.getChoiceCount ()] = sChoice;
 
             // In previous line, the "throw" never throws an exception since the
             // evaluation of jj_consume_token(-1) causes ParseException to be
             // thrown first.
-            for (int i = 0; i < e_nrw.getChoices ().size (); i++)
+            for (int i = 0; i < e_nrw.getChoiceCount (); i++)
             {
-              final ExpSequence nestedSeq = (ExpSequence) e_nrw.getChoices ().get (i);
+              final ExpSequence nestedSeq = (ExpSequence) e_nrw.getChoiceAt (i);
               actions[i] = _phase1ExpansionGen (nestedSeq);
-              conds[i] = (ExpLookahead) nestedSeq.m_units.get (0);
+              conds[i] = (ExpLookahead) nestedSeq.getUnitAt (0);
             }
             retval = buildLookaheadChecker (conds, actions);
           }
@@ -1230,7 +1219,7 @@ public class ParseEngine
               // We skip the first element in the following iteration since it
               // is the
               // Lookahead object.
-              for (int i = 1; i < e_nrw.m_units.size (); i++)
+              for (int i = 1; i < e_nrw.getUnitCount (); i++)
               {
                 // For C++, since we are not using exceptions, we will protect
                 // all the
@@ -1246,8 +1235,8 @@ public class ParseEngine
                     case CPP:
                       // for the last one, if it's an action, we will not
                       // protect it.
-                      final Expansion elem = e_nrw.m_units.get (i);
-                      if (!(elem instanceof ExpAction) || !(e.getParent () instanceof BNFProduction) || i != e_nrw.m_units.size () - 1)
+                      final Expansion elem = e_nrw.getUnitAt (i);
+                      if (!(elem instanceof ExpAction) || !(e.getParent () instanceof BNFProduction) || i != e_nrw.getUnitCount () - 1)
                       {
                         wrap_in_block = true;
                         retval += "\nif (!hasError) {";
@@ -1257,7 +1246,7 @@ public class ParseEngine
                       throw new UnsupportedOutputLanguageException (eOutputLanguage);
                   }
                 }
-                retval += _phase1ExpansionGen (e_nrw.m_units.get (i));
+                retval += _phase1ExpansionGen (e_nrw.getUnitAt (i));
                 if (wrap_in_block)
                 {
                   retval += "\n}";
@@ -1272,7 +1261,7 @@ public class ParseEngine
                 ExpLookahead la;
                 if (nested_e instanceof ExpSequence)
                 {
-                  la = (ExpLookahead) (((ExpSequence) nested_e).m_units.get (0));
+                  la = (ExpLookahead) (((ExpSequence) nested_e).getUnitAt (0));
                 }
                 else
                 {
@@ -1337,7 +1326,7 @@ public class ParseEngine
                   ExpLookahead la;
                   if (nested_e instanceof ExpSequence)
                   {
-                    la = (ExpLookahead) (((ExpSequence) nested_e).m_units.get (0));
+                    la = (ExpLookahead) (((ExpSequence) nested_e).getUnitAt (0));
                   }
                   else
                   {
@@ -1403,7 +1392,7 @@ public class ParseEngine
                     ExpLookahead la;
                     if (nested_e instanceof ExpSequence)
                     {
-                      la = (ExpLookahead) (((ExpSequence) nested_e).m_units.get (0));
+                      la = (ExpLookahead) (((ExpSequence) nested_e).getUnitAt (0));
                     }
                     else
                     {
@@ -1584,9 +1573,9 @@ public class ParseEngine
     {
       while (true)
       {
-        if (seq instanceof ExpSequence && ((ExpSequence) seq).m_units.size () == 2)
+        if (seq instanceof ExpSequence && ((ExpSequence) seq).getUnitCount () == 2)
         {
-          seq = ((ExpSequence) seq).m_units.get (1);
+          seq = ((ExpSequence) seq).getUnitAt (1);
         }
         else
           if (seq instanceof ExpNonTerminal)
@@ -1663,9 +1652,9 @@ public class ParseEngine
             // the
             // Lookahead object.
             int cnt = inf.m_count;
-            for (int i = 1; i < e_nrw.m_units.size (); i++)
+            for (int i = 1; i < e_nrw.getUnitCount (); i++)
             {
-              final Expansion eseq = (e_nrw.m_units.get (i));
+              final Expansion eseq = (e_nrw.getUnitAt (i));
               setupPhase3Builds (new Phase3Data (eseq, cnt));
               cnt -= minimumSize (eseq);
               if (cnt <= 0)
@@ -1824,7 +1813,7 @@ public class ParseEngine
         {
           ExpSequence nested_seq;
           final ExpChoice e_nrw = (ExpChoice) e;
-          if (e_nrw.getChoices ().size () != 1)
+          if (e_nrw.getChoiceCount () != 1)
           {
             if (!m_xsp_declared)
             {
@@ -1833,10 +1822,10 @@ public class ParseEngine
             }
             m_codeGenerator.genCodeLine ("    xsp = jj_scanpos;");
           }
-          for (int i = 0; i < e_nrw.getChoices ().size (); i++)
+          for (int i = 0; i < e_nrw.getChoiceCount (); i++)
           {
-            nested_seq = (ExpSequence) (e_nrw.getChoices ().get (i));
-            final ExpLookahead la = (ExpLookahead) (nested_seq.m_units.get (0));
+            nested_seq = (ExpSequence) (e_nrw.getChoiceAt (i));
+            final ExpLookahead la = (ExpLookahead) (nested_seq.getUnitAt (0));
             if (la.getActionTokens ().isNotEmpty ())
             {
               // We have semantic lookahead that must be evaluated.
@@ -1858,7 +1847,7 @@ public class ParseEngine
             {
               m_codeGenerator.genCode ("!jj_semLA || ");
             }
-            if (i != e_nrw.getChoices ().size () - 1)
+            if (i != e_nrw.getChoiceCount () - 1)
             {
               // codeGenerator.genCodeLine("jj_3" + nested_seq.internal_name +
               // "()) {");
@@ -1874,7 +1863,7 @@ public class ParseEngine
               // jj_lastpos) " + genReturn(false));
             }
           }
-          for (int i = 1; i < e_nrw.getChoices ().size (); i++)
+          for (int i = 1; i < e_nrw.getChoiceCount (); i++)
           {
             // codeGenerator.genCodeLine(" } else if (jj_la == 0 && jj_scanpos
             // == jj_lastpos) " + genReturn(false));
@@ -1888,9 +1877,9 @@ public class ParseEngine
             // We skip the first element in the following iteration since it is
             // the Lookahead object.
             int cnt = inf.m_count;
-            for (int i = 1; i < e_nrw.m_units.size (); i++)
+            for (int i = 1; i < e_nrw.getUnitCount (); i++)
             {
-              final Expansion eseq = e_nrw.m_units.get (i);
+              final Expansion eseq = e_nrw.getUnitAt (i);
               buildPhase3Routine (new Phase3Data (eseq, cnt), true);
 
               // Test Code
@@ -2033,9 +2022,9 @@ public class ParseEngine
         int min = oldMin;
         Expansion nested_e;
         final ExpChoice e_nrw = (ExpChoice) e;
-        for (int i = 0; min > 1 && i < e_nrw.getChoices ().size (); i++)
+        for (int i = 0; min > 1 && i < e_nrw.getChoiceCount (); i++)
         {
-          nested_e = (e_nrw.getChoices ().get (i));
+          nested_e = (e_nrw.getChoiceAt (i));
           final int min1 = minimumSize (nested_e, min);
           if (min > min1)
             min = min1;
@@ -2051,9 +2040,9 @@ public class ParseEngine
         // is
         // the
         // Lookahead object.
-        for (int i = 1; i < e_nrw.m_units.size (); i++)
+        for (int i = 1; i < e_nrw.getUnitCount (); i++)
         {
-          final Expansion eseq = (e_nrw.m_units.get (i));
+          final Expansion eseq = (e_nrw.getUnitAt (i));
           final int mineseq = minimumSize (eseq);
           if (min == Integer.MAX_VALUE || mineseq == Integer.MAX_VALUE)
           {
@@ -2363,12 +2352,12 @@ public class ParseEngine
         {
           final ExpChoice e_nrw = (ExpChoice) e;
           PGPrinter.info ("CHOICE, ");
-          for (int i = 0; i < e_nrw.getChoices ().size (); i++)
+          for (int i = 0; i < e_nrw.getChoiceCount (); i++)
           {
             if (i > 0)
               PGPrinter.info ("\n|");
-            final ExpSequence nested_seq = (ExpSequence) (e_nrw.getChoices ().get (i));
-            final ExpLookahead la = (ExpLookahead) (nested_seq.m_units.get (0));
+            final ExpSequence nested_seq = (ExpSequence) (e_nrw.getChoiceAt (i));
+            final ExpLookahead la = (ExpLookahead) (nested_seq.getUnitAt (0));
             if (la.getActionTokens ().isNotEmpty ())
             {
               PGPrinter.info ("SEMANTIC,");
@@ -2387,12 +2376,12 @@ public class ParseEngine
           {
             final ExpSequence e_nrw = (ExpSequence) e;
             int cnt = inf.m_count;
-            if (e_nrw.m_units.size () > 2)
+            if (e_nrw.getUnitCount () > 2)
             {
               PGPrinter.info ("SEQ, " + cnt);
-              for (int i = 1; i < e_nrw.m_units.size (); i++)
+              for (int i = 1; i < e_nrw.getUnitCount (); i++)
               {
-                final Expansion eseq = (e_nrw.m_units.get (i));
+                final Expansion eseq = (e_nrw.getUnitAt (i));
                 buildPhase3TableRec (new Phase3Data (eseq, cnt));
                 cnt -= minimumSize (eseq);
                 if (cnt <= 0)
@@ -2401,7 +2390,7 @@ public class ParseEngine
             }
             else
             {
-              Expansion tmp = e_nrw.m_units.get (1);
+              Expansion tmp = e_nrw.getUnitAt (1);
               while (tmp instanceof ExpNonTerminal)
               {
                 final NormalProduction ntprod = (s_production_table.get (((ExpNonTerminal) tmp).getName ()));

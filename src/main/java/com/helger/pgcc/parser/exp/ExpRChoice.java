@@ -36,8 +36,10 @@ package com.helger.pgcc.parser.exp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.pgcc.parser.ICCCharacter;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.LexGenJava;
@@ -69,13 +71,31 @@ public class ExpRChoice extends AbstractExpRegularExpression
     return m_choices;
   }
 
+  @Nonnegative
+  public final int getChoiceCount ()
+  {
+    return m_choices.size ();
+  }
+
+  @Nonnull
+  public final AbstractExpRegularExpression getChoiceAt (final int nIndex)
+  {
+    return m_choices.get (nIndex);
+  }
+
+  public final void addChoice (@Nonnull final AbstractExpRegularExpression a)
+  {
+    ValueEnforcer.notNull (a, "Expansion");
+    m_choices.add (a);
+  }
+
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
   {
     compressCharLists ();
 
-    if (getChoices ().size () == 1)
-      return getChoices ().get (0).generateNfa (ignoreCase);
+    if (getChoiceCount () == 1)
+      return getChoiceAt (0).generateNfa (ignoreCase);
 
     final Nfa retVal = new Nfa ();
     final NfaState startState = retVal.start ();
@@ -98,9 +118,9 @@ public class ExpRChoice extends AbstractExpRegularExpression
     AbstractExpRegularExpression curRE;
     ExpRCharacterList curCharList = null;
 
-    for (int i = 0; i < getChoices ().size (); i++)
+    for (int i = 0; i < getChoiceCount (); i++)
     {
-      curRE = getChoices ().get (i);
+      curRE = getChoiceAt (i);
 
       while (curRE instanceof ExpRJustName)
         curRE = ((ExpRJustName) curRE).m_regexpr;
@@ -136,9 +156,9 @@ public class ExpRChoice extends AbstractExpRegularExpression
 
   void compressChoices ()
   {
-    for (int i = 0; i < getChoices ().size (); i++)
+    for (int i = 0; i < getChoiceCount (); i++)
     {
-      AbstractExpRegularExpression curRE = getChoices ().get (i);
+      AbstractExpRegularExpression curRE = getChoiceAt (i);
 
       while (curRE instanceof ExpRJustName)
         curRE = ((ExpRJustName) curRE).m_regexpr;
@@ -146,8 +166,8 @@ public class ExpRChoice extends AbstractExpRegularExpression
       if (curRE instanceof ExpRChoice)
       {
         getChoices ().remove (i--);
-        for (int j = ((ExpRChoice) curRE).getChoices ().size (); j-- > 0;)
-          getChoices ().add (((ExpRChoice) curRE).getChoices ().get (j));
+        for (int j = ((ExpRChoice) curRE).getChoiceCount (); j-- > 0;)
+          addChoice (((ExpRChoice) curRE).getChoiceAt (j));
       }
     }
   }

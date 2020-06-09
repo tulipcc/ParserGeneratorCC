@@ -986,13 +986,13 @@ void expansion_choices(Container c1) :
   ( "|" expansion(c2)
   {
     if (morethanone) {
-      ch.getChoices().add((Expansion)c2.member);
+      ch.addChoice((Expansion)c2.member);
       ((Expansion)c2.member).setParent (ch);
     } else {
       morethanone = true;
       ch = new ExpChoice((Expansion)c1.member);
       ((Expansion)c1.member).setParent (ch);
-      ch.getChoices().add((Expansion)c2.member);
+      ch.addChoice((Expansion)c2.member);
       ((Expansion)c2.member).setParent (ch);
     }
   }
@@ -1037,7 +1037,7 @@ void expansion(Container c1) :
   {
     seq.addUnit((Expansion) c2.member);
     ((Expansion)c2.member).setParent (seq);
-    ((Expansion)c2.member).setOrdinalBase (seq.getUnitCount()-1);
+    ((Expansion)c2.member).setOrdinalBase (seq.getUnitCount () - 1);
   }
   )+
   {
@@ -1153,7 +1153,7 @@ void expansion_unit(Container c) :
     seq.addUnit(act);
     act.setParent (seq);
     act.setOrdinalBase (1);
-    ch.getChoices().add(seq);
+    ch.addChoice(seq);
     seq.setParent (ch);
     seq.setOrdinalBase (0);
     if (la.getAmount() != 0) {
@@ -1365,14 +1365,14 @@ void complex_regular_expression_choices(Container c1) :
   ( "|" complex_regular_expression(c2)
   {
     if (morethanone) {
-      ch.getChoices().add((AbstractExpRegularExpression)c2.member);
+      ch.addChoice((AbstractExpRegularExpression)c2.member);
     } else {
       morethanone = true;
       ch = new ExpRChoice();
       ch.setLine(((AbstractExpRegularExpression)c1.member).getLine());
       ch.setColumn(((AbstractExpRegularExpression)c1.member).getColumn());
-      ch.getChoices().add((AbstractExpRegularExpression)c1.member);
-      ch.getChoices().add((AbstractExpRegularExpression)c2.member);
+      ch.addChoice((AbstractExpRegularExpression)c1.member);
+      ch.addChoice((AbstractExpRegularExpression)c2.member);
     }
   }
   )*
@@ -1416,7 +1416,7 @@ void complex_regular_expression(Container c1) :
 void complex_regular_expression_unit(Container c) :
   {
     String image;
-    Token t = getToken(1);
+    final Token t = getToken(1);
     int r1 = 0, r2 = -1;
     boolean hasMax = false;
   }
@@ -1444,24 +1444,13 @@ void complex_regular_expression_unit(Container c) :
   }
    | "?"
   {
-    ExpRZeroOrOne zorexp = new ExpRZeroOrOne();
-    zorexp.setLine(t.beginLine);
-    zorexp.setColumn(t.beginColumn);
-    zorexp.m_regexpr = (AbstractExpRegularExpression)c.member;
-    c.member = zorexp;
+    c.member = new ExpRZeroOrOne(t, (AbstractExpRegularExpression)c.member);
   }
    | "{" r1 = IntegerLiteral()
          [ "," { hasMax = true; } [ r2 = IntegerLiteral() ] ]
      "}"
   {
-    ExpRRepetitionRange rrrexp = new ExpRRepetitionRange();
-    rrrexp.setLine(t.beginLine);
-    rrrexp.setColumn(t.beginColumn);
-    rrrexp.m_min = r1;
-    rrrexp.m_max = r2;
-    rrrexp.m_hasMax = hasMax;
-    rrrexp.m_regexpr = (AbstractExpRegularExpression)c.member;
-    c.member = rrrexp;
+    c.member = new ExpRRepetitionRange(t, r1, r2, hasMax, (AbstractExpRegularExpression)c.member);
   }
   )?
 }

@@ -36,7 +36,10 @@ package com.helger.pgcc.parser.exp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.helger.pgcc.parser.Nfa;
+import com.helger.pgcc.parser.Token;
 
 /**
  * Describes one-or-more regular expressions (&lt;foo+&gt;).
@@ -46,10 +49,41 @@ public class ExpRRepetitionRange extends AbstractExpRegularExpression
   /**
    * The regular expression which is repeated one or more times.
    */
-  public AbstractExpRegularExpression m_regexpr;
-  public int m_min = 0;
-  public int m_max = -1;
-  public boolean m_hasMax;
+  private final AbstractExpRegularExpression m_regexpr;
+  private int m_min = 0;
+  private int m_max = -1;
+  private final boolean m_hasMax;
+
+  public ExpRRepetitionRange (final Token t, final int r1, final int r2, final boolean hasMax, final AbstractExpRegularExpression r)
+  {
+    setLine (t.beginLine);
+    setColumn (t.beginColumn);
+    m_min = r1;
+    m_max = r2;
+    m_hasMax = hasMax;
+    m_regexpr = r;
+  }
+
+  @Nonnull
+  public final AbstractExpRegularExpression getRegExpr ()
+  {
+    return m_regexpr;
+  }
+
+  public final int getMin ()
+  {
+    return m_min;
+  }
+
+  public final boolean hasMax ()
+  {
+    return m_hasMax;
+  }
+
+  public final int getMax ()
+  {
+    return m_max;
+  }
 
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
@@ -65,16 +99,12 @@ public class ExpRRepetitionRange extends AbstractExpRegularExpression
 
     if (m_hasMax && m_max == -1) // Unlimited
     {
-      final ExpRZeroOrMore zoo = new ExpRZeroOrMore ();
-      zoo.m_regexpr = m_regexpr;
-      units.add (zoo);
+      units.add (new ExpRZeroOrMore (m_regexpr));
     }
 
     while (i++ < m_max)
     {
-      final ExpRZeroOrOne zoo = new ExpRZeroOrOne ();
-      zoo.m_regexpr = m_regexpr;
-      units.add (zoo);
+      units.add (new ExpRZeroOrOne (m_regexpr));
     }
     seq = new ExpRSequence (units);
     return seq.generateNfa (ignoreCase);
