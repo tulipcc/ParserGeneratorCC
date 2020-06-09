@@ -240,9 +240,7 @@ public abstract class JavaCCParserInternals
     {
       if (p.m_lexStates == null || p.m_lexStates.length != 1 || !p.m_lexStates[0].equals ("DEFAULT"))
       {
-        JavaCCErrors.warning (p,
-                              "Ignoring lexical state specifications since option " +
-                                 "USER_TOKEN_MANAGER has been set to true.");
+        JavaCCErrors.warning (p, "Ignoring lexical state specifications since option " + "USER_TOKEN_MANAGER has been set to true.");
       }
     }
     if (p.m_lexStates == null)
@@ -280,9 +278,7 @@ public abstract class JavaCCParserInternals
       s_token_mgr_decls = new CommonsArrayList <> (decls);
       if (Options.isUserTokenManager ())
       {
-        JavaCCErrors.warning (t,
-                              "Ignoring declarations in \"TOKEN_MGR_DECLS\" since option " +
-                                 "USER_TOKEN_MANAGER has been set to true.");
+        JavaCCErrors.warning (t, "Ignoring declarations in \"TOKEN_MGR_DECLS\" since option " + "USER_TOKEN_MANAGER has been set to true.");
       }
     }
   }
@@ -500,7 +496,7 @@ public abstract class JavaCCParserInternals
     tblk.setColumn (tryLoc.beginColumn);
     tblk.m_exp = (Expansion) (nestedExp.member);
     tblk.m_exp.m_parent = tblk;
-    tblk.m_exp.m_ordinalBase = 0;
+    tblk.m_exp.setOrdinalBase (0);
     tblk.m_types = types;
     tblk.m_ids = ids;
     tblk.m_catchblks = catchblks;

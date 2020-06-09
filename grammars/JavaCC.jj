@@ -1004,7 +1004,7 @@ void expansion(Container c1) :
   {
     seq.addUnit((Expansion) c2.member);
     ((Expansion)c2.member).m_parent = seq;
-    ((Expansion)c2.member).m_ordinalBase = seq.getUnitCount()-1;
+    ((Expansion)c2.member).setOrdinalBase (seq.getUnitCount()-1);
   }
   )+
   {
@@ -1113,18 +1113,18 @@ void expansion_unit(Container c) :
     ExpChoice ch = new ExpChoice(t);
     ExpSequence seq = new ExpSequence(t, la);
     la.m_parent = seq;
-    la.m_ordinalBase = 0;
+    la.setOrdinalBase (0);
     act = new ExpAction();
     act.setLine(t.beginLine);
     act.setColumn(t.beginColumn);
     seq.addUnit(act);
     act.m_parent = seq;
-    act.m_ordinalBase = 1;
+    act.setOrdinalBase (1);
     ch.getChoices().add(seq);
     seq.m_parent = ch;
-    seq.m_ordinalBase = 0;
+    seq.setOrdinalBase (0);
     if (la.getAmount() != 0) {
-      if (la.getActionTokens().size() != 0) {
+      if (!la.getActionTokens().isEmpty()) {
         JavaCCErrors.warning(t, "Encountered LOOKAHEAD(...) at a non-choice location.  Only semantic lookahead will be considered here.");
       } else {
         JavaCCErrors.warning(t, "Encountered LOOKAHEAD(...) at a non-choice location.  This will be ignored.");
@@ -1314,7 +1314,7 @@ void regular_expression(Container c) :
     ef = new ExpREndOfFile();
     ef.setLine(t.beginLine);
     ef.setColumn(t.beginColumn);
-    ef.m_ordinalBase = 0;
+    ef.setOrdinalBase (0);
     c.member = ef;
   }
 }

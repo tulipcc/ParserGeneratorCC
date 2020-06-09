@@ -96,9 +96,9 @@ public final class LookaheadWalk
     {
       final List <MatchInfo> retval = new ArrayList <> ();
       final ExpChoice ch = (ExpChoice) exp;
-      for (int i = 0; i < ch.getChoices ().size (); i++)
+      for (final Expansion element : ch.getChoices ())
       {
-        final List <MatchInfo> v = genFirstSet (partialMatches, ch.getChoices ().get (i));
+        final List <MatchInfo> v = genFirstSet (partialMatches, element);
         retval.addAll (v);
       }
       return retval;
@@ -108,9 +108,9 @@ public final class LookaheadWalk
     {
       List <MatchInfo> v = partialMatches;
       final ExpSequence seq = (ExpSequence) exp;
-      for (int i = 0; i < seq.m_units.size (); i++)
+      for (final Expansion element : seq.m_units)
       {
-        v = genFirstSet (v, seq.m_units.get (i));
+        v = genFirstSet (v, element);
         if (v.size () == 0)
           break;
       }
@@ -188,9 +188,7 @@ public final class LookaheadWalk
     }
   }
 
-  public static List <MatchInfo> genFollowSet (final List <MatchInfo> partialMatches,
-                                               final Expansion exp,
-                                               final long generation)
+  public static List <MatchInfo> genFollowSet (final List <MatchInfo> partialMatches, final Expansion exp, final long generation)
   {
     if (exp.m_myGeneration == generation)
     {
@@ -209,9 +207,9 @@ public final class LookaheadWalk
       final List <Expansion> parents = ((NormalProduction) exp.m_parent).getParents ();
       final List <MatchInfo> retval = new ArrayList <> ();
       // System.out.println("1; gen: " + generation + "; exp: " + exp);
-      for (int i = 0; i < parents.size (); i++)
+      for (final Expansion parent : parents)
       {
-        final List <MatchInfo> v = genFollowSet (partialMatches, parents.get (i), generation);
+        final List <MatchInfo> v = genFollowSet (partialMatches, parent, generation);
         retval.addAll (v);
       }
       return retval;
@@ -221,7 +219,7 @@ public final class LookaheadWalk
     {
       final ExpSequence seq = (ExpSequence) exp.m_parent;
       List <MatchInfo> v = partialMatches;
-      for (int i = exp.m_ordinalBase + 1; i < seq.m_units.size (); i++)
+      for (int i = exp.getOrdinalBase () + 1; i < seq.m_units.size (); i++)
       {
         v = genFirstSet (v, seq.m_units.get (i));
         if (v.size () == 0)

@@ -83,7 +83,7 @@ public class Expansion
   /**
    * The ordinal of this node with respect to its parent.
    */
-  public int m_ordinalBase;
+  private int m_ordinalBase;
 
   /**
    * To avoid right-recursive loops when calculating follow sets, we use a
@@ -201,6 +201,16 @@ public class Expansion
   public final int getLine ()
   {
     return m_nLine;
+  }
+
+  public int getOrdinalBase ()
+  {
+    return m_ordinalBase;
+  }
+
+  public void setOrdinalBase (final int n)
+  {
+    m_ordinalBase = n;
   }
 
   /**
