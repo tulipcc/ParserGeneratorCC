@@ -37,7 +37,7 @@ package com.helger.pgcc.parser;
  * An object container. Used to pass references to objects as parameter.
  */
 
-public class Container
+public final class Container
 {
   public Object member;
 }

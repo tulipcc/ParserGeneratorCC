@@ -987,13 +987,13 @@ void expansion_choices(Container c1) :
   {
     if (morethanone) {
       ch.getChoices().add((Expansion)c2.member);
-      ((Expansion)c2.member).m_parent = ch;
+      ((Expansion)c2.member).setParent (ch);
     } else {
       morethanone = true;
       ch = new ExpChoice((Expansion)c1.member);
-      ((Expansion)c1.member).m_parent = ch;
+      ((Expansion)c1.member).setParent (ch);
       ch.getChoices().add((Expansion)c2.member);
-      ((Expansion)c2.member).m_parent = ch;
+      ((Expansion)c2.member).setParent (ch);
     }
   }
   )*
@@ -1006,8 +1006,8 @@ void expansion_choices(Container c1) :
 
 void expansion(Container c1) :
   {
-    ExpSequence seq = new ExpSequence();
-    Container c2 = new Container();
+    final ExpSequence seq = new ExpSequence();
+    final Container c2 = new Container();
     ExpLookahead la = new ExpLookahead();
     Token t = getToken(1);
     seq.setLine(t.beginLine);
@@ -1036,7 +1036,7 @@ void expansion(Container c1) :
     expansion_unit(c2)
   {
     seq.addUnit((Expansion) c2.member);
-    ((Expansion)c2.member).m_parent = seq;
+    ((Expansion)c2.member).setParent (seq);
     ((Expansion)c2.member).setOrdinalBase (seq.getUnitCount()-1);
   }
   )+
@@ -1056,7 +1056,7 @@ ExpLookahead local_lookahead() :
     la.setLine(t.beginLine);
     la.setColumn(t.beginColumn);
     la.setLaExpansion(null);
-    Container c = new Container();
+    final Container c = new Container();
     boolean commaAtEnd = false, emptyLA = true;
     int laAmount;
     m_nInLocalLA++;
@@ -1145,16 +1145,16 @@ void expansion_unit(Container c) :
     // Create a singleton choice with an empty action.
     ExpChoice ch = new ExpChoice(t);
     ExpSequence seq = new ExpSequence(t, la);
-    la.m_parent = seq;
+    la.setParent (seq);
     la.setOrdinalBase (0);
     act = new ExpAction();
     act.setLine(t.beginLine);
     act.setColumn(t.beginColumn);
     seq.addUnit(act);
-    act.m_parent = seq;
+    act.setParent (seq);
     act.setOrdinalBase (1);
     ch.getChoices().add(seq);
-    seq.m_parent = ch;
+    seq.setParent (ch);
     seq.setOrdinalBase (0);
     if (la.getAmount() != 0) {
       if (la.getActionTokens().size() != 0) {

@@ -64,21 +64,12 @@ public class Expansion
   private int m_nInternalIndex = -1;
 
   /**
-   * The parser routines are generated in three phases. The generation of the
-   * second and third phase are on demand only, and the third phase can be
-   * recursive. This variable is used to keep track of the expansions for which
-   * phase 3 generations have been already added to a list so that the recursion
-   * can be terminated.
-   */
-  boolean m_phase3done = false;
-
-  /**
    * The parent of this expansion node. In case this is the top level expansion
    * of the production it is a reference to the production node otherwise it is
    * a reference to another Expansion node. In case this is the top level of a
    * lookahead expansion,then the parent is null.
    */
-  public Object m_parent;
+  private Object m_parent;
 
   /**
    * The ordinal of this node with respect to its parent.
@@ -93,13 +84,13 @@ public class Expansion
    * generation is stored in the non-static variable below.
    */
   private static long s_nextGenerationIndex = 1;
-  public long m_myGeneration = 0;
+  private long m_myGeneration = 0;
 
   /**
    * This flag is used for bookkeeping by the minimumSize method in class
    * ParseEngine.
    */
-  public boolean m_inMinimumSize = false;
+  private boolean m_inMinimumSize = false;
 
   public static void reInit ()
   {
@@ -203,14 +194,44 @@ public class Expansion
     return m_nLine;
   }
 
-  public int getOrdinalBase ()
+  public final Object getParent ()
+  {
+    return m_parent;
+  }
+
+  public final void setParent (final Object o)
+  {
+    m_parent = o;
+  }
+
+  public final int getOrdinalBase ()
   {
     return m_ordinalBase;
   }
 
-  public void setOrdinalBase (final int n)
+  public final void setOrdinalBase (final int n)
   {
     m_ordinalBase = n;
+  }
+
+  public final long getMyGeneration ()
+  {
+    return m_myGeneration;
+  }
+
+  public final void setMyGeneration (final long n)
+  {
+    m_myGeneration = n;
+  }
+
+  public final boolean isInMinimumSize ()
+  {
+    return m_inMinimumSize;
+  }
+
+  public final void setInMinimumSize (final boolean b)
+  {
+    m_inMinimumSize = b;
   }
 
   /**

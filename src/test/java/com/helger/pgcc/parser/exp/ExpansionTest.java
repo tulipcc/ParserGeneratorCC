@@ -64,7 +64,7 @@ public final class ExpansionTest
     assertEquals (m_aToken.beginColumn, zoo.getColumn ());
     assertEquals (m_aToken.beginLine, zoo.getLine ());
     assertEquals (m_aExp, zoo.m_expansion);
-    assertSame (m_aExp.m_parent, zoo);
+    assertSame (m_aExp.getParent (), zoo);
   }
 
   @Test
@@ -74,7 +74,7 @@ public final class ExpansionTest
     assertEquals (m_aToken.beginColumn, zom.getColumn ());
     assertEquals (m_aToken.beginLine, zom.getLine ());
     assertEquals (m_aExp, zom.m_expansion);
-    assertEquals (m_aExp.m_parent, zom);
+    assertEquals (m_aExp.getParent (), zom);
   }
 
   @Test
@@ -105,7 +105,7 @@ public final class ExpansionTest
     assertEquals (m_aToken.beginColumn, oom.getColumn ());
     assertEquals (m_aToken.beginLine, oom.getLine ());
     assertEquals (rce, oom.m_expansion);
-    assertEquals (rce.m_parent, oom);
+    assertEquals (rce.getParent (), oom);
   }
 
   @Test

@@ -51,7 +51,7 @@ public class ExpAction extends Expansion
    * Contains the list of tokens that make up the action. This list does not
    * include the surrounding braces.
    */
-  private final ICommonsList <Token> m_action_tokens = new CommonsArrayList <> ();
+  private final ICommonsList <Token> m_aActionTokens = new CommonsArrayList <> ();
 
   public ExpAction ()
   {}
@@ -63,7 +63,7 @@ public class ExpAction extends Expansion
   @ReturnsMutableObject
   public final ICommonsList <Token> getActionTokens ()
   {
-    return m_action_tokens;
+    return m_aActionTokens;
   }
 
   @Override

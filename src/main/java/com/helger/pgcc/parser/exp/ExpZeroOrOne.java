@@ -49,10 +49,10 @@ public class ExpZeroOrOne extends Expansion
 
   public ExpZeroOrOne (final Token t, final Expansion e)
   {
-    this.setLine (t.beginLine);
-    this.setColumn (t.beginColumn);
-    this.m_expansion = e;
-    e.m_parent = this;
+    setLine (t.beginLine);
+    setColumn (t.beginColumn);
+    m_expansion = e;
+    e.setParent (this);
   }
 
   @Override

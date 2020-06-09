@@ -146,13 +146,9 @@ public class Semanticize
         {
           // JavaCCErrors.semantic_error(res.rexp, "Badly placed <EOF>.");
           if (tp.m_lexStates != null)
-            JavaCCErrors.semantic_error (res.rexp,
-                                         "EOF action/state change must be specified for all states, " +
-                                                   "i.e., <*>TOKEN:.");
+            JavaCCErrors.semantic_error (res.rexp, "EOF action/state change must be specified for all states, " + "i.e., <*>TOKEN:.");
           if (tp.m_kind != ETokenKind.TOKEN)
-            JavaCCErrors.semantic_error (res.rexp,
-                                         "EOF action/state change can be specified only in a " +
-                                                   "TOKEN specification.");
+            JavaCCErrors.semantic_error (res.rexp, "EOF action/state change can be specified only in a " + "TOKEN specification.");
           if (s_nextStateForEof != null || s_actForEof != null)
             JavaCCErrors.semantic_error (res.rexp, "Duplicate action/state change specification for <EOF>.");
           s_actForEof = res.act;
@@ -163,8 +159,7 @@ public class Semanticize
           if (tp.m_isExplicit && Options.isUserTokenManager ())
           {
             JavaCCErrors.warning (res.rexp,
-                                  "Ignoring regular expression specification since " +
-                                            "option USER_TOKEN_MANAGER has been set to true.");
+                                  "Ignoring regular expression specification since " + "option USER_TOKEN_MANAGER has been set to true.");
           }
           else
             if (tp.m_isExplicit && !Options.isUserTokenManager () && res.rexp instanceof ExpRJustName)
@@ -179,9 +174,7 @@ public class Semanticize
             else
               if (!tp.m_isExplicit && res.rexp.m_private_rexp)
               {
-                JavaCCErrors.semantic_error (res.rexp,
-                                             "Private (#) regular expression cannot be defined within " +
-                                                       "grammar productions.");
+                JavaCCErrors.semantic_error (res.rexp, "Private (#) regular expression cannot be defined within " + "grammar productions.");
               }
       }
     }
@@ -214,11 +207,7 @@ public class Semanticize
           }
           if (s_lexstate_S2I.get (s) != null)
           {
-            JavaCCErrors.semantic_error (res.rexp,
-                                         "Lexical token name \"" +
-                                                   s +
-                                                   "\" is the same as " +
-                                                   "that of a lexical state.");
+            JavaCCErrors.semantic_error (res.rexp, "Lexical token name \"" + s + "\" is the same as " + "that of a lexical state.");
           }
         }
       }
@@ -300,10 +289,7 @@ public class Semanticize
                 {
                   // give the standard error message.
                   JavaCCErrors.semantic_error (sl,
-                                               "Duplicate definition of string token \"" +
-                                                   sl.m_image +
-                                                   "\" " +
-                                                   "can never be matched.");
+                                               "Duplicate definition of string token \"" + sl.m_image + "\" " + "can never be matched.");
                 }
               }
               else
@@ -323,13 +309,11 @@ public class Semanticize
                   }
                   if (count == 1)
                   {
-                    JavaCCErrors.warning (sl,
-                                          "String with IGNORE_CASE is partially superceded by string at" + pos + ".");
+                    JavaCCErrors.warning (sl, "String with IGNORE_CASE is partially superceded by string at" + pos + ".");
                   }
                   else
                   {
-                    JavaCCErrors.warning (sl,
-                                          "String with IGNORE_CASE is partially superceded by strings at" + pos + ".");
+                    JavaCCErrors.warning (sl, "String with IGNORE_CASE is partially superceded by strings at" + pos + ".");
                   }
                   // This entry is legitimate. So insert it.
                   if (sl.m_ordinal == 0)
@@ -360,8 +344,7 @@ public class Semanticize
                       // implicit.
                       if (tp.m_lexStates[i].equals ("DEFAULT"))
                       {
-                        JavaCCErrors.semantic_error (sl,
-                                                     "Duplicate definition of string token \"" + sl.m_image + "\".");
+                        JavaCCErrors.semantic_error (sl, "Duplicate definition of string token \"" + sl.m_image + "\".");
                       }
                       else
                       {
@@ -523,9 +506,7 @@ public class Semanticize
           final Integer ii = Integer.valueOf (res.rexp.m_ordinal);
           if (s_names_of_tokens.get (ii) == null)
           {
-            JavaCCErrors.warning (res.rexp,
-                                  "Unlabeled regular expression cannot be referred to by " +
-                                            "user generated token manager.");
+            JavaCCErrors.warning (res.rexp, "Unlabeled regular expression cannot be referred to by " + "user generated token manager.");
           }
         }
       }
@@ -851,8 +832,7 @@ public class Semanticize
             if (jn.m_regexpr.m_walkStatus == -2)
             {
               jn.m_regexpr.m_walkStatus = 1;
-              JavaCCErrors.semantic_error (jn.m_regexpr,
-                                           "Loop in regular expression detected: \"" + s_loopString + "\"");
+              JavaCCErrors.semantic_error (jn.m_regexpr, "Loop in regular expression detected: \"" + s_loopString + "\"");
               return false;
             }
             jn.m_regexpr.m_walkStatus = 1;
@@ -928,11 +908,7 @@ public class Semanticize
         else
           if (jn == m_root && !jn.m_tpContext.m_isExplicit && rexp.m_private_rexp)
           {
-            JavaCCErrors.semantic_error (e,
-                                         "Token name \"" +
-                                            jn.m_label +
-                                            "\" refers to a private " +
-                                            "(with a #) regular expression.");
+            JavaCCErrors.semantic_error (e, "Token name \"" + jn.m_label + "\" refers to a private " + "(with a #) regular expression.");
           }
           else
             if (jn == m_root && !jn.m_tpContext.m_isExplicit && rexp.m_tpContext.m_kind != ETokenKind.TOKEN)
@@ -966,10 +942,10 @@ public class Semanticize
     {
       if (e instanceof ExpSequence)
       {
-        if (e.m_parent instanceof ExpChoice ||
-            e.m_parent instanceof ExpZeroOrMore ||
-            e.m_parent instanceof ExpOneOrMore ||
-            e.m_parent instanceof ExpZeroOrOne)
+        if (e.getParent () instanceof ExpChoice ||
+            e.getParent () instanceof ExpZeroOrMore ||
+            e.getParent () instanceof ExpOneOrMore ||
+            e.getParent () instanceof ExpZeroOrOne)
         {
           return;
         }
@@ -983,17 +959,20 @@ public class Semanticize
         final ExpChoice ch = new ExpChoice ();
         ch.setLine (la.getLine ());
         ch.setColumn (la.getColumn ());
-        ch.m_parent = seq;
+        ch.setParent (seq);
+
         final ExpSequence seq1 = new ExpSequence ();
         seq1.setLine (la.getLine ());
         seq1.setColumn (la.getColumn ());
-        seq1.m_parent = ch;
+        seq1.setParent (ch);
         seq1.m_units.add (la);
-        la.m_parent = seq1;
+        la.setParent (seq1);
+
         final ExpAction act = new ExpAction ();
         act.setLine (la.getLine ());
         act.setColumn (la.getColumn ());
-        act.m_parent = seq1;
+        act.setParent (seq1);
+
         seq1.m_units.add (act);
         ch.getChoices ().add (seq1);
         if (la.getAmount () != 0)
@@ -1016,7 +995,8 @@ public class Semanticize
         la1.setExplicit (false);
         la1.setLine (la.getLine ());
         la1.setColumn (la.getColumn ());
-        la1.m_parent = seq;
+        la1.setParent (seq);
+
         // Now set the la_expansion field of la and la1 with a dummy expansion
         // (we use EOF).
         la.setLaExpansion (new ExpREndOfFile ());

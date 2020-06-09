@@ -190,21 +190,21 @@ public final class LookaheadWalk
 
   public static List <MatchInfo> genFollowSet (final List <MatchInfo> partialMatches, final Expansion exp, final long generation)
   {
-    if (exp.m_myGeneration == generation)
+    if (exp.getMyGeneration () == generation)
     {
       return new ArrayList <> ();
     }
     // System.out.println("*** Parent: " + exp.parent);
-    exp.m_myGeneration = generation;
-    if (exp.m_parent == null)
+    exp.setMyGeneration (generation);
+    if (exp.getParent () == null)
     {
       final List <MatchInfo> retval = new ArrayList <> (partialMatches);
       return retval;
     }
 
-    if (exp.m_parent instanceof NormalProduction)
+    if (exp.getParent () instanceof NormalProduction)
     {
-      final List <Expansion> parents = ((NormalProduction) exp.m_parent).getParents ();
+      final List <Expansion> parents = ((NormalProduction) exp.getParent ()).getParents ();
       final List <MatchInfo> retval = new ArrayList <> ();
       // System.out.println("1; gen: " + generation + "; exp: " + exp);
       for (final Expansion parent : parents)
@@ -215,9 +215,9 @@ public final class LookaheadWalk
       return retval;
     }
 
-    if (exp.m_parent instanceof ExpSequence)
+    if (exp.getParent () instanceof ExpSequence)
     {
-      final ExpSequence seq = (ExpSequence) exp.m_parent;
+      final ExpSequence seq = (ExpSequence) exp.getParent ();
       List <MatchInfo> v = partialMatches;
       for (int i = exp.getOrdinalBase () + 1; i < seq.m_units.size (); i++)
       {
@@ -242,8 +242,9 @@ public final class LookaheadWalk
       return v2;
     }
 
-    if (exp.m_parent instanceof ExpOneOrMore || exp.m_parent instanceof ExpZeroOrMore)
+    if (exp.getParent () instanceof ExpOneOrMore || exp.getParent () instanceof ExpZeroOrMore)
     {
+      final Expansion aParent = (Expansion) exp.getParent ();
       final List <MatchInfo> moreMatches = new ArrayList <> (partialMatches);
       List <MatchInfo> v = partialMatches;
       while (true)
@@ -259,19 +260,19 @@ public final class LookaheadWalk
       if (v1.size () != 0)
       {
         // System.out.println("4; gen: " + generation + "; exp: " + exp);
-        v1 = genFollowSet (v1, (Expansion) exp.m_parent, generation);
+        v1 = genFollowSet (v1, aParent, generation);
       }
       if (v2.size () != 0)
       {
         // System.out.println("5; gen: " + generation + "; exp: " + exp);
-        v2 = genFollowSet (v2, (Expansion) exp.m_parent, Expansion.getNextGenerationIndex ());
+        v2 = genFollowSet (v2, aParent, Expansion.getNextGenerationIndex ());
       }
       v2.addAll (v1);
       return v2;
     }
 
     // System.out.println("6; gen: " + generation + "; exp: " + exp);
-    return genFollowSet (partialMatches, (Expansion) exp.m_parent, generation);
+    return genFollowSet (partialMatches, (Expansion) exp.getParent (), generation);
   }
 
   public static void reInit ()

@@ -227,7 +227,7 @@ public abstract class JavaCCParserInternals
 
   protected static void productionAddExpansion (final BNFProduction p, final Expansion e)
   {
-    e.m_parent = p;
+    e.setParent (p);
     p.setExpansion (e);
   }
 
@@ -494,8 +494,8 @@ public abstract class JavaCCParserInternals
     final ExpTryBlock tblk = new ExpTryBlock ();
     tblk.setLine (tryLoc.beginLine);
     tblk.setColumn (tryLoc.beginColumn);
-    tblk.m_exp = (Expansion) (nestedExp.member);
-    tblk.m_exp.m_parent = tblk;
+    tblk.m_exp = (Expansion) nestedExp.member;
+    tblk.m_exp.setParent (tblk);
     tblk.m_exp.setOrdinalBase (0);
     tblk.m_types = types;
     tblk.m_ids = ids;

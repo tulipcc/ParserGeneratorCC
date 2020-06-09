@@ -35,6 +35,8 @@ package com.helger.pgcc.parser.exp;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.helger.pgcc.parser.Token;
 
 /**
@@ -47,12 +49,12 @@ public class ExpZeroOrMore extends Expansion
    */
   public final Expansion m_expansion;
 
-  public ExpZeroOrMore (final Token token, final Expansion expansion)
+  public ExpZeroOrMore (@Nonnull final Token token, @Nonnull final Expansion e)
   {
-    this.setLine (token.beginLine);
-    this.setColumn (token.beginColumn);
-    this.m_expansion = expansion;
-    this.m_expansion.m_parent = this;
+    setLine (token.beginLine);
+    setColumn (token.beginColumn);
+    m_expansion = e;
+    e.setParent (this);
   }
 
   @Override
