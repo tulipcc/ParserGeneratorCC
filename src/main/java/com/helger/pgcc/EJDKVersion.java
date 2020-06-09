@@ -48,7 +48,10 @@ public enum EJDKVersion
   JDK_1_8 (8),
   JDK_9 (9),
   JDK_10 (10),
-  JDK_11 (11);
+  JDK_11 (11),
+  JDK_12 (12),
+  JDK_13 (13),
+  JDK_14 (14);
 
   public static final EJDKVersion DEFAULT = JDK_1_5;
 
@@ -94,6 +97,12 @@ public enum EJDKVersion
       return EJDKVersion.JDK_10;
     if ("1.11".equals (sVersion) || "11".equals (sVersion))
       return EJDKVersion.JDK_11;
+    if ("1.12".equals (sVersion) || "12".equals (sVersion))
+      return EJDKVersion.JDK_12;
+    if ("1.13".equals (sVersion) || "13".equals (sVersion))
+      return EJDKVersion.JDK_13;
+    if ("1.14".equals (sVersion) || "14".equals (sVersion))
+      return EJDKVersion.JDK_14;
     return null;
   }
 }
