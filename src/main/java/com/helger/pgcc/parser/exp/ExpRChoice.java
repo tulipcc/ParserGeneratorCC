@@ -36,6 +36,8 @@ package com.helger.pgcc.parser.exp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.helger.pgcc.parser.ICCCharacter;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.LexGenJava;
@@ -53,21 +55,16 @@ public class ExpRChoice extends AbstractExpRegularExpression
    * The list of choices of this regular expression. Each list component will
    * narrow to RegularExpression.
    */
-  private List <AbstractExpRegularExpression> m_choices = new ArrayList <> ();
+  private final List <AbstractExpRegularExpression> m_choices = new ArrayList <> ();
 
-  /**
-   * @param choices
-   *        the choices to set
-   */
-  public void setChoices (final List <AbstractExpRegularExpression> choices)
-  {
-    this.m_choices = choices;
-  }
+  public ExpRChoice ()
+  {}
 
   /**
    * @return the choices
    */
-  public List <AbstractExpRegularExpression> getChoices ()
+  @Nonnull
+  public final List <AbstractExpRegularExpression> getChoices ()
   {
     return m_choices;
   }
@@ -75,7 +72,7 @@ public class ExpRChoice extends AbstractExpRegularExpression
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
   {
-    CompressCharLists ();
+    compressCharLists ();
 
     if (getChoices ().size () == 1)
       return getChoices ().get (0).generateNfa (ignoreCase);
@@ -95,7 +92,7 @@ public class ExpRChoice extends AbstractExpRegularExpression
     return retVal;
   }
 
-  void CompressCharLists ()
+  void compressCharLists ()
   {
     compressChoices (); // Unroll nested choices
     AbstractExpRegularExpression curRE;
@@ -139,11 +136,9 @@ public class ExpRChoice extends AbstractExpRegularExpression
 
   void compressChoices ()
   {
-    AbstractExpRegularExpression curRE;
-
     for (int i = 0; i < getChoices ().size (); i++)
     {
-      curRE = getChoices ().get (i);
+      AbstractExpRegularExpression curRE = getChoices ().get (i);
 
       while (curRE instanceof ExpRJustName)
         curRE = ((ExpRJustName) curRE).m_regexpr;
@@ -159,22 +154,24 @@ public class ExpRChoice extends AbstractExpRegularExpression
 
   public int checkUnmatchability ()
   {
-    AbstractExpRegularExpression curRE;
     int numStrings = 0;
 
-    for (final AbstractExpRegularExpression element : getChoices ())
+    for (final AbstractExpRegularExpression curRE : getChoices ())
     {
-      if (!(curRE = element).m_private_rexp &&
+      if (!curRE.m_private_rexp &&
           // curRE instanceof RJustName &&
           curRE.m_ordinal > 0 &&
           curRE.m_ordinal < m_ordinal &&
           LexGenJava.s_lexStates[curRE.m_ordinal] == LexGenJava.s_lexStates[m_ordinal])
       {
-        if (m_label != null)
-          JavaCCErrors.warning (this, "Regular Expression choice : " + curRE.m_label + " can never be matched as : " + m_label);
+        if (hasLabel ())
+          JavaCCErrors.warning (this, "Regular Expression choice : " + curRE.getLabel () + " can never be matched as : " + getLabel ());
         else
           JavaCCErrors.warning (this,
-                                "Regular Expression choice : " + curRE.m_label + " can never be matched as token of kind : " + m_ordinal);
+                                "Regular Expression choice : " +
+                                      curRE.getLabel () +
+                                      " can never be matched as token of kind : " +
+                                      m_ordinal);
       }
 
       if (!curRE.m_private_rexp && curRE instanceof ExpRStringLiteral)

@@ -1323,7 +1323,7 @@ void regular_expression(Container c) :
   ]
   complex_regular_expression_choices(c) < RANGLE: ">" >
   {
-    AbstractExpRegularExpression re;
+    final AbstractExpRegularExpression re;
     if (c.member instanceof ExpRJustName) {
       ExpRSequence seq = new ExpRSequence();
       seq.addUnit((ExpRJustName) c.member);
@@ -1331,7 +1331,7 @@ void regular_expression(Container c) :
     } else {
       re = (AbstractExpRegularExpression)c.member;
     }
-    re.m_label = image;
+    re.setLabel (image);
     re.m_private_rexp = private_rexp;
     re.setLine(t.beginLine);
     re.setColumn(t.beginColumn);

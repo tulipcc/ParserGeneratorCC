@@ -774,7 +774,7 @@ public class LexGenJava extends CodeGenerator
         s_canLoop[k] |= seen[k];
 
       s_hasLoop = true;
-      final String sLabel = s_rexprs[s_initMatch[i]].m_label;
+      final String sLabel = s_rexprs[s_initMatch[i]].getLabel ();
       if (len == 0)
       {
         JavaCCErrors.warning (s_rexprs[s_initMatch[i]],

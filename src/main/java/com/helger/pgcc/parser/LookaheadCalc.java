@@ -42,7 +42,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.exp.ExpChoice;
@@ -65,12 +64,12 @@ public final class LookaheadCalc
     MatchInfo m1, m2, m3;
     int size;
     boolean diff;
-    for (int i = 0; i < v1.size (); i++)
+    for (final MatchInfo element : v1)
     {
-      m1 = v1.get (i);
-      for (int j = 0; j < v2.size (); j++)
+      m1 = element;
+      for (final MatchInfo element2 : v2)
       {
-        m2 = v2.get (j);
+        m2 = element2;
         size = m1.m_firstFreeLoc;
         m3 = m1;
         if (size > m2.m_firstFreeLoc)
@@ -123,14 +122,10 @@ public final class LookaheadCalc
           ret += " \"" + addEscapes (((ExpRStringLiteral) re).m_image) + "\"";
         }
         else
-          if (StringHelper.hasText (re.m_label))
-          {
-            ret += " <" + re.m_label + ">";
-          }
+          if (re.hasLabel ())
+            ret += " <" + re.getLabel () + ">";
           else
-          {
             ret += " <token of kind " + i + ">";
-          }
       }
     }
     if (m.m_firstFreeLoc == 0)

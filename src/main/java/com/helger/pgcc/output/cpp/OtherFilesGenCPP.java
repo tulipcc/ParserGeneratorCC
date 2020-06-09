@@ -81,7 +81,6 @@ import java.util.List;
 import java.util.Locale;
 
 import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.parser.ETokenKind;
 import com.helger.pgcc.parser.JavaCCErrors;
@@ -139,8 +138,7 @@ public class OtherFilesGenCPP
       tn.add (CPG.APP_NAME);
       s_ostr.println ("/* " + getIdString (tn, s_cu_name + "Constants.java") + " */");
 
-      if (s_cu_to_insertion_point_1.size () != 0 &&
-          s_cu_to_insertion_point_1.get (0).kind == JavaCCParserConstants.PACKAGE)
+      if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == JavaCCParserConstants.PACKAGE)
       {
         for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
         {
@@ -184,7 +182,7 @@ public class OtherFilesGenCPP
       {
         re = it.next ();
         s_ostr.println ("  /** RegularExpression Id. */");
-        s_ostr.println (constPrefix + "  int " + re.m_label + " = " + re.m_ordinal + ";");
+        s_ostr.println (constPrefix + "  int " + re.getLabel () + " = " + re.m_ordinal + ";");
       }
       s_ostr.println ("");
 
@@ -215,9 +213,9 @@ public class OtherFilesGenCPP
             printCharArray (s_ostr, "\"" + ((ExpRStringLiteral) re).m_image + "\"");
           }
           else
-            if (StringHelper.hasText (re.m_label))
+            if (re.hasLabel ())
             {
-              printCharArray (s_ostr, "\"<" + re.m_label + ">\"");
+              printCharArray (s_ostr, "\"<" + re.getLabel () + ">\"");
             }
             else
             {

@@ -167,7 +167,7 @@ public class Semanticize
               JavaCCErrors.warning (res.rexp,
                                     "Ignoring free-standing regular expression reference.  " +
                                               "If you really want this, you must give it a different label as <NEWLABEL:<" +
-                                              res.rexp.m_label +
+                                              res.rexp.getLabel () +
                                               ">>.");
               prepareToRemove (respecs, res);
             }
@@ -193,9 +193,9 @@ public class Semanticize
       for (final RegExprSpec aRegExprSpec : respecs)
       {
         final RegExprSpec res = (aRegExprSpec);
-        if (!(res.rexp instanceof ExpRJustName) && res.rexp.m_label.length () > 0)
+        if (!(res.rexp instanceof ExpRJustName) && res.rexp.hasLabel ())
         {
-          final String s = res.rexp.m_label;
+          final String s = res.rexp.getLabel ();
           final AbstractExpRegularExpression obj = s_named_tokens_table.put (s, res.rexp);
           if (obj != null)
           {
@@ -399,9 +399,9 @@ public class Semanticize
           {
             res.rexp.m_ordinal = s_tokenCount++;
           }
-        if (!(res.rexp instanceof ExpRJustName) && res.rexp.m_label.length () > 0)
+        if (!(res.rexp instanceof ExpRJustName) && res.rexp.hasLabel ())
         {
-          s_names_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp.m_label);
+          s_names_of_tokens.put (Integer.valueOf (res.rexp.m_ordinal), res.rexp.getLabel ());
         }
         if (!(res.rexp instanceof ExpRJustName))
         {
@@ -467,13 +467,13 @@ public class Semanticize
           if (res.rexp instanceof ExpRJustName)
           {
             final ExpRJustName jn = (ExpRJustName) res.rexp;
-            final AbstractExpRegularExpression rexp = s_named_tokens_table.get (jn.m_label);
+            final AbstractExpRegularExpression rexp = s_named_tokens_table.get (jn.getLabel ());
             if (rexp == null)
             {
               jn.m_ordinal = s_tokenCount++;
-              s_named_tokens_table.put (jn.m_label, jn);
+              s_named_tokens_table.put (jn.getLabel (), jn);
               s_ordered_named_tokens.add (jn);
-              s_names_of_tokens.put (Integer.valueOf (jn.m_ordinal), jn.m_label);
+              s_names_of_tokens.put (Integer.valueOf (jn.m_ordinal), jn.getLabel ());
             }
             else
             {
@@ -587,15 +587,15 @@ public class Semanticize
           {
             final RegExprSpec res = (aRegExprSpec);
             final AbstractExpRegularExpression rexp = res.rexp;
-            if (rexp.m_walkStatus == 0)
+            if (rexp.getWalkStatus () == 0)
             {
-              rexp.m_walkStatus = -1;
+              rexp.setWalkStatus (-1);
               if (_rexpWalk (rexp))
               {
-                s_loopString = "..." + rexp.m_label + "... --> " + s_loopString;
+                s_loopString = "..." + rexp.getLabel () + "... --> " + s_loopString;
                 JavaCCErrors.semantic_error (rexp, "Loop in regular expression detected: \"" + s_loopString + "\"");
               }
-              rexp.m_walkStatus = 1;
+              rexp.setWalkStatus (1);
             }
           }
         }
@@ -813,32 +813,32 @@ public class Semanticize
     if (rexp instanceof ExpRJustName)
     {
       final ExpRJustName jn = (ExpRJustName) rexp;
-      if (jn.m_regexpr.m_walkStatus == -1)
+      if (jn.m_regexpr.getWalkStatus () == -1)
       {
-        jn.m_regexpr.m_walkStatus = -2;
-        s_loopString = "..." + jn.m_regexpr.m_label + "...";
+        jn.m_regexpr.setWalkStatus (-2);
+        s_loopString = "..." + jn.m_regexpr.getLabel () + "...";
         // Note: Only the regexpr's of RJustName nodes and the top leve
         // regexpr's can have labels. Hence it is only in these cases that
         // the labels are checked for to be added to the loopString.
         return true;
       }
       else
-        if (jn.m_regexpr.m_walkStatus == 0)
+        if (jn.m_regexpr.getWalkStatus () == 0)
         {
-          jn.m_regexpr.m_walkStatus = -1;
+          jn.m_regexpr.setWalkStatus (-1);
           if (_rexpWalk (jn.m_regexpr))
           {
-            s_loopString = "..." + jn.m_regexpr.m_label + "... --> " + s_loopString;
-            if (jn.m_regexpr.m_walkStatus == -2)
+            s_loopString = "..." + jn.m_regexpr.getLabel () + "... --> " + s_loopString;
+            if (jn.m_regexpr.getWalkStatus () == -2)
             {
-              jn.m_regexpr.m_walkStatus = 1;
+              jn.m_regexpr.setWalkStatus (1);
               JavaCCErrors.semantic_error (jn.m_regexpr, "Loop in regular expression detected: \"" + s_loopString + "\"");
               return false;
             }
-            jn.m_regexpr.m_walkStatus = 1;
+            jn.m_regexpr.setWalkStatus (1);
             return true;
           }
-          jn.m_regexpr.m_walkStatus = 1;
+          jn.m_regexpr.setWalkStatus (1);
           return false;
         }
     }
@@ -900,22 +900,23 @@ public class Semanticize
       if (e instanceof ExpRJustName)
       {
         final ExpRJustName jn = (ExpRJustName) e;
-        final AbstractExpRegularExpression rexp = s_named_tokens_table.get (jn.m_label);
+        final AbstractExpRegularExpression rexp = s_named_tokens_table.get (jn.getLabel ());
         if (rexp == null)
         {
-          JavaCCErrors.semantic_error (e, "Undefined lexical token name \"" + jn.m_label + "\".");
+          JavaCCErrors.semantic_error (e, "Undefined lexical token name \"" + jn.getLabel () + "\".");
         }
         else
           if (jn == m_root && !jn.m_tpContext.m_isExplicit && rexp.m_private_rexp)
           {
-            JavaCCErrors.semantic_error (e, "Token name \"" + jn.m_label + "\" refers to a private " + "(with a #) regular expression.");
+            JavaCCErrors.semantic_error (e,
+                                         "Token name \"" + jn.getLabel () + "\" refers to a private " + "(with a #) regular expression.");
           }
           else
             if (jn == m_root && !jn.m_tpContext.m_isExplicit && rexp.m_tpContext.m_kind != ETokenKind.TOKEN)
             {
               JavaCCErrors.semantic_error (e,
                                            "Token name \"" +
-                                              jn.m_label +
+                                              jn.getLabel () +
                                               "\" refers to a non-token " +
                                               "(SKIP, MORE, IGNORE_IN_BNF) regular expression.");
             }

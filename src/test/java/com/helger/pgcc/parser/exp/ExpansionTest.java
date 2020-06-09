@@ -123,7 +123,7 @@ public final class ExpansionTest
     final ExpRJustName r = new ExpRJustName (m_aToken, "hey");
     assertEquals (m_aToken.beginColumn, r.getColumn ());
     assertEquals (m_aToken.beginLine, r.getLine ());
-    assertEquals ("hey", r.m_label);
+    assertEquals ("hey", r.getLabel ());
   }
 
   @Test

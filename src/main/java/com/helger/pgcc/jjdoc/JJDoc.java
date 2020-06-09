@@ -382,7 +382,7 @@ public final class JJDoc
   public static String emitRE (final AbstractExpRegularExpression re)
   {
     String returnString = "";
-    final boolean hasLabel = StringHelper.hasText (re.m_label);
+    final boolean hasLabel = StringHelper.hasText (re.getLabel ());
     final boolean justName = re instanceof ExpRJustName;
     final boolean eof = re instanceof ExpREndOfFile;
     final boolean isString = re instanceof ExpRStringLiteral;
@@ -399,7 +399,7 @@ public final class JJDoc
         }
         if (hasLabel)
         {
-          returnString += re.m_label;
+          returnString += re.getLabel ();
           returnString += ": ";
         }
       }
@@ -468,7 +468,7 @@ public final class JJDoc
           if (re instanceof ExpRJustName)
           {
             final ExpRJustName jn = (ExpRJustName) re;
-            returnString += jn.m_label;
+            returnString += jn.getLabel ();
           }
           else
             if (re instanceof ExpROneOrMore)

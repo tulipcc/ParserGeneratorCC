@@ -39,6 +39,7 @@ import java.util.Set;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.parser.Nfa;
 import com.helger.pgcc.parser.Token;
 import com.helger.pgcc.parser.TokenProduction;
@@ -52,7 +53,7 @@ public abstract class AbstractExpRegularExpression extends Expansion
    * The label of the regular expression (if any). If no label is present, this
    * is set to "".
    */
-  public String m_label = "";
+  private String m_label = "";
 
   /**
    * The ordinal value assigned to the regular expression. It is used for
@@ -84,14 +85,6 @@ public abstract class AbstractExpRegularExpression extends Expansion
    * TokenProduction), then this field point to that TokenProduction object.
    */
   public TokenProduction m_tpContext;
-
-  public abstract Nfa generateNfa (boolean ignoreCase);
-
-  public boolean canMatchAnyChar ()
-  {
-    return false;
-  }
-
   /**
    * The following variable is used to maintain state information for the loop
    * determination algorithm: It is initialized to 0, and set to -1 if this node
@@ -99,7 +92,42 @@ public abstract class AbstractExpRegularExpression extends Expansion
    * pre-order walk of the whole graph from this node has been traversed. i.e.,
    * -1 indicates partially processed, and 1 indicates fully processed.
    */
-  public int m_walkStatus = 0;
+  private int m_walkStatus = 0;
+
+  protected AbstractExpRegularExpression ()
+  {}
+
+  public final String getLabel ()
+  {
+    return m_label;
+  }
+
+  public final boolean hasLabel ()
+  {
+    return StringHelper.hasText (m_label);
+  }
+
+  public final void setLabel (final String s)
+  {
+    m_label = s;
+  }
+
+  public final int getWalkStatus ()
+  {
+    return m_walkStatus;
+  }
+
+  public final void setWalkStatus (final int n)
+  {
+    m_walkStatus = n;
+  }
+
+  public abstract Nfa generateNfa (boolean ignoreCase);
+
+  public boolean canMatchAnyChar ()
+  {
+    return false;
+  }
 
   @Override
   @OverridingMethodsMustInvokeSuper

@@ -536,8 +536,8 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
     if (re instanceof ExpRStringLiteral)
       return " \"" + JavaCCGlobals.addEscapes (((ExpRStringLiteral) re).m_image) + "\"";
-    if (re.m_label.length () > 0)
-      return " <" + re.m_label + ">";
+    if (re.hasLabel ())
+      return " <" + re.getLabel () + ">";
     return " <token of kind " + kind + ">";
   }
 

@@ -83,7 +83,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.parser.ETokenKind;
 import com.helger.pgcc.parser.JavaCCErrors;
@@ -149,8 +148,7 @@ public class OtherFilesGenJava
         }
       }
 
-    final Writer w = FileHelper.getBufferedWriter (new File (Options.getOutputDirectory (),
-                                                             s_cu_name + CONSTANTS_FILENAME_SUFFIX),
+    final Writer w = FileHelper.getBufferedWriter (new File (Options.getOutputDirectory (), s_cu_name + CONSTANTS_FILENAME_SUFFIX),
                                                    Options.getOutputEncoding ());
     if (w == null)
     {
@@ -203,7 +201,7 @@ public class OtherFilesGenJava
       for (final AbstractExpRegularExpression re : s_ordered_named_tokens)
       {
         ostr.println ("  /** RegularExpression Id. */");
-        ostr.println ("  int " + re.m_label + " = " + re.m_ordinal + ";");
+        ostr.println ("  int " + re.getLabel () + " = " + re.m_ordinal + ";");
       }
       ostr.println ();
       if (!Options.isUserTokenManager () && Options.isBuildTokenManager ())
@@ -233,9 +231,9 @@ public class OtherFilesGenJava
             ostr.println ("\"\\\"" + addEscapes (addEscapes (((ExpRStringLiteral) re).m_image)) + "\\\"\",");
           }
           else
-            if (StringHelper.hasText (re.m_label))
+            if (re.hasLabel ())
             {
-              ostr.println ("\"<" + re.m_label + ">\",");
+              ostr.println ("\"<" + re.getLabel () + ">\",");
             }
             else
             {

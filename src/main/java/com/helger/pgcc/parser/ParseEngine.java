@@ -1095,7 +1095,11 @@ public class ParseEngine
             throw new UnsupportedOutputLanguageException (eOutputLanguage);
         }
 
-      if (e_nrw.m_label.length () == 0)
+      if (e_nrw.hasLabel ())
+      {
+        retval += "jj_consume_token(" + e_nrw.getLabel () + tail;
+      }
+      else
       {
         final String label = s_names_of_tokens.get (Integer.valueOf (e_nrw.m_ordinal));
         if (label != null)
@@ -1106,10 +1110,6 @@ public class ParseEngine
         {
           retval += "jj_consume_token(" + e_nrw.m_ordinal + tail;
         }
-      }
-      else
-      {
-        retval += "jj_consume_token(" + e_nrw.m_label + tail;
       }
 
       switch (eOutputLanguage)
@@ -1777,7 +1777,11 @@ public class ParseEngine
     if (e instanceof AbstractExpRegularExpression)
     {
       final AbstractExpRegularExpression e_nrw = (AbstractExpRegularExpression) e;
-      if (e_nrw.m_label.length () == 0)
+      if (e_nrw.hasLabel ())
+      {
+        m_codeGenerator.genCodeLine ("    if (jj_scan_token(" + e_nrw.getLabel () + ")) " + _genReturn (true));
+      }
+      else
       {
         final Object label = s_names_of_tokens.get (Integer.valueOf (e_nrw.m_ordinal));
         if (label != null)
@@ -1788,10 +1792,6 @@ public class ParseEngine
         {
           m_codeGenerator.genCodeLine ("    if (jj_scan_token(" + e_nrw.m_ordinal + ")) " + _genReturn (true));
         }
-      }
-      else
-      {
-        m_codeGenerator.genCodeLine ("    if (jj_scan_token(" + e_nrw.m_label + ")) " + _genReturn (true));
       }
       // codeGenerator.genCodeLine(" if (jj_la == 0 && jj_scanpos == jj_lastpos)
       // " + genReturn(false));
