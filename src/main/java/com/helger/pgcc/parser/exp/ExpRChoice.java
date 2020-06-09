@@ -40,7 +40,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.pgcc.parser.ICCCharacter;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.LexGenJava;
 import com.helger.pgcc.parser.Nfa;

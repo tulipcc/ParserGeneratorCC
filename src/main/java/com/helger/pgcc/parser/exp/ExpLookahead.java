@@ -35,6 +35,8 @@ package com.helger.pgcc.parser.exp;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.pgcc.parser.Token;
@@ -76,6 +78,66 @@ public class ExpLookahead extends Expansion
    */
   private boolean m_bIsExplicit;
 
+  /**
+   * @return the action_tokens
+   */
+  @Nonnull
+  public final ICommonsList <Token> getActionTokens ()
+  {
+    return m_action_tokens;
+  }
+
+  /**
+   * @return the amount
+   */
+  public final int getAmount ()
+  {
+    return m_amount;
+  }
+
+  /**
+   * @param amount
+   *        the amount to set
+   */
+  public final void setAmount (final int amount)
+  {
+    m_amount = amount;
+  }
+
+  /**
+   * @return the la_expansion
+   */
+  public final Expansion getLaExpansion ()
+  {
+    return m_la_expansion;
+  }
+
+  /**
+   * @param la_expansion
+   *        the la_expansion to set
+   */
+  public final void setLaExpansion (final Expansion la_expansion)
+  {
+    m_la_expansion = la_expansion;
+  }
+
+  /**
+   * @return the isExplicit
+   */
+  public final boolean isExplicit ()
+  {
+    return m_bIsExplicit;
+  }
+
+  /**
+   * @param isExplicit
+   *        the isExplicit to set
+   */
+  public final void setExplicit (final boolean isExplicit)
+  {
+    m_bIsExplicit = isExplicit;
+  }
+
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
@@ -85,64 +147,5 @@ public class ExpLookahead extends Expansion
       sb.append (EOL).append (m_la_expansion.dump (indent + 1, alreadyDumped));
     }
     return sb;
-  }
-
-  /**
-   * @return the action_tokens
-   */
-  public ICommonsList <Token> getActionTokens ()
-  {
-    return m_action_tokens;
-  }
-
-  /**
-   * @param amount
-   *        the amount to set
-   */
-  public void setAmount (final int amount)
-  {
-    m_amount = amount;
-  }
-
-  /**
-   * @return the amount
-   */
-  public int getAmount ()
-  {
-    return m_amount;
-  }
-
-  /**
-   * @param la_expansion
-   *        the la_expansion to set
-   */
-  public void setLaExpansion (final Expansion la_expansion)
-  {
-    m_la_expansion = la_expansion;
-  }
-
-  /**
-   * @return the la_expansion
-   */
-  public Expansion getLaExpansion ()
-  {
-    return m_la_expansion;
-  }
-
-  /**
-   * @param isExplicit
-   *        the isExplicit to set
-   */
-  public void setExplicit (final boolean isExplicit)
-  {
-    m_bIsExplicit = isExplicit;
-  }
-
-  /**
-   * @return the isExplicit
-   */
-  public boolean isExplicit ()
-  {
-    return m_bIsExplicit;
   }
 }

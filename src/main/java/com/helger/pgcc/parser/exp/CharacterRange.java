@@ -31,9 +31,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
 import javax.annotation.Nonnull;
+
+import com.helger.pgcc.parser.JavaCCErrors;
+import com.helger.pgcc.parser.Token;
 
 /**
  * Describes character range descriptors in a character list.
@@ -69,38 +72,35 @@ public final class CharacterRange implements ICCCharacter
     setRight (r);
   }
 
-  /**
-   * @param line
-   *        the line to set
-   */
-  void setLine (final int line)
+  public CharacterRange (@Nonnull final Token t, final char l, final char r)
   {
-    m_nLine = line;
+    this (l, r);
+    m_nLine = t.beginLine;
+    m_nColumn = t.beginColumn;
   }
 
   /**
    * @return the line
    */
-  int getLine ()
+  public int getLine ()
   {
     return m_nLine;
   }
 
   /**
-   * @param column
-   *        the column to set
+   * @return the column
    */
-  void setColumn (final int column)
+  public int getColumn ()
   {
-    m_nColumn = column;
+    return m_nColumn;
   }
 
   /**
-   * @return the column
+   * @return the left
    */
-  int getColumn ()
+  public char getLeft ()
   {
-    return m_nColumn;
+    return m_nLeft;
   }
 
   /**
@@ -113,11 +113,11 @@ public final class CharacterRange implements ICCCharacter
   }
 
   /**
-   * @return the left
+   * @return the right
    */
-  public char getLeft ()
+  public char getRight ()
   {
-    return m_nLeft;
+    return m_nRight;
   }
 
   /**
@@ -127,14 +127,6 @@ public final class CharacterRange implements ICCCharacter
   public void setRight (final char right)
   {
     m_nRight = right;
-  }
-
-  /**
-   * @return the right
-   */
-  public char getRight ()
-  {
-    return m_nRight;
   }
 
   public boolean isInRange (final char c)

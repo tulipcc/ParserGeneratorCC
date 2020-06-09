@@ -1121,9 +1121,9 @@ public class ParseEngine
       {
         final ExpNonTerminal e_nrw = (ExpNonTerminal) e;
         retval += "\n";
-        if (e_nrw.getLhsTokens ().size () != 0)
+        if (e_nrw.getLhsTokenCount () != 0)
         {
-          m_codeGenerator.printTokenSetup (e_nrw.getLhsTokens ().get (0));
+          m_codeGenerator.printTokenSetup (e_nrw.getLhsTokenAt (0));
           for (final Token aElement : e_nrw.getLhsTokens ())
           {
             t = aElement;
@@ -1133,9 +1133,9 @@ public class ParseEngine
           retval += " = ";
         }
         retval += e_nrw.getName () + "(";
-        if (e_nrw.getArgumentTokens ().size () != 0)
+        if (e_nrw.getArgumentTokenCount () != 0)
         {
-          m_codeGenerator.printTokenSetup (e_nrw.getArgumentTokens ().get (0));
+          m_codeGenerator.printTokenSetup (e_nrw.getArgumentTokenAt (0));
           for (final Token aElement : e_nrw.getArgumentTokens ())
           {
             t = aElement;

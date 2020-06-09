@@ -31,12 +31,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
+
+import com.helger.pgcc.parser.Token;
 
 /**
  * Describes single character descriptors in a character list.
  */
-
 public final class SingleCharacter implements ICCCharacter
 {
   /**
@@ -50,43 +51,32 @@ public final class SingleCharacter implements ICCCharacter
   /**
    * The character of this descriptor.
    */
-  private char m_ch;
+  private final char m_ch;
 
   public SingleCharacter (final char c)
   {
     m_ch = c;
   }
 
-  /**
-   * @param line
-   *        the line to set
-   */
-  void setLine (final int line)
+  public SingleCharacter (final Token t, final char c)
   {
-    m_nLine = line;
+    this (c);
+    m_nLine = t.beginLine;
+    m_nColumn = t.beginColumn;
   }
 
   /**
    * @return the line
    */
-  int getLine ()
+  public int getLine ()
   {
     return m_nLine;
   }
 
   /**
-   * @param column
-   *        the column to set
-   */
-  void setColumn (final int column)
-  {
-    m_nColumn = column;
-  }
-
-  /**
    * @return the column
    */
-  int getColumn ()
+  public int getColumn ()
   {
     return m_nColumn;
   }
@@ -94,10 +84,5 @@ public final class SingleCharacter implements ICCCharacter
   public char getChar ()
   {
     return m_ch;
-  }
-
-  public void setChar (final char ch)
-  {
-    m_ch = ch;
   }
 }

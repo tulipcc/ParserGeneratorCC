@@ -1125,7 +1125,7 @@ ExpLookahead local_lookahead() :
 void expansion_unit(Container c) :
   {
     String name;
-    List<Token> lhsTokens = new ArrayList <Token>();
+    final List<Token> lhsTokens = new ArrayList <>();
     ExpNonTerminal nt;
     ExpAction act;
     Token t;
@@ -1260,7 +1260,8 @@ void expansion_unit(Container c) :
     t = first;
     while (true) {
       lhsTokens.add(t);
-      if (t == last) break;
+      if (t == last)
+        break;
       t = t.next;
     }
   }
@@ -1274,7 +1275,7 @@ void expansion_unit(Container c) :
     nt.setColumn(t.beginColumn);
     nt.setLhsTokens(lhsTokens);
   }
-   name=identifier() [ TypeArguments(nt.getParametrizedTypeTokens()) ] Arguments(nt.getArgumentTokens())
+   name=identifier() [ TypeArguments(nt.getMutableParametrizedTypeTokens()) ] Arguments(nt.getMutableArgumentTokens())
   {
     nt.setName(name);
     c.member = nt;
@@ -1505,15 +1506,9 @@ void character_descriptor(Container c) :
   ]
   {
     if (isrange) {
-      final CharacterRange cr = new CharacterRange(c1, c2);
-      cr.setLine(t.beginLine);
-      cr.setColumn(t.beginColumn);
-      c.member = cr;
+      c.member = new CharacterRange(t, c1, c2);
     } else {
-      final SingleCharacter sc = new SingleCharacter(c1);
-      sc.setLine(t.beginLine);
-      sc.setColumn(t.beginColumn);
-      c.member = sc;
+      c.member = new SingleCharacter(t, c1);
     }
   }
 }

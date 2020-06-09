@@ -33,12 +33,14 @@
  */
 package com.helger.pgcc.parser.exp;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.Token;
 
@@ -52,7 +54,7 @@ public class ExpNonTerminal extends Expansion
    * The LHS to which the return value of the non-terminal is assigned. In case
    * there is no LHS, then the vector remains empty.
    */
-  private final List <Token> m_lhsTokens = new ArrayList <> ();
+  private final ICommonsList <Token> m_lhsTokens = new CommonsArrayList <> ();
 
   /**
    * The name of the non-terminal.
@@ -62,9 +64,10 @@ public class ExpNonTerminal extends Expansion
   /**
    * The list of all tokens in the argument list.
    */
-  private List <Token> m_argumentTokens = new ArrayList <> ();
+  private final ICommonsList <Token> m_argumentTokens = new CommonsArrayList <> ();
 
-  private List <Token> m_parametrizedTypeTokens = new ArrayList <> ();
+  private final ICommonsList <Token> m_parametrizedTypeTokens = new CommonsArrayList <> ();
+
   /**
    * The production this non-terminal corresponds to.
    */
@@ -73,17 +76,28 @@ public class ExpNonTerminal extends Expansion
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final StringBuilder value = super.dump (indent, alreadyDumped).append (' ').append (m_name);
-    return value;
+    return super.dump (indent, alreadyDumped).append (' ').append (m_name);
   }
 
   /**
    * @return the lhsTokens
    */
   @Nonnull
-  public final List <Token> getLhsTokens ()
+  public final Iterable <Token> getLhsTokens ()
   {
     return m_lhsTokens;
+  }
+
+  @Nonnegative
+  public final int getLhsTokenCount ()
+  {
+    return m_lhsTokens.size ();
+  }
+
+  @Nonnull
+  public final Token getLhsTokenAt (final int nIndex)
+  {
+    return m_lhsTokens.get (nIndex);
   }
 
   /**
@@ -92,75 +106,82 @@ public class ExpNonTerminal extends Expansion
    */
   public final void setLhsTokens (@Nonnull final List <Token> lhsTokens)
   {
-    m_lhsTokens.clear ();
-    m_lhsTokens.addAll (lhsTokens);
+    m_lhsTokens.setAll (lhsTokens);
+  }
+
+  /**
+   * @return the name
+   */
+  public final String getName ()
+  {
+    return m_name;
   }
 
   /**
    * @param name
    *        the name to set
    */
-  public void setName (final String name)
+  public final void setName (final String name)
   {
-    this.m_name = name;
+    m_name = name;
   }
 
-  /**
-   * @return the name
-   */
-  public String getName ()
+  @Nonnull
+  public final List <Token> getMutableArgumentTokens ()
   {
-    return m_name;
-  }
-
-  /**
-   * @param argument_tokens
-   *        the argument_tokens to set
-   */
-  public void setParametrizedTypeTokens (final List <Token> argument_tokens)
-  {
-    this.m_argumentTokens = argument_tokens;
+    return m_argumentTokens;
   }
 
   /**
    * @return the argument_tokens
    */
-  public List <Token> getParametrizedTypeTokens ()
+  @Nonnull
+  public final Iterable <Token> getArgumentTokens ()
+  {
+    return m_argumentTokens;
+  }
+
+  @Nonnegative
+  public final int getArgumentTokenCount ()
+  {
+    return m_argumentTokens.size ();
+  }
+
+  @Nonnull
+  public final Token getArgumentTokenAt (final int n)
+  {
+    return m_argumentTokens.get (n);
+  }
+
+  @Nonnull
+  public final List <Token> getMutableParametrizedTypeTokens ()
   {
     return m_parametrizedTypeTokens;
   }
 
   /**
-   * @param parametrizedTypeTokens
-   *        the argument tokens to set
+   * @return the argument_tokens
    */
-  public void setArgumentTokens (final List <Token> parametrizedTypeTokens)
+  @Nonnull
+  public final Iterable <Token> getParametrizedTypeTokens ()
   {
-    this.m_parametrizedTypeTokens = parametrizedTypeTokens;
+    return m_parametrizedTypeTokens;
   }
 
   /**
-   * @return the argument_tokens
+   * @return the prod
    */
-  public List <Token> getArgumentTokens ()
+  public final NormalProduction getProd ()
   {
-    return m_argumentTokens;
+    return m_prod;
   }
 
   /**
    * @param prod
    *        the prod to set
    */
-  public void setProd (final NormalProduction prod)
+  public final void setProd (final NormalProduction prod)
   {
-    this.m_prod = prod;
-  }
-
-  /**
-   * @return the prod
-   */
-  public NormalProduction getProd ()
-  {
-    return m_prod;
+    m_prod = prod;
   }
 }

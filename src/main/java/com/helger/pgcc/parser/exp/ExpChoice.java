@@ -52,7 +52,7 @@ public class ExpChoice extends Expansion
    * The list of choices of this expansion unit. Each List component will narrow
    * to ExpansionUnit.
    */
-  private List <Expansion> m_choices = new ArrayList <> ();
+  private final List <Expansion> m_choices = new ArrayList <> ();
 
   public ExpChoice ()
   {}
@@ -97,24 +97,13 @@ public class ExpChoice extends Expansion
     m_choices.add (a);
   }
 
-  /**
-   * @param choices
-   *        the choices to set
-   */
-  public final void setChoices (@Nonnull final List <Expansion> choices)
-  {
-    m_choices = choices;
-  }
-
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
     final StringBuilder sb = super.dump (indent, alreadyDumped);
     if (alreadyDumped.add (this))
-    {
       for (final Expansion next : getChoices ())
         sb.append (EOL).append (next.dump (indent + 1, alreadyDumped));
-    }
     return sb;
   }
 }

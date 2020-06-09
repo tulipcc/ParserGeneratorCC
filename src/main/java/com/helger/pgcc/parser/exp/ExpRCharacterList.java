@@ -40,13 +40,10 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.parser.CharacterRange;
-import com.helger.pgcc.parser.ICCCharacter;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.Nfa;
 import com.helger.pgcc.parser.NfaState;
 import com.helger.pgcc.parser.Options;
-import com.helger.pgcc.parser.SingleCharacter;
 
 /**
  * Describes character lists.
@@ -1839,7 +1836,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     return retVal;
   }
 
-  private static boolean _overlaps (final CharacterRange r1, final CharacterRange r2)
+  private static boolean _overlaps (@Nonnull final CharacterRange r1, @Nonnull final CharacterRange r2)
   {
     return r1.getLeft () <= r2.getRight () && r1.getRight () > r2.getRight ();
   }

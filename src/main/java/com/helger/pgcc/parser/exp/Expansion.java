@@ -154,10 +154,15 @@ public class Expansion
   @OverrideOnDemand
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    // lol
-    assert alreadyDumped.size () >= 0;
-    final StringBuilder value = dumpPrefix (indent).append (System.identityHashCode (this)).append (" ").append (_getSimpleName ());
-    return value;
+    return dumpPrefix (indent).append (System.identityHashCode (this)).append (" ").append (_getSimpleName ());
+  }
+
+  /**
+   * @return the column
+   */
+  public final int getColumn ()
+  {
+    return m_nColumn;
   }
 
   /**
@@ -170,11 +175,11 @@ public class Expansion
   }
 
   /**
-   * @return the column
+   * @return the line
    */
-  public final int getColumn ()
+  public final int getLine ()
   {
-    return m_nColumn;
+    return m_nLine;
   }
 
   /**
@@ -184,14 +189,6 @@ public class Expansion
   public final void setLine (final int line)
   {
     m_nLine = line;
-  }
-
-  /**
-   * @return the line
-   */
-  public final int getLine ()
-  {
-    return m_nLine;
   }
 
   public final Object getParent ()

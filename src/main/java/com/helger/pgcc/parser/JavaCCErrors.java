@@ -37,7 +37,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.pgcc.PGPrinter;
+import com.helger.pgcc.parser.exp.CharacterRange;
 import com.helger.pgcc.parser.exp.Expansion;
+import com.helger.pgcc.parser.exp.SingleCharacter;
 
 /**
  * Output error messages and keep track of totals.
