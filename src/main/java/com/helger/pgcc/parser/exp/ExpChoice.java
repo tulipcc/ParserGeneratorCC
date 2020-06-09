@@ -31,26 +31,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import com.helger.pgcc.parser.Token;
+
 /**
- * Describes zero-or-more expansions (e.g., foo*).
+ * Describes expansions where one of many choices is taken (c1|c2|...).
  */
-public class ExpZeroOrMore extends Expansion
+public class ExpChoice extends Expansion
 {
   /**
-   * The expansion which is repeated zero or more times.
+   * The list of choices of this expansion unit. Each List component will narrow
+   * to ExpansionUnit.
    */
-  public final Expansion m_expansion;
+  private List <Expansion> m_choices = new ArrayList <> ();
 
-  public ExpZeroOrMore (final Token token, final Expansion expansion)
+  public ExpChoice ()
+  {}
+
+  public ExpChoice (final Token token)
   {
     this.setLine (token.beginLine);
     this.setColumn (token.beginColumn);
-    this.m_expansion = expansion;
-    this.m_expansion.m_parent = this;
+  }
+
+  public ExpChoice (final Expansion expansion)
+  {
+    this.setLine (expansion.getLine ());
+    this.setColumn (expansion.getColumn ());
+    this.getChoices ().add (expansion);
+  }
+
+  /**
+   * @param choices
+   *        the choices to set
+   */
+  public void setChoices (final List <Expansion> choices)
+  {
+    this.m_choices = choices;
+  }
+
+  /**
+   * @return the choices
+   */
+  public List <Expansion> getChoices ()
+  {
+    return m_choices;
   }
 
   @Override
@@ -59,7 +89,8 @@ public class ExpZeroOrMore extends Expansion
     final StringBuilder sb = super.dump (indent, alreadyDumped);
     if (alreadyDumped.add (this))
     {
-      sb.append (EOL).append (m_expansion.dump (indent + 1, alreadyDumped));
+      for (final Expansion next : getChoices ())
+        sb.append (EOL).append (next.dump (indent + 1, alreadyDumped));
     }
     return sb;
   }

@@ -31,65 +31,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.helger.pgcc.parser.Nfa;
+import com.helger.pgcc.parser.NfaState;
+import com.helger.pgcc.parser.Token;
 
 /**
- * Describes expansions where one of many choices is taken (c1|c2|...).
+ * Describes zero-or-more regular expressions (&lt;foo*&gt;).
  */
-public class ExpChoice extends Expansion
+public class ExpRZeroOrMore extends AbstractExpRegularExpression
 {
   /**
-   * The list of choices of this expansion unit. Each List component will narrow
-   * to ExpansionUnit.
+   * The regular expression which is repeated zero or more times.
    */
-  private List <Expansion> m_choices = new ArrayList <> ();
+  public AbstractExpRegularExpression m_regexpr;
 
-  public ExpChoice ()
+  public ExpRZeroOrMore ()
   {}
 
-  public ExpChoice (final Token token)
+  public ExpRZeroOrMore (final Token t, final AbstractExpRegularExpression r)
   {
-    this.setLine (token.beginLine);
-    this.setColumn (token.beginColumn);
-  }
-
-  public ExpChoice (final Expansion expansion)
-  {
-    this.setLine (expansion.getLine ());
-    this.setColumn (expansion.getColumn ());
-    this.getChoices ().add (expansion);
-  }
-
-  /**
-   * @param choices
-   *        the choices to set
-   */
-  public void setChoices (final List <Expansion> choices)
-  {
-    this.m_choices = choices;
-  }
-
-  /**
-   * @return the choices
-   */
-  public List <Expansion> getChoices ()
-  {
-    return m_choices;
+    setLine (t.beginLine);
+    setColumn (t.beginColumn);
+    m_regexpr = r;
   }
 
   @Override
-  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
-    final StringBuilder sb = super.dump (indent, alreadyDumped);
-    if (alreadyDumped.add (this))
-    {
-      for (final Expansion next : getChoices ())
-        sb.append (EOL).append (next.dump (indent + 1, alreadyDumped));
-    }
-    return sb;
+    final Nfa retVal = new Nfa ();
+    final NfaState startState = retVal.start ();
+    final NfaState finalState = retVal.end ();
+
+    final Nfa temp = m_regexpr.generateNfa (ignoreCase);
+
+    startState.addMove (temp.start ());
+    startState.addMove (finalState);
+    temp.end ().addMove (finalState);
+    temp.end ().addMove (temp.start ());
+
+    return retVal;
   }
 }

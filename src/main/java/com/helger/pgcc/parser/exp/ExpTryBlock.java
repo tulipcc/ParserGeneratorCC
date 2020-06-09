@@ -31,65 +31,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
+import com.helger.pgcc.parser.Token;
 
 /**
- * Describes expansions that are sequences of expansion units. (c1 c2 ...)
+ * Describes expansions of the form "try {...} ...".
  */
-public class ExpSequence extends Expansion
+
+public class ExpTryBlock extends Expansion
 {
+
   /**
-   * The list of units in this expansion sequence. Each List component will
-   * narrow to Expansion.
+   * The expansion contained within the try block.
    */
-  final List <Expansion> m_units = new ArrayList <> ();
+  public Expansion m_exp;
 
-  public ExpSequence ()
-  {}
+  /**
+   * The types of each catch block. Each list entry is itself a list which in
+   * turn contains tokens as entries.
+   */
+  public List <List <Token>> m_types;
 
-  public ExpSequence (final Token token, final ExpLookahead lookahead)
-  {
-    this.setLine (token.beginLine);
-    this.setColumn (token.beginColumn);
-    this.m_units.add (lookahead);
-  }
+  /**
+   * The exception identifiers of each catch block. Each list entry is a token.
+   */
+  public List <Token> m_ids;
 
-  public void addUnit (final Expansion aObj)
-  {
-    m_units.add (aObj);
-  }
+  /**
+   * The block part of each catch block. Each list entry is itself a list which
+   * in turn contains tokens as entries.
+   */
+  public List <List <Token>> m_catchblks;
 
-  @Nonnull
-  public Iterable <Expansion> units ()
-  {
-    return m_units;
-  }
-
-  @Nonnegative
-  public int getUnitCount ()
-  {
-    return m_units.size ();
-  }
+  /**
+   * The block part of the finally block. Each list entry is a token. If there
+   * is no finally block, this is null.
+   */
+  public List <Token> m_finallyblk;
 
   @Override
   public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    if (!alreadyDumped.add (this))
-    {
-      return super.dump (0, alreadyDumped).insert (0, '[').append (']').insert (0, dumpPrefix (indent));
-    }
-
     final StringBuilder sb = super.dump (indent, alreadyDumped);
-    for (final Expansion next : m_units)
+    if (alreadyDumped.add (this))
     {
-      sb.append (EOL).append (next.dump (indent + 1, alreadyDumped));
+      sb.append (EOL).append (m_exp.dump (indent + 1, alreadyDumped));
     }
     return sb;
   }

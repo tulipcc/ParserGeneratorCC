@@ -31,50 +31,81 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import com.helger.commons.ValueEnforcer;
+import com.helger.pgcc.parser.Nfa;
+import com.helger.pgcc.parser.NfaState;
+
 /**
- * Describes one-or-more regular expressions (&lt;foo+&gt;).
+ * Describes regular expressions which are sequences of other regular
+ * expressions.
  */
-public class ExpRRepetitionRange extends AbstractExpRegularExpression
+
+public class ExpRSequence extends AbstractExpRegularExpression
 {
+
   /**
-   * The regular expression which is repeated one or more times.
+   * The list of units in this regular expression sequence. Each list component
+   * will narrow to RegularExpression.
    */
-  public AbstractExpRegularExpression m_regexpr;
-  public int m_min = 0;
-  public int m_max = -1;
-  public boolean m_hasMax;
+  public final List <AbstractExpRegularExpression> m_units;
+
+  public ExpRSequence ()
+  {
+    m_units = new ArrayList <> ();
+  }
+
+  ExpRSequence (final List <AbstractExpRegularExpression> seq)
+  {
+    m_ordinal = Integer.MAX_VALUE;
+    m_units = seq;
+  }
+
+  public void addUnit (final AbstractExpRegularExpression ex)
+  {
+    ValueEnforcer.notNull (ex, "RegEx");
+    m_units.add (ex);
+  }
+
+  public Iterator <AbstractExpRegularExpression> iterator ()
+  {
+    return m_units.iterator ();
+  }
 
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
   {
-    final List <AbstractExpRegularExpression> units = new ArrayList <> ();
-    ExpRSequence seq;
-    int i;
+    if (m_units.size () == 1)
+      return m_units.get (0).generateNfa (ignoreCase);
 
-    for (i = 0; i < m_min; i++)
+    final Nfa retVal = new Nfa ();
+    final NfaState startState = retVal.start ();
+    final NfaState finalState = retVal.end ();
+    Nfa temp1;
+    Nfa temp2 = null;
+
+    AbstractExpRegularExpression curRE;
+
+    curRE = m_units.get (0);
+    temp1 = curRE.generateNfa (ignoreCase);
+    startState.addMove (temp1.start ());
+
+    for (int i = 1; i < m_units.size (); i++)
     {
-      units.add (m_regexpr);
+      curRE = m_units.get (i);
+
+      temp2 = curRE.generateNfa (ignoreCase);
+      temp1.end ().addMove (temp2.start ());
+      temp1 = temp2;
     }
 
-    if (m_hasMax && m_max == -1) // Unlimited
-    {
-      final ExpRZeroOrMore zoo = new ExpRZeroOrMore ();
-      zoo.m_regexpr = m_regexpr;
-      units.add (zoo);
-    }
+    temp2.end ().addMove (finalState);
 
-    while (i++ < m_max)
-    {
-      final ExpRZeroOrOne zoo = new ExpRZeroOrOne ();
-      zoo.m_regexpr = m_regexpr;
-      units.add (zoo);
-    }
-    seq = new ExpRSequence (units);
-    return seq.generateNfa (ignoreCase);
+    return retVal;
   }
 }

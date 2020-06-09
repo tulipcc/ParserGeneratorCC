@@ -38,6 +38,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.helger.pgcc.parser.exp.Expansion;
+
 /**
  * Describes JavaCC productions.
  */

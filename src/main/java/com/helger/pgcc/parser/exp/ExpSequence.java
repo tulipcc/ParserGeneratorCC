@@ -31,17 +31,68 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
+import com.helger.pgcc.parser.Token;
 
 /**
- * Describes the EOF regular expression
+ * Describes expansions that are sequences of expansion units. (c1 c2 ...)
  */
-
-public class ExpREndOfFile extends AbstractExpRegularExpression
+public class ExpSequence extends Expansion
 {
-  @Override
-  public Nfa generateNfa (final boolean ignoreCase)
+  /**
+   * The list of units in this expansion sequence. Each List component will
+   * narrow to Expansion.
+   */
+  public final List <Expansion> m_units = new ArrayList <> ();
+
+  public ExpSequence ()
+  {}
+
+  public ExpSequence (final Token token, final ExpLookahead lookahead)
   {
-    return null;
+    setLine (token.beginLine);
+    setColumn (token.beginColumn);
+    m_units.add (lookahead);
+  }
+
+  public void addUnit (final Expansion aObj)
+  {
+    m_units.add (aObj);
+  }
+
+  @Nonnull
+  public Iterable <Expansion> units ()
+  {
+    return m_units;
+  }
+
+  @Nonnegative
+  public int getUnitCount ()
+  {
+    return m_units.size ();
+  }
+
+  @Override
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  {
+    if (!alreadyDumped.add (this))
+    {
+      return super.dump (0, alreadyDumped).insert (0, '[').append (']').insert (0, dumpPrefix (indent));
+    }
+
+    final StringBuilder sb = super.dump (indent, alreadyDumped);
+    for (final Expansion next : m_units)
+    {
+      sb.append (EOL).append (next.dump (indent + 1, alreadyDumped));
+    }
+    return sb;
   }
 }

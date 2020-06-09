@@ -33,13 +33,15 @@
  */
 package com.helger.pgcc.parser;
 
+import javax.annotation.Nonnull;
+
 /**
  * A Non-deterministic Finite Automaton.
  */
-public class Nfa
+public final class Nfa
 {
-  NfaState start;
-  NfaState end;
+  private final NfaState start;
+  private final NfaState end;
 
   public Nfa ()
   {
@@ -47,9 +49,21 @@ public class Nfa
     end = new NfaState ();
   }
 
-  public Nfa (final NfaState startGiven, final NfaState finalGiven)
+  public Nfa (@Nonnull final NfaState startGiven, @Nonnull final NfaState finalGiven)
   {
     start = startGiven;
     end = finalGiven;
+  }
+
+  @Nonnull
+  public NfaState start ()
+  {
+    return start;
+  }
+
+  @Nonnull
+  public NfaState end ()
+  {
+    return end;
   }
 }

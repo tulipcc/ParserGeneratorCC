@@ -83,9 +83,7 @@ import java.util.Locale;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
-import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.ETokenKind;
-import com.helger.pgcc.parser.ExpRStringLiteral;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCParserConstants;
 import com.helger.pgcc.parser.LexGenJava;
@@ -94,6 +92,8 @@ import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.RegExprSpec;
 import com.helger.pgcc.parser.Token;
 import com.helger.pgcc.parser.TokenProduction;
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpRStringLiteral;
 
 /**
  * Generates the Constants file.

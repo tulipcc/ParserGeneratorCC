@@ -87,6 +87,17 @@ import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpAction;
+import com.helger.pgcc.parser.exp.ExpChoice;
+import com.helger.pgcc.parser.exp.ExpLookahead;
+import com.helger.pgcc.parser.exp.ExpNonTerminal;
+import com.helger.pgcc.parser.exp.ExpOneOrMore;
+import com.helger.pgcc.parser.exp.ExpSequence;
+import com.helger.pgcc.parser.exp.ExpTryBlock;
+import com.helger.pgcc.parser.exp.ExpZeroOrMore;
+import com.helger.pgcc.parser.exp.ExpZeroOrOne;
+import com.helger.pgcc.parser.exp.Expansion;
 
 public class ParseEngine
 {

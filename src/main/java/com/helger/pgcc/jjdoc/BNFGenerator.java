@@ -38,15 +38,15 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
-import com.helger.pgcc.parser.ExpNonTerminal;
-import com.helger.pgcc.parser.ExpRCharacterList;
-import com.helger.pgcc.parser.ExpRJustName;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.TokenProduction;
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpNonTerminal;
+import com.helger.pgcc.parser.exp.ExpRCharacterList;
+import com.helger.pgcc.parser.exp.ExpRJustName;
+import com.helger.pgcc.parser.exp.Expansion;
 
 public class BNFGenerator implements IDocGenerator
 {

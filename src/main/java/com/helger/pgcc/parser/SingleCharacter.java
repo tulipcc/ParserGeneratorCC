@@ -52,7 +52,7 @@ public final class SingleCharacter implements ICCCharacter
    */
   private char m_ch;
 
-  SingleCharacter (final char c)
+  public SingleCharacter (final char c)
   {
     m_ch = c;
   }

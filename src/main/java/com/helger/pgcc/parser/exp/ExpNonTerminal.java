@@ -31,11 +31,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import com.helger.pgcc.parser.NormalProduction;
+import com.helger.pgcc.parser.Token;
 
 /**
  * Describes non terminals.

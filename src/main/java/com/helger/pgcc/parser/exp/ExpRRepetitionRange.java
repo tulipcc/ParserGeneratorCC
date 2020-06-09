@@ -31,36 +31,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.helger.pgcc.parser.Nfa;
 
 /**
- * Describes zero-or-one expansions (e.g., [foo], foo?).
+ * Describes one-or-more regular expressions (&lt;foo+&gt;).
  */
-public class ExpZeroOrOne extends Expansion
+public class ExpRRepetitionRange extends AbstractExpRegularExpression
 {
   /**
-   * The expansion which is repeated zero or one times.
+   * The regular expression which is repeated one or more times.
    */
-  public Expansion m_expansion;
-
-  public ExpZeroOrOne (final Token t, final Expansion e)
-  {
-    this.setLine (t.beginLine);
-    this.setColumn (t.beginColumn);
-    this.m_expansion = e;
-    e.m_parent = this;
-  }
+  public AbstractExpRegularExpression m_regexpr;
+  public int m_min = 0;
+  public int m_max = -1;
+  public boolean m_hasMax;
 
   @Override
-  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
-    final StringBuilder sb = super.dump (indent, alreadyDumped);
-    if (alreadyDumped.add (this))
+    final List <AbstractExpRegularExpression> units = new ArrayList <> ();
+    ExpRSequence seq;
+    int i;
+
+    for (i = 0; i < m_min; i++)
     {
-      sb.append (EOL).append (m_expansion.dump (indent + 1, alreadyDumped));
+      units.add (m_regexpr);
     }
-    return sb;
+
+    if (m_hasMax && m_max == -1) // Unlimited
+    {
+      final ExpRZeroOrMore zoo = new ExpRZeroOrMore ();
+      zoo.m_regexpr = m_regexpr;
+      units.add (zoo);
+    }
+
+    while (i++ < m_max)
+    {
+      final ExpRZeroOrOne zoo = new ExpRZeroOrOne ();
+      zoo.m_regexpr = m_regexpr;
+      units.add (zoo);
+    }
+    seq = new ExpRSequence (units);
+    return seq.generateNfa (ignoreCase);
   }
 }

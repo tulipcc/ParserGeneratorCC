@@ -31,7 +31,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
 import java.util.Set;
 
@@ -83,7 +83,7 @@ public class Expansion
   /**
    * The ordinal of this node with respect to its parent.
    */
-  int m_ordinalBase;
+  public int m_ordinalBase;
 
   /**
    * To avoid right-recursive loops when calculating follow sets, we use a
@@ -111,28 +111,28 @@ public class Expansion
     return s_nextGenerationIndex++;
   }
 
-  void setInternalName (final String sPrefix, final int nIndex)
+  public final void setInternalName (final String sPrefix, final int nIndex)
   {
     m_sInternalName = sPrefix + nIndex;
     m_nInternalIndex = nIndex;
   }
 
-  void setInternalNameOnly (final String sName)
+  public final void setInternalNameOnly (final String sName)
   {
     m_sInternalName = sName;
   }
 
-  boolean hasNoInternalName ()
+  public final boolean hasNoInternalName ()
   {
     return StringHelper.hasNoText (m_sInternalName);
   }
 
-  String getInternalName ()
+  public final String getInternalName ()
   {
     return m_sInternalName;
   }
 
-  int getInternalIndex ()
+  public final int getInternalIndex ()
   {
     return m_nInternalIndex;
   }
@@ -165,9 +165,7 @@ public class Expansion
   {
     // lol
     assert alreadyDumped.size () >= 0;
-    final StringBuilder value = dumpPrefix (indent).append (System.identityHashCode (this))
-                                                   .append (" ")
-                                                   .append (_getSimpleName ());
+    final StringBuilder value = dumpPrefix (indent).append (System.identityHashCode (this)).append (" ").append (_getSimpleName ());
     return value;
   }
 
@@ -175,7 +173,7 @@ public class Expansion
    * @param column
    *        the column to set
    */
-  final void setColumn (final int column)
+  public final void setColumn (final int column)
   {
     m_nColumn = column;
   }
@@ -183,7 +181,7 @@ public class Expansion
   /**
    * @return the column
    */
-  int getColumn ()
+  public final int getColumn ()
   {
     return m_nColumn;
   }
@@ -192,7 +190,7 @@ public class Expansion
    * @param line
    *        the line to set
    */
-  final void setLine (final int line)
+  public final void setLine (final int line)
   {
     m_nLine = line;
   }
@@ -200,7 +198,7 @@ public class Expansion
   /**
    * @return the line
    */
-  int getLine ()
+  public final int getLine ()
   {
     return m_nLine;
   }

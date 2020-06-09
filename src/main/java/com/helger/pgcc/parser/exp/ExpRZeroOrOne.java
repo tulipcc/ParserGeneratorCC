@@ -31,41 +31,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
+
+import com.helger.pgcc.parser.Nfa;
+import com.helger.pgcc.parser.NfaState;
 
 /**
- * Describes zero-or-more regular expressions (&lt;foo*&gt;).
+ * Describes zero-or-one regular expressions (&lt;foo?&gt;).
  */
-public class ExpRZeroOrMore extends AbstractExpRegularExpression
+public class ExpRZeroOrOne extends AbstractExpRegularExpression
 {
   /**
-   * The regular expression which is repeated zero or more times.
+   * The regular expression which is repeated zero or one times.
    */
   public AbstractExpRegularExpression m_regexpr;
-
-  public ExpRZeroOrMore ()
-  {}
-
-  public ExpRZeroOrMore (final Token t, final AbstractExpRegularExpression r)
-  {
-    setLine (t.beginLine);
-    setColumn (t.beginColumn);
-    m_regexpr = r;
-  }
 
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
   {
     final Nfa retVal = new Nfa ();
-    final NfaState startState = retVal.start;
-    final NfaState finalState = retVal.end;
+    final NfaState startState = retVal.start ();
+    final NfaState finalState = retVal.end ();
 
     final Nfa temp = m_regexpr.generateNfa (ignoreCase);
 
-    startState.addMove (temp.start);
+    startState.addMove (temp.start ());
     startState.addMove (finalState);
-    temp.end.addMove (finalState);
-    temp.end.addMove (temp.start);
+    temp.end ().addMove (finalState);
 
     return retVal;
   }

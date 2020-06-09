@@ -31,10 +31,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.helger.pgcc.parser.ICCCharacter;
+import com.helger.pgcc.parser.JavaCCErrors;
+import com.helger.pgcc.parser.LexGenJava;
+import com.helger.pgcc.parser.Nfa;
+import com.helger.pgcc.parser.NfaState;
 
 /**
  * Describes regular expressions which are choices from from among included
@@ -75,18 +81,15 @@ public class ExpRChoice extends AbstractExpRegularExpression
       return getChoices ().get (0).generateNfa (ignoreCase);
 
     final Nfa retVal = new Nfa ();
-    final NfaState startState = retVal.start;
-    final NfaState finalState = retVal.end;
+    final NfaState startState = retVal.start ();
+    final NfaState finalState = retVal.end ();
 
-    for (int i = 0; i < getChoices ().size (); i++)
+    for (final AbstractExpRegularExpression curRE : getChoices ())
     {
-      Nfa temp;
-      final AbstractExpRegularExpression curRE = getChoices ().get (i);
+      final Nfa temp = curRE.generateNfa (ignoreCase);
 
-      temp = curRE.generateNfa (ignoreCase);
-
-      startState.addMove (temp.start);
-      temp.end.addMove (finalState);
+      startState.addMove (temp.start ());
+      temp.end ().addMove (finalState);
     }
 
     return retVal;
@@ -159,26 +162,19 @@ public class ExpRChoice extends AbstractExpRegularExpression
     AbstractExpRegularExpression curRE;
     int numStrings = 0;
 
-    for (int i = 0; i < getChoices ().size (); i++)
+    for (final AbstractExpRegularExpression element : getChoices ())
     {
-      if (!(curRE = getChoices ().get (i)).m_private_rexp &&
+      if (!(curRE = element).m_private_rexp &&
           // curRE instanceof RJustName &&
           curRE.m_ordinal > 0 &&
           curRE.m_ordinal < m_ordinal &&
           LexGenJava.s_lexStates[curRE.m_ordinal] == LexGenJava.s_lexStates[m_ordinal])
       {
         if (m_label != null)
-          JavaCCErrors.warning (this,
-                                "Regular Expression choice : " +
-                                      curRE.m_label +
-                                      " can never be matched as : " +
-                                      m_label);
+          JavaCCErrors.warning (this, "Regular Expression choice : " + curRE.m_label + " can never be matched as : " + m_label);
         else
           JavaCCErrors.warning (this,
-                                "Regular Expression choice : " +
-                                      curRE.m_label +
-                                      " can never be matched as token of kind : " +
-                                      m_ordinal);
+                                "Regular Expression choice : " + curRE.m_label + " can never be matched as token of kind : " + m_ordinal);
       }
 
       if (!curRE.m_private_rexp && curRE instanceof ExpRStringLiteral)

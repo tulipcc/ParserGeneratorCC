@@ -48,6 +48,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpAction;
+import com.helger.pgcc.parser.exp.ExpREndOfFile;
+import com.helger.pgcc.parser.exp.ExpTryBlock;
+import com.helger.pgcc.parser.exp.Expansion;
 
 /**
  * Utilities.

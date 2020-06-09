@@ -31,79 +31,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import com.helger.commons.ValueEnforcer;
+import com.helger.pgcc.parser.Nfa;
+import com.helger.pgcc.parser.Token;
 
 /**
- * Describes regular expressions which are sequences of other regular
- * expressions.
+ * Describes regular expressions which are referred to just by their name. This
+ * means that a regular expression with this name has been declared earlier.
  */
 
-public class ExpRSequence extends AbstractExpRegularExpression
+public class ExpRJustName extends AbstractExpRegularExpression
 {
-
   /**
-   * The list of units in this regular expression sequence. Each list component
-   * will narrow to RegularExpression.
+   * "regexpr" points to the regular expression denoted by the name.
    */
-  final List <AbstractExpRegularExpression> m_units;
-
-  ExpRSequence ()
-  {
-    m_units = new ArrayList <> ();
-  }
-
-  ExpRSequence (final List <AbstractExpRegularExpression> seq)
-  {
-    m_ordinal = Integer.MAX_VALUE;
-    m_units = seq;
-  }
-
-  public void addUnit (final AbstractExpRegularExpression ex)
-  {
-    ValueEnforcer.notNull (ex, "RegEx");
-    m_units.add (ex);
-  }
-
-  public Iterator <AbstractExpRegularExpression> iterator ()
-  {
-    return m_units.iterator ();
-  }
+  public AbstractExpRegularExpression m_regexpr;
 
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
   {
-    if (m_units.size () == 1)
-      return m_units.get (0).generateNfa (ignoreCase);
+    return m_regexpr.generateNfa (ignoreCase);
+  }
 
-    final Nfa retVal = new Nfa ();
-    final NfaState startState = retVal.start;
-    final NfaState finalState = retVal.end;
-    Nfa temp1;
-    Nfa temp2 = null;
-
-    AbstractExpRegularExpression curRE;
-
-    curRE = m_units.get (0);
-    temp1 = curRE.generateNfa (ignoreCase);
-    startState.addMove (temp1.start);
-
-    for (int i = 1; i < m_units.size (); i++)
-    {
-      curRE = m_units.get (i);
-
-      temp2 = curRE.generateNfa (ignoreCase);
-      temp1.end.addMove (temp2.start);
-      temp1 = temp2;
-    }
-
-    temp2.end.addMove (finalState);
-
-    return retVal;
+  public ExpRJustName (final Token token, final String image)
+  {
+    this.setLine (token.beginLine);
+    this.setColumn (token.beginColumn);
+    this.m_label = image;
   }
 }

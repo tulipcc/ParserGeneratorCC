@@ -36,14 +36,14 @@ package com.helger.pgcc.jjdoc;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
-import com.helger.pgcc.parser.ExpNonTerminal;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.RegExprSpec;
 import com.helger.pgcc.parser.TokenProduction;
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpNonTerminal;
+import com.helger.pgcc.parser.exp.Expansion;
 
 /**
  * Output BNF in XText format.

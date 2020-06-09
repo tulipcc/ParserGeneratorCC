@@ -31,12 +31,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.helger.pgcc.PGPrinter;
+import com.helger.pgcc.parser.CharacterRange;
+import com.helger.pgcc.parser.ICCCharacter;
+import com.helger.pgcc.parser.JavaCCErrors;
+import com.helger.pgcc.parser.Nfa;
+import com.helger.pgcc.parser.NfaState;
+import com.helger.pgcc.parser.Options;
+import com.helger.pgcc.parser.SingleCharacter;
 
 /**
  * Describes character lists.
@@ -1709,9 +1716,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
             continue;
           }
 
-          m_descriptors.add (new CharacterRange ((char) (Character.toUpperCase (DIFF_UPPER_CASE_RANGES[j]) +
-                                                         l -
-                                                         DIFF_UPPER_CASE_RANGES[j]),
+          m_descriptors.add (new CharacterRange ((char) (Character.toUpperCase (DIFF_UPPER_CASE_RANGES[j]) + l - DIFF_UPPER_CASE_RANGES[j]),
                                                  Character.toUpperCase (DIFF_UPPER_CASE_RANGES[j + 1])));
         }
 
@@ -1808,8 +1813,8 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
 
     m_transformed = true;
     final Nfa retVal = new Nfa ();
-    final NfaState startState = retVal.start;
-    final NfaState finalState = retVal.end;
+    final NfaState startState = retVal.start ();
+    final NfaState finalState = retVal.end ();
     int i;
 
     for (i = 0; i < m_descriptors.size (); i++)
@@ -1946,17 +1951,17 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     if (false)
     {
       final StringBuilder aSB = new StringBuilder ("REM. NEG Before:");
-      for (int i = 0; i < m_descriptors.size (); i++)
+      for (final ICCCharacter m_descriptor : m_descriptors)
       {
-        if (m_descriptors.get (i) instanceof SingleCharacter)
+        if (m_descriptor instanceof SingleCharacter)
         {
-          final char c = ((SingleCharacter) m_descriptors.get (i)).getChar ();
+          final char c = ((SingleCharacter) m_descriptor).getChar ();
           aSB.append ((int) c + " ");
         }
         else
         {
-          final char l = ((CharacterRange) m_descriptors.get (i)).getLeft ();
-          final char r = ((CharacterRange) m_descriptors.get (i)).getRight ();
+          final char l = ((CharacterRange) m_descriptor).getLeft ();
+          final char r = ((CharacterRange) m_descriptor).getRight ();
           aSB.append ((int) l + "-" + (int) r + " ");
         }
       }
@@ -2022,17 +2027,17 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     if (false)
     {
       final StringBuilder aSB = new StringBuilder ("REM. NEG After:");
-      for (int i = 0; i < m_descriptors.size (); i++)
+      for (final ICCCharacter m_descriptor : m_descriptors)
       {
-        if (m_descriptors.get (i) instanceof SingleCharacter)
+        if (m_descriptor instanceof SingleCharacter)
         {
-          final char c = ((SingleCharacter) m_descriptors.get (i)).getChar ();
+          final char c = ((SingleCharacter) m_descriptor).getChar ();
           aSB.append ((int) c + " ");
         }
         else
         {
-          final char l = ((CharacterRange) m_descriptors.get (i)).getLeft ();
-          final char r = ((CharacterRange) m_descriptors.get (i)).getRight ();
+          final char l = ((CharacterRange) m_descriptor).getLeft ();
+          final char r = ((CharacterRange) m_descriptor).getRight ();
           aSB.append ((int) l + "-" + (int) r + " ");
         }
       }
@@ -2040,7 +2045,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     }
   }
 
-  ExpRCharacterList ()
+  public ExpRCharacterList ()
   {}
 
   ExpRCharacterList (final char c)

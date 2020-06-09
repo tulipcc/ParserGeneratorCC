@@ -31,54 +31,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
-import java.util.List;
-import java.util.Set;
+import com.helger.pgcc.parser.Nfa;
 
 /**
- * Describes expansions of the form "try {...} ...".
+ * Describes the EOF regular expression
  */
 
-public class ExpTryBlock extends Expansion
+public class ExpREndOfFile extends AbstractExpRegularExpression
 {
-
-  /**
-   * The expansion contained within the try block.
-   */
-  public Expansion m_exp;
-
-  /**
-   * The types of each catch block. Each list entry is itself a list which in
-   * turn contains tokens as entries.
-   */
-  public List <List <Token>> m_types;
-
-  /**
-   * The exception identifiers of each catch block. Each list entry is a token.
-   */
-  public List <Token> m_ids;
-
-  /**
-   * The block part of each catch block. Each list entry is itself a list which
-   * in turn contains tokens as entries.
-   */
-  public List <List <Token>> m_catchblks;
-
-  /**
-   * The block part of the finally block. Each list entry is a token. If there
-   * is no finally block, this is null.
-   */
-  public List <Token> m_finallyblk;
-
   @Override
-  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  public Nfa generateNfa (final boolean ignoreCase)
   {
-    final StringBuilder sb = super.dump (indent, alreadyDumped);
-    if (alreadyDumped.add (this))
-    {
-      sb.append (EOL).append (m_exp.dump (indent + 1, alreadyDumped));
-    }
-    return sb;
+    return null;
   }
 }

@@ -40,6 +40,7 @@ import java.util.List;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.*;
+import com.helger.pgcc.parser.exp.*;
 
 /**
  * The main entry point for JJDoc.

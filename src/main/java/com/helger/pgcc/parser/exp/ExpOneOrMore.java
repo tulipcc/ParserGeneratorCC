@@ -31,9 +31,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
 import java.util.Set;
+
+import com.helger.pgcc.parser.Token;
 
 /**
  * Describes one-or-more expansions (e.g., foo+).

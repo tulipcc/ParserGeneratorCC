@@ -31,31 +31,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
+
+import java.util.Set;
+
+import com.helger.pgcc.parser.Token;
 
 /**
- * Describes zero-or-one regular expressions (&lt;foo?&gt;).
+ * Describes zero-or-one expansions (e.g., [foo], foo?).
  */
-public class ExpRZeroOrOne extends AbstractExpRegularExpression
+public class ExpZeroOrOne extends Expansion
 {
   /**
-   * The regular expression which is repeated zero or one times.
+   * The expansion which is repeated zero or one times.
    */
-  public AbstractExpRegularExpression m_regexpr;
+  public Expansion m_expansion;
+
+  public ExpZeroOrOne (final Token t, final Expansion e)
+  {
+    this.setLine (t.beginLine);
+    this.setColumn (t.beginColumn);
+    this.m_expansion = e;
+    e.m_parent = this;
+  }
 
   @Override
-  public Nfa generateNfa (final boolean ignoreCase)
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
   {
-    final Nfa retVal = new Nfa ();
-    final NfaState startState = retVal.start;
-    final NfaState finalState = retVal.end;
-
-    final Nfa temp = m_regexpr.generateNfa (ignoreCase);
-
-    startState.addMove (temp.start);
-    startState.addMove (finalState);
-    temp.end.addMove (finalState);
-
-    return retVal;
+    final StringBuilder sb = super.dump (indent, alreadyDumped);
+    if (alreadyDumped.add (this))
+    {
+      sb.append (EOL).append (m_expansion.dump (indent + 1, alreadyDumped));
+    }
+    return sb;
   }
 }

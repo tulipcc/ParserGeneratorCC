@@ -31,13 +31,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
+
+import com.helger.pgcc.parser.Nfa;
+import com.helger.pgcc.parser.Token;
+import com.helger.pgcc.parser.TokenProduction;
 
 /**
  * Describes regular expressions.
@@ -95,7 +99,7 @@ public abstract class AbstractExpRegularExpression extends Expansion
    * pre-order walk of the whole graph from this node has been traversed. i.e.,
    * -1 indicates partially processed, and 1 indicates fully processed.
    */
-  int m_walkStatus = 0;
+  public int m_walkStatus = 0;
 
   @Override
   @OverridingMethodsMustInvokeSuper

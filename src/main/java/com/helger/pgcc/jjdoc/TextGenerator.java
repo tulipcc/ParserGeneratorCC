@@ -43,14 +43,14 @@ import javax.annotation.Nonnull;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
-import com.helger.pgcc.parser.ExpNonTerminal;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.TokenProduction;
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpNonTerminal;
+import com.helger.pgcc.parser.exp.Expansion;
 
 /**
  * Output BNF in text format.

@@ -55,6 +55,8 @@ import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpAction;
 
 /**
  * This package contains data created as a result of parsing and semanticizing a

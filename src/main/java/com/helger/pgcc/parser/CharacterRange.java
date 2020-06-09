@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
 /**
  * Describes character range descriptors in a character list.
  */
-public class CharacterRange implements ICCCharacter
+public final class CharacterRange implements ICCCharacter
 {
   /**
    * The line and column number of the construct that corresponds most closely
@@ -55,7 +55,7 @@ public class CharacterRange implements ICCCharacter
 
   private char m_nLeft;
 
-  CharacterRange (final char l, final char r)
+  public CharacterRange (final char l, final char r)
   {
     if (l > r)
       JavaCCErrors.semantic_error (this,

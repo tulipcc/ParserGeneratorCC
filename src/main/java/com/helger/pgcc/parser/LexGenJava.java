@@ -88,6 +88,10 @@ import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.OutputHelper;
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpAction;
+import com.helger.pgcc.parser.exp.ExpRChoice;
+import com.helger.pgcc.parser.exp.ExpRStringLiteral;
 import com.helger.pgcc.parser.table.TokenManagerCodeGenerator;
 
 /**
@@ -107,7 +111,7 @@ public class LexGenJava extends CodeGenerator
   static ETokenKind [] s_kinds;
   public static int s_maxOrdinal = 1;
   public static String s_lexStateSuffix;
-  static String [] s_newLexState;
+  public static String [] s_newLexState;
   public static int [] s_lexStates;
   public static boolean [] s_ignoreCase;
   public static ExpAction [] s_actions;
@@ -183,8 +187,7 @@ public class LexGenJava extends CodeGenerator
               nKind == JavaCCParserConstants.INTERFACE ||
               nKind == JavaCCParserConstants.ENUM)
           {
-            setLineAndCol (s_cu_to_insertion_point_1.get (nIndex).beginLine,
-                           s_cu_to_insertion_point_1.get (nIndex).beginColumn);
+            setLineAndCol (s_cu_to_insertion_point_1.get (nIndex).beginLine, s_cu_to_insertion_point_1.get (nIndex).beginColumn);
             int j = nIndex;
             for (; j < i; j++)
             {
@@ -472,9 +475,7 @@ public class LexGenJava extends CodeGenerator
             continue;
           }
 
-          if (!Options.isNoDfa () &&
-              s_curRE instanceof ExpRStringLiteral &&
-              StringHelper.hasText (((ExpRStringLiteral) s_curRE).m_image))
+          if (!Options.isNoDfa () && s_curRE instanceof ExpRStringLiteral && StringHelper.hasText (((ExpRStringLiteral) s_curRE).m_image))
           {
             ((ExpRStringLiteral) s_curRE).generateDfa ();
             if (i != 0 && !s_mixed[s_lexStateIndex] && ignoring != ignore)
@@ -496,9 +497,9 @@ public class LexGenJava extends CodeGenerator
                 choices.add ((ExpRChoice) s_curRE);
 
               temp = s_curRE.generateNfa (ignore);
-              temp.end.m_isFinal = true;
-              temp.end.m_kind = s_curRE.m_ordinal;
-              s_initialState.addMove (temp.start);
+              temp.end ().m_isFinal = true;
+              temp.end ().m_kind = s_curRE.m_ordinal;
+              s_initialState.addMove (temp.start ());
             }
 
           if (s_kinds.length < s_curRE.m_ordinal)
@@ -1172,10 +1173,7 @@ public class LexGenJava extends CodeGenerator
       {
         if (s_initMatch[i] != Integer.MAX_VALUE && s_initMatch[i] != 0)
         {
-          genCodeLine (prefix +
-                       "if (jjmatchedPos < 0 || (jjmatchedPos == 0 && jjmatchedKind > " +
-                       s_canMatchAnyChar[i] +
-                       "))");
+          genCodeLine (prefix + "if (jjmatchedPos < 0 || (jjmatchedPos == 0 && jjmatchedKind > " + s_canMatchAnyChar[i] + "))");
         }
         else
           genCodeLine (prefix + "if (jjmatchedPos == 0 && jjmatchedKind > " + s_canMatchAnyChar[i] + ")");
@@ -1284,9 +1282,7 @@ public class LexGenJava extends CodeGenerator
         {
           if (s_hasMore)
           {
-            genCodeLine (prefix +
-                         "      else if ((jjtoSkip[jjmatchedKind >> 6] & " +
-                         "(1L << (jjmatchedKind & 077))) != 0L)");
+            genCodeLine (prefix + "      else if ((jjtoSkip[jjmatchedKind >> 6] & " + "(1L << (jjmatchedKind & 077))) != 0L)");
           }
           else
             genCodeLine (prefix + "      else");
@@ -1295,9 +1291,7 @@ public class LexGenJava extends CodeGenerator
 
           if (s_hasSpecial)
           {
-            genCodeLine (prefix +
-                         "         if ((jjtoSpecial[jjmatchedKind >> 6] & " +
-                         "(1L << (jjmatchedKind & 077))) != 0L)");
+            genCodeLine (prefix + "         if ((jjtoSpecial[jjmatchedKind >> 6] & " + "(1L << (jjmatchedKind & 077))) != 0L)");
             genCodeLine (prefix + "         {");
 
             genCodeLine (prefix + "            matchedToken = jjFillToken();");

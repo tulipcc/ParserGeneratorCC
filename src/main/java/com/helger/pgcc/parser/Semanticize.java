@@ -53,6 +53,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.helger.pgcc.parser.exp.*;
+
 public class Semanticize
 {
   private static List <List <RegExprSpec>> s_aRemoveList = new ArrayList <> ();

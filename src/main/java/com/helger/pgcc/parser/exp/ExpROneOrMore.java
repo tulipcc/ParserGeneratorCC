@@ -31,7 +31,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
+
+import com.helger.pgcc.parser.Nfa;
+import com.helger.pgcc.parser.NfaState;
+import com.helger.pgcc.parser.Token;
 
 /**
  * Describes one-or-more regular expressions (&lt;foo+&gt;).
@@ -57,14 +61,14 @@ public class ExpROneOrMore extends AbstractExpRegularExpression
   public Nfa generateNfa (final boolean ignoreCase)
   {
     final Nfa retVal = new Nfa ();
-    final NfaState startState = retVal.start;
-    final NfaState finalState = retVal.end;
+    final NfaState startState = retVal.start ();
+    final NfaState finalState = retVal.end ();
 
     final Nfa temp = m_regexpr.generateNfa (ignoreCase);
 
-    startState.addMove (temp.start);
-    temp.end.addMove (temp.start);
-    temp.end.addMove (finalState);
+    startState.addMove (temp.start ());
+    temp.end ().addMove (temp.start ());
+    temp.end ().addMove (finalState);
 
     return retVal;
   }

@@ -73,6 +73,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
@@ -126,19 +129,19 @@ public class NfaState
   }
 
   long [] m_asciiMoves = new long [2];
-  char [] m_charMoves = null;
+  public char [] m_charMoves = null;
   private char [] m_rangeMoves = null;
-  NfaState m_next = null;
+  public NfaState m_next = null;
   private NfaState m_stateForCase;
-  final List <NfaState> m_epsilonMoves = new ArrayList <> ();
+  public final List <NfaState> m_epsilonMoves = new ArrayList <> ();
   private String m_epsilonMovesString;
 
   private final int m_id;
-  int m_stateName = -1;
+  public int m_stateName = -1;
   int m_kind = Integer.MAX_VALUE;
   private int m_lookingFor;
   private int m_usefulEpsilonMoves = 0;
-  int m_inNextOf;
+  public int m_inNextOf;
   private int m_lexState;
   private int m_nonAsciiMethod = -1;
   private int m_kindToPrint = Integer.MAX_VALUE;
@@ -152,7 +155,7 @@ public class NfaState
   private int m_onlyChar = 0;
   private char m_matchSingleChar;
 
-  NfaState ()
+  public NfaState ()
   {
     m_id = s_idCnt++;
     s_allStates.add (this);
@@ -160,6 +163,7 @@ public class NfaState
     m_lookingFor = LexGenJava.s_curKind;
   }
 
+  @Nonnull
   private NfaState _createClone ()
   {
     final NfaState retVal = new NfaState ();
@@ -197,7 +201,7 @@ public class NfaState
     return ret;
   }
 
-  void addMove (final NfaState newState)
+  public void addMove (@Nonnull final NfaState newState)
   {
     if (!m_epsilonMoves.contains (newState))
       _insertInOrder (m_epsilonMoves, newState);
@@ -208,7 +212,7 @@ public class NfaState
     m_asciiMoves[c / 64] |= (1L << (c % 64));
   }
 
-  void addChar (final char c)
+  public void addChar (final char c)
   {
     m_onlyChar++;
     m_matchSingleChar = c;
@@ -258,7 +262,7 @@ public class NfaState
     }
   }
 
-  void addRange (final char pleft, final char right)
+  public void addRange (final char pleft, final char right)
   {
     char left = pleft;
     m_onlyChar = 2;
@@ -1170,7 +1174,7 @@ public class NfaState
     return bitVec.equals (s_allBits);
   }
 
-  static int addStartStateSet (final String stateSetString)
+  public static int addStartStateSet (final String stateSetString)
   {
     return _addCompositeStateSet (stateSetString, true);
   }
@@ -1256,7 +1260,7 @@ public class NfaState
     return s_stateNameForComposite.get (stateSetString).intValue ();
   }
 
-  static int initStateName ()
+  public static int initStateName ()
   {
     final String s = LexGenJava.s_initialState._getEpsilonMovesString ();
 
@@ -1351,7 +1355,7 @@ public class NfaState
     return retVal;
   }
 
-  static String getStateSetString (final List <NfaState> states)
+  public static String getStateSetString (@Nullable final List <NfaState> states)
   {
     if (states == null || states.size () == 0)
       return "null;";
@@ -3578,16 +3582,17 @@ public class NfaState
     tokenizerData.setWildcardKind (s_matchAnyChar);
   }
 
-  static NfaState getNfaState (final int index)
+  @Nullable
+  public static NfaState getNfaState (final int index)
   {
     if (index == -1)
       return null;
+
     for (final NfaState s : s_allStates)
-    {
       if (s.m_stateName == index)
         return s;
-    }
-    assert (false);
+
+    assert false;
     return null;
   }
 }

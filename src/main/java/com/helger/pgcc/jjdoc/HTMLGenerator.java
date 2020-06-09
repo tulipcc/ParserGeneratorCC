@@ -40,13 +40,13 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.string.StringHelper;
-import com.helger.pgcc.parser.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
-import com.helger.pgcc.parser.ExpNonTerminal;
-import com.helger.pgcc.parser.Expansion;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.TokenProduction;
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpNonTerminal;
+import com.helger.pgcc.parser.exp.Expansion;
 import com.helger.xml.serialize.write.EXMLCharMode;
 import com.helger.xml.serialize.write.EXMLIncorrectCharacterHandling;
 import com.helger.xml.serialize.write.EXMLSerializeVersion;

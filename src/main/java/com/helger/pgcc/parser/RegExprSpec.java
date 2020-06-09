@@ -33,6 +33,9 @@
  */
 package com.helger.pgcc.parser;
 
+import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
+import com.helger.pgcc.parser.exp.ExpAction;
+
 /**
  * The object type of entries in the vector "respecs" of class
  * "TokenProduction".

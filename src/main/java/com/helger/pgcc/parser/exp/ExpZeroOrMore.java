@@ -31,30 +31,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.helger.pgcc.parser;
+package com.helger.pgcc.parser.exp;
+
+import java.util.Set;
+
+import com.helger.pgcc.parser.Token;
 
 /**
- * Describes regular expressions which are referred to just by their name. This
- * means that a regular expression with this name has been declared earlier.
+ * Describes zero-or-more expansions (e.g., foo*).
  */
-
-public class ExpRJustName extends AbstractExpRegularExpression
+public class ExpZeroOrMore extends Expansion
 {
   /**
-   * "regexpr" points to the regular expression denoted by the name.
+   * The expansion which is repeated zero or more times.
    */
-  public AbstractExpRegularExpression m_regexpr;
+  public final Expansion m_expansion;
 
-  @Override
-  public Nfa generateNfa (final boolean ignoreCase)
-  {
-    return m_regexpr.generateNfa (ignoreCase);
-  }
-
-  public ExpRJustName (final Token token, final String image)
+  public ExpZeroOrMore (final Token token, final Expansion expansion)
   {
     this.setLine (token.beginLine);
     this.setColumn (token.beginColumn);
-    this.m_label = image;
+    this.m_expansion = expansion;
+    this.m_expansion.m_parent = this;
+  }
+
+  @Override
+  public StringBuilder dump (final int indent, final Set <? super Expansion> alreadyDumped)
+  {
+    final StringBuilder sb = super.dump (indent, alreadyDumped);
+    if (alreadyDumped.add (this))
+    {
+      sb.append (EOL).append (m_expansion.dump (indent + 1, alreadyDumped));
+    }
+    return sb;
   }
 }
