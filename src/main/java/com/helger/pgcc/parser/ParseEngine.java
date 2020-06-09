@@ -1068,10 +1068,10 @@ public class ParseEngine
     {
       final AbstractExpRegularExpression e_nrw = (AbstractExpRegularExpression) e;
       retval += "\n";
-      if (e_nrw.m_lhsTokens.size () != 0)
+      if (!e_nrw.getLhsTokens ().isEmpty ())
       {
-        m_codeGenerator.printTokenSetup (e_nrw.m_lhsTokens.get (0));
-        for (final Token aElement : e_nrw.m_lhsTokens)
+        m_codeGenerator.printTokenSetup (e_nrw.getLhsTokens ().get (0));
+        for (final Token aElement : e_nrw.getLhsTokens ())
         {
           t = aElement;
           retval += m_codeGenerator.getStringToPrint (t);
@@ -1080,16 +1080,16 @@ public class ParseEngine
         retval += " = ";
       }
       final String tail;
-      if (e_nrw.m_rhsToken == null)
+      if (e_nrw.getRhsToken () == null)
         tail = ");";
       else
         switch (eOutputLanguage)
         {
           case JAVA:
-            tail = ")." + e_nrw.m_rhsToken.image + ";";
+            tail = ")." + e_nrw.getRhsToken ().image + ";";
             break;
           case CPP:
-            tail = ")->" + e_nrw.m_rhsToken.image + ";";
+            tail = ")->" + e_nrw.getRhsToken ().image + ";";
             break;
           default:
             throw new UnsupportedOutputLanguageException (eOutputLanguage);

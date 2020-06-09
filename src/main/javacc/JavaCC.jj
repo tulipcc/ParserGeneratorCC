@@ -1282,10 +1282,10 @@ void expansion_unit(Container c) :
   |
     regular_expression(c)
   {
-    ((AbstractExpRegularExpression) c.member).m_lhsTokens = lhsTokens;
+    ((AbstractExpRegularExpression) c.member).setLhsTokens (lhsTokens);
     add_inline_regexpr((AbstractExpRegularExpression) c.member);
   }
-  [ "." t=<IDENTIFIER> { ((AbstractExpRegularExpression) c.member).m_rhsToken = t; } ]
+  [ "." t=<IDENTIFIER> { ((AbstractExpRegularExpression) c.member).setRhsToken (t); } ]
   )
 |
   t="(" expansion_choices(c) ")"

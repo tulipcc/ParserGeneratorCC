@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.string.StringHelper;
@@ -66,12 +68,12 @@ public abstract class AbstractExpRegularExpression extends Expansion
    * The LHS to which the token value of the regular expression is assigned. In
    * case there is no LHS, then the list remains empty.
    */
-  public List <Token> m_lhsTokens = new ArrayList <> ();
+  private final List <Token> m_lhsTokens = new ArrayList <> ();
 
   /**
    * We now allow qualified access to token members. Store it here.
    */
-  public Token m_rhsToken;
+  private Token m_rhsToken;
 
   /**
    * This flag is set if the regular expression has a label prefixed with the #
@@ -120,6 +122,33 @@ public abstract class AbstractExpRegularExpression extends Expansion
   public final void setOrdinal (final int n)
   {
     m_ordinal = n;
+  }
+
+  @Nonnull
+  public final List <Token> getLhsTokens ()
+  {
+    return m_lhsTokens;
+  }
+
+  /**
+   * @param lhsTokens
+   *        the lhsTokens to set
+   */
+  public final void setLhsTokens (@Nonnull final List <Token> lhsTokens)
+  {
+    m_lhsTokens.clear ();
+    m_lhsTokens.addAll (lhsTokens);
+  }
+
+  @Nullable
+  public final Token getRhsToken ()
+  {
+    return m_rhsToken;
+  }
+
+  public final void setRhsToken (@Nullable final Token rhsToken)
+  {
+    m_rhsToken = rhsToken;
   }
 
   public final int getWalkStatus ()

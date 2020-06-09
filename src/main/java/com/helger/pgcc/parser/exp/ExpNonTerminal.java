@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.Token;
 
@@ -50,7 +52,7 @@ public class ExpNonTerminal extends Expansion
    * The LHS to which the return value of the non-terminal is assigned. In case
    * there is no LHS, then the vector remains empty.
    */
-  private List <Token> m_lhsTokens = new ArrayList <> ();
+  private final List <Token> m_lhsTokens = new ArrayList <> ();
 
   /**
    * The name of the non-terminal.
@@ -76,20 +78,22 @@ public class ExpNonTerminal extends Expansion
   }
 
   /**
-   * @param lhsTokens
-   *        the lhsTokens to set
+   * @return the lhsTokens
    */
-  public void setLhsTokens (final List <Token> lhsTokens)
+  @Nonnull
+  public final List <Token> getLhsTokens ()
   {
-    this.m_lhsTokens = lhsTokens;
+    return m_lhsTokens;
   }
 
   /**
-   * @return the lhsTokens
+   * @param lhsTokens
+   *        the lhsTokens to set
    */
-  public List <Token> getLhsTokens ()
+  public final void setLhsTokens (@Nonnull final List <Token> lhsTokens)
   {
-    return m_lhsTokens;
+    m_lhsTokens.clear ();
+    m_lhsTokens.addAll (lhsTokens);
   }
 
   /**
