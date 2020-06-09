@@ -46,7 +46,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.lang.StackTraceHelper;
 import com.helger.commons.string.StringHelper;
 
-public class PGPrinter
+public final class PGPrinter
 {
   public static interface IPrinter extends AutoCloseable
   {

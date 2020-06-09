@@ -111,9 +111,7 @@ public class Main
     _printOptions ();
 
     PGPrinter.info ("EXAMPLE:");
-    PGPrinter.info ("    " +
-                    CPG.CMDLINE_NAME +
-                    " -OUTPUT_DIRECTORY=target/code -LOOKAHEAD:2 -debug_parser mygrammar.jj");
+    PGPrinter.info ("    " + CPG.CMDLINE_NAME + " -OUTPUT_DIRECTORY=target/code -LOOKAHEAD:2 -debug_parser mygrammar.jj");
     PGPrinter.info ();
   }
 
@@ -187,10 +185,7 @@ public class Main
       final Object default1 = optionInfo.getDefault ();
       PGPrinter.info ("    " +
                       _padRight (optionInfo.getName (), padLength + 1) +
-                      (default1 == null ? ""
-                                        : ("(default : " +
-                                           (default1.toString ().length () == 0 ? "<<empty>>" : default1) +
-                                           ")")));
+                      (default1 == null ? "" : ("(default : " + (default1.toString ().length () == 0 ? "<<empty>>" : default1) + ")")));
     }
   }
 
@@ -229,7 +224,7 @@ public class Main
   /**
    * The method to call to exercise the parser from other Java programs. It
    * returns an error code. See how the main program above uses this method.
-   * 
+   *
    * @param args
    *        main arguments
    * @return {@link ESuccess}
@@ -282,8 +277,7 @@ public class Main
         return ESuccess.FAILURE;
       }
 
-      final Reader aReader = FileHelper.getBufferedReader (new File (args[args.length - 1]),
-                                                           Options.getGrammarEncoding ());
+      final Reader aReader = FileHelper.getBufferedReader (new File (args[args.length - 1]), Options.getGrammarEncoding ());
       if (aReader == null)
       {
         PGPrinter.info ("File " + args[args.length - 1] + " not found.");
@@ -308,14 +302,12 @@ public class Main
 
       // 2012/05/02 - Moved this here as cannot evaluate output language
       // until the cc file has been processed. Was previously setting the 'lg'
-      // variable
-      // to a lexer before the configuration override in the cc file had been
-      // read.
+      // variable to a lexer before the configuration override in the cc file
+      // had been read.
       final EOutputLanguage eOutputLanguage = Options.getOutputLanguage ();
 
       // 2013/07/22 Java Modern is a
-      final boolean isJavaModern = eOutputLanguage.isJava () &&
-                                   Options.getJavaTemplateType ().equals (Options.JAVA_TEMPLATE_TYPE_MODERN);
+      final boolean isJavaModern = eOutputLanguage.isJava () && Options.getJavaTemplateType ().equals (Options.JAVA_TEMPLATE_TYPE_MODERN);
 
       JavaCCGlobals.createOutputDir (Options.getOutputDirectory ());
 
@@ -387,19 +379,11 @@ public class Main
     }
     catch (final MetaParseException e)
     {
-      PGPrinter.error ("Detected " +
-                       JavaCCErrors.getErrorCount () +
-                       " errors and " +
-                       JavaCCErrors.getWarningCount () +
-                       " warnings.");
+      PGPrinter.error ("Detected " + JavaCCErrors.getErrorCount () + " errors and " + JavaCCErrors.getWarningCount () + " warnings.");
     }
     catch (final ParseException e)
     {
-      PGPrinter.error ("Detected " +
-                       (JavaCCErrors.getErrorCount () + 1) +
-                       " errors and " +
-                       JavaCCErrors.getWarningCount () +
-                       " warnings.",
+      PGPrinter.error ("Detected " + (JavaCCErrors.getErrorCount () + 1) + " errors and " + JavaCCErrors.getWarningCount () + " warnings.",
                        e);
     }
     return ESuccess.FAILURE;
