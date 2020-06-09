@@ -36,6 +36,9 @@ package com.helger.pgcc.parser.exp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import com.helger.commons.ValueEnforcer;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.CharacterRange;
 import com.helger.pgcc.parser.ICCCharacter;
@@ -51,19 +54,6 @@ import com.helger.pgcc.parser.SingleCharacter;
 
 public class ExpRCharacterList extends AbstractExpRegularExpression
 {
-
-  /**
-   * This is true if a tilde (~) appears before the character list. Otherwise,
-   * this is false.
-   */
-  public boolean m_negated_list = false;
-
-  /**
-   * This is the list of descriptors of the character list. Each list entry will
-   * narrow to either SingleCharacter or to CharacterRange.
-   */
-  public List <ICCCharacter> m_descriptors = new ArrayList <> ();
-
   private static final char [] DIFF_LOWER_CASE_RANGES = { 65,
                                                           90,
                                                           192,
@@ -1594,6 +1584,19 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
                                                           0xfffe,
                                                           0xffff,
                                                           0xffff };
+  /**
+   * This is true if a tilde (~) appears before the character list. Otherwise,
+   * this is false.
+   */
+  private boolean m_negated_list = false;
+
+  /**
+   * This is the list of descriptors of the character list. Each list entry will
+   * narrow to either SingleCharacter or to CharacterRange.
+   */
+  private List <ICCCharacter> m_descriptors = new ArrayList <> ();
+
+  private boolean m_transformed = false;
 
   void toCaseNeutral ()
   {
@@ -1740,8 +1743,6 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     }
   }
 
-  boolean m_transformed = false;
-
   @Override
   public Nfa generateNfa (final boolean ignoreCase)
   {
@@ -1838,7 +1839,7 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     return retVal;
   }
 
-  private static boolean overlaps (final CharacterRange r1, final CharacterRange r2)
+  private static boolean _overlaps (final CharacterRange r1, final CharacterRange r2)
   {
     return r1.getLeft () <= r2.getRight () && r1.getRight () > r2.getRight ();
   }
@@ -1918,12 +1919,12 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
               continue Outer;
             }
 
-            if (overlaps (range, rtmp))
+            if (_overlaps (range, rtmp))
             {
               range.setLeft ((char) (rtmp.getRight () + 1));
             }
             else
-              if (overlaps (rtmp, range))
+              if (_overlaps (rtmp, range))
               {
                 final CharacterRange tmp = range;
                 rtmp.setRight ((char) (range.getLeft () + 1));
@@ -2061,5 +2062,27 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
   {
     // Return true only if it is ~[]
     return m_negated_list && (m_descriptors == null || m_descriptors.size () == 0);
+  }
+
+  public final boolean isNegatedList ()
+  {
+    return m_negated_list;
+  }
+
+  public final void setNegatedList (final boolean b)
+  {
+    m_negated_list = b;
+  }
+
+  @Nonnull
+  public final List <ICCCharacter> getDescriptors ()
+  {
+    return m_descriptors;
+  }
+
+  public final void addDescriptor (@Nonnull final ICCCharacter a)
+  {
+    ValueEnforcer.notNull (a, "CCCharacter");
+    m_descriptors.add (a);
   }
 }

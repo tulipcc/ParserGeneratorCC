@@ -116,10 +116,10 @@ public class ExpRChoice extends AbstractExpRegularExpression
 
       if (curRE instanceof ExpRCharacterList)
       {
-        if (((ExpRCharacterList) curRE).m_negated_list)
+        if (((ExpRCharacterList) curRE).isNegatedList ())
           ((ExpRCharacterList) curRE).removeNegation ();
 
-        final List <ICCCharacter> tmp = ((ExpRCharacterList) curRE).m_descriptors;
+        final List <ICCCharacter> tmp = ((ExpRCharacterList) curRE).getDescriptors ();
 
         if (curCharList == null)
         {
@@ -131,7 +131,7 @@ public class ExpRChoice extends AbstractExpRegularExpression
           getChoices ().remove (i--);
 
         for (int j = tmp.size (); j-- > 0;)
-          curCharList.m_descriptors.add (tmp.get (j));
+          curCharList.addDescriptor (tmp.get (j));
       }
 
     }

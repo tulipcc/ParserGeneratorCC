@@ -1477,16 +1477,16 @@ void character_list(Container c1) :
 {
   ["~"
   {
-    chlist.m_negated_list = true;
+    chlist.setNegatedList (true);
   }
   ]
   "[" [ character_descriptor(c2)
   {
-    chlist.m_descriptors.add((ICCCharacter) c2.member);
+    chlist.addDescriptor((ICCCharacter) c2.member);
   }
         ( "," character_descriptor(c2)
   {
-    chlist.m_descriptors.add((ICCCharacter) c2.member);
+    chlist.addDescriptor((ICCCharacter) c2.member);
   }
         )*
       ]

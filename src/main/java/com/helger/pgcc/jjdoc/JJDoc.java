@@ -407,14 +407,19 @@ public final class JJDoc
     if (re instanceof ExpRCharacterList)
     {
       final ExpRCharacterList cl = (ExpRCharacterList) re;
-      if (cl.m_negated_list)
+      if (cl.isNegatedList ())
       {
         returnString += "~";
       }
       returnString += "[";
-      for (final Iterator <ICCCharacter> it = cl.m_descriptors.iterator (); it.hasNext ();)
+      boolean bFirst = true;
+      for (final ICCCharacter o : cl.getDescriptors ())
       {
-        final ICCCharacter o = it.next ();
+        if (bFirst)
+          bFirst = false;
+        else
+          returnString += ",";
+
         if (o instanceof SingleCharacter)
         {
           returnString += "\"";
@@ -437,10 +442,6 @@ public final class JJDoc
           {
             PGPrinter.error ("Oops: unknown character list element type.");
           }
-        if (it.hasNext ())
-        {
-          returnString += ",";
-        }
       }
       returnString += "]";
     }
