@@ -55,30 +55,30 @@ public class ExpChoice extends Expansion
 
   public ExpChoice (final Token token)
   {
-    this.setLine (token.beginLine);
-    this.setColumn (token.beginColumn);
+    setLine (token.beginLine);
+    setColumn (token.beginColumn);
   }
 
   public ExpChoice (final Expansion expansion)
   {
-    this.setLine (expansion.getLine ());
-    this.setColumn (expansion.getColumn ());
-    this.getChoices ().add (expansion);
+    setLine (expansion.getLine ());
+    setColumn (expansion.getColumn ());
+    m_choices.add (expansion);
   }
 
   /**
    * @param choices
    *        the choices to set
    */
-  public void setChoices (final List <Expansion> choices)
+  public final void setChoices (final List <Expansion> choices)
   {
-    this.m_choices = choices;
+    m_choices = choices;
   }
 
   /**
    * @return the choices
    */
-  public List <Expansion> getChoices ()
+  public final List <Expansion> getChoices ()
   {
     return m_choices;
   }

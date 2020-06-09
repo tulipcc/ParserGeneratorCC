@@ -83,17 +83,17 @@ public final class ExpansionTreeWalker
         else
           if (node instanceof ExpOneOrMore)
           {
-            preOrderWalk (((ExpOneOrMore) node).m_expansion, opObj);
+            preOrderWalk (((ExpOneOrMore) node).getExpansion (), opObj);
           }
           else
             if (node instanceof ExpZeroOrMore)
             {
-              preOrderWalk (((ExpZeroOrMore) node).m_expansion, opObj);
+              preOrderWalk (((ExpZeroOrMore) node).getExpansion (), opObj);
             }
             else
               if (node instanceof ExpZeroOrOne)
               {
-                preOrderWalk (((ExpZeroOrOne) node).m_expansion, opObj);
+                preOrderWalk (((ExpZeroOrOne) node).getExpansion (), opObj);
               }
               else
                 if (node instanceof ExpLookahead)
@@ -174,17 +174,17 @@ public final class ExpansionTreeWalker
         else
           if (node instanceof ExpOneOrMore)
           {
-            postOrderWalk (((ExpOneOrMore) node).m_expansion, opObj);
+            postOrderWalk (((ExpOneOrMore) node).getExpansion (), opObj);
           }
           else
             if (node instanceof ExpZeroOrMore)
             {
-              postOrderWalk (((ExpZeroOrMore) node).m_expansion, opObj);
+              postOrderWalk (((ExpZeroOrMore) node).getExpansion (), opObj);
             }
             else
               if (node instanceof ExpZeroOrOne)
               {
-                postOrderWalk (((ExpZeroOrOne) node).m_expansion, opObj);
+                postOrderWalk (((ExpZeroOrOne) node).getExpansion (), opObj);
               }
               else
                 if (node instanceof ExpLookahead)

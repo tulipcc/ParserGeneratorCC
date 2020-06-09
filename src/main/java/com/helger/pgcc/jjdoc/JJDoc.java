@@ -39,7 +39,17 @@ import java.util.List;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.parser.*;
+import com.helger.pgcc.parser.BNFProduction;
+import com.helger.pgcc.parser.CharacterRange;
+import com.helger.pgcc.parser.CodeProductionCpp;
+import com.helger.pgcc.parser.CodeProductionJava;
+import com.helger.pgcc.parser.ICCCharacter;
+import com.helger.pgcc.parser.JavaCCGlobals;
+import com.helger.pgcc.parser.NormalProduction;
+import com.helger.pgcc.parser.RegExprSpec;
+import com.helger.pgcc.parser.SingleCharacter;
+import com.helger.pgcc.parser.Token;
+import com.helger.pgcc.parser.TokenProduction;
 import com.helger.pgcc.parser.exp.*;
 
 /**
@@ -95,8 +105,7 @@ public final class JJDoc
    * instanceof TokenProduction) ); }
    */
 
-  private static void _emitTokenProductions (final IDocGenerator gen,
-                                             final List <TokenProduction> prods) throws IOException
+  private static void _emitTokenProductions (final IDocGenerator gen, final List <TokenProduction> prods) throws IOException
   {
     gen.tokensStart ();
     // FIXME there are many empty productions here
@@ -167,8 +176,7 @@ public final class JJDoc
     return token;
   }
 
-  private static void _emitNormalProductions (final IDocGenerator gen,
-                                              final List <NormalProduction> prods) throws IOException
+  private static void _emitNormalProductions (final IDocGenerator gen, final List <NormalProduction> prods) throws IOException
   {
     gen.nonterminalsStart ();
     for (final NormalProduction np : prods)
@@ -301,12 +309,11 @@ public final class JJDoc
   private static void _emitExpansionOneOrMore (final ExpOneOrMore o, final IDocGenerator gen) throws IOException
   {
     gen.text ("( ");
-    _emitExpansionTree (o.m_expansion, gen);
+    _emitExpansionTree (o.getExpansion (), gen);
     gen.text (" )+");
   }
 
-  private static void _emitExpansionRegularExpression (final AbstractExpRegularExpression r,
-                                                       final IDocGenerator gen) throws IOException
+  private static void _emitExpansionRegularExpression (final AbstractExpRegularExpression r, final IDocGenerator gen) throws IOException
   {
     final String reRendered = emitRE (r);
     if (StringHelper.hasText (reRendered))
@@ -361,14 +368,14 @@ public final class JJDoc
   private static void _emitExpansionZeroOrMore (final ExpZeroOrMore z, final IDocGenerator gen) throws IOException
   {
     gen.text ("( ");
-    _emitExpansionTree (z.m_expansion, gen);
+    _emitExpansionTree (z.getExpansion (), gen);
     gen.text (" )*");
   }
 
   private static void _emitExpansionZeroOrOne (final ExpZeroOrOne z, final IDocGenerator gen) throws IOException
   {
     gen.text ("( ");
-    _emitExpansionTree (z.m_expansion, gen);
+    _emitExpansionTree (z.getExpansion (), gen);
     gen.text (" )?");
   }
 

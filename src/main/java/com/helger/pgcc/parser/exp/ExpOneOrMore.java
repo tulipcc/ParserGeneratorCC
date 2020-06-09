@@ -47,7 +47,7 @@ public class ExpOneOrMore extends Expansion
   /**
    * The expansion which is repeated one or more times.
    */
-  public Expansion m_expansion;
+  private final Expansion m_expansion;
 
   public ExpOneOrMore (@Nonnull final Token t, @Nonnull final Expansion e)
   {
@@ -55,6 +55,12 @@ public class ExpOneOrMore extends Expansion
     setColumn (t.beginColumn);
     m_expansion = e;
     e.setParent (this);
+  }
+
+  @Nonnull
+  public final Expansion getExpansion ()
+  {
+    return m_expansion;
   }
 
   @Override

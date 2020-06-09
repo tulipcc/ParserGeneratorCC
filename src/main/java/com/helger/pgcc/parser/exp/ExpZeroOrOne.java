@@ -35,6 +35,8 @@ package com.helger.pgcc.parser.exp;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.helger.pgcc.parser.Token;
 
 /**
@@ -45,7 +47,7 @@ public class ExpZeroOrOne extends Expansion
   /**
    * The expansion which is repeated zero or one times.
    */
-  public Expansion m_expansion;
+  private final Expansion m_expansion;
 
   public ExpZeroOrOne (final Token t, final Expansion e)
   {
@@ -53,6 +55,12 @@ public class ExpZeroOrOne extends Expansion
     setColumn (t.beginColumn);
     m_expansion = e;
     e.setParent (this);
+  }
+
+  @Nonnull
+  public final Expansion getExpansion ()
+  {
+    return m_expansion;
   }
 
   @Override

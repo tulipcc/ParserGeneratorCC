@@ -42,7 +42,6 @@ package com.helger.pgcc.parser;
 /**
  * Describes the input token stream.
  */
-@SuppressWarnings ("hiding")
 public class Token
 {
   /**
@@ -94,14 +93,6 @@ public class Token
   public Token ()
   {}
 
-  // /**
-  // * Constructs a new token for the specified Image.
-  // */
-  // public Token(int kind)
-  // {
-  // this(kind, null);
-  // }
-  //
   /**
    * Constructs a new token for the specified Image and Kind.
    *
@@ -172,7 +163,7 @@ public class Token
    * IDToken(ofKind, image); to the following switch statement. Then you can
    * cast matchedToken variable to the appropriate type and use it in your
    * lexical actions.
-   * 
+   *
    * @param ofKind
    *        token kind
    * @param image

@@ -124,7 +124,7 @@ public final class LookaheadWalk
       final ExpOneOrMore om = (ExpOneOrMore) exp;
       while (true)
       {
-        v = genFirstSet (v, om.m_expansion);
+        v = genFirstSet (v, om.getExpansion ());
         if (v.size () == 0)
           break;
         retval.addAll (v);
@@ -139,7 +139,7 @@ public final class LookaheadWalk
       final ExpZeroOrMore zm = (ExpZeroOrMore) exp;
       while (true)
       {
-        v = genFirstSet (v, zm.m_expansion);
+        v = genFirstSet (v, zm.getExpansion ());
         if (v.size () == 0)
           break;
         retval.addAll (v);
@@ -151,7 +151,7 @@ public final class LookaheadWalk
     {
       final List <MatchInfo> retval = new ArrayList <> ();
       retval.addAll (partialMatches);
-      retval.addAll (genFirstSet (partialMatches, ((ExpZeroOrOne) exp).m_expansion));
+      retval.addAll (genFirstSet (partialMatches, ((ExpZeroOrOne) exp).getExpansion ()));
       return retval;
     }
 

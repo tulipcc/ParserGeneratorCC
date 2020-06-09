@@ -661,7 +661,7 @@ public class Semanticize
 
     if (exp instanceof ExpOneOrMore)
     {
-      return emptyExpansionExists (((ExpOneOrMore) exp).m_expansion);
+      return emptyExpansionExists (((ExpOneOrMore) exp).getExpansion ());
     }
 
     if (exp instanceof ExpZeroOrMore || exp instanceof ExpZeroOrOne)
@@ -722,17 +722,17 @@ public class Semanticize
     else
       if (exp instanceof ExpOneOrMore)
       {
-        _addLeftMost (prod, ((ExpOneOrMore) exp).m_expansion);
+        _addLeftMost (prod, ((ExpOneOrMore) exp).getExpansion ());
       }
       else
         if (exp instanceof ExpZeroOrMore)
         {
-          _addLeftMost (prod, ((ExpZeroOrMore) exp).m_expansion);
+          _addLeftMost (prod, ((ExpZeroOrMore) exp).getExpansion ());
         }
         else
           if (exp instanceof ExpZeroOrOne)
           {
-            _addLeftMost (prod, ((ExpZeroOrOne) exp).m_expansion);
+            _addLeftMost (prod, ((ExpZeroOrOne) exp).getExpansion ());
           }
           else
             if (exp instanceof ExpChoice)
@@ -1050,7 +1050,7 @@ public class Semanticize
     {
       if (e instanceof ExpOneOrMore)
       {
-        if (Semanticize.emptyExpansionExists (((ExpOneOrMore) e).m_expansion))
+        if (Semanticize.emptyExpansionExists (((ExpOneOrMore) e).getExpansion ()))
         {
           JavaCCErrors.semantic_error (e, "Expansion within \"(...)+\" can be matched by empty string.");
         }
@@ -1058,7 +1058,7 @@ public class Semanticize
       else
         if (e instanceof ExpZeroOrMore)
         {
-          if (Semanticize.emptyExpansionExists (((ExpZeroOrMore) e).m_expansion))
+          if (Semanticize.emptyExpansionExists (((ExpZeroOrMore) e).getExpansion ()))
           {
             JavaCCErrors.semantic_error (e, "Expansion within \"(...)*\" can be matched by empty string.");
           }
@@ -1066,7 +1066,7 @@ public class Semanticize
         else
           if (e instanceof ExpZeroOrOne)
           {
-            if (Semanticize.emptyExpansionExists (((ExpZeroOrOne) e).m_expansion))
+            if (Semanticize.emptyExpansionExists (((ExpZeroOrOne) e).getExpansion ()))
             {
               JavaCCErrors.semantic_error (e, "Expansion within \"(...)?\" can be matched by empty string.");
             }
@@ -1100,27 +1100,27 @@ public class Semanticize
         if (e instanceof ExpOneOrMore)
         {
           final ExpOneOrMore exp = (ExpOneOrMore) e;
-          if (Options.isForceLaCheck () || (implicitLA (exp.m_expansion) && Options.getLookahead () == 1))
+          if (Options.isForceLaCheck () || (implicitLA (exp.getExpansion ()) && Options.getLookahead () == 1))
           {
-            LookaheadCalc.ebnfCalc (exp, exp.m_expansion);
+            LookaheadCalc.ebnfCalc (exp, exp.getExpansion ());
           }
         }
         else
           if (e instanceof ExpZeroOrMore)
           {
             final ExpZeroOrMore exp = (ExpZeroOrMore) e;
-            if (Options.isForceLaCheck () || (implicitLA (exp.m_expansion) && Options.getLookahead () == 1))
+            if (Options.isForceLaCheck () || (implicitLA (exp.getExpansion ()) && Options.getLookahead () == 1))
             {
-              LookaheadCalc.ebnfCalc (exp, exp.m_expansion);
+              LookaheadCalc.ebnfCalc (exp, exp.getExpansion ());
             }
           }
           else
             if (e instanceof ExpZeroOrOne)
             {
               final ExpZeroOrOne exp = (ExpZeroOrOne) e;
-              if (Options.isForceLaCheck () || (implicitLA (exp.m_expansion) && Options.getLookahead () == 1))
+              if (Options.isForceLaCheck () || (implicitLA (exp.getExpansion ()) && Options.getLookahead () == 1))
               {
-                LookaheadCalc.ebnfCalc (exp, exp.m_expansion);
+                LookaheadCalc.ebnfCalc (exp, exp.getExpansion ());
               }
             }
     }

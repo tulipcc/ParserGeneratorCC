@@ -63,7 +63,7 @@ public final class ExpansionTest
     final ExpZeroOrOne zoo = new ExpZeroOrOne (m_aToken, m_aExp);
     assertEquals (m_aToken.beginColumn, zoo.getColumn ());
     assertEquals (m_aToken.beginLine, zoo.getLine ());
-    assertEquals (m_aExp, zoo.m_expansion);
+    assertEquals (m_aExp, zoo.getExpansion ());
     assertSame (m_aExp.getParent (), zoo);
   }
 
@@ -73,7 +73,7 @@ public final class ExpansionTest
     final ExpZeroOrMore zom = new ExpZeroOrMore (m_aToken, m_aExp);
     assertEquals (m_aToken.beginColumn, zom.getColumn ());
     assertEquals (m_aToken.beginLine, zom.getLine ());
-    assertEquals (m_aExp, zom.m_expansion);
+    assertEquals (m_aExp, zom.getExpansion ());
     assertEquals (m_aExp.getParent (), zom);
   }
 
@@ -104,7 +104,7 @@ public final class ExpansionTest
     final ExpOneOrMore oom = new ExpOneOrMore (m_aToken, rce);
     assertEquals (m_aToken.beginColumn, oom.getColumn ());
     assertEquals (m_aToken.beginLine, oom.getLine ());
-    assertEquals (rce, oom.m_expansion);
+    assertEquals (rce, oom.getExpansion ());
     assertEquals (rce.getParent (), oom);
   }
 
@@ -115,18 +115,6 @@ public final class ExpansionTest
     assertEquals (m_aToken.beginColumn, r.getColumn ());
     assertEquals (m_aToken.beginLine, r.getLine ());
     assertEquals ("hey", r.m_image);
-  }
-
-  @Test
-  public void testChoiceConstructor ()
-  {
-    ExpChoice c = new ExpChoice (m_aToken);
-    assertEquals (m_aToken.beginColumn, c.getColumn ());
-    assertEquals (m_aToken.beginLine, c.getLine ());
-    c = new ExpChoice (m_aExp);
-    assertEquals (m_aExp.getColumn (), c.getColumn ());
-    assertEquals (m_aExp.getLine (), c.getLine ());
-    assertEquals (m_aExp, c.getChoices ().get (0));
   }
 
   @Test

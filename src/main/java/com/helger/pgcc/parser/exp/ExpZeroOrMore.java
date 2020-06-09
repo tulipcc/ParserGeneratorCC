@@ -47,7 +47,7 @@ public class ExpZeroOrMore extends Expansion
   /**
    * The expansion which is repeated zero or more times.
    */
-  public final Expansion m_expansion;
+  private final Expansion m_expansion;
 
   public ExpZeroOrMore (@Nonnull final Token token, @Nonnull final Expansion e)
   {
@@ -55,6 +55,12 @@ public class ExpZeroOrMore extends Expansion
     setColumn (token.beginColumn);
     m_expansion = e;
     e.setParent (this);
+  }
+
+  @Nonnull
+  public final Expansion getExpansion ()
+  {
+    return m_expansion;
   }
 
   @Override
