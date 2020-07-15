@@ -92,10 +92,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     m_codeGenerator.genCodeLine ("\n}");
     if (!Options.isBuildParser ())
       return;
-    final String fileName = Options.getOutputDirectory () +
-                            File.separator +
-                            tokenizerData.m_parserName +
-                            "TokenManager.java";
+    final String fileName = Options.getOutputDirectory () + File.separator + tokenizerData.m_parserName + "TokenManager.java";
     m_codeGenerator.saveOutput (fileName);
   }
 

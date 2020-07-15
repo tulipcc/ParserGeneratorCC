@@ -214,13 +214,10 @@ public class TextGenerator implements IDocGenerator
       JJDocGlobals.s_output_file = JJDocOptions.getOutputFile ();
     }
 
-    final Writer aWriter = FileHelper.getBufferedWriter (new File (JJDocGlobals.s_output_file),
-                                                         Options.getOutputEncoding ());
+    final Writer aWriter = FileHelper.getBufferedWriter (new File (JJDocGlobals.s_output_file), Options.getOutputEncoding ());
     if (aWriter != null)
       return new PrintWriter (aWriter);
-    PGPrinter.error ("JJDoc: can't open output stream on file " +
-                     JJDocGlobals.s_output_file +
-                     ".  Using standard output.");
+    PGPrinter.error ("JJDoc: can't open output stream on file " + JJDocGlobals.s_output_file + ".  Using standard output.");
     return PGPrinter.getOutWriter ();
   }
 }

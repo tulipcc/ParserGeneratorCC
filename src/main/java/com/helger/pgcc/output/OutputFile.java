@@ -292,11 +292,7 @@ public class OutputFile implements AutoCloseable
 
       // Write the headers....
       final String version = m_sCompatibleVersion == null ? PGVersion.VERSION_NUMBER : m_sCompatibleVersion;
-      m_aPW.println ("/* " +
-                     JavaCCGlobals.getIdString (m_sToolName, m_aFile.getName ()) +
-                     " Version " +
-                     version +
-                     " */");
+      m_aPW.println ("/* " + JavaCCGlobals.getIdString (m_sToolName, m_aFile.getName ()) + " Version " + version + " */");
       if (m_aOptions != null)
       {
         m_aPW.println ("/* " + OPTIONS_PREFIX + ":" + Options.getOptionsString (m_aOptions) + " */");

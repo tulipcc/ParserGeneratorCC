@@ -115,14 +115,12 @@ public class OutputFileGenerator
   public void generate (@WillNotClose final Writer out) throws IOException
   {
     final IReadableResource aRes = m_bReadFromClasspath ? new ClassPathResource (m_sTemplateName)
-                                                        : new FileSystemResource ("src/main/resources" +
-                                                                                  m_sTemplateName);
+                                                        : new FileSystemResource ("src/main/resources" + m_sTemplateName);
     final InputStream is = aRes.getInputStream ();
     if (is == null)
       throw new IOException ("Invalid template name: " + m_sTemplateName);
 
-    try (final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is,
-                                                                                                    TEMPLATE_FILE_CHARSET)))
+    try (final NonBlockingBufferedReader in = new NonBlockingBufferedReader (new InputStreamReader (is, TEMPLATE_FILE_CHARSET)))
     {
       _process (in, out, false);
     }
@@ -275,9 +273,7 @@ public class OutputFileGenerator
     out.write (m_eNewLineMode.getText ());
   }
 
-  private void _process (final NonBlockingBufferedReader in,
-                         final Writer out,
-                         final boolean ignoring) throws IOException
+  private void _process (final NonBlockingBufferedReader in, final Writer out, final boolean ignoring) throws IOException
   {
     // out.println("*** process ignore=" + ignoring + " : " + peekLine(in));
     while (_peekLine (in) != null)
@@ -303,9 +299,7 @@ public class OutputFileGenerator
     out.flush ();
   }
 
-  private void _processIf (final NonBlockingBufferedReader in,
-                           final Writer out,
-                           final boolean ignoring) throws IOException
+  private void _processIf (final NonBlockingBufferedReader in, final Writer out, final boolean ignoring) throws IOException
   {
     String line = _getLine (in).trim ();
     assert line.trim ().startsWith ("#if");

@@ -296,9 +296,7 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
   {
     if (arg != null)
     {
-      io.print ("/*@bgen(jjtree) " +
-                arg +
-                (Options.booleanValue (Options.USEROPTION__CPP_IGNORE_ACTIONS) ? "" : " */"));
+      io.print ("/*@bgen(jjtree) " + arg + (Options.booleanValue (Options.USEROPTION__CPP_IGNORE_ACTIONS) ? "" : " */"));
     }
     else
     {
@@ -352,24 +350,12 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
     if (JJTreeOptions.getNodeFactory ().equals ("*"))
     {
       // Old-style multiple-implementations.
-      io.println ("(" +
-                  nodeClass +
-                  "*)" +
-                  nodeClass +
-                  "::jjtCreate(" +
-                  parserArg +
-                  ns.m_node_descriptor.getNodeId () +
-                  ");");
+      io.println ("(" + nodeClass + "*)" + nodeClass + "::jjtCreate(" + parserArg + ns.m_node_descriptor.getNodeId () + ");");
     }
     else
       if (JJTreeOptions.getNodeFactory ().length () > 0)
       {
-        io.println ("(" +
-                    nodeClass +
-                    "*)nodeFactory->jjtCreate(" +
-                    parserArg +
-                    ns.m_node_descriptor.getNodeId () +
-                    ");");
+        io.println ("(" + nodeClass + "*)nodeFactory->jjtCreate(" + parserArg + ns.m_node_descriptor.getNodeId () + ");");
       }
       else
       {
@@ -445,11 +431,7 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
 
   }
 
-  void tryTokenSequence (final NodeScope ns,
-                         final JJTreeIO io,
-                         final String indent,
-                         final Token first,
-                         final Token last)
+  void tryTokenSequence (final NodeScope ns, final JJTreeIO io, final String indent, final Token first, final Token last)
   {
     io.println (indent + "try {");
     closeJJTreeComment (io);
@@ -479,9 +461,7 @@ public class CodeGeneratorCpp extends DefaultJJTreeVisitor
     closeJJTreeComment (io);
   }
 
-  private static void findThrown (final NodeScope ns,
-                                  final Map <String, String> thrown_set,
-                                  final JJTreeNode expansion_unit)
+  private static void findThrown (final NodeScope ns, final Map <String, String> thrown_set, final JJTreeNode expansion_unit)
   {
     if (expansion_unit instanceof ASTBNFNonTerminal)
     {

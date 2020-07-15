@@ -128,14 +128,12 @@ public final class NodeFilesCpp
 
   public static String jjtreeIncludeFile ()
   {
-    return new File (JJTreeOptions.getJJTreeOutputDirectory (),
-                     JJTreeGlobals.s_parserName + "Tree.h").getAbsolutePath ();
+    return new File (JJTreeOptions.getJJTreeOutputDirectory (), JJTreeGlobals.s_parserName + "Tree.h").getAbsolutePath ();
   }
 
   public static String jjtreeImplFile ()
   {
-    return new File (JJTreeOptions.getJJTreeOutputDirectory (),
-                     JJTreeGlobals.s_parserName + "Tree.cc").getAbsolutePath ();
+    return new File (JJTreeOptions.getJJTreeOutputDirectory (), JJTreeGlobals.s_parserName + "Tree.cc").getAbsolutePath ();
   }
 
   public static String jjtreeIncludeFile (final String s)

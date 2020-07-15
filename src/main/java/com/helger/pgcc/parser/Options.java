@@ -407,8 +407,7 @@ public class Options
       return ((Boolean) value).booleanValue () ? "*" : "";
     }
 
-    if (name.equalsIgnoreCase (USEROPTION__JDK_VERSION) &&
-        (value.getClass () == String.class || value.getClass () == Integer.class))
+    if (name.equalsIgnoreCase (USEROPTION__JDK_VERSION) && (value.getClass () == String.class || value.getClass () == Integer.class))
     {
       final EJDKVersion ret = EJDKVersion.getFromStringOrNull (value.toString ());
       if (ret != null)
@@ -453,12 +452,7 @@ public class Options
       final boolean bIsInvalidInteger = aObject instanceof Integer && ((Integer) aRealSrc).intValue () <= 0;
       if (aExistingValue.getClass () != aObject.getClass () || bIsInvalidInteger)
       {
-        JavaCCErrors.warning (valueloc,
-                              "Bad option value \"" +
-                                        aRealSrc +
-                                        "\" for \"" +
-                                        name +
-                                        "\".  Option setting will be ignored.");
+        JavaCCErrors.warning (valueloc, "Bad option value \"" + aRealSrc + "\" for \"" + name + "\".  Option setting will be ignored.");
         return;
       }
 
@@ -511,9 +505,7 @@ public class Options
                                           "\" for \"" +
                                           name +
                                           "\".  Option setting will be ignored. Valid options are: " +
-                                          StringHelper.getImplodedMapped (", ",
-                                                                          EOutputLanguage.values (),
-                                                                          EOutputLanguage::getID));
+                                          StringHelper.getImplodedMapped (", ", EOutputLanguage.values (), EOutputLanguage::getID));
           return;
         }
         s_language = eOutLanguage;
@@ -659,11 +651,9 @@ public class Options
   {
     if (isDebugLookahead () && !isDebugParser ())
     {
-      if (s_cmdLineSetting.contains (USEROPTION__DEBUG_PARSER) ||
-          s_inputFileSetting.contains (USEROPTION__DEBUG_PARSER))
+      if (s_cmdLineSetting.contains (USEROPTION__DEBUG_PARSER) || s_inputFileSetting.contains (USEROPTION__DEBUG_PARSER))
       {
-        JavaCCErrors.warning ("True setting of option DEBUG_LOOKAHEAD overrides " +
-                              "false setting of option DEBUG_PARSER.");
+        JavaCCErrors.warning ("True setting of option DEBUG_LOOKAHEAD overrides " + "false setting of option DEBUG_PARSER.");
       }
       s_optionValues.put (USEROPTION__DEBUG_PARSER, Boolean.TRUE);
     }

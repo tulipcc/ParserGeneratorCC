@@ -448,9 +448,7 @@ public class NfaStateTest extends AbstractJavaCCTestCase
     final CodeGenerator cg = new CodeGenerator ();
     NfaState.dumpStatesForStateJava (cg);
     final String result = cg.getGeneratedCode ().replaceAll ("\r", "");
-    assertEquals ("protected static final class States {\n" +
-                  "  protected static final int[][][] statesForState = null;\n" +
-                  "}",
+    assertEquals ("protected static final class States {\n" + "  protected static final int[][][] statesForState = null;\n" + "}",
                   result.trim ());
   }
 

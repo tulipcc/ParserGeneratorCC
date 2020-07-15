@@ -135,10 +135,9 @@ public class FilesJava
   public static void gen_CharStream (final IJavaResourceTemplateLocations locations)
   {
     final File file = new File (Options.getOutputDirectory (), "CharStream.java");
-    try (
-        final OutputFile outputFile = new OutputFile (file,
-                                                      charStreamVersion,
-                                                      new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       charStreamVersion,
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -148,8 +147,7 @@ public class FilesJava
         _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-        final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (),
-                                                                       options);
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getCharStreamTemplateResourceUrl (), options);
         generator.setReadFromClasspath (s_bReadFromClassPath);
         generator.generate (ostr);
       }
@@ -164,10 +162,9 @@ public class FilesJava
   public static void gen_AbstractCharStream (final IJavaResourceTemplateLocations locations)
   {
     final File file = new File (Options.getOutputDirectory (), "AbstractCharStream.java");
-    try (
-        final OutputFile outputFile = new OutputFile (file,
-                                                      charStreamVersion,
-                                                      new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       charStreamVersion,
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -178,8 +175,7 @@ public class FilesJava
         _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-        final OutputFileGenerator generator = new OutputFileGenerator (locations.getAbstractCharStreamTemplateResourceUrl (),
-                                                                       options);
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getAbstractCharStreamTemplateResourceUrl (), options);
         generator.setReadFromClasspath (s_bReadFromClassPath);
         generator.generate (ostr);
       }
@@ -194,10 +190,9 @@ public class FilesJava
   public static void gen_JavaCharStream (final IJavaResourceTemplateLocations locations)
   {
     final File file = new File (Options.getOutputDirectory (), "JavaCharStream.java");
-    try (
-        final OutputFile outputFile = new OutputFile (file,
-                                                      charStreamVersion,
-                                                      new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       charStreamVersion,
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -208,8 +203,7 @@ public class FilesJava
         _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-        final OutputFileGenerator generator = new OutputFileGenerator (locations.getJavaCharStreamTemplateResourceUrl (),
-                                                                       options);
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getJavaCharStreamTemplateResourceUrl (), options);
         generator.setReadFromClasspath (s_bReadFromClassPath);
         generator.generate (ostr);
       }
@@ -224,10 +218,9 @@ public class FilesJava
   public static void gen_SimpleCharStream (final IJavaResourceTemplateLocations locations)
   {
     final File file = new File (Options.getOutputDirectory (), "SimpleCharStream.java");
-    try (
-        final OutputFile outputFile = new OutputFile (file,
-                                                      charStreamVersion,
-                                                      new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       charStreamVersion,
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -237,8 +230,7 @@ public class FilesJava
         _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-        final OutputFileGenerator generator = new OutputFileGenerator (locations.getSimpleCharStreamTemplateResourceUrl (),
-                                                                       options);
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getSimpleCharStreamTemplateResourceUrl (), options);
         generator.setReadFromClasspath (s_bReadFromClassPath);
         generator.generate (ostr);
       }
@@ -261,9 +253,7 @@ public class FilesJava
   private static void _genMiscFile (final String fileName, final String templatePath) throws Error
   {
     final File file = new File (Options.getOutputDirectory (), fileName);
-    try (final OutputFile outputFile = new OutputFile (file,
-                                                       parseExceptionVersion,
-                                                       new String [] { Options.USEROPTION__KEEP_LINE_COLUMN }))
+    try (final OutputFile outputFile = new OutputFile (file, parseExceptionVersion, new String [] { Options.USEROPTION__KEEP_LINE_COLUMN }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -288,9 +278,7 @@ public class FilesJava
   public static void gen_ParseException (final IJavaResourceTemplateLocations locations)
   {
     final File file = new File (Options.getOutputDirectory (), "ParseException.java");
-    try (final OutputFile outputFile = new OutputFile (file,
-                                                       parseExceptionVersion,
-                                                       new String [] { Options.USEROPTION__KEEP_LINE_COLUMN }))
+    try (final OutputFile outputFile = new OutputFile (file, parseExceptionVersion, new String [] { Options.USEROPTION__KEEP_LINE_COLUMN }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -300,8 +288,7 @@ public class FilesJava
         _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-        final OutputFileGenerator generator = new OutputFileGenerator (locations.getParseExceptionTemplateResourceUrl (),
-                                                                       options);
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getParseExceptionTemplateResourceUrl (), options);
         generator.setReadFromClasspath (s_bReadFromClassPath);
         generator.generate (ostr);
       }
@@ -328,8 +315,7 @@ public class FilesJava
         _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-        final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenMgrErrorTemplateResourceUrl (),
-                                                                       options);
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenMgrErrorTemplateResourceUrl (), options);
         generator.setReadFromClasspath (s_bReadFromClassPath);
         generator.generate (ostr);
       }
@@ -344,12 +330,11 @@ public class FilesJava
   public static void gen_Token (final IJavaResourceTemplateLocations locations)
   {
     final File file = new File (Options.getOutputDirectory (), "Token.java");
-    try (
-        final OutputFile outputFile = new OutputFile (file,
-                                                      tokenVersion,
-                                                      new String [] { Options.USEROPTION__TOKEN_EXTENDS,
-                                                                      Options.USEROPTION__KEEP_LINE_COLUMN,
-                                                                      Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       tokenVersion,
+                                                       new String [] { Options.USEROPTION__TOKEN_EXTENDS,
+                                                                       Options.USEROPTION__KEEP_LINE_COLUMN,
+                                                                       Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -359,8 +344,7 @@ public class FilesJava
         _writePackageName (ostr);
 
         final Map <String, Object> options = _getDefaultOptions ();
-        final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenTemplateResourceUrl (),
-                                                                       options);
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenTemplateResourceUrl (), options);
         generator.setReadFromClasspath (s_bReadFromClassPath);
         generator.generate (ostr);
       }
@@ -375,10 +359,9 @@ public class FilesJava
   public static void gen_TokenManager (final IJavaResourceTemplateLocations locations)
   {
     final File file = new File (Options.getOutputDirectory (), "TokenManager.java");
-    try (
-        final OutputFile outputFile = new OutputFile (file,
-                                                      tokenManagerVersion,
-                                                      new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
+    try (final OutputFile outputFile = new OutputFile (file,
+                                                       tokenManagerVersion,
+                                                       new String [] { Options.USEROPTION__SUPPORT_CLASS_VISIBILITY_PUBLIC }))
     {
       if (!outputFile.needToWrite ())
         return;
@@ -388,8 +371,7 @@ public class FilesJava
         _writePackageName (ostr);
 
         final Map <String, Object> options = Options.getAllOptions ();
-        final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenManagerTemplateResourceUrl (),
-                                                                       options);
+        final OutputFileGenerator generator = new OutputFileGenerator (locations.getTokenManagerTemplateResourceUrl (), options);
         generator.setReadFromClasspath (s_bReadFromClassPath);
         generator.generate (ostr);
       }

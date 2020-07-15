@@ -122,11 +122,7 @@ public class TokenizerData
     // Any lexical state transition specified.
     public final String m_action;
 
-    public MatchInfo (final String image,
-                      final int kind,
-                      final EMatchType matchType,
-                      final int newLexState,
-                      final String action)
+    public MatchInfo (final String image, final int kind, final EMatchType matchType, final int newLexState, final String action)
     {
       this.m_image = image;
       this.m_kind = kind;

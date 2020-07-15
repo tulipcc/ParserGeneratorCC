@@ -206,8 +206,7 @@ public class CodeGenerator
 
   public final void saveOutput (final String fileName, final StringBuilder sb)
   {
-    try (final NonBlockingBufferedWriter fw = FileHelper.getBufferedWriter (new File (fileName),
-                                                                            Options.getOutputEncoding ()))
+    try (final NonBlockingBufferedWriter fw = FileHelper.getBufferedWriter (new File (fileName), Options.getOutputEncoding ()))
     {
       fw.write (sb.toString ());
     }
@@ -413,10 +412,7 @@ public class CodeGenerator
    * @param superInterfaces
    *        super interfaces
    */
-  public final void genClassStart (final String mod,
-                                   final String name,
-                                   final String [] superClasses,
-                                   final String [] superInterfaces)
+  public final void genClassStart (final String mod, final String name, final String [] superClasses, final String [] superInterfaces)
   {
     final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     switch (eOutputLanguage)
@@ -456,9 +452,7 @@ public class CodeGenerator
     }
   }
 
-  public final void generateMethodDefHeader (final String modsAndRetType,
-                                             final String className,
-                                             final String nameAndParams)
+  public final void generateMethodDefHeader (final String modsAndRetType, final String className, final String nameAndParams)
   {
     generateMethodDefHeader (modsAndRetType, className, nameAndParams, null);
   }

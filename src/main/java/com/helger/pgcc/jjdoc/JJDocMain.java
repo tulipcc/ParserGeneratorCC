@@ -186,8 +186,7 @@ public final class JJDocMain
           return ESuccess.FAILURE;
         }
         JJDocGlobals.s_input_file = fp.getName ();
-        final Reader aReader = FileHelper.getBufferedReader (new File (args[args.length - 1]),
-                                                             Options.getGrammarEncoding ());
+        final Reader aReader = FileHelper.getBufferedReader (new File (args[args.length - 1]), Options.getGrammarEncoding ());
         if (aReader == null)
         {
           PGPrinter.error ("File " + args[args.length - 1] + " not found.");
@@ -214,36 +213,21 @@ public final class JJDocMain
         }
         else
         {
-          PGPrinter.info ("Grammar documentation generated with 0 errors and " +
-                          JavaCCErrors.getWarningCount () +
-                          " warnings.");
+          PGPrinter.info ("Grammar documentation generated with 0 errors and " + JavaCCErrors.getWarningCount () + " warnings.");
         }
         return ESuccess.SUCCESS;
       }
 
-      PGPrinter.error ("Detected " +
-                       JavaCCErrors.getErrorCount () +
-                       " errors and " +
-                       JavaCCErrors.getWarningCount () +
-                       " warnings.");
+      PGPrinter.error ("Detected " + JavaCCErrors.getErrorCount () + " errors and " + JavaCCErrors.getWarningCount () + " warnings.");
       return ESuccess.valueOf (JavaCCErrors.getErrorCount () == 0);
     }
     catch (final MetaParseException e)
     {
-      PGPrinter.error ("Detected " +
-                       JavaCCErrors.getErrorCount () +
-                       " errors and " +
-                       JavaCCErrors.getWarningCount () +
-                       " warnings.",
-                       e);
+      PGPrinter.error ("Detected " + JavaCCErrors.getErrorCount () + " errors and " + JavaCCErrors.getWarningCount () + " warnings.", e);
     }
     catch (final ParseException e)
     {
-      PGPrinter.error ("Detected " +
-                       (JavaCCErrors.getErrorCount () + 1) +
-                       " errors and " +
-                       JavaCCErrors.getWarningCount () +
-                       " warnings.",
+      PGPrinter.error ("Detected " + (JavaCCErrors.getErrorCount () + 1) + " errors and " + JavaCCErrors.getWarningCount () + " warnings.",
                        e);
     }
     return ESuccess.FAILURE;

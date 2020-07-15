@@ -68,9 +68,7 @@ public final class JJTreeStateCpp
     final String sFilePrefix = new File (JJTreeOptions.getJJTreeOutputDirectory (),
                                          "JJT" + JJTreeGlobals.s_parserName + "State").getAbsolutePath ();
 
-    OutputFile aOutputFile = new OutputFile (new File (sFilePrefix + ".h"),
-                                             JJTStateVersion,
-                                             ArrayHelper.EMPTY_STRING_ARRAY);
+    OutputFile aOutputFile = new OutputFile (new File (sFilePrefix + ".h"), JJTStateVersion, ArrayHelper.EMPTY_STRING_ARRAY);
     NodeFilesCpp.generateFile (aOutputFile, "/templates/jjtree/cpp/JJTTreeState.h.template", aOptions, true);
 
     aOutputFile = new OutputFile (new File (sFilePrefix + ".cc"), JJTStateVersion, ArrayHelper.EMPTY_STRING_ARRAY);

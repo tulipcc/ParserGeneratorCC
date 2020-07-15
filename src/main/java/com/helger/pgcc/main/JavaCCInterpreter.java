@@ -94,19 +94,11 @@ public class JavaCCInterpreter
     }
     catch (final MetaParseException e)
     {
-      PGPrinter.error ("Detected " +
-                       JavaCCErrors.getErrorCount () +
-                       " errors and " +
-                       JavaCCErrors.getWarningCount () +
-                       " warnings.");
+      PGPrinter.error ("Detected " + JavaCCErrors.getErrorCount () + " errors and " + JavaCCErrors.getWarningCount () + " warnings.");
     }
     catch (final Exception e)
     {
-      PGPrinter.error ("Detected " +
-                       (JavaCCErrors.getErrorCount () + 1) +
-                       " errors and " +
-                       JavaCCErrors.getWarningCount () +
-                       " warnings.",
+      PGPrinter.error ("Detected " + (JavaCCErrors.getErrorCount () + 1) + " errors and " + JavaCCErrors.getWarningCount () + " warnings.",
                        e);
     }
   }

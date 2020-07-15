@@ -348,9 +348,7 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("   */");
           if (bHasCharset)
           {
-            genCodeLine ("  public " +
-                         s_cu_name +
-                         "(final java.io.InputStream stream, final java.nio.charset.Charset encoding) {");
+            genCodeLine ("  public " + s_cu_name + "(final java.io.InputStream stream, final java.nio.charset.Charset encoding) {");
             genCodeLine ("   jj_input_stream = new " +
                          (Options.isJavaUnicodeEscape () ? "JavaCharStream" : "SimpleCharStream") +
                          "(stream, encoding, 1, 1);");
@@ -878,9 +876,7 @@ public class ParseGenJava extends CodeGenerator
     }
     if (Options.isErrorReporting ())
     {
-      genCodeLine ("  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<" +
-                   (bEmptyTypeVar ? "" : "int[]") +
-                   ">();");
+      genCodeLine ("  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<" + (bEmptyTypeVar ? "" : "int[]") + ">();");
       genCodeLine ("  private int[] jj_expentry;");
       genCodeLine ("  private int jj_kind = -1;");
       if (s_jj2index != 0)
@@ -1068,13 +1064,9 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("      }");
       genCodeLine ("      tracePS.print(\"Consumed token: <\" + tokenImage[t.kind]);");
       genCodeLine ("      if (t.kind != 0 && !tokenImage[t.kind].equals(\"\\\"\" + t.image + \"\\\"\")) {");
-      genCodeLine ("        tracePS.print(\": \\\"\" + " +
-                   Options.getTokenMgrErrorClass () +
-                   ".addEscapes(" +
-                   "t.image) + \"\\\"\");");
+      genCodeLine ("        tracePS.print(\": \\\"\" + " + Options.getTokenMgrErrorClass () + ".addEscapes(" + "t.image) + \"\\\"\");");
       genCodeLine ("      }");
-      genCodeLine ("      tracePS.println(\" at line \" + t.beginLine + " +
-                   "\" column \" + t.beginColumn + \">\" + where);");
+      genCodeLine ("      tracePS.println(\" at line \" + t.beginLine + " + "\" column \" + t.beginColumn + \">\" + where);");
       genCodeLine ("    }");
       genCodeLine ("  }");
       genCodeNewLine ();
@@ -1083,10 +1075,7 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("      for (int i = 0; i < trace_indent; i++) { tracePS.print(\" \"); }");
       genCodeLine ("      tracePS.print(\"Visited token: <\" + tokenImage[t1.kind]);");
       genCodeLine ("      if (t1.kind != 0 && !tokenImage[t1.kind].equals(\"\\\"\" + t1.image + \"\\\"\")) {");
-      genCodeLine ("        tracePS.print(\": \\\"\" + " +
-                   Options.getTokenMgrErrorClass () +
-                   ".addEscapes(" +
-                   "t1.image) + \"\\\"\");");
+      genCodeLine ("        tracePS.print(\": \\\"\" + " + Options.getTokenMgrErrorClass () + ".addEscapes(" + "t1.image) + \"\\\"\");");
       genCodeLine ("      }");
       genCodeLine ("      tracePS.println(\" at line \" + t1.beginLine + \"" +
                    " column \" + t1.beginColumn + \">; Expected token: <\" + tokenImage[t2] + \">\");");

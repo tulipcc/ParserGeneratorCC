@@ -49,9 +49,7 @@ public class OptionInfo implements IComparable <OptionInfo>
   private final EOptionType m_type;
   private final Comparable <?> m_default;
 
-  public OptionInfo (@Nonnull final String name,
-                     @Nonnull final EOptionType type,
-                     @Nullable final Comparable <?> default1)
+  public OptionInfo (@Nonnull final String name, @Nonnull final EOptionType type, @Nullable final Comparable <?> default1)
   {
     m_name = name;
     m_type = type;

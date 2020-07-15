@@ -264,13 +264,7 @@ public final class NodeFilesJava
       else
         argumentType = "Object";
 
-      ostr.println ("  public " +
-                    JJTreeOptions.getVisitorReturnType () +
-                    " visit(SimpleNode node, " +
-                    argumentType +
-                    " data)" +
-                    ve +
-                    ";");
+      ostr.println ("  public " + JJTreeOptions.getVisitorReturnType () + " visit(SimpleNode node, " + argumentType + " data)" + ve + ";");
       if (JJTreeOptions.isMulti ())
       {
         for (int i = 0; i < nodeNames.size (); ++i)
@@ -344,13 +338,7 @@ public final class NodeFilesJava
         argumentType = "Object";
 
       final String ret = JJTreeOptions.getVisitorReturnType ();
-      ostr.println ("  public " +
-                    ret +
-                    " defaultVisit(final SimpleNode node, final " +
-                    argumentType +
-                    " data)" +
-                    ve +
-                    "{");
+      ostr.println ("  public " + ret + " defaultVisit(final SimpleNode node, final " + argumentType + " data)" + ve + "{");
       ostr.println ("    node.childrenAccept(this, data);");
       ostr.println ("    return" + (ret.trim ().equals ("void") ? "" : " data") + ";");
       ostr.println ("  }");
@@ -425,8 +413,7 @@ public final class NodeFilesJava
       options.put (Options.NONUSER_OPTION__PARSER_NAME, JJTreeGlobals.s_parserName);
       options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
 
-      final OutputFileGenerator generator = new OutputFileGenerator ("/templates/jjtree/java/SimpleNode.template",
-                                                                     options);
+      final OutputFileGenerator generator = new OutputFileGenerator ("/templates/jjtree/java/SimpleNode.template", options);
 
       generator.generate (ostr);
     }
@@ -443,8 +430,7 @@ public final class NodeFilesJava
       options.put ("NODE_TYPE", nodeType);
       options.put ("VISITOR_RETURN_TYPE_VOID", Boolean.valueOf (JJTreeOptions.getVisitorReturnType ().equals ("void")));
 
-      final OutputFileGenerator generator = new OutputFileGenerator ("/templates/jjtree/java/MultiNode.template",
-                                                                     options);
+      final OutputFileGenerator generator = new OutputFileGenerator ("/templates/jjtree/java/MultiNode.template", options);
 
       generator.generate (ostr);
     }

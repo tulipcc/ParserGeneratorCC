@@ -131,10 +131,7 @@ public class ParseGenCPP extends ParseGenJava
     genCodeNewLine ();
 
     final String superClass = Options.stringValue (Options.USEROPTION__PARSER_SUPER_CLASS);
-    genClassStart ("",
-                   s_cu_name,
-                   new String [] {},
-                   superClass == null ? new String [0] : new String [] { "public " + superClass });
+    genClassStart ("", s_cu_name, new String [] {}, superClass == null ? new String [0] : new String [] { "public " + superClass });
     switchToMainFile ();
     if (s_cu_to_insertion_point_2.size () != 0)
     {

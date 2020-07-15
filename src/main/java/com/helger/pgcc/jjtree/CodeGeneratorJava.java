@@ -181,8 +181,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
         // If the parser and nodes are in separate packages (NODE_PACKAGE
         // specified in
         // OPTIONS), then generate an import for the node package.
-        if (StringHelper.hasText (JJTreeGlobals.s_nodePackageName) &&
-            !JJTreeGlobals.s_nodePackageName.equals (JJTreeGlobals.s_packageName))
+        if (StringHelper.hasText (JJTreeGlobals.s_nodePackageName) && !JJTreeGlobals.s_nodePackageName.equals (JJTreeGlobals.s_packageName))
         {
           io.getOut ().println ();
           io.getOut ().println ("import " + JJTreeGlobals.s_nodePackageName + ".*;");
@@ -391,14 +390,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
     if (JJTreeOptions.getNodeFactory ().equals ("*"))
     {
       // Old-style multiple-implementations.
-      io.println ("(" +
-                  nodeClass +
-                  ")" +
-                  nodeClass +
-                  ".jjtCreate(" +
-                  parserArg +
-                  ns.m_node_descriptor.getNodeId () +
-                  ");");
+      io.println ("(" + nodeClass + ")" + nodeClass + ".jjtCreate(" + parserArg + ns.m_node_descriptor.getNodeId () + ");");
     }
     else
       if (JJTreeOptions.getNodeFactory ().length () > 0)
@@ -468,10 +460,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
     io.println (indent + "}");
   }
 
-  private void insertCatchBlocks (final NodeScope ns,
-                                  final JJTreeIO io,
-                                  final Collection <String> thrown_names,
-                                  final String indent)
+  private void insertCatchBlocks (final NodeScope ns, final JJTreeIO io, final Collection <String> thrown_names, final String indent)
   {
     if (!thrown_names.isEmpty ())
     {
@@ -503,11 +492,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
 
   }
 
-  void tryTokenSequence (final NodeScope ns,
-                         final JJTreeIO io,
-                         final String indent,
-                         final Token first,
-                         final Token last)
+  void tryTokenSequence (final NodeScope ns, final JJTreeIO io, final String indent, final Token first, final Token last)
   {
     io.println (indent + "try {");
     closeJJTreeComment (io);
@@ -537,9 +522,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
     closeJJTreeComment (io);
   }
 
-  private static void findThrown (final NodeScope ns,
-                                  final Map <String, String> thrown_set,
-                                  final JJTreeNode expansion_unit)
+  private static void findThrown (final NodeScope ns, final Map <String, String> thrown_set, final JJTreeNode expansion_unit)
   {
     if (expansion_unit instanceof ASTBNFNonTerminal)
     {
