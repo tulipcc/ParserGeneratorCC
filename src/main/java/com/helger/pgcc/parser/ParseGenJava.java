@@ -333,18 +333,22 @@ public class ParseGenJava extends CodeGenerator
       {
         if (!bIsJavaModernMode)
         {
-          genCodeLine ("  /**");
-          genCodeLine ("   * Constructor with InputStream.");
-          genCodeLine ("   * @param stream input stream");
-          genCodeLine ("   */");
-          genCodeLine ("  public " + s_cu_name + "(final java.io.InputStream stream) {");
-          genCodeLine ("	  this(stream, null);");
-          genCodeLine ("  }");
-          genCodeNewLine ();
+          // See #108
+          if (false)
+          {
+            genCodeLine ("  /**");
+            genCodeLine ("   * Constructor with InputStream.");
+            genCodeLine ("   * @param stream input stream");
+            genCodeLine ("   */");
+            genCodeLine ("  public " + s_cu_name + "(final java.io.InputStream stream) {");
+            genCodeLine ("	  this(stream, null);");
+            genCodeLine ("  }");
+            genCodeNewLine ();
+          }
           genCodeLine ("  /**");
           genCodeLine ("   * Constructor with InputStream and supplied encoding");
           genCodeLine ("   * @param stream input stream");
-          genCodeLine ("   * @param encoding charset to be used");
+          genCodeLine ("   * @param encoding charset to be used. May not be <code>null</code>.");
           genCodeLine ("   */");
           if (bHasCharset)
           {
@@ -398,18 +402,22 @@ public class ParseGenJava extends CodeGenerator
           genCodeLine ("  }");
           genCodeNewLine ();
 
-          genCodeLine ("  /**");
-          genCodeLine ("   * Reinitialise");
-          genCodeLine ("   * @param stream input stream");
-          genCodeLine ("   */");
-          genCodeLine ("  public void ReInit(final java.io.InputStream stream) {");
-          genCodeLine ("	  ReInit(stream, null);");
-          genCodeLine ("  }");
+          // See #108
+          if (false)
+          {
+            genCodeLine ("  /**");
+            genCodeLine ("   * Reinitialise");
+            genCodeLine ("   * @param stream input stream");
+            genCodeLine ("   */");
+            genCodeLine ("  public void ReInit(final java.io.InputStream stream) {");
+            genCodeLine ("	  ReInit(stream, null);");
+            genCodeLine ("  }");
+          }
 
           genCodeLine ("  /**");
           genCodeLine ("   * Reinitialise");
           genCodeLine ("   * @param stream input stream");
-          genCodeLine ("   * @param encoding charset to be used");
+          genCodeLine ("   * @param encoding charset to be used. May not be <code>null</code>.");
           genCodeLine ("   */");
           if (bHasCharset)
           {
