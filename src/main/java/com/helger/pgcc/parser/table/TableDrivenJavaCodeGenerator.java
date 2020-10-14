@@ -66,7 +66,6 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     options.put ("stateSetSize", tokenizerData.m_nfa.size ());
     options.put ("parserName", tokenizerData.m_parserName);
     options.put ("maxLongs", tokenizerData.m_allMatches.size () / 64 + 1);
-    options.put ("parserName", tokenizerData.m_parserName);
     options.put ("charStreamName", CodeGenerator.getCharStreamName ());
     options.put ("defaultLexState", tokenizerData.m_defaultLexState);
     options.put ("decls", tokenizerData.m_decls);

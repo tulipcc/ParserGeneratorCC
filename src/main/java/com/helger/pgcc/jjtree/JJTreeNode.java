@@ -107,7 +107,7 @@ public class JJTreeNode extends SimpleNode
     return t.image;
   }
 
-  static final String whiteOut (final Token t)
+  static String whiteOut (final Token t)
   {
     final StringBuilder sb = new StringBuilder (t.image.length ());
 

@@ -658,7 +658,7 @@ public class LexGenJava extends CodeGenerator
         try
         {
           final Class <?> codeGenClazz = Class.forName (codeGeneratorClass);
-          gen = (TokenManagerCodeGenerator) codeGenClazz.newInstance ();
+          gen = (TokenManagerCodeGenerator) codeGenClazz.getDeclaredConstructor().newInstance ();
         }
         catch (final Exception ee)
         {
