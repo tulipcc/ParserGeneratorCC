@@ -170,7 +170,7 @@ public class Token
    *        token image
    * @return The created token. Never <code>null</code>.
    */
-  public static final Token newToken (final int ofKind, final String image)
+  public static Token newToken (final int ofKind, final String image)
   {
     switch (ofKind)
     {
@@ -183,7 +183,7 @@ public class Token
     }
   }
 
-  public static final Token newToken (final int ofKind)
+  public static Token newToken (final int ofKind)
   {
     return newToken (ofKind, null);
   }

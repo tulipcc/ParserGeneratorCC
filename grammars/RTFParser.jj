@@ -176,7 +176,7 @@ public class RTFParser implements RTFParserDelegate {
    * TODO: handle \bin
    */
   // the default number of bytes to skip after a unicode character
-  private static final Integer DEFAULT_SKIP_STATE = new Integer(1);
+  private static final Integer DEFAULT_SKIP_STATE = 1;
   // the current number of bytes to skip after a unicode character
   private Integer _currentSkipState = DEFAULT_SKIP_STATE;
   // a stack of skip states for bytes following a unicode character
@@ -663,10 +663,10 @@ void text() throws UnsupportedEncodingException :
       baos.reset();
     }
     if (_where == IN_STYLESHEET) {
-      _styleMap.put(new Integer(_currentStyleValue), buf.toString());
+      _styleMap.put(_currentStyleValue, buf.toString());
     } else if (_where == IN_FONTTBL) {
       String encoding = getEncodingForCharsetAndFontName(_currentCharsetValue, buf.toString());
-      _fontEncodingMap.put(new Integer(_currentFontValue), encoding); 
+      _fontEncodingMap.put(_currentFontValue, encoding);
     }
     _delegate.text(buf.toString(), getCurrentStyle(), _where);
   }
@@ -894,7 +894,7 @@ void uc() :
   val=<CW_VAL>
   {
     int bytesToSkip = null == val ? 0 : Integer.parseInt(val.image);
-    setCurrentSkipState(new Integer(bytesToSkip));
+    setCurrentSkipState(bytesToSkip);
   }
 }
 
@@ -937,7 +937,7 @@ void f() :
     if (IN_FONTTBL == _where) {
       _currentFontValue = font;
     } else if (IN_DOCUMENT == _where) {
-      String encoding = (String)_fontEncodingMap.get(new Integer(font));
+      String encoding = (String)_fontEncodingMap.get(font);
       setCurrentEncoding(null == encoding ? DEFAULT_ENCODING : encoding);
     }
     _delegate.controlWord("\\f", font, _where);
@@ -956,7 +956,7 @@ void cs() :
     if (IN_STYLESHEET == _where) {
       _currentStyleValue = style;
     } else if (IN_DOCUMENT == _where) {
-      setCurrentStyle((String)_styleMap.get(new Integer(style)));
+      setCurrentStyle((String)_styleMap.get(style));
     }
     _delegate.controlWord("\\cs", style, _where);
   }
