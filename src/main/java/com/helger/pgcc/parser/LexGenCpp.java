@@ -646,19 +646,6 @@ public class LexGenCpp extends LexGenJava
       genCodeLine ("\n};");
     }
 
-    if (false)
-      if (s_hasMore) // Not needed as we just use else
-      {
-        // Bit vector for MORE
-        genCode ("static const " + eOutputLanguage.getTypeLong () + " jjtoMore[] = {");
-        for (i = 0; i < s_maxOrdinal / 64 + 1; i++)
-        {
-          if (i % 4 == 0)
-            genCode ("\n   ");
-          genCode (eOutputLanguage.getLongHex (s_toMore[i]) + ", ");
-        }
-        genCodeLine ("\n};");
-      }
   }
 
   private void _dumpFillToken ()

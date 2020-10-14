@@ -678,16 +678,6 @@ public class ParseEngine
     String ret, params;
     Token t = null;
 
-    if (false)
-    {
-      m_codeGenerator.printTokenSetup (t);
-      s_ccol = 1;
-      final String comment1 = m_codeGenerator.getLeadingComments (t);
-      s_cline = t.beginLine;
-      s_ccol = t.beginColumn;
-      sig.append (t.image);
-    }
-
     for (final Token element : p.getReturnTypeTokens ())
     {
       t = element;
@@ -1883,8 +1873,6 @@ public class ParseEngine
               buildPhase3Routine (new Phase3Data (eseq, cnt), true);
 
               // Test Code
-              if (false)
-                PGPrinter.info ("minimumSize: line: " + eseq.getLine () + ", column: " + eseq.getColumn () + ": " + minimumSize (eseq));
 
               cnt -= minimumSize (eseq);
               if (cnt <= 0)
@@ -2111,45 +2099,6 @@ public class ParseEngine
 
         _generateCPPMethodheader (cp);
 
-        if (false)
-        {
-          Token t = (cp.getReturnTypeTokens ().get (0));
-          codeGenerator.printTokenSetup (t);
-          s_ccol = 1;
-          codeGenerator.printLeadingComments (t);
-          codeGenerator.genCode (" " + (p.getAccessMod () != null ? p.getAccessMod () + " " : ""));
-          s_cline = t.beginLine;
-          s_ccol = t.beginColumn;
-          codeGenerator.printTokenOnly (t);
-          for (int i = 1; i < cp.getReturnTypeTokens ().size (); i++)
-          {
-            t = (cp.getReturnTypeTokens ().get (i));
-            codeGenerator.printToken (t);
-          }
-          codeGenerator.printTrailingComments (t);
-          codeGenerator.genCode (" " + cp.getLhs () + "(");
-          if (cp.getParameterListTokens ().size () != 0)
-          {
-            codeGenerator.printTokenSetup (cp.getParameterListTokens ().get (0));
-            for (final Token aElement : cp.getParameterListTokens ())
-            {
-              t = aElement;
-              codeGenerator.printToken (t);
-            }
-            codeGenerator.printTrailingComments (t);
-          }
-          codeGenerator.genCode (")");
-          for (final List <Token> aElement : cp.getThrowsList ())
-          {
-            codeGenerator.genCode (", ");
-            for (final Token aElement2 : aElement)
-            {
-              t = aElement2;
-              codeGenerator.genCode (t.image);
-            }
-          }
-        }
-
         codeGenerator.genCodeLine (" {");
         if (Options.isDebugParser ())
         {
@@ -2293,16 +2242,6 @@ public class ParseEngine
       buildPhase3Routine (data, false);
     }
 
-    if (false)
-    {
-      for (final Phase3Data inf : m_phase3table.values ())
-      {
-        PGPrinter.info ("**** Table for: " + inf.m_exp.getInternalName ());
-        buildPhase3TableRec (inf);
-        PGPrinter.info ("**** END TABLE *********");
-      }
-    }
-
     codeGenerator.switchToMainFile ();
   }
 
@@ -2343,8 +2282,6 @@ public class ParseEngine
           final Expansion ntexp = ntprod.getExpansion ();
           // nt exp's table.
           PGPrinter.info ("PRODUCTION, " + ntexp.getInternalIndex ());
-          if (false)
-            buildPhase3TableRec (new Phase3Data (ntexp, inf.m_count));
         }
       }
       else

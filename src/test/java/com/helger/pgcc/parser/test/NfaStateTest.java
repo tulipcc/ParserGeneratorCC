@@ -388,42 +388,6 @@ public class NfaStateTest extends AbstractJavaCCTestCase
     final String result = cg.getGeneratedCode ();
     assertEquals ("", result.trim ());
 
-    if (false)
-    {
-
-      assertEquals ("static private final void jjCheckNAdd(int state)\n" +
-                    "{\n" +
-                    "   if (jjrounds[state] != jjround)\n" +
-                    "   {\n" +
-                    "      jjstateSet[jjnewStateCnt++] = state;\n" +
-                    "      jjrounds[state] = jjround;\n" +
-                    "   }\n" +
-                    "}\n" +
-                    "static private final void jjAddStates(int start, int end)\n" +
-                    "{\n" +
-                    "   do {\n" +
-                    "      jjstateSet[jjnewStateCnt++] = jjnextStates[start];\n" +
-                    "   } while (start++ != end);\n" +
-                    "}\n" +
-                    "static private final void jjCheckNAddTwoStates(int state1, int state2)\n" +
-                    "{\n" +
-                    "   jjCheckNAdd(state1);\n" +
-                    "   jjCheckNAdd(state2);\n" +
-                    "}\n" +
-                    "static private final void jjCheckNAddStates(int start, int end)\n" +
-                    "{\n" +
-                    "   do {\n" +
-                    "      jjCheckNAdd(jjnextStates[start]);\n" +
-                    "   } while (start++ != end);\n" +
-                    "}\n" +
-                    "static private final void jjCheckNAddStates(int start)\n" +
-                    "{\n" +
-                    "   jjCheckNAdd(jjnextStates[start]);\n" +
-                    "   jjCheckNAdd(jjnextStates[start + 1]);\n" +
-                    "}\n" +
-                    "",
-                    cg.getGeneratedCode ().trim ());
-    }
   }
 
   /**

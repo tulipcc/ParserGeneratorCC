@@ -761,8 +761,6 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
   @Nonnull
   private static String _getCaseChar (final char c, final EOutputLanguage eOutputLanguage)
   {
-    if (false)
-      return Integer.toString (c);
 
     // Just for better readability
     if (c < 0x20 || c >= 0x7f)
@@ -1470,7 +1468,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       dumpStartWithStates (codeGenerator);
   }
 
-  static final int getStrKind (final String str)
+  static int getStrKind (final String str)
   {
     for (int i = 0; i < s_maxStrKind; i++)
     {

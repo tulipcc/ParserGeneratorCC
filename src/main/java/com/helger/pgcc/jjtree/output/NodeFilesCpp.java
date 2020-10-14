@@ -170,8 +170,6 @@ public final class NodeFilesCpp
     _generateMultiTreeInterface ();
     _generateMultiTreeImpl ();
     _generateOneTreeInterface ();
-    if (false)
-      _generateOneTreeImpl ();
   }
 
   private static void _generateNodeHeader ()

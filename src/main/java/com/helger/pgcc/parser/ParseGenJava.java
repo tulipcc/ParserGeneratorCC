@@ -334,18 +334,7 @@ public class ParseGenJava extends CodeGenerator
         if (!bIsJavaModernMode)
         {
           // See #108
-          if (false)
-          {
             genCodeLine ("  /**");
-            genCodeLine ("   * Constructor with InputStream.");
-            genCodeLine ("   * @param stream input stream");
-            genCodeLine ("   */");
-            genCodeLine ("  public " + s_cu_name + "(final java.io.InputStream stream) {");
-            genCodeLine ("	  this(stream, null);");
-            genCodeLine ("  }");
-            genCodeNewLine ();
-          }
-          genCodeLine ("  /**");
           genCodeLine ("   * Constructor with InputStream and supplied encoding");
           genCodeLine ("   * @param stream input stream");
           genCodeLine ("   * @param encoding charset to be used. May not be <code>null</code>.");
@@ -403,18 +392,8 @@ public class ParseGenJava extends CodeGenerator
           genCodeNewLine ();
 
           // See #108
-          if (false)
-          {
-            genCodeLine ("  /**");
-            genCodeLine ("   * Reinitialise");
-            genCodeLine ("   * @param stream input stream");
-            genCodeLine ("   */");
-            genCodeLine ("  public void ReInit(final java.io.InputStream stream) {");
-            genCodeLine ("	  ReInit(stream, null);");
-            genCodeLine ("  }");
-          }
 
-          genCodeLine ("  /**");
+            genCodeLine ("  /**");
           genCodeLine ("   * Reinitialise");
           genCodeLine ("   * @param stream input stream");
           genCodeLine ("   * @param encoding charset to be used. May not be <code>null</code>.");
@@ -780,9 +759,7 @@ public class ParseGenJava extends CodeGenerator
     genCodeNewLine ();
     if (s_jj2index != 0)
     {
-      if (false)
-        genCodeLine ("  @SuppressWarnings(\"serial\")");
-      genCodeLine ("  private static final class LookaheadSuccess extends IllegalStateException {}");
+        genCodeLine ("  private static final class LookaheadSuccess extends IllegalStateException {}");
       genCodeLine ("  private final LookaheadSuccess jj_ls = new LookaheadSuccess();");
       genCodeLine ("  private " + eOutputLanguage.getTypeBoolean () + " jj_scan_token(int kind) {");
       genCodeLine ("	 if (jj_scanpos == jj_lastpos) {");

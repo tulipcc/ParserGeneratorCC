@@ -1748,53 +1748,11 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
       if (Options.isIgnoreCase () || ignoreCase)
       {
         // Internal debug only
-        if (false)
-        {
-          final StringBuilder aSB = new StringBuilder ("Before:");
-          for (int i = 0; i < m_descriptors.size (); i++)
-          {
-            if (m_descriptors.get (i) instanceof SingleCharacter)
-            {
-              final char c = ((SingleCharacter) m_descriptors.get (i)).getChar ();
-              aSB.append ((int) c + " ");
-            }
-            else
-            {
-              final char l = ((CharacterRange) m_descriptors.get (i)).getLeft ();
-              final char r = ((CharacterRange) m_descriptors.get (i)).getRight ();
-              aSB.append ((int) l + "-" + (int) r + " ");
-            }
-            if ((i + 1) % 6 == 0)
-              aSB.append ("\n");
-          }
-          PGPrinter.info (aSB.toString ());
-        }
 
         toCaseNeutral ();
         sortDescriptors ();
 
         // Internal debug only
-        if (false)
-        {
-          final StringBuilder aSB = new StringBuilder ("After:");
-          for (int i = 0; i < m_descriptors.size (); i++)
-          {
-            if (m_descriptors.get (i) instanceof SingleCharacter)
-            {
-              final char c = ((SingleCharacter) m_descriptors.get (i)).getChar ();
-              aSB.append ((int) c + " ");
-            }
-            else
-            {
-              final char l = ((CharacterRange) m_descriptors.get (i)).getLeft ();
-              final char r = ((CharacterRange) m_descriptors.get (i)).getRight ();
-              aSB.append ((int) l + "-" + (int) r + " ");
-            }
-            if ((i + 1) % 6 == 0)
-              aSB.append ("\n");
-          }
-          PGPrinter.info (aSB.toString ());
-        }
       }
 
       if (m_negated_list)
@@ -1946,26 +1904,6 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
   {
     sortDescriptors ();
 
-    if (false)
-    {
-      final StringBuilder aSB = new StringBuilder ("REM. NEG Before:");
-      for (final ICCCharacter m_descriptor : m_descriptors)
-      {
-        if (m_descriptor instanceof SingleCharacter)
-        {
-          final char c = ((SingleCharacter) m_descriptor).getChar ();
-          aSB.append ((int) c + " ");
-        }
-        else
-        {
-          final char l = ((CharacterRange) m_descriptor).getLeft ();
-          final char r = ((CharacterRange) m_descriptor).getRight ();
-          aSB.append ((int) l + "-" + (int) r + " ");
-        }
-      }
-      PGPrinter.info (aSB.toString ());
-    }
-
     final List <ICCCharacter> newDescriptors = new ArrayList <> ();
     // One less than the first valid character.
     int lastRemoved = -1;
@@ -1977,14 +1915,12 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
       {
         final char c = ((SingleCharacter) tmp).getChar ();
 
-        if (c >= 0 && c <= lastRemoved + 1)
+        if (c <= lastRemoved + 1)
         {
           lastRemoved = c;
           continue;
         }
 
-        if (false)
-          PGPrinter.info ("lastRemoved : " + lastRemoved + "; char : " + (int) c);
         newDescriptors.add (new CharacterRange ((char) (lastRemoved + 1), (char) ((lastRemoved = c) - 1)));
       }
       else
@@ -1992,21 +1928,16 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
         final char l = ((CharacterRange) tmp).getLeft ();
         final char r = ((CharacterRange) tmp).getRight ();
 
-        if (l >= 0 && l <= lastRemoved + 1)
+        if (l <= lastRemoved + 1)
         {
           lastRemoved = r;
           continue;
         }
 
-        if (false)
-          PGPrinter.info ("lastRemoved : " + lastRemoved + "; left : " + l + "; right : " + (int) r);
         newDescriptors.add (new CharacterRange ((char) (lastRemoved + 1), (char) (l - 1)));
         lastRemoved = r;
       }
     }
-
-    if (false)
-      PGPrinter.info ("lastRem : " + lastRemoved);
 
     if (NfaState.s_unicodeWarningGiven || Options.isJavaUnicodeEscape ())
     {
@@ -2022,25 +1953,6 @@ public class ExpRCharacterList extends AbstractExpRegularExpression
     m_descriptors = newDescriptors;
     m_negated_list = false;
 
-    if (false)
-    {
-      final StringBuilder aSB = new StringBuilder ("REM. NEG After:");
-      for (final ICCCharacter m_descriptor : m_descriptors)
-      {
-        if (m_descriptor instanceof SingleCharacter)
-        {
-          final char c = ((SingleCharacter) m_descriptor).getChar ();
-          aSB.append ((int) c + " ");
-        }
-        else
-        {
-          final char l = ((CharacterRange) m_descriptor).getLeft ();
-          final char r = ((CharacterRange) m_descriptor).getRight ();
-          aSB.append ((int) l + "-" + (int) r + " ");
-        }
-      }
-      PGPrinter.info (aSB.toString ());
-    }
   }
 
   public ExpRCharacterList ()

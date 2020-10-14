@@ -207,7 +207,7 @@ public class NfaState
       _insertInOrder (m_epsilonMoves, newState);
   }
 
-  private final void _addASCIIMove (final char c)
+  private void _addASCIIMove (final char c)
   {
     m_asciiMoves[c / 64] |= (1L << (c % 64));
   }
@@ -550,15 +550,6 @@ public class NfaState
       if (!tmp.m_closureDone)
         tmp._optimizeEpsilonMoves (false);
 
-    if (false)
-    {
-      for (int i = 0; i < s_allStates.size (); i++)
-      {
-        final NfaState tmp = s_allStates.get (i);
-        final NfaState [] epsilonMoveArray = new NfaState [tmp.m_epsilonMoves.size ()];
-        tmp.m_epsilonMoves.toArray (epsilonMoveArray);
-      }
-    }
   }
 
   private void _optimizeEpsilonMoves (final boolean optReqd)
@@ -1667,7 +1658,7 @@ public class NfaState
     }
   }
 
-  private final void _fixNextStates (final int [] newSet)
+  private void _fixNextStates (final int [] newSet)
   {
     m_next.m_usefulEpsilonMoves = newSet.length;
     // next.epsilonMovesString = GetStateSetString(newSet);
@@ -2365,7 +2356,7 @@ public class NfaState
       codeGenerator.genCodeLine ("                  break;");
   }
 
-  private final void _dumpNonAsciiMoveForCompositeState (final CodeGenerator codeGenerator)
+  private void _dumpNonAsciiMoveForCompositeState (final CodeGenerator codeGenerator)
   {
     boolean nextIntersects = _selfLoop ();
     for (final NfaState temp1 : s_allStates)
@@ -2441,7 +2432,7 @@ public class NfaState
       codeGenerator.genCodeLine ("                  }");
   }
 
-  private final void _dumpNonAsciiMove (final CodeGenerator codeGenerator, final boolean dumped[])
+  private void _dumpNonAsciiMove (final CodeGenerator codeGenerator, final boolean dumped[])
   {
     boolean nextIntersects = _selfLoop () && m_isComposite;
 
@@ -3127,21 +3118,11 @@ public class NfaState
     switch (eOutputLanguage)
     {
       case JAVA:
-        if (false)
-        {
-          // Old
-          codeGenerator.genCodeLine ("      if ((i = jjnewStateCnt) == (startsAt = " +
-                                     s_generatedStates +
-                                     " - (jjnewStateCnt = startsAt)))");
-        }
-        else
-        {
-          // New
-          codeGenerator.genCodeLine ("      i = jjnewStateCnt;");
-          codeGenerator.genCodeLine ("      jjnewStateCnt = startsAt;");
-          codeGenerator.genCodeLine ("      startsAt = " + s_generatedStates + " - jjnewStateCnt;");
-          codeGenerator.genCodeLine ("      if (i == startsAt)");
-        }
+        // New
+        codeGenerator.genCodeLine ("      i = jjnewStateCnt;");
+        codeGenerator.genCodeLine ("      jjnewStateCnt = startsAt;");
+        codeGenerator.genCodeLine ("      startsAt = " + s_generatedStates + " - jjnewStateCnt;");
+        codeGenerator.genCodeLine ("      if (i == startsAt)");
         break;
       case CPP:
         codeGenerator.genCodeLine ("      if ((i = jjnewStateCnt), (jjnewStateCnt = startsAt), (i == (startsAt = " +

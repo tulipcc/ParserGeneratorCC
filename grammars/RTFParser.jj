@@ -167,7 +167,7 @@ public class RTFParser implements RTFParserDelegate {
    * the corresponding encoding name from the JAVA_ENCODINGS table, or
    * null if none is present.
    */
-  private static final String getJavaEncoding(int rtfCodepage) {
+  private static String getJavaEncoding(int rtfCodepage) {
     int offset = Arrays.binarySearch(RTF_CODEPAGE, rtfCodepage);
     return offset < 0 ? null : JAVA_ENCODINGS[offset];
   }
@@ -305,7 +305,7 @@ public class RTFParser implements RTFParserDelegate {
   protected String getEncodingForCharsetAndFontName(int charset, String fontName) {
   	return CHARSET_ENCODING_TABLE[charset];
   }
-  
+
   private void setCurrentEncoding(String encoding) {
     if (null == encoding) {
        throw new IllegalArgumentException("current encoding cannot be null");
@@ -356,6 +356,7 @@ public class RTFParser implements RTFParserDelegate {
     }
     return buf;
   }
+}}
 }
  
 PARSER_END(RTFParser)
