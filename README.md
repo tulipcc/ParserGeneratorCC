@@ -1,5 +1,5 @@
-ParserGeneratorCC
-===================
+# ParserGeneratorCC
+
 ![Travis CI Status](https://travis-ci.org/phax/ParserGeneratorCC.svg?branch=master)
 [![javadoc](https://javadoc.io/badge2/com.helger/parser-generator-cc/javadoc.svg)](https://javadoc.io/doc/com.helger/parser-generator-cc)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.helger/parser-generator-cc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.helger/parser-generator-cc) 
