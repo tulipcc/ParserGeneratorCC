@@ -61,17 +61,17 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     final String superClass = (String) Options.getAllOptions ().get (Options.USEROPTION__TOKEN_MANAGER_SUPER_CLASS);
 
     final Map <String, Object> options = Options.getAllOptions ();
-    options.put ("maxOrdinal", tokenizerData.m_allMatches.size ());
-    options.put ("maxLexStates", tokenizerData.m_lexStateNames.length);
-    options.put ("stateSetSize", tokenizerData.m_nfa.size ());
+    options.put ("maxOrdinal", Integer.valueOf (tokenizerData.m_allMatches.size ()));
+    options.put ("maxLexStates", Integer.valueOf (tokenizerData.m_lexStateNames.length));
+    options.put ("stateSetSize", Integer.valueOf (tokenizerData.m_nfa.size ()));
     options.put ("parserName", tokenizerData.m_parserName);
-    options.put ("maxLongs", tokenizerData.m_allMatches.size () / 64 + 1);
+    options.put ("maxLongs", Integer.valueOf (tokenizerData.m_allMatches.size () / 64 + 1));
     options.put ("charStreamName", CodeGenerator.getCharStreamName ());
-    options.put ("defaultLexState", tokenizerData.m_defaultLexState);
+    options.put ("defaultLexState", Integer.valueOf (tokenizerData.m_defaultLexState));
     options.put ("decls", tokenizerData.m_decls);
     options.put ("superClass", StringHelper.hasNoText (superClass) ? "" : "extends " + superClass);
-    options.put ("noDfa", Options.isNoDfa ());
-    options.put ("generatedStates", tokenizerData.m_nfa.size ());
+    options.put ("noDfa", Boolean.valueOf (Options.isNoDfa ()));
+    options.put ("generatedStates", Integer.valueOf (tokenizerData.m_nfa.size ()));
     try
     {
       m_codeGenerator.writeTemplate (TokenManagerTemplate, options);
@@ -104,8 +104,8 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     for (final int key : tokenizerData.m_literalSequence.keySet ())
     {
       final int [] arr = new int [2];
-      final List <String> l = tokenizerData.m_literalSequence.get (key);
-      final List <Integer> kinds = tokenizerData.m_literalKinds.get (key);
+      final List <String> l = tokenizerData.m_literalSequence.get (Integer.valueOf (key));
+      final List <Integer> kinds = tokenizerData.m_literalKinds.get (Integer.valueOf (key));
       arr[0] = i;
       arr[1] = l.size ();
       int j = 0;
@@ -122,13 +122,13 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
           codeGenerator.genCode (Integer.toString (s.charAt (k)));
           i++;
         }
-        final int kind = kinds.get (j);
+        final Integer kind = kinds.get (j);
         codeGenerator.genCode (", " + kind);
         codeGenerator.genCode (", " + tokenizerData.m_kindToNfaStartState.get (kind));
         i += 3;
         j++;
       }
-      startAndSize.put (key, arr);
+      startAndSize.put (Integer.valueOf (key), arr);
     }
     codeGenerator.genCodeLine ("};");
 
@@ -139,7 +139,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     codeGenerator.genCodeLine ("static {");
     for (final int key : tokenizerData.m_literalSequence.keySet ())
     {
-      final int [] arr = startAndSize.get (key);
+      final int [] arr = startAndSize.get (Integer.valueOf (key));
       codeGenerator.genCodeLine ("startAndSize.put(" + key + ", new int[]{" + arr[0] + ", " + arr[1] + "});");
     }
     codeGenerator.genCodeLine ("}");
@@ -155,7 +155,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     final Map <Integer, TokenizerData.NfaState> nfa = tokenizerData.m_nfa;
     for (int i = 0; i < nfa.size (); i++)
     {
-      final TokenizerData.NfaState tmp = nfa.get (i);
+      final TokenizerData.NfaState tmp = nfa.get (Integer.valueOf (i));
       if (i > 0)
         codeGenerator.genCodeLine (",");
       if (tmp == null)
@@ -201,7 +201,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     codeGenerator.genCodeLine ("private static final int[][] jjcompositeState = {");
     for (int i = 0; i < nfa.size (); i++)
     {
-      final TokenizerData.NfaState tmp = nfa.get (i);
+      final TokenizerData.NfaState tmp = nfa.get (Integer.valueOf (i));
       if (i > 0)
         codeGenerator.genCodeLine (", ");
       if (tmp == null)
@@ -224,7 +224,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     codeGenerator.genCodeLine ("private static final int[] jjmatchKinds = {");
     for (int i = 0; i < nfa.size (); i++)
     {
-      final TokenizerData.NfaState tmp = nfa.get (i);
+      final TokenizerData.NfaState tmp = nfa.get (Integer.valueOf (i));
       if (i > 0)
         codeGenerator.genCodeLine (", ");
       // TODO(sreeni) : Fix this mess.
@@ -240,7 +240,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     codeGenerator.genCodeLine ("private static final int[][] jjnextStateSet = {");
     for (int i = 0; i < nfa.size (); i++)
     {
-      final TokenizerData.NfaState tmp = nfa.get (i);
+      final TokenizerData.NfaState tmp = nfa.get (Integer.valueOf (i));
       if (i > 0)
         codeGenerator.genCodeLine (", ");
       if (tmp == null)
@@ -405,7 +405,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     codeGenerator.genCodeLine ("  switch(" + kindString + ") {");
     for (final int i : allMatches.keySet ())
     {
-      final TokenizerData.MatchInfo matchInfo = allMatches.get (i);
+      final TokenizerData.MatchInfo matchInfo = allMatches.get (Integer.valueOf (i));
       if (matchInfo.m_action == null || matchInfo.m_matchType != matchType)
       {
         continue;

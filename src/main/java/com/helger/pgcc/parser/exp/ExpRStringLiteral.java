@@ -74,6 +74,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.lang.GenericReflection;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
@@ -1497,7 +1498,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     List <NfaState> oldStates = null;
     List <NfaState> jjtmpStates;
 
-    s_statesForPos = new Map [s_maxLen];
+    s_statesForPos = GenericReflection.uncheckedCast (new Map [s_maxLen]);
     s_intermediateKinds = new int [s_maxStrKind + 1] [];
     s_intermediateMatchedPos = new int [s_maxStrKind + 1] [];
 

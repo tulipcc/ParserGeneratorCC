@@ -58,6 +58,7 @@ import com.helger.pgcc.CPG;
  */
 public class ParseGenCPP extends ParseGenJava
 {
+  @SuppressWarnings ("unchecked")
   public void start () throws MetaParseException
   {
     if (JavaCCErrors.getErrorCount () != 0)

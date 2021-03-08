@@ -327,6 +327,7 @@ public class ParseEngine
     OPENSWITCH
   }
 
+  @SuppressWarnings ("unused")
   private void _dumpLookaheads (final ExpLookahead [] conds, final String [] actions)
   {
     for (int i = 0; i < conds.length; i++)
