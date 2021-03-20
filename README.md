@@ -28,6 +28,7 @@ Add the following to your pom.xml to use this artifact:
 # News and noteworthy
 
 * v1.1.4 - work in progress
+    * Updated to ph-commons 10
     * Java non-modern style no longer creates constructors without a Charset - [issue #29](https://github.com/phax/ParserGeneratorCC/issues/29)
 * v1.1.3 - 2020-05-13
     * Allow `final` when catching exceptions - [issue #24](https://github.com/phax/ParserGeneratorCC/issues/24)

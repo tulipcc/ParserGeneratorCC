@@ -133,9 +133,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.helger</groupId>
+        <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>9.5.5</version>
+        <version>10.0.0-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -144,15 +144,15 @@
   
   <dependencies>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.commons</groupId>
       <artifactId>ph-commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.commons</groupId>
       <artifactId>ph-security</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.commons</groupId>
       <artifactId>ph-xml</artifactId>
     </dependency>
     
@@ -169,7 +169,7 @@
     <dependency>
       <groupId>com.github.javaparser</groupId>
       <artifactId>javaparser-core</artifactId>
-      <version>3.19.0</version>
+      <version>3.20.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
