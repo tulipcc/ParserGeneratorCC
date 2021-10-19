@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017-2021 Philip Helger, pgcc@helger.com
  *
  * Copyright 2011 Google Inc. All Rights Reserved.
