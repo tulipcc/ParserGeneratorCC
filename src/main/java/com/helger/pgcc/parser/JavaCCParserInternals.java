@@ -448,8 +448,42 @@ public abstract class JavaCCParserInternals
     return retval;
   }
 
+  private static boolean isUnicodeEscapeCharSequence(String s) {
+    return s.length() > 6 && (s.startsWith("\\u005c") || s.startsWith("\\u005C"));
+  }
+
+  private static char getUnicodeEscapedChar(String unicodeEscapeSequence) {
+    switch (unicodeEscapeSequence.substring(6))
+    {
+      case "\\":
+      case "\\u005c":
+      case "\\u005C":
+        return '\\';
+      case "n":
+        return '\n';
+      case "r":
+        return '\r';
+      case "t":
+        return '\t';
+      case "b":
+        return '\b';
+      case "f":
+        return '\f';
+      case "'":
+        return '\'';
+      case "\"":
+        return '\"';
+      default:
+        throw new IllegalArgumentException("Not a unicode escaped special char symbol: " + unicodeEscapeSequence);
+    }
+  }
+
   protected static char character_descriptor_assign (final Token t, final String s)
   {
+    if (isUnicodeEscapeCharSequence(s))
+    {
+      return getUnicodeEscapedChar(s);
+    }
     if (s.length () != 1)
     {
       JavaCCErrors.parse_error (t, "String in character list may contain only one character.");
@@ -460,6 +494,10 @@ public abstract class JavaCCParserInternals
 
   protected static char character_descriptor_assign (final Token t, final String s, final String left)
   {
+    if (isUnicodeEscapeCharSequence(s))
+    {
+      return getUnicodeEscapedChar(s);
+    }
     if (s.length () != 1)
     {
       JavaCCErrors.parse_error (t, "String in character list may contain only one character.");
