@@ -1,10 +1,9 @@
 # ParserGeneratorCC
 
-![Travis CI Status](https://travis-ci.org/phax/ParserGeneratorCC.svg?branch=master)
 [![javadoc](https://javadoc.io/badge2/com.helger/parser-generator-cc/javadoc.svg)](https://javadoc.io/doc/com.helger/parser-generator-cc)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.helger/parser-generator-cc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.helger/parser-generator-cc) 
 
-Fork of JavaCC 7.0.3 because the original code base has poor quality and PRs are not really merged.
+Fork of JavaCC 7.0.3 because the original code base has poor quality and PRs were not really merged.
 The overall goal is to maintain compatibility to JavaCC but
 * The code itself should be better maintainable
 * The code itself should conform to best-practices
@@ -13,17 +12,20 @@ The overall goal is to maintain compatibility to JavaCC but
 
 See https://github.com/phax/ph-javacc-maven-plugin/ for a Maven plugin that uses this CC.
 
+This fork is not really actively maintained, except some severe problems arise.
+I mainly use it to power my [ph-css](https://github.com/phax/ph-css) CSS parser.
+
 ## Maven usage
 
-Add the following to your pom.xml to use this artifact:
+Add the following to your pom.xml to use this artifact (replacing `x.y.z` with the actual version number):
 
 ```xml
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>parser-generator-cc</artifactId>
-  <version>1.1.3</version>
+  <version>x.y.z</version>
 </dependency>
-``` 
+```
 
 # News and noteworthy
 
