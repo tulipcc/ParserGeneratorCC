@@ -31,7 +31,7 @@ Add the following to your pom.xml to use this artifact (replacing `x.y.z` with t
 
 * v1.1.4 - 2022-01-10
     * Updated to ph-commons 10
-    * Java non-modern style no longer creates constructors without a Charset - [issue #29](https://github.com/phax/ParserGeneratorCC/issues/29)
+    * Java non-modern style no longer creates constructors without a Charset. See [issue #29](https://github.com/phax/ParserGeneratorCC/issues/29) - thanks @sfuhrm
     * Improved the code of the `jj_ntk_f` method to be more efficient
 * v1.1.3 - 2020-05-13
     * Allow `final` when catching exceptions - [issue #24](https://github.com/phax/ParserGeneratorCC/issues/24)
