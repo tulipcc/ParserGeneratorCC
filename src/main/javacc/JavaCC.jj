@@ -555,18 +555,18 @@ void javacc_input() :
   {
     addcuname(id1);
   }
-                 ")"
+    ")"
   {
     m_processing_cu = true;
     m_sParserClassName = id1;
 
-          if (!isJavaLanguage()) {
-            JavaCCGlobals.s_otherLanguageDeclTokenBeg = getToken(1);
-            while(getToken(1).kind != _PARSER_END) {
-              getNextToken();
-            }
-            JavaCCGlobals.s_otherLanguageDeclTokenEnd = getToken(1);
-          }
+    if (!isJavaLanguage()) {
+      JavaCCGlobals.setOtherLanguageDeclTokenBegin (getToken(1));
+      while(getToken(1).kind != _PARSER_END) {
+        getNextToken();
+      }
+      JavaCCGlobals.setOtherLanguageDeclTokenEnd (getToken(1));
+    }
   }
     CompilationUnit()
   {

@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
@@ -225,8 +226,8 @@ public final class JavaCCGlobals
 
   static ExpAction s_aActForEof;
   static String s_sNextStateForEof;
-  static Token s_aOtherLanguageDeclTokenBeg;
-  static Token s_aOtherLanguageDeclTokenEnd;
+  private static Token s_aOtherLanguageDeclTokenBeg;
+  private static Token s_aOtherLanguageDeclTokenEnd;
 
   // Some general purpose utilities follow.
 
@@ -238,6 +239,28 @@ public final class JavaCCGlobals
   public static void setLookAheadNeeded (final boolean bLookAheadNeeded)
   {
     s_bLookAheadNeeded = bLookAheadNeeded;
+  }
+
+  @Nullable
+  public static Token getOtherLanguageDeclTokenBegin ()
+  {
+    return s_aOtherLanguageDeclTokenBeg;
+  }
+
+  public static void setOtherLanguageDeclTokenBegin (@Nullable final Token t)
+  {
+    s_aOtherLanguageDeclTokenBeg = t;
+  }
+
+  @Nullable
+  public static Token getOtherLanguageDeclTokenEnd ()
+  {
+    return s_aOtherLanguageDeclTokenEnd;
+  }
+
+  public static void setOtherLanguageDeclTokenEnd (@Nullable final Token t)
+  {
+    s_aOtherLanguageDeclTokenEnd = t;
   }
 
   /**

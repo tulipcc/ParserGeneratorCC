@@ -36,13 +36,13 @@
 
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.CU_FROM_INSERTION_POINT_2;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
+import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
-import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
@@ -802,8 +802,8 @@ public class ParseGenCPP extends ParseGenJava
     switchToIncludeFile ();
 
     // copy other stuff
-    Token t1 = JavaCCGlobals.s_aOtherLanguageDeclTokenBeg;
-    final Token t2 = JavaCCGlobals.s_aOtherLanguageDeclTokenEnd;
+    Token t1 = JavaCCGlobals.getOtherLanguageDeclTokenBegin ();
+    final Token t2 = JavaCCGlobals.getOtherLanguageDeclTokenEnd ();
     while (t1 != t2)
     {
       printToken (t1);
