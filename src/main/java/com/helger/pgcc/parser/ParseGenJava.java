@@ -63,15 +63,15 @@
  */
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
-import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.CU_FROM_INSERTION_POINT_2;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
 import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
+import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
+import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
-import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
@@ -870,16 +870,36 @@ public class ParseGenJava extends CodeGenerator
     genCodeNewLine ();
     if (!Options.isCacheTokens ())
     {
-      genCodeLine ("  private int jj_ntk_f() {");
-      genCodeLine ("    jj_nt = token.next;");
-      genCodeLine ("    if (jj_nt == null) {");
-      genCodeLine ("      token.next = token_source.getNextToken();");
-      genCodeLine ("      jj_ntk = token.next.kind;");
-      genCodeLine ("      return jj_ntk;");
-      genCodeLine ("    }");
-      genCodeLine ("    jj_ntk = jj_nt.kind;");
-      genCodeLine ("    return jj_ntk;");
-      genCodeLine ("  }");
+      if (true)
+      {
+        // This is a version with optimized runtime performance
+        // It uses way less member access
+        genCodeLine ("  private int jj_ntk_f() {");
+        genCodeLine ("    final Token nt = jj_nt = token.next;");
+        genCodeLine ("    final int ret;");
+        genCodeLine ("    if (nt == null) {");
+        genCodeLine ("      token.next = token_source.getNextToken();");
+        genCodeLine ("      ret = jj_ntk = token.next.kind;");
+        genCodeLine ("    }");
+        genCodeLine ("    else");
+        genCodeLine ("      ret = jj_ntk = nt.kind;");
+        genCodeLine ("    return ret;");
+        genCodeLine ("  }");
+      }
+      else
+      {
+        // Original version
+        genCodeLine ("  private int jj_ntk_f() {");
+        genCodeLine ("    jj_nt = token.next;");
+        genCodeLine ("    if (jj_nt == null) {");
+        genCodeLine ("      token.next = token_source.getNextToken();");
+        genCodeLine ("      jj_ntk = token.next.kind;");
+        genCodeLine ("      return jj_ntk;");
+        genCodeLine ("    }");
+        genCodeLine ("    jj_ntk = jj_nt.kind;");
+        genCodeLine ("    return jj_ntk;");
+        genCodeLine ("  }");
+      }
       genCodeNewLine ();
     }
     if (Options.isErrorReporting ())
