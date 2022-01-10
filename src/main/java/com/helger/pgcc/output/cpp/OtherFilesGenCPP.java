@@ -68,9 +68,9 @@ import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
 import static com.helger.pgcc.parser.JavaCCGlobals.printTokenSetup;
 import static com.helger.pgcc.parser.JavaCCGlobals.printTrailingComments;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_ordered_named_tokens;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.ORDERED_NAME_TOKENS;
+import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
@@ -138,17 +138,17 @@ public class OtherFilesGenCPP
       tn.add (CPG.APP_NAME);
       s_ostr.println ("/* " + getIdString (tn, s_cu_name + "Constants.java") + " */");
 
-      if (s_cu_to_insertion_point_1.size () != 0 && s_cu_to_insertion_point_1.get (0).kind == JavaCCParserConstants.PACKAGE)
+      if (CU_TO_INSERTION_POINT_1.size () != 0 && CU_TO_INSERTION_POINT_1.get (0).kind == JavaCCParserConstants.PACKAGE)
       {
-        for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
+        for (int i = 1; i < CU_TO_INSERTION_POINT_1.size (); i++)
         {
-          if (s_cu_to_insertion_point_1.get (i).kind == JavaCCParserConstants.SEMICOLON)
+          if (CU_TO_INSERTION_POINT_1.get (i).kind == JavaCCParserConstants.SEMICOLON)
           {
-            Token t = s_cu_to_insertion_point_1.get (0);
+            Token t = CU_TO_INSERTION_POINT_1.get (0);
             printTokenSetup (t);
             for (int j = 0; j <= i; j++)
             {
-              t = s_cu_to_insertion_point_1.get (j);
+              t = CU_TO_INSERTION_POINT_1.get (j);
               printToken (t, s_ostr);
             }
             printTrailingComments (t);
@@ -178,7 +178,7 @@ public class OtherFilesGenCPP
       final String constPrefix = "const";
       s_ostr.println ("  /** End of File. */");
       s_ostr.println (constPrefix + "  int _EOF = 0;");
-      for (final java.util.Iterator <AbstractExpRegularExpression> it = s_ordered_named_tokens.iterator (); it.hasNext ();)
+      for (final java.util.Iterator <AbstractExpRegularExpression> it = ORDERED_NAME_TOKENS.iterator (); it.hasNext ();)
       {
         re = it.next ();
         s_ostr.println ("  /** RegularExpression Id. */");
@@ -201,7 +201,7 @@ public class OtherFilesGenCPP
       printCharArray (s_ostr, "<EOF>");
       s_ostr.println (";");
 
-      for (final TokenProduction tp : s_rexprlist)
+      for (final TokenProduction tp : REXPR_LIST)
       {
         final List <RegExprSpec> respecs = tp.m_respecs;
         for (final RegExprSpec res : respecs)

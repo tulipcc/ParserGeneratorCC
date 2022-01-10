@@ -116,46 +116,46 @@ public final class JavaCCGlobals
    * This is a list of tokens that appear after "PARSER_BEGIN(name)" all the way
    * until (but not including) the opening brace "{" of the class "name".
    */
-  public static final ICommonsList <Token> s_cu_to_insertion_point_1 = new CommonsArrayList <> ();
+  public static final ICommonsList <Token> CU_TO_INSERTION_POINT_1 = new CommonsArrayList <> ();
 
   /**
    * This is the list of all tokens that appear after the tokens in
    * "cu_to_insertion_point_1" and until (but not including) the closing brace
    * "}" of the class "name".
    */
-  public static final ICommonsList <Token> s_cu_to_insertion_point_2 = new CommonsArrayList <> ();
+  public static final ICommonsList <Token> CU_TO_INSERTION_POINT_2 = new CommonsArrayList <> ();
 
   /**
    * This is the list of all tokens that appear after the tokens in
    * "cu_to_insertion_point_2" and until "PARSER_END(name)".
    */
-  public static final ICommonsList <Token> s_cu_from_insertion_point_2 = new CommonsArrayList <> ();
+  public static final ICommonsList <Token> CU_FROM_INSERTION_POINT_2 = new CommonsArrayList <> ();
 
   /**
    * A list of all grammar productions - normal and JAVACODE - in the order they
    * appear in the input file. Each entry here will be a subclass of
    * "NormalProduction".
    */
-  public static final List <NormalProduction> s_bnfproductions = new ArrayList <> ();
+  public static final List <NormalProduction> BNF_PRODUCTIONS = new ArrayList <> ();
 
   /**
    * A symbol table of all grammar productions - normal and JAVACODE. The symbol
    * table is indexed by the name of the left hand side non-terminal. Its
    * contents are of type "NormalProduction".
    */
-  public static final Map <String, NormalProduction> s_production_table = new HashMap <> ();
+  public static final Map <String, NormalProduction> PRODUCTION_TABLE = new HashMap <> ();
 
   /**
    * A mapping of lexical state strings to their integer internal
    * representation. Integers are stored as java.lang.Integer's.
    */
-  public static final Map <String, Integer> s_lexstate_S2I = new HashMap <> ();
+  public static final Map <String, Integer> LEXSTATE_S2I = new HashMap <> ();
 
   /**
    * A mapping of the internal integer representations of lexical states to
    * their strings. Integers are stored as java.lang.Integer's.
    */
-  public static final Map <Integer, String> s_lexstate_I2S = new HashMap <> ();
+  public static final Map <Integer, String> LEXSTATE_I2S = new HashMap <> ();
 
   /**
    * The declarations to be inserted into the TokenManager class.
@@ -167,7 +167,7 @@ public final class JavaCCGlobals
    * implicit TokenProductions that are created for uses of regular expressions
    * within BNF productions.
    */
-  public static final List <TokenProduction> s_rexprlist = new ArrayList <> ();
+  public static final List <TokenProduction> REXPR_LIST = new ArrayList <> ();
 
   /**
    * The total number of distinct tokens. This is therefore one more than the
@@ -180,13 +180,13 @@ public final class JavaCCGlobals
    * defined with a label). The index to the table is the image of the label and
    * the contents of the table are of type "RegularExpression".
    */
-  public static final Map <String, AbstractExpRegularExpression> s_named_tokens_table = new HashMap <> ();
+  public static final Map <String, AbstractExpRegularExpression> NAMED_TOKENS_TABLE = new HashMap <> ();
 
   /**
    * Contains the same entries as "named_tokens_table", but this is an ordered
    * list which is ordered by the order of appearance in the input file.
    */
-  public static final List <AbstractExpRegularExpression> s_ordered_named_tokens = new ArrayList <> ();
+  public static final List <AbstractExpRegularExpression> ORDERED_NAME_TOKENS = new ArrayList <> ();
 
   /**
    * A mapping of ordinal values (represented as objects of type "Integer") to
@@ -195,13 +195,13 @@ public final class JavaCCGlobals
    * there are multiple labels representing the same ordinal value, then only
    * one label is stored.
    */
-  public static final Map <Integer, String> s_names_of_tokens = new HashMap <> ();
+  public static final Map <Integer, String> NAMES_OF_TOKENS = new HashMap <> ();
 
   /**
    * A mapping of ordinal values (represented as objects of type "Integer") to
    * the corresponding RegularExpression's.
    */
-  public static final Map <Integer, AbstractExpRegularExpression> s_rexps_of_tokens = new HashMap <> ();
+  public static final Map <Integer, AbstractExpRegularExpression> REXPS_OF_TOKENS = new HashMap <> ();
 
   /**
    * This is a three-level symbol table that contains all simple tokens (those
@@ -212,7 +212,7 @@ public final class JavaCCGlobals
    * hashtable. This third level hashtable contains the actual string of the
    * simple token and maps it to its RegularExpression.
    */
-  public static final Map <String, Map <String, Map <String, AbstractExpRegularExpression>>> s_simple_tokens_table = new HashMap <> ();
+  public static final Map <String, Map <String, Map <String, AbstractExpRegularExpression>>> SIMPLE_TOKENS_TABLE = new HashMap <> ();
 
   /**
    * maskindex, jj2index, maskVals are variables that are shared between
@@ -221,12 +221,12 @@ public final class JavaCCGlobals
   protected static int s_maskindex = 0;
   protected static int s_jj2index = 0;
   private static boolean s_bLookAheadNeeded = false;
-  protected static final List <int []> s_maskVals = new ArrayList <> ();
+  protected static final List <int []> MASK_VALS = new ArrayList <> ();
 
-  static ExpAction s_actForEof;
-  static String s_nextStateForEof;
-  static Token s_otherLanguageDeclTokenBeg;
-  static Token s_otherLanguageDeclTokenEnd;
+  static ExpAction s_aActForEof;
+  static String s_sNextStateForEof;
+  static Token s_aOtherLanguageDeclTokenBeg;
+  static Token s_aOtherLanguageDeclTokenEnd;
 
   // Some general purpose utilities follow.
 
@@ -406,7 +406,6 @@ public final class JavaCCGlobals
     if (!outputDir.canWrite ())
     {
       JavaCCErrors.semantic_error ("Cannot write to the output output directory : \"" + outputDir + "\"");
-      return;
     }
   }
 
@@ -670,29 +669,29 @@ public final class JavaCCGlobals
     s_jjtreeGenerated = false;
     s_toolNames = null;
     s_cu_name = null;
-    s_cu_to_insertion_point_1.clear ();
-    s_cu_to_insertion_point_2.clear ();
-    s_cu_from_insertion_point_2.clear ();
-    s_bnfproductions.clear ();
-    s_production_table.clear ();
-    s_lexstate_S2I.clear ();
-    s_lexstate_I2S.clear ();
+    CU_TO_INSERTION_POINT_1.clear ();
+    CU_TO_INSERTION_POINT_2.clear ();
+    CU_FROM_INSERTION_POINT_2.clear ();
+    BNF_PRODUCTIONS.clear ();
+    PRODUCTION_TABLE.clear ();
+    LEXSTATE_S2I.clear ();
+    LEXSTATE_I2S.clear ();
     s_token_mgr_decls = null;
-    s_rexprlist.clear ();
+    REXPR_LIST.clear ();
     s_tokenCount = 0;
-    s_named_tokens_table.clear ();
-    s_ordered_named_tokens.clear ();
-    s_names_of_tokens.clear ();
-    s_rexps_of_tokens.clear ();
-    s_simple_tokens_table.clear ();
+    NAMED_TOKENS_TABLE.clear ();
+    ORDERED_NAME_TOKENS.clear ();
+    NAMES_OF_TOKENS.clear ();
+    REXPS_OF_TOKENS.clear ();
+    SIMPLE_TOKENS_TABLE.clear ();
     s_maskindex = 0;
     s_jj2index = 0;
     s_bLookAheadNeeded = false;
-    s_maskVals.clear ();
+    MASK_VALS.clear ();
     s_cline = 0;
     s_ccol = 0;
-    s_actForEof = null;
-    s_nextStateForEof = null;
+    s_aActForEof = null;
+    s_sNextStateForEof = null;
   }
 
   static String getFileExtension ()

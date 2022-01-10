@@ -58,8 +58,8 @@ public final class JJDoc
   {
     JJDocGlobals.s_generator = JJDocGlobals.getGenerator ();
     JJDocGlobals.s_generator.documentStart ();
-    _emitTokenProductions (JJDocGlobals.s_generator, JavaCCGlobals.s_rexprlist);
-    _emitNormalProductions (JJDocGlobals.s_generator, JavaCCGlobals.s_bnfproductions);
+    _emitTokenProductions (JJDocGlobals.s_generator, JavaCCGlobals.REXPR_LIST);
+    _emitNormalProductions (JJDocGlobals.s_generator, JavaCCGlobals.BNF_PRODUCTIONS);
     JJDocGlobals.s_generator.documentEnd ();
   }
 

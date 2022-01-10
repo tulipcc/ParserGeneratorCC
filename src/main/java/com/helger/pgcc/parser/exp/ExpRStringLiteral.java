@@ -143,7 +143,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
   // with single char keys;
   private static int [] s_maxLenForActive = new int [100]; // 6400 tokens
   public static String [] s_allImages;
-  private static int [] [] s_intermediateKinds;
+  private static int [] [] s_aIntermediateKinds;
   private static int [] [] s_intermediateMatchedPos;
 
   private static boolean [] s_subString;
@@ -162,7 +162,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     s_maxLen = 0;
     s_charPosKind = new ArrayList <> ();
     s_maxLenForActive = new int [100]; // 6400 tokens
-    s_intermediateKinds = null;
+    s_aIntermediateKinds = null;
     s_intermediateMatchedPos = null;
     s_subString = null;
     s_subStringAtPos = null;
@@ -675,13 +675,13 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                                      (LexGenJava.s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                                      "\"Current character : \" + " +
                                      Options.getTokenMgrErrorClass () +
-                                     ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
+                                     ".addEscapes(String.valueOf(curChar)) + \" (\" + curChar + \") " +
                                      "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
           break;
         case CPP:
           codeGenerator.genCodeLine ("   fprintf(debugStream, " +
                                      "\"<%s>Current character : %c(%d) at line %d column %d\\n\"," +
-                                     "addUnicodeEscapes(lexStateNames[curLexState]).c_str(), curChar, (int)curChar, " +
+                                     "addUnicodeEscapes(lexStateNames[curLexState]).c_str(), curChar, curChar, " +
                                      "input_stream->getEndLine(), input_stream->getEndColumn());");
           break;
         default:
@@ -1101,13 +1101,13 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                                          (LexGenJava.s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                                          "\"Current character : \" + " +
                                          Options.getTokenMgrErrorClass () +
-                                         ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
+                                         ".addEscapes(String.valueOf(curChar)) + \" (\" + curChar + \") " +
                                          "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
               break;
             case CPP:
               codeGenerator.genCodeLine ("   fprintf(debugStream, " +
                                          "\"<%s>Current character : %c(%d) at line %d column %d\\n\"," +
-                                         "addUnicodeEscapes(lexStateNames[curLexState]).c_str(), curChar, (int)curChar, " +
+                                         "addUnicodeEscapes(lexStateNames[curLexState]).c_str(), curChar, curChar, " +
                                          "input_stream->getEndLine(), input_stream->getEndColumn());");
               break;
             default:
@@ -1137,9 +1137,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
           for (int k = 0; k < 64; k++)
             if ((info.m_finalKinds[j] & (1L << k)) != 0L && !s_subString[kind = (j * 64 + k)])
             {
-              if ((s_intermediateKinds != null &&
-                   s_intermediateKinds[(j * 64 + k)] != null &&
-                   s_intermediateKinds[(j * 64 + k)][i] < (j * 64 + k) &&
+              if ((s_aIntermediateKinds != null &&
+                   s_aIntermediateKinds[(j * 64 + k)] != null &&
+                   s_aIntermediateKinds[(j * 64 + k)][i] < (j * 64 + k) &&
                    s_intermediateMatchedPos != null &&
                    s_intermediateMatchedPos[(j * 64 + k)][i] == i) ||
                   (LexGenJava.s_canMatchAnyChar[LexGenJava.s_lexStateIndex] >= 0 &&
@@ -1215,9 +1215,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                                            ")");
               }
 
-              if (s_intermediateKinds != null &&
-                  s_intermediateKinds[(j * 64 + k)] != null &&
-                  s_intermediateKinds[(j * 64 + k)][i] < (j * 64 + k) &&
+              if (s_aIntermediateKinds != null &&
+                  s_aIntermediateKinds[(j * 64 + k)] != null &&
+                  s_aIntermediateKinds[(j * 64 + k)][i] < (j * 64 + k) &&
                   s_intermediateMatchedPos != null &&
                   s_intermediateMatchedPos[(j * 64 + k)][i] == i)
               {
@@ -1229,9 +1229,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                                       ", column " +
                                       getColumn (j * 64 + k) +
                                       ". It will be matched as " +
-                                      getLabel (s_intermediateKinds[(j * 64 + k)][i]) +
+                                      getLabel (s_aIntermediateKinds[(j * 64 + k)][i]) +
                                       ".");
-                kindToPrint = s_intermediateKinds[(j * 64 + k)][i];
+                kindToPrint = s_aIntermediateKinds[(j * 64 + k)][i];
               }
               else
                 if (i == 0 &&
@@ -1499,7 +1499,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     List <NfaState> jjtmpStates;
 
     s_statesForPos = GenericReflection.uncheckedCast (new Map [s_maxLen]);
-    s_intermediateKinds = new int [s_maxStrKind + 1] [];
+    s_aIntermediateKinds = new int [s_maxStrKind + 1] [];
     s_intermediateMatchedPos = new int [s_maxStrKind + 1] [];
 
     for (i = 0; i < s_maxStrKind; i++)
@@ -1526,7 +1526,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         JavaCCErrors.semantic_error ("Error cloning state vector");
       }
 
-      s_intermediateKinds[i] = new int [image.length ()];
+      s_aIntermediateKinds[i] = new int [image.length ()];
       s_intermediateMatchedPos[i] = new int [image.length ()];
       jjmatchedPos = 0;
       kind = Integer.MAX_VALUE;
@@ -1536,7 +1536,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         if (oldStates == null || oldStates.size () <= 0)
         {
           // Here, j > 0
-          kind = s_intermediateKinds[i][j] = s_intermediateKinds[i][j - 1];
+          kind = s_aIntermediateKinds[i][j] = s_aIntermediateKinds[i][j - 1];
           jjmatchedPos = s_intermediateMatchedPos[i][j] = s_intermediateMatchedPos[i][j - 1];
         }
         else
@@ -1552,21 +1552,21 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
           if (getStrKind (image.substring (0, j + 1)) < kind)
           {
-            s_intermediateKinds[i][j] = kind = Integer.MAX_VALUE;
+            s_aIntermediateKinds[i][j] = kind = Integer.MAX_VALUE;
             jjmatchedPos = 0;
           }
           else
             if (kind != Integer.MAX_VALUE)
             {
-              s_intermediateKinds[i][j] = kind;
+              s_aIntermediateKinds[i][j] = kind;
               jjmatchedPos = s_intermediateMatchedPos[i][j] = j;
             }
             else
               if (j == 0)
-                kind = s_intermediateKinds[i][j] = Integer.MAX_VALUE;
+                kind = s_aIntermediateKinds[i][j] = Integer.MAX_VALUE;
               else
               {
-                kind = s_intermediateKinds[i][j] = s_intermediateKinds[i][j - 1];
+                kind = s_aIntermediateKinds[i][j] = s_aIntermediateKinds[i][j - 1];
                 jjmatchedPos = s_intermediateMatchedPos[i][j] = s_intermediateMatchedPos[i][j - 1];
               }
 
@@ -1884,18 +1884,18 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       }
       String s = s_allImages[kind];
       int actualKind;
-      if (s_intermediateKinds != null &&
-          s_intermediateKinds[kind][s.length () - 1] != Integer.MAX_VALUE &&
-          s_intermediateKinds[kind][s.length () - 1] < kind)
+      if (s_aIntermediateKinds != null &&
+          s_aIntermediateKinds[kind][s.length () - 1] != Integer.MAX_VALUE &&
+          s_aIntermediateKinds[kind][s.length () - 1] < kind)
       {
         JavaCCErrors.warning ("Token: " +
                               s +
                               " will not be matched as " +
                               "specified. It will be matched as token " +
                               "of kind: " +
-                              s_intermediateKinds[kind][s.length () - 1] +
+                              s_aIntermediateKinds[kind][s.length () - 1] +
                               " instead.");
-        actualKind = s_intermediateKinds[kind][s.length () - 1];
+        actualKind = s_aIntermediateKinds[kind][s.length () - 1];
       }
       else
       {

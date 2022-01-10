@@ -37,12 +37,12 @@
 package com.helger.pgcc.parser;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_from_insertion_point_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_FROM_INSERTION_POINT_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_maskVals;
+import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
@@ -134,10 +134,10 @@ public class ParseGenCPP extends ParseGenJava
     final String superClass = Options.stringValue (Options.USEROPTION__PARSER_SUPER_CLASS);
     genClassStart ("", s_cu_name, new String [] {}, superClass == null ? new String [0] : new String [] { "public " + superClass });
     switchToMainFile ();
-    if (s_cu_to_insertion_point_2.size () != 0)
+    if (CU_TO_INSERTION_POINT_2.size () != 0)
     {
-      printTokenSetup (s_cu_to_insertion_point_2.get (0));
-      for (final Token t : s_cu_to_insertion_point_2)
+      printTokenSetup (CU_TO_INSERTION_POINT_2.get (0));
+      for (final Token t : CU_TO_INSERTION_POINT_2)
         printToken (t);
     }
 
@@ -195,10 +195,10 @@ public class ParseGenCPP extends ParseGenJava
       switchToStaticsFile ();
       for (int i = 0; i < tokenMaskSize; i++)
       {
-        if (s_maskVals.size () > 0)
+        if (MASK_VALS.size () > 0)
         {
           genCodeLine ("  unsigned int jj_la1_" + i + "[] = {");
-          for (final int [] tokenMask : s_maskVals)
+          for (final int [] tokenMask : MASK_VALS)
           {
             genCode ("0x" + Integer.toHexString (tokenMask[i]) + ",");
           }
@@ -784,12 +784,12 @@ public class ParseGenCPP extends ParseGenJava
       genCodeNewLine ();
     }
 
-    if (s_cu_from_insertion_point_2.isNotEmpty ())
+    if (CU_FROM_INSERTION_POINT_2.isNotEmpty ())
     {
-      printTokenSetup (s_cu_from_insertion_point_2.get (0));
+      printTokenSetup (CU_FROM_INSERTION_POINT_2.get (0));
       setColToStart ();
       Token t = null;
-      for (final Token name : s_cu_from_insertion_point_2)
+      for (final Token name : CU_FROM_INSERTION_POINT_2)
       {
         t = name;
         printToken (t);
@@ -802,8 +802,8 @@ public class ParseGenCPP extends ParseGenJava
     switchToIncludeFile ();
 
     // copy other stuff
-    Token t1 = JavaCCGlobals.s_otherLanguageDeclTokenBeg;
-    final Token t2 = JavaCCGlobals.s_otherLanguageDeclTokenEnd;
+    Token t1 = JavaCCGlobals.s_aOtherLanguageDeclTokenBeg;
+    final Token t2 = JavaCCGlobals.s_aOtherLanguageDeclTokenEnd;
     while (t1 != t2)
     {
       printToken (t1);

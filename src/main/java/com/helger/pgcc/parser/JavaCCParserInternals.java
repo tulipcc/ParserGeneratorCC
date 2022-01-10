@@ -33,15 +33,15 @@
  */
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.s_bnfproductions;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_from_insertion_point_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.BNF_PRODUCTIONS;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_FROM_INSERTION_POINT_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_2;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_S2I;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_simple_tokens_table;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_S2I;
+import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
+import static com.helger.pgcc.parser.JavaCCGlobals.SIMPLE_TOKENS_TABLE;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 
 import java.util.HashMap;
@@ -152,9 +152,9 @@ public abstract class JavaCCParserInternals
   protected static void initialize ()
   {
     final Integer i = Integer.valueOf (0);
-    s_lexstate_S2I.put ("DEFAULT", i);
-    s_lexstate_I2S.put (i, "DEFAULT");
-    s_simple_tokens_table.put ("DEFAULT", new HashMap <> ());
+    LEXSTATE_S2I.put ("DEFAULT", i);
+    LEXSTATE_I2S.put (i, "DEFAULT");
+    SIMPLE_TOKENS_TABLE.put ("DEFAULT", new HashMap <> ());
   }
 
   protected static void addcuname (final String id)
@@ -170,7 +170,7 @@ public abstract class JavaCCParserInternals
     }
   }
 
-  private static List <Token> s_add_cu_token_here = s_cu_to_insertion_point_1;
+  private static List <Token> s_add_cu_token_here = CU_TO_INSERTION_POINT_1;
   private static Token s_first_cu_token;
   private static boolean s_insertionpoint1set = false;
   private static boolean s_insertionpoint2set = false;
@@ -191,12 +191,12 @@ public abstract class JavaCCParserInternals
       else
       {
         s_insertionpoint1set = true;
-        s_add_cu_token_here = s_cu_to_insertion_point_2;
+        s_add_cu_token_here = CU_TO_INSERTION_POINT_2;
       }
     }
     else
     {
-      s_add_cu_token_here = s_cu_from_insertion_point_2;
+      s_add_cu_token_here = CU_FROM_INSERTION_POINT_2;
       s_insertionpoint2set = true;
     }
     s_first_cu_token = t;
@@ -222,7 +222,7 @@ public abstract class JavaCCParserInternals
 
   protected static void addProduction (final NormalProduction p)
   {
-    s_bnfproductions.add (p);
+    BNF_PRODUCTIONS.add (p);
   }
 
   protected static void productionAddExpansion (final BNFProduction p, final Expansion e)
@@ -235,7 +235,7 @@ public abstract class JavaCCParserInternals
 
   protected static void addregexpr (final TokenProduction p)
   {
-    s_rexprlist.add (p);
+    REXPR_LIST.add (p);
     if (Options.isUserTokenManager ())
     {
       if (p.m_lexStates == null || p.m_lexStates.length != 1 || !p.m_lexStates[0].equals ("DEFAULT"))
@@ -256,13 +256,13 @@ public abstract class JavaCCParserInternals
           JavaCCErrors.parse_error (p, "Multiple occurrence of \"" + p.m_lexStates[i] + "\" in lexical state list.");
         }
       }
-      if (s_lexstate_S2I.get (p.m_lexStates[i]) == null)
+      if (LEXSTATE_S2I.get (p.m_lexStates[i]) == null)
       {
         final Integer ii = Integer.valueOf (s_nextFreeLexState);
         s_nextFreeLexState++;
-        s_lexstate_S2I.put (p.m_lexStates[i], ii);
-        s_lexstate_I2S.put (ii, p.m_lexStates[i]);
-        s_simple_tokens_table.put (p.m_lexStates[i], new HashMap <> ());
+        LEXSTATE_S2I.put (p.m_lexStates[i], ii);
+        LEXSTATE_I2S.put (ii, p.m_lexStates[i]);
+        SIMPLE_TOKENS_TABLE.put (p.m_lexStates[i], new HashMap <> ());
       }
     }
   }
@@ -298,7 +298,7 @@ public abstract class JavaCCParserInternals
       res.nextState = null;
       res.nsTok = null;
       p.m_respecs.add (res);
-      s_rexprlist.add (p);
+      REXPR_LIST.add (p);
     }
   }
 
@@ -506,7 +506,7 @@ public abstract class JavaCCParserInternals
 
   public static void reInit ()
   {
-    s_add_cu_token_here = s_cu_to_insertion_point_1;
+    s_add_cu_token_here = CU_TO_INSERTION_POINT_1;
     s_first_cu_token = null;
     s_insertionpoint1set = false;
     s_insertionpoint2set = false;

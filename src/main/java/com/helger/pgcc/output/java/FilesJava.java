@@ -36,7 +36,7 @@ package com.helger.pgcc.output.java;
 import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ccol;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cline;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
 import static com.helger.pgcc.parser.JavaCCParserConstants.PACKAGE;
 import static com.helger.pgcc.parser.JavaCCParserConstants.SEMICOLON;
 
@@ -112,17 +112,17 @@ public class FilesJava
 
   private static void _writePackageName (@Nonnull @WillNotClose final PrintWriter ostr)
   {
-    if (s_cu_to_insertion_point_1.isNotEmpty () && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
+    if (CU_TO_INSERTION_POINT_1.isNotEmpty () && CU_TO_INSERTION_POINT_1.get (0).kind == PACKAGE)
     {
-      for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
+      for (int i = 1; i < CU_TO_INSERTION_POINT_1.size (); i++)
       {
-        if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+        if (CU_TO_INSERTION_POINT_1.get (i).kind == SEMICOLON)
         {
-          s_cline = s_cu_to_insertion_point_1.get (0).beginLine;
-          s_ccol = s_cu_to_insertion_point_1.get (0).beginColumn;
+          s_cline = CU_TO_INSERTION_POINT_1.get (0).beginLine;
+          s_ccol = CU_TO_INSERTION_POINT_1.get (0).beginColumn;
           for (int j = 0; j <= i; j++)
           {
-            printToken (s_cu_to_insertion_point_1.get (j), ostr);
+            printToken (CU_TO_INSERTION_POINT_1.get (j), ostr);
           }
           ostr.println ();
           ostr.println ();

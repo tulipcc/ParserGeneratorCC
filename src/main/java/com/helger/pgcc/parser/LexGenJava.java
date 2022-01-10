@@ -66,12 +66,12 @@ package com.helger.pgcc.parser;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_actForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_aActForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_nextStateForEof;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_sNextStateForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
@@ -165,18 +165,18 @@ public class LexGenJava extends CodeGenerator
     int i = 1;
     for (;;)
     {
-      if (s_cu_to_insertion_point_1.size () <= nIndex)
+      if (CU_TO_INSERTION_POINT_1.size () <= nIndex)
         break;
 
-      int nKind = s_cu_to_insertion_point_1.get (nIndex).kind;
+      int nKind = CU_TO_INSERTION_POINT_1.get (nIndex).kind;
       if (nKind == JavaCCParserConstants.PACKAGE || nKind == JavaCCParserConstants.IMPORT)
       {
         if (nKind == JavaCCParserConstants.IMPORT)
           bHasImport = true;
 
-        for (; i < s_cu_to_insertion_point_1.size (); i++)
+        for (; i < CU_TO_INSERTION_POINT_1.size (); i++)
         {
-          nKind = s_cu_to_insertion_point_1.get (i).kind;
+          nKind = CU_TO_INSERTION_POINT_1.get (i).kind;
           if (nKind == JavaCCParserConstants.SEMICOLON ||
               nKind == JavaCCParserConstants.ABSTRACT ||
               nKind == JavaCCParserConstants.FINAL ||
@@ -187,14 +187,14 @@ public class LexGenJava extends CodeGenerator
               nKind == JavaCCParserConstants.INTERFACE ||
               nKind == JavaCCParserConstants.ENUM)
           {
-            setLineAndCol (s_cu_to_insertion_point_1.get (nIndex).beginLine, s_cu_to_insertion_point_1.get (nIndex).beginColumn);
+            setLineAndCol (CU_TO_INSERTION_POINT_1.get (nIndex).beginLine, CU_TO_INSERTION_POINT_1.get (nIndex).beginColumn);
             int j = nIndex;
             for (; j < i; j++)
             {
-              printToken (s_cu_to_insertion_point_1.get (j));
+              printToken (CU_TO_INSERTION_POINT_1.get (j));
             }
             if (nKind == JavaCCParserConstants.SEMICOLON)
-              printToken (s_cu_to_insertion_point_1.get (j));
+              printToken (CU_TO_INSERTION_POINT_1.get (j));
             genCodeNewLine ();
             break;
           }
@@ -330,11 +330,11 @@ public class LexGenJava extends CodeGenerator
 
   private static void _buildLexStatesTable ()
   {
-    final Iterator <TokenProduction> it = s_rexprlist.iterator ();
+    final Iterator <TokenProduction> it = REXPR_LIST.iterator ();
     TokenProduction tp;
     int i;
 
-    final String [] tmpLexStateName = new String [s_lexstate_I2S.size ()];
+    final String [] tmpLexStateName = new String [LEXSTATE_I2S.size ()];
     while (it.hasNext ())
     {
       tp = it.next ();
@@ -370,8 +370,8 @@ public class LexGenJava extends CodeGenerator
     s_toToken = new long [s_maxOrdinal / 64 + 1];
     s_toToken[0] = 1L;
     s_actions = new ExpAction [s_maxOrdinal];
-    s_actions[0] = s_actForEof;
-    s_hasTokenActions = s_actForEof != null;
+    s_actions[0] = s_aActForEof;
+    s_hasTokenActions = s_aActForEof != null;
     s_initStates.clear ();
     s_canMatchAnyChar = new int [s_maxLexStates];
     s_canLoop = new boolean [s_maxLexStates];
@@ -388,7 +388,7 @@ public class LexGenJava extends CodeGenerator
     s_maxLongsReqd = new int [s_maxLexStates];
     s_initMatch = new int [s_maxLexStates];
     s_newLexState = new String [s_maxOrdinal];
-    s_newLexState[0] = s_nextStateForEof;
+    s_newLexState[0] = s_sNextStateForEof;
     s_hasEmptyMatch = false;
     s_lexStates = new int [s_maxOrdinal];
     s_ignoreCase = new boolean [s_maxOrdinal];
@@ -658,7 +658,7 @@ public class LexGenJava extends CodeGenerator
         try
         {
           final Class <?> codeGenClazz = Class.forName (codeGeneratorClass);
-          gen = (TokenManagerCodeGenerator) codeGenClazz.getDeclaredConstructor().newInstance ();
+          gen = (TokenManagerCodeGenerator) codeGenClazz.getDeclaredConstructor ().newInstance ();
         }
         catch (final Exception ee)
         {
@@ -1032,7 +1032,7 @@ public class LexGenJava extends CodeGenerator
     if (s_hasSpecial)
       genCodeLine ("      matchedToken.specialToken = specialToken;");
 
-    if (s_nextStateForEof != null || s_actForEof != null)
+    if (s_sNextStateForEof != null || s_aActForEof != null)
       genCodeLine ("      TokenLexicalActions(matchedToken);");
 
     if (Options.isCommonTokenAction ())
@@ -1128,7 +1128,7 @@ public class LexGenJava extends CodeGenerator
                        (s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                        "\"Skipping character : \" + " +
                        s_errorHandlingClass +
-                       ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \")\");");
+                       ".addEscapes(String.valueOf(curChar)) + \" (\" + curChar + \")\");");
         }
         genCodeLine (prefix + "      curChar = input_stream.beginToken();");
 
@@ -1164,7 +1164,7 @@ public class LexGenJava extends CodeGenerator
                      (s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                      "\"Current character : \" + " +
                      s_errorHandlingClass +
-                     ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
+                     ".addEscapes(String.valueOf(curChar)) + \" (\" + curChar + \") " +
                      "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
       }
 
@@ -1353,7 +1353,7 @@ public class LexGenJava extends CodeGenerator
                          (s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
                          "\"Current character : \" + " +
                          s_errorHandlingClass +
-                         ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
+                         ".addEscapes(String.valueOf(curChar)) + \" (\" + curChar + \") " +
                          "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
           genCodeLine (prefix + "         continue;");
           genCodeLine (prefix + "      }");

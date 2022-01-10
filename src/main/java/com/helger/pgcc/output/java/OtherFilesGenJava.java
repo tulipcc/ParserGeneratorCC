@@ -69,9 +69,9 @@ import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
 import static com.helger.pgcc.parser.JavaCCGlobals.printTokenSetup;
 import static com.helger.pgcc.parser.JavaCCGlobals.printTrailingComments;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_ordered_named_tokens;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.ORDERED_NAME_TOKENS;
+import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 import static com.helger.pgcc.parser.JavaCCParserConstants.PACKAGE;
 import static com.helger.pgcc.parser.JavaCCParserConstants.SEMICOLON;
@@ -163,17 +163,17 @@ public class OtherFilesGenJava
 
       ostr.println ("/* " + getIdString (tn, s_cu_name + CONSTANTS_FILENAME_SUFFIX) + " */");
 
-      if (s_cu_to_insertion_point_1.isNotEmpty () && s_cu_to_insertion_point_1.get (0).kind == PACKAGE)
+      if (CU_TO_INSERTION_POINT_1.isNotEmpty () && CU_TO_INSERTION_POINT_1.get (0).kind == PACKAGE)
       {
-        for (int i = 1; i < s_cu_to_insertion_point_1.size (); i++)
+        for (int i = 1; i < CU_TO_INSERTION_POINT_1.size (); i++)
         {
-          if (s_cu_to_insertion_point_1.get (i).kind == SEMICOLON)
+          if (CU_TO_INSERTION_POINT_1.get (i).kind == SEMICOLON)
           {
-            t = s_cu_to_insertion_point_1.get (0);
+            t = CU_TO_INSERTION_POINT_1.get (0);
             printTokenSetup (t);
             for (int j = 0; j <= i; j++)
             {
-              t = s_cu_to_insertion_point_1.get (j);
+              t = CU_TO_INSERTION_POINT_1.get (j);
               printToken (t, ostr);
             }
             printTrailingComments (t);
@@ -198,7 +198,7 @@ public class OtherFilesGenJava
 
       ostr.println ("  /** End of File. */");
       ostr.println ("  int EOF = 0;");
-      for (final AbstractExpRegularExpression re : s_ordered_named_tokens)
+      for (final AbstractExpRegularExpression re : ORDERED_NAME_TOKENS)
       {
         ostr.println ("  /** RegularExpression Id. */");
         ostr.println ("  int " + re.getLabel () + " = " + re.getOrdinal () + ";");
@@ -217,7 +217,7 @@ public class OtherFilesGenJava
       ostr.println ("  String[] tokenImage = {");
       ostr.println ("    \"<EOF>\",");
 
-      for (final TokenProduction aTokenProduction : s_rexprlist)
+      for (final TokenProduction aTokenProduction : REXPR_LIST)
       {
         final TokenProduction tp = (aTokenProduction);
         final List <RegExprSpec> respecs = tp.m_respecs;

@@ -65,11 +65,11 @@
 package com.helger.pgcc.parser;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_actForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_aActForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_lexstate_I2S;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_nextStateForEof;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_rexprlist;
+import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_sNextStateForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
@@ -226,11 +226,11 @@ public class LexGenCpp extends LexGenJava
 
   private static void _buildLexStatesTable ()
   {
-    final Iterator <TokenProduction> it = s_rexprlist.iterator ();
+    final Iterator <TokenProduction> it = REXPR_LIST.iterator ();
     TokenProduction tp;
     int i;
 
-    final String [] tmpLexStateName = new String [s_lexstate_I2S.size ()];
+    final String [] tmpLexStateName = new String [LEXSTATE_I2S.size ()];
     while (it.hasNext ())
     {
       tp = it.next ();
@@ -268,8 +268,8 @@ public class LexGenCpp extends LexGenJava
     s_toToken = new long [s_maxOrdinal / 64 + 1];
     s_toToken[0] = 1L;
     s_actions = new ExpAction [s_maxOrdinal];
-    s_actions[0] = s_actForEof;
-    s_hasTokenActions = s_actForEof != null;
+    s_actions[0] = s_aActForEof;
+    s_hasTokenActions = s_aActForEof != null;
     s_initStates.clear ();
     s_canMatchAnyChar = new int [s_maxLexStates];
     s_canLoop = new boolean [s_maxLexStates];
@@ -286,7 +286,7 @@ public class LexGenCpp extends LexGenJava
     s_maxLongsReqd = new int [s_maxLexStates];
     s_initMatch = new int [s_maxLexStates];
     s_newLexState = new String [s_maxOrdinal];
-    s_newLexState[0] = s_nextStateForEof;
+    s_newLexState[0] = s_sNextStateForEof;
     s_hasEmptyMatch = false;
     s_lexStates = new int [s_maxOrdinal];
     s_ignoreCase = new boolean [s_maxOrdinal];
@@ -804,7 +804,7 @@ public class LexGenCpp extends LexGenJava
     if (s_hasSpecial)
       genCodeLine ("      matchedToken->specialToken = specialToken;");
 
-    if (s_nextStateForEof != null || s_actForEof != null)
+    if (s_sNextStateForEof != null || s_aActForEof != null)
       genCodeLine ("      TokenLexicalActions(matchedToken);");
 
     if (Options.isCommonTokenAction ())

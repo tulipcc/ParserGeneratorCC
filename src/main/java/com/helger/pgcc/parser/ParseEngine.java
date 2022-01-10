@@ -63,15 +63,15 @@
  */
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.s_bnfproductions;
+import static com.helger.pgcc.parser.JavaCCGlobals.BNF_PRODUCTIONS;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ccol;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cline;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_maskVals;
+import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_names_of_tokens;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_production_table;
+import static com.helger.pgcc.parser.JavaCCGlobals.NAMES_OF_TOKENS;
+import static com.helger.pgcc.parser.JavaCCGlobals.PRODUCTION_TABLE;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 
 import java.util.HashSet;
@@ -405,7 +405,7 @@ public class ParseEngine
               retval += "\njj_la1[" + s_maskindex + "] = jj_gen;";
               s_maskindex++;
             }
-            s_maskVals.add (tokenMask);
+            MASK_VALS.add (tokenMask);
             retval += "\n" + "if (";
             indentAmt++;
             break;
@@ -507,7 +507,7 @@ public class ParseEngine
                 final int j1 = i / 32;
                 final int j2 = i % 32;
                 tokenMask[j1] |= 1 << j2;
-                final String s = s_names_of_tokens.get (Integer.valueOf (i));
+                final String s = NAMES_OF_TOKENS.get (Integer.valueOf (i));
                 if (s == null)
                   retval += i;
                 else
@@ -549,7 +549,7 @@ public class ParseEngine
               retval += "\njj_la1[" + s_maskindex + "] = jj_gen;";
               s_maskindex++;
             }
-            s_maskVals.add (tokenMask);
+            MASK_VALS.add (tokenMask);
             retval += "\nif (";
             indentAmt++;
             break;
@@ -602,7 +602,7 @@ public class ParseEngine
         if (Options.isErrorReporting ())
         {
           retval += "\njj_la1[" + s_maskindex + "] = jj_gen;";
-          s_maskVals.add (tokenMask);
+          MASK_VALS.add (tokenMask);
           s_maskindex++;
         }
         retval += actions[index];
@@ -1091,7 +1091,7 @@ public class ParseEngine
       }
       else
       {
-        final String label = s_names_of_tokens.get (Integer.valueOf (e_nrw.getOrdinal ()));
+        final String label = NAMES_OF_TOKENS.get (Integer.valueOf (e_nrw.getOrdinal ()));
         if (label != null)
         {
           retval += "jj_consume_token(" + label + tail;
@@ -1582,7 +1582,7 @@ public class ParseEngine
           if (seq instanceof ExpNonTerminal)
           {
             final ExpNonTerminal e_nrw = (ExpNonTerminal) seq;
-            final NormalProduction ntprod = (s_production_table.get (e_nrw.getName ()));
+            final NormalProduction ntprod = (PRODUCTION_TABLE.get (e_nrw.getName ()));
             if (ntprod instanceof AbstractCodeProduction)
             {
               break; // nothing to do here
@@ -1626,7 +1626,7 @@ public class ParseEngine
         // fact, we rely here on the fact that the "name" fields of both these
         // variables are the same.
         final ExpNonTerminal e_nrw = (ExpNonTerminal) e;
-        final NormalProduction ntprod = (s_production_table.get (e_nrw.getName ()));
+        final NormalProduction ntprod = (PRODUCTION_TABLE.get (e_nrw.getName ()));
         if (ntprod instanceof AbstractCodeProduction)
         {
           // nothing to do here
@@ -1773,7 +1773,7 @@ public class ParseEngine
       }
       else
       {
-        final Object label = s_names_of_tokens.get (Integer.valueOf (e_nrw.getOrdinal ()));
+        final Object label = NAMES_OF_TOKENS.get (Integer.valueOf (e_nrw.getOrdinal ()));
         if (label != null)
         {
           m_codeGenerator.genCodeLine ("    if (jj_scan_token(" + (String) label + ")) " + _genReturn (true));
@@ -1794,7 +1794,7 @@ public class ParseEngine
         // fact, we rely here on the fact that the "name" fields of both these
         // variables are the same.
         final ExpNonTerminal e_nrw = (ExpNonTerminal) e;
-        final NormalProduction ntprod = (s_production_table.get (e_nrw.getName ()));
+        final NormalProduction ntprod = (PRODUCTION_TABLE.get (e_nrw.getName ()));
         if (ntprod instanceof AbstractCodeProduction)
         {
           m_codeGenerator.genCodeLine ("    if (true) { jj_la = 0; jj_scanpos = jj_lastpos; " + _genReturn (false) + "}");
@@ -2006,7 +2006,7 @@ public class ParseEngine
       if (e instanceof ExpNonTerminal)
       {
         final ExpNonTerminal e_nrw = (ExpNonTerminal) e;
-        final NormalProduction ntprod = (s_production_table.get (e_nrw.getName ()));
+        final NormalProduction ntprod = (PRODUCTION_TABLE.get (e_nrw.getName ()));
         if (ntprod instanceof AbstractCodeProduction)
         {
           return Integer.MAX_VALUE;
@@ -2098,7 +2098,7 @@ public class ParseEngine
   {
     m_codeGenerator = codeGenerator;
     final EOutputLanguage eOutputLanguage = m_codeGenerator.getOutputLanguage ();
-    for (final NormalProduction p : s_bnfproductions)
+    for (final NormalProduction p : BNF_PRODUCTIONS)
     {
       if (p instanceof CodeProductionCpp)
       {
@@ -2333,7 +2333,7 @@ public class ParseEngine
       if (e instanceof ExpNonTerminal)
       {
         final ExpNonTerminal e_nrw = (ExpNonTerminal) e;
-        final NormalProduction ntprod = (s_production_table.get (e_nrw.getName ()));
+        final NormalProduction ntprod = (PRODUCTION_TABLE.get (e_nrw.getName ()));
         if (ntprod instanceof AbstractCodeProduction)
         {
           // javacode, true - always (warn?)
@@ -2394,7 +2394,7 @@ public class ParseEngine
               Expansion tmp = e_nrw.getUnitAt (1);
               while (tmp instanceof ExpNonTerminal)
               {
-                final NormalProduction ntprod = (s_production_table.get (((ExpNonTerminal) tmp).getName ()));
+                final NormalProduction ntprod = (PRODUCTION_TABLE.get (((ExpNonTerminal) tmp).getName ()));
                 if (ntprod instanceof AbstractCodeProduction)
                   break;
                 tmp = ntprod.getExpansion ();

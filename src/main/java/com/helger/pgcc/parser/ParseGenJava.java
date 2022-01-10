@@ -65,13 +65,13 @@ package com.helger.pgcc.parser;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_from_insertion_point_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_FROM_INSERTION_POINT_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_to_insertion_point_2;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_maskVals;
+import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
@@ -111,13 +111,13 @@ public class ParseGenJava extends CodeGenerator
 
     boolean bImplementsExists = false;
 
-    if (s_cu_to_insertion_point_1.size () != 0)
+    if (CU_TO_INSERTION_POINT_1.size () != 0)
     {
-      final Token firstToken = s_cu_to_insertion_point_1.get (0);
+      final Token firstToken = CU_TO_INSERTION_POINT_1.get (0);
       printTokenSetup (firstToken);
       setColToStart ();
       Token t;
-      for (final Token aToken : s_cu_to_insertion_point_1)
+      for (final Token aToken : CU_TO_INSERTION_POINT_1)
       {
         t = aToken;
         if (t.kind == JavaCCParserConstants.IMPLEMENTS)
@@ -143,10 +143,10 @@ public class ParseGenJava extends CodeGenerator
       genCode (" implements ");
     }
     genCode (s_cu_name + "Constants ");
-    if (s_cu_to_insertion_point_2.isNotEmpty ())
+    if (CU_TO_INSERTION_POINT_2.isNotEmpty ())
     {
-      printTokenSetup (s_cu_to_insertion_point_2.get (0));
-      for (final Token aToken : s_cu_to_insertion_point_2)
+      printTokenSetup (CU_TO_INSERTION_POINT_2.get (0));
+      for (final Token aToken : CU_TO_INSERTION_POINT_2)
       {
         printToken (aToken);
       }
@@ -221,7 +221,7 @@ public class ParseGenJava extends CodeGenerator
       {
         genCodeLine ("	private static void jj_la1_init_" + i + "() {");
         genCode ("	   jj_la1_" + i + " = new int[] {");
-        for (final int [] tokenMask : s_maskVals)
+        for (final int [] tokenMask : MASK_VALS)
           genCode ("0x" + Integer.toHexString (tokenMask[i]) + ",");
         genCodeLine ("};");
         genCodeLine ("	}");
@@ -1162,12 +1162,12 @@ public class ParseGenJava extends CodeGenerator
       genCodeNewLine ();
     }
 
-    if (s_cu_from_insertion_point_2.isNotEmpty ())
+    if (CU_FROM_INSERTION_POINT_2.isNotEmpty ())
     {
-      printTokenSetup (s_cu_from_insertion_point_2.getFirst ());
+      printTokenSetup (CU_FROM_INSERTION_POINT_2.getFirst ());
       setColToStart ();
       Token t = null;
-      for (final Token aElement : s_cu_from_insertion_point_2)
+      for (final Token aElement : CU_FROM_INSERTION_POINT_2)
       {
         t = aElement;
         printToken (t);
