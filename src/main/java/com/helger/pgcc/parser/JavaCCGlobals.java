@@ -48,6 +48,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.file.FileHelper;
@@ -532,7 +533,7 @@ public final class JavaCCGlobals
     s_ccol = tt.beginColumn;
   }
 
-  protected static void printTokenOnly (final Token t, final PrintWriter ostr)
+  protected static void printTokenOnly (@Nonnull final Token t, @Nonnull final PrintWriter ostr)
   {
     for (; s_cline < t.beginLine; s_cline++)
     {
@@ -557,7 +558,7 @@ public final class JavaCCGlobals
     }
   }
 
-  public static void printToken (final Token t, final PrintWriter ostr)
+  public static void printToken (@Nonnull final Token t, @Nonnull final PrintWriter ostr)
   {
     Token tt = t.specialToken;
     if (tt != null)
@@ -573,7 +574,7 @@ public final class JavaCCGlobals
     printTokenOnly (t, ostr);
   }
 
-  protected static void printTokenList (final List <Token> list, final PrintWriter ostr)
+  protected static void printTokenList (@Nonnull final List <Token> list, @Nonnull final PrintWriter ostr)
   {
     Token t = null;
     for (final Iterator <Token> it = list.iterator (); it.hasNext ();)
@@ -586,7 +587,7 @@ public final class JavaCCGlobals
       printTrailingComments (t);
   }
 
-  protected static void printLeadingComments (final Token t, final PrintWriter ostr)
+  protected static void printLeadingComments (@Nonnull final Token t, @Nonnull final PrintWriter ostr)
   {
     if (t.specialToken == null)
       return;
@@ -717,6 +718,8 @@ public final class JavaCCGlobals
     s_sNextStateForEof = null;
   }
 
+  @Nonnull
+  @Nonempty
   static String getFileExtension ()
   {
     switch (Options.getOutputLanguage ())
@@ -737,7 +740,7 @@ public final class JavaCCGlobals
    *        source string
    * @return result string
    */
-  public static String replaceBackslash (final String str)
+  public static String replaceBackslash (@Nonnull final String str)
   {
     if (str.indexOf ('\\') < 0)
     {
