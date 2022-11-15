@@ -135,7 +135,7 @@
       <dependency>
         <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>10.2.0</version>
+        <version>10.2.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -169,7 +169,7 @@
     <dependency>
       <groupId>com.github.javaparser</groupId>
       <artifactId>javaparser-core</artifactId>
-      <version>3.24.4</version>
+      <version>3.24.7</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
