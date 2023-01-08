@@ -29,6 +29,9 @@ Add the following to your pom.xml to use this artifact (replacing `x.y.z` with t
 
 # News and noteworthy
 
+* v2.0.0 - work in progress
+    * Using Java 11 as the baseline
+    * Updated to ph-commons 11
 * v1.1.4 - 2022-01-10
     * Updated to ph-commons 10
     * Java non-modern style no longer creates constructors without a Charset. See [issue #29](https://github.com/phax/ParserGeneratorCC/issues/29) - thanks @sfuhrm
