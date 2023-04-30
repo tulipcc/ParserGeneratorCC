@@ -72,5 +72,4 @@ Add the following to your pom.xml to use this artifact (replacing `x.y.z` with t
 ---
 
 My personal [Coding Styleguide](https://github.com/phax/meta/blob/master/CodingStyleguide.md) |
-On Twitter: <a href="https://twitter.com/philiphelger">@philiphelger</a> |
 Kindly supported by [YourKit Java Profiler](https://www.yourkit.com)
