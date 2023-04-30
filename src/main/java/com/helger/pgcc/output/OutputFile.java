@@ -81,9 +81,9 @@ public class OutputFile implements AutoCloseable
 {
   private static final String OPTIONS_PREFIX = CPG.APP_NAME + "Options";
   private static final String MD5_LINE_PART_1 = "/* " + CPG.APP_NAME + " - OriginalChecksum=";
-  private static final String MD5_LINE_PART_1q = "/\\* " + CPG.APP_NAME + " - OriginalChecksum=";
+  private static final String MD5_LINE_PART_1Q = "/\\* " + CPG.APP_NAME + " - OriginalChecksum=";
   private static final String MD5_LINE_PART_2 = " (do not edit this line) */";
-  private static final String MD5_LINE_PART_2q = " \\(do not edit this line\\) \\*/";
+  private static final String MD5_LINE_PART_2Q = " \\(do not edit this line\\) \\*/";
 
   private TrapClosePrintWriter m_aPW;
   private DigestOutputStream m_dos;
@@ -137,7 +137,7 @@ public class OutputFile implements AutoCloseable
           {
             if (line.startsWith (MD5_LINE_PART_1))
             {
-              existingMD5 = line.replaceAll (MD5_LINE_PART_1q, "").replaceAll (MD5_LINE_PART_2q, "");
+              existingMD5 = line.replaceAll (MD5_LINE_PART_1Q, "").replaceAll (MD5_LINE_PART_2Q, "");
             }
             else
             {
