@@ -33,25 +33,25 @@
  */
 package com.helger.pgcc.issues;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
-import java.io.File;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.List;
+
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 public class Issue33Test
 {
@@ -68,28 +68,27 @@ public class Issue33Test
     /*
      * Compile the resulting output
      */
-    JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
-    StandardJavaFileManager fileManager = javac.getStandardFileManager(null, null, null);
+    final JavaCompiler javac = ToolProvider.getSystemJavaCompiler ();
+    final StandardJavaFileManager fileManager = javac.getStandardFileManager (null, null, null);
 
-    List<File> files = Arrays.asList(aOutDir.listFiles(f -> f.getName().endsWith(".java")));
-    Iterable<? extends JavaFileObject> compilationUnits1 =
-        fileManager.getJavaFileObjectsFromFiles(files);
-    javac.getTask(null, fileManager, null, null, null, compilationUnits1).call();
+    final List <File> files = Arrays.asList (aOutDir.listFiles (f -> f.getName ().endsWith (".java")));
+    final Iterable <? extends JavaFileObject> compilationUnits1 = fileManager.getJavaFileObjectsFromFiles (files);
+    javac.getTask (null, fileManager, null, null, null, compilationUnits1).call ();
 
     /*
      * Load and run the parser on a test dataset
      */
-    try (InputStream in = new FileInputStream(aData)) {
-        ClassLoader loader = URLClassLoader.newInstance(
-                              new URL[] { aOutDir.toURL() },
-                              getClass().getClassLoader()
-        );
-        Class<?> clazz = Class.forName("IssueParser", true, loader);
-        Constructor<? extends Object> constructor = clazz.getConstructor(new Class[] {InputStream.class, Charset.class});
-        Object obj = constructor.newInstance(new Object[] {in, Charset.defaultCharset()});
-        Method parse = clazz.getDeclaredMethod("parse", new Class[]{});
-        int i = (int) parse.invoke(obj, new Object[]{});
-        assertEquals(i, 10);
+    try (InputStream in = new FileInputStream (aData))
+    {
+      final ClassLoader loader = URLClassLoader.newInstance (new URL [] { aOutDir.toURI ().toURL () },
+                                                             getClass ().getClassLoader ());
+      final Class <?> clazz = Class.forName ("IssueParser", true, loader);
+      final Constructor <? extends Object> constructor = clazz.getConstructor (new Class [] { InputStream.class,
+                                                                                              Charset.class });
+      final Object obj = constructor.newInstance (new Object [] { in, Charset.defaultCharset () });
+      final Method parse = clazz.getDeclaredMethod ("parse", new Class [] {});
+      final int i = (int) parse.invoke (obj, new Object [] {});
+      assertEquals (i, 10);
     }
   }
 }
