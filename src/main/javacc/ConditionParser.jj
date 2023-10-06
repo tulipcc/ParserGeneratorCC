@@ -117,7 +117,7 @@ TOKEN :
 
 boolean CompilationUnit(Map<String,Object> options):
 {
-	boolean value;
+  boolean value;
   this.options = options;
 }
 {
@@ -126,13 +126,13 @@ boolean CompilationUnit(Map<String,Object> options):
 
 boolean ConditionalExpression():
 {
-	boolean value;
+  boolean value;
 }
 {
   value = ConditionalAndExpression()    { if (value) return true; }
-  	
+    
   ( "||" 
-  	value = ConditionalAndExpression() 	{ if (value) return true; }
+    value = ConditionalAndExpression()   { if (value) return true; }
   )*
   
   { return false; }
@@ -140,7 +140,7 @@ boolean ConditionalExpression():
 
 boolean ConditionalAndExpression():
 {
-	boolean value;
+  boolean value;
 }
 {
   value = UnaryExpressionNotPlusMinus()    { if (!value) return false; }
@@ -155,7 +155,7 @@ boolean ConditionalAndExpression():
 
 boolean UnaryExpressionNotPlusMinus():
 {
-	boolean value;
+  boolean value;
 }
 {
   ( "~" | "!" ) value = UnaryExpressionNotPlusMinus() { return !value; }
@@ -164,10 +164,10 @@ boolean UnaryExpressionNotPlusMinus():
 
 boolean UnaryExpression():
 {
-	boolean value;
+  boolean value;
 }
 {
-  value = Literal()		{ return value; }
+  value = Literal()    { return value; }
 |
   "(" value = ConditionalExpression() ")" { return value; }
 |
@@ -176,7 +176,7 @@ boolean UnaryExpression():
 
 boolean Literal():
 {
-	boolean value;
+  boolean value;
 }
 {
   value = BooleanLiteral()     { return value; }
@@ -194,25 +194,25 @@ boolean Name() :
   String name;
 }
 {
-	<IDENTIFIER>
-	
-	{
-	  name = getToken(0).image.trim();
-	    
-	  final Object obj = options.get(name);
-	  if (obj instanceof Boolean)
-	  {
-	    return ((Boolean)obj).booleanValue();
-	  }
-	  if (obj instanceof String)
-	  {
-	    final String string = ((String)obj).trim();
-	    return string.length() > 0 && !string.equalsIgnoreCase("false") && !string.equalsIgnoreCase("no");
-	  }
-	  
-	  // Unsupported data type in options map
+  <IDENTIFIER>
+  
+  {
+    name = getToken(0).image.trim();
+      
+    final Object obj = options.get(name);
+    if (obj instanceof Boolean)
+    {
+      return ((Boolean)obj).booleanValue();
+    }
+    if (obj instanceof String)
+    {
+      final String string = ((String)obj).trim();
+      return string.length() > 0 && !string.equalsIgnoreCase("false") && !string.equalsIgnoreCase("no");
+    }
+    
+    // Unsupported data type in options map
     return false;
-	}
+  }
 }
 
 /* IDENTIFIERS */

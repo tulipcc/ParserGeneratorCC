@@ -50,12 +50,12 @@ package com.helger.pgcc.jjtree;
 public class JJTreeParser {
   void jjtreeOpenNodeScope(final Node n)
   {
-	  ((JJTreeNode)n).setFirstToken(getToken(1));
+    ((JJTreeNode)n).setFirstToken(getToken(1));
   }
 
   void jjtreeCloseNodeScope(final Node n)
   {
-	  ((JJTreeNode)n).setLastToken(getToken(0));
+    ((JJTreeNode)n).setLastToken(getToken(0));
   }
 
   /**
@@ -324,9 +324,9 @@ TOKEN :
 | < BIT_OR: "|" >
 | < XOR: "^" >
 | < REM: "%" >
-//	| < LSHIFT: "<<" >
-//	| < RSIGNEDSHIFT: ">>" >
-//	| < RUNSIGNEDSHIFT: ">>>" >
+//  | < LSHIFT: "<<" >
+//  | < RSIGNEDSHIFT: ">>" >
+//  | < RUNSIGNEDSHIFT: ">>>" >
 | < PLUSASSIGN: "+=" >
 | < MINUSASSIGN: "-=" >
 | < STARASSIGN: "*=" >
@@ -335,9 +335,9 @@ TOKEN :
 | < ORASSIGN: "|=" >
 | < XORASSIGN: "^=" >
 | < REMASSIGN: "%=" >
-//	| < LSHIFTASSIGN: "<<=" >
-//	| < RSIGNEDSHIFTASSIGN: ">>=" >
-//	| < RUNSIGNEDSHIFTASSIGN: ">>>=" >
+//  | < LSHIFTASSIGN: "<<=" >
+//  | < RSIGNEDSHIFTASSIGN: ">>=" >
+//  | < RUNSIGNEDSHIFTASSIGN: ">>>=" >
 }
 
 
@@ -367,25 +367,25 @@ TOKEN :
  ************************************************/
 
 void javacc_input() #Grammar :
-	{
-	  Token t;
-	}
+  {
+    Token t;
+  }
 {
   javacc_options()
   (
     "PARSER_BEGIN" "(" t=identifier() ")"
-	{
-	  JJTreeGlobals.s_parserName = t.image;
-	}
+  {
+    JJTreeGlobals.s_parserName = t.image;
+  }
     CompilationUnit()
     "PARSER_END" "(" identifier() ")"
-	{
-	  if (JJTreeOptions.getNodePackage().equals("")) {
-	    JJTreeGlobals.s_nodePackageName = JJTreeGlobals.s_packageName;
-	  } else {
-	    JJTreeGlobals.s_nodePackageName = JJTreeOptions.getNodePackage();
-	  }
-	}
+  {
+    if (JJTreeOptions.getNodePackage().equals("")) {
+      JJTreeGlobals.s_nodePackageName = JJTreeGlobals.s_packageName;
+    } else {
+      JJTreeGlobals.s_nodePackageName = JJTreeOptions.getNodePackage();
+    }
+  }
   ) #CompilationUnit(true)
   (
     ( production() )+
@@ -394,46 +394,46 @@ void javacc_input() #Grammar :
 }
 
 void javacc_options() :
-	{
-	}
+  {
+  }
 {
   [ LOOKAHEAD( { getToken(1).image.equals("options") }) ( <IDENTIFIER> "{" ( option_binding() )* "}" ) #Options ]
-	{
-	  JJTreeOptions.normalize();
-	}
+  {
+    JJTreeOptions.normalize();
+  }
 }
 
 void option_binding() #OptionBinding :
-	{
-	  Token o, v;
-	}
+  {
+    Token o, v;
+  }
 {
   ( o=<IDENTIFIER> | o="LOOKAHEAD" | o="IGNORE_CASE" | o="static" )
   "="
   (
      v=IntegerLiteral()
         {
-	  JJTreeOptions.setInputFileOption(o, v, o.image, Integer.valueOf(v.image));
-	  jjtThis.initialize(o.image, v.image);
-	}
+    JJTreeOptions.setInputFileOption(o, v, o.image, Integer.valueOf(v.image));
+    jjtThis.initialize(o.image, v.image);
+  }
    | v=BooleanLiteral()
         {
-	  JJTreeOptions.setInputFileOption(o, v, o.image,
-				     Boolean.valueOf(v.image));
-	  jjtThis.initialize(o.image, v.image);
-	}
+    JJTreeOptions.setInputFileOption(o, v, o.image,
+             Boolean.valueOf(v.image));
+    jjtThis.initialize(o.image, v.image);
+  }
    | v=StringLiteral()
-        {	
-	  String vs = TokenUtils.remove_escapes_and_quotes(v, v.image);
-	  JJTreeOptions.setInputFileOption(o, v, o.image, (Object)vs);
-	  jjtThis.initialize(o.image, vs);
-	}
+        {  
+    String vs = TokenUtils.remove_escapes_and_quotes(v, v.image);
+    JJTreeOptions.setInputFileOption(o, v, o.image, (Object)vs);
+    jjtThis.initialize(o.image, vs);
+  }
   ) ";"
 }
 
 void production() :
-	{
-	}
+  {
+  }
 {
   LOOKAHEAD(1)
   /*
@@ -463,27 +463,27 @@ void production() :
 }
 
 void javacode_production() #Javacode :
-	{
-	  Token t1, t2;
-	  ASTJavacode prod;
-	  ASTNodeDescriptor nd = null;
-	  String n;
-	}
+  {
+    Token t1, t2;
+    ASTJavacode prod;
+    ASTNodeDescriptor nd = null;
+    String n;
+  }
 {
   {
-	  prod = jjtThis;
-	}
+    prod = jjtThis;
+  }
   "JAVACODE"
   AccessModifier() ResultType() t1=identifier() FormalParameters()
     [
       "throws" n=Name()
-	{
-	  prod.m_throws_list.add(n);
-	}
+  {
+    prod.m_throws_list.add(n);
+  }
       ( "," n=Name()
-	{
-	  prod.m_throws_list.add(n);
-	}
+  {
+    prod.m_throws_list.add(n);
+  }
       )*
     ]
     [ nd=node_descriptor() ]
@@ -491,44 +491,44 @@ void javacode_production() #Javacode :
     // This is really a Block()
     t2="{"
         {
-	  prod.m_name = t1.image;
-	  prod.stmBeginLoc = t2;
-	}
+    prod.m_name = t1.image;
+    prod.stmBeginLoc = t2;
+  }
     (
       ( BlockStatement() )*
         {
-	  jjtThis.m_node_scope = new NodeScope(prod, nd);
-	}
+    jjtThis.m_node_scope = new NodeScope(prod, nd);
+  }
     ) #JavacodeBody
     "}"
         {
-	  JJTreeGlobals.s_productions.put(prod.m_name, prod);
-	}
+    JJTreeGlobals.s_productions.put(prod.m_name, prod);
+  }
 }
 
 void bnf_production() #BNF :
-	{
-	  Token t1, t2;
-	  ASTBNF prod;
-	  ASTNodeDescriptor nd = null;
-	  NodeScope ns;
-	  JJTreeNode eu;
-	  String n;
-	}
+  {
+    Token t1, t2;
+    ASTBNF prod;
+    ASTNodeDescriptor nd = null;
+    NodeScope ns;
+    JJTreeNode eu;
+    String n;
+  }
 {
         {
-	  prod = jjtThis;
-	}
+    prod = jjtThis;
+  }
   AccessModifier() ResultType() t1=identifier() FormalParameters()
   [
     "throws" n=Name()
         {
-	  prod.m_throws_list.add(n);
-	}
+    prod.m_throws_list.add(n);
+  }
     ( "," n=Name()
         {
-	  prod.m_throws_list.add(n);
-	}
+    prod.m_throws_list.add(n);
+  }
     )*
   ]
   [ nd=node_descriptor() ]
@@ -537,15 +537,15 @@ void bnf_production() #BNF :
   // This is really a Block()
   t2="{"
         {
-	  prod.m_name = t1.image;
-	  prod.declBeginLoc = t2;
-	  ns = new NodeScope(prod, nd);
-	}
+    prod.m_name = t1.image;
+    prod.declBeginLoc = t2;
+    ns = new NodeScope(prod, nd);
+  }
   (
     ( BlockStatement() )*
         {
-	  jjtThis.m_node_scope = ns;
-	}
+    jjtThis.m_node_scope = ns;
+  }
   ) #BNFDeclaration
   "}"
 
@@ -553,25 +553,25 @@ void bnf_production() #BNF :
   (
     eu=expansion_choices(prod)
         {
-	  jjtThis.m_node_scope = ns;
-	  jjtThis.m_expansion_unit = eu;
-	}
+    jjtThis.m_node_scope = ns;
+    jjtThis.m_expansion_unit = eu;
+  }
   ) #BNFNodeScope
  "}"
         {
-	  JJTreeGlobals.s_productions.put(prod.m_name, prod);
-	}
+    JJTreeGlobals.s_productions.put(prod.m_name, prod);
+  }
 }
 
 void AccessModifier() :
 {}
 {
-	( "public" | "protected" | "private" )?
+  ( "public" | "protected" | "private" )?
 }
 
 void regular_expr_production() #RE :
-	{
-	}
+  {
+  }
 {
   [
     LOOKAHEAD(2) "<" "*" ">"
@@ -583,8 +583,8 @@ void regular_expr_production() #RE :
 }
 
 void token_manager_decls() #TokenDecls :
-	{
-	}
+  {
+  }
 {
   "TOKEN_MGR_DECLS" ":"
   {
@@ -593,8 +593,8 @@ void token_manager_decls() #TokenDecls :
 }
 
 void regexpr_kind() :
-	{
-	}
+  {
+  }
 {
   "TOKEN"
 |
@@ -614,20 +614,20 @@ void regexpr_spec() #RESpec :
 }
 
 JJTreeNode expansion_choices(ASTProduction p) #BNFChoice(>1) :
-	{
-	}
+  {
+  }
 {
   expansion(p) ( "|" expansion(p) )*
         {
-	  return (JJTreeNode)jjtree.peekNode();
-	}
+    return (JJTreeNode)jjtree.peekNode();
+  }
 }
 
 void expansion(ASTProduction p) #BNFSequence(>1) :
-	{
-	  JJTreeNode eu;
-	  ASTNodeDescriptor nd = null;
-	}
+  {
+    JJTreeNode eu;
+    ASTNodeDescriptor nd = null;
+  }
 {
   (
     LOOKAHEAD(1)
@@ -639,19 +639,19 @@ void expansion(ASTProduction p) #BNFSequence(>1) :
      eu=expansion_unit(p)
      [ nd=node_descriptor() ]
         {
-	  if (jjtree.nodeCreated()) {
-	    jjtThis.m_node_scope = new NodeScope(p, nd);
-	    jjtThis.m_expansion_unit = eu;
-	  }
-	}
+    if (jjtree.nodeCreated()) {
+      jjtThis.m_node_scope = new NodeScope(p, nd);
+      jjtThis.m_expansion_unit = eu;
+    }
+  }
    ) #ExpansionNodeScope(>1)
   )+
 }
 
 void local_lookahead(ASTProduction p) :
-	{
-	  boolean commaAtEnd = false, emptyLA = true;
-	}
+  {
+    boolean commaAtEnd = false, emptyLA = true;
+  }
 {
   [
     /*
@@ -662,27 +662,27 @@ void local_lookahead(ASTProduction p) :
      */
     LOOKAHEAD(1)
     IntegerLiteral()
-	{
-	  emptyLA = false;
-	}
+  {
+    emptyLA = false;
+  }
   ]
   [ LOOKAHEAD(0, { !emptyLA && (getToken(1).kind != RPAREN) } )
     ","
-	{
-	  commaAtEnd = true;
-	}
+  {
+    commaAtEnd = true;
+  }
   ]
   [ LOOKAHEAD(0, { getToken(1).kind != RPAREN && getToken(1).kind != LBRACE } )
     expansion_choices(p)
-	{
-	  emptyLA = false; commaAtEnd = false;
-	}
+  {
+    emptyLA = false; commaAtEnd = false;
+  }
   ]
   [ LOOKAHEAD(0, { !emptyLA && !commaAtEnd && (getToken(1).kind != RPAREN) } )
     ","
-	{
-	  commaAtEnd = true;
-	}
+  {
+    commaAtEnd = true;
+  }
   ]
   [ LOOKAHEAD(0, { emptyLA || commaAtEnd } )
     "{"
@@ -693,9 +693,9 @@ void local_lookahead(ASTProduction p) :
 }
 
 JJTreeNode expansion_unit(ASTProduction p) :
-	{
-	  Token t;
-	}
+  {
+    Token t;
+  }
 {
 (
   LOOKAHEAD(1)
@@ -733,7 +733,7 @@ JJTreeNode expansion_unit(ASTProduction p) :
     regular_expression() [ "." t=<IDENTIFIER>  ]
   | ( identifier() Arguments() ) #BNFNonTerminal
   )
-	
+  
 ) #BNFAssignment(>1)
 |
   t="(" expansion_choices(p) ")"
@@ -750,18 +750,18 @@ JJTreeNode expansion_unit(ASTProduction p) :
     {}
       #BNFParenthesized(1)
   )
-	{
-	  ((JJTreeNode)jjtree.peekNode()).setFirstToken(t);
-	}
+  {
+    ((JJTreeNode)jjtree.peekNode()).setFirstToken(t);
+  }
 )
         {
-	  return (JJTreeNode)jjtree.peekNode();
-	}
+    return (JJTreeNode)jjtree.peekNode();
+  }
 }
 
 void regular_expression() :
-	{
-	}
+  {
+  }
 {
   StringLiteral() #REStringLiteral
 |
@@ -793,9 +793,9 @@ void complex_regular_expression() #RESequence(>1) :
 }
 
 void complex_regular_expression_unit() :
-	{
-	  Token t;
-	}
+  {
+    Token t;
+  }
 {
   StringLiteral() #REStringLiteral
 |
@@ -819,9 +819,9 @@ void complex_regular_expression_unit() :
     {}
       #REParenthesized(1)
   )
-	{
-	  ((JJTreeNode)jjtree.peekNode()).setFirstToken(t);
-	}
+  {
+    ((JJTreeNode)jjtree.peekNode()).setFirstToken(t);
+  }
 }
 
 void character_list() #RECharList :
@@ -843,8 +843,8 @@ Token identifier() :
 {
   t=<IDENTIFIER>
                 {
-		  return t;
-		}
+      return t;
+    }
 }
 
 
@@ -863,31 +863,31 @@ ASTNodeDescriptor node_descriptor() #NodeDescriptor :
     s=Name()
                    {
                      jjtThis.m_name = s;
-		   }
+       }
   | t=<VOID>
                    {
                      jjtThis.m_name = t.image;
-		   }
+       }
   )
   [
    LOOKAHEAD(1)
    "("
       [ ">"
                    {
-		     jjtThis.m_isGT = true;
-		   }
+         jjtThis.m_isGT = true;
+       }
       ]
       node_descriptor_expression()
-	           {
-		     jjtThis.m_expression =
-		       (ASTNodeDescriptorExpression)jjtree.peekNode();
-		   }
+             {
+         jjtThis.m_expression =
+           (ASTNodeDescriptorExpression)jjtree.peekNode();
+       }
    ")"
   ]
                    {
-		     jjtThis.setNodeIdValue();
-		     return jjtThis;
-		   }
+         jjtThis.setNodeIdValue();
+         return jjtThis;
+       }
 }
 
 
@@ -943,8 +943,8 @@ String JavaIdentifier() :
 | "EOF"
 )
                 {
-		  return token.image;
-		}
+      return token.image;
+    }
 }
 
 /*
@@ -967,8 +967,8 @@ void PackageDeclaration() :
 {
   Modifiers() "package" s=Name() ";"
                 {
-		  JJTreeGlobals.s_packageName = s;
-		}
+      JJTreeGlobals.s_packageName = s;
+    }
 }
 
 void ImportDeclaration() :
@@ -1049,15 +1049,15 @@ void ClassOrInterfaceDeclaration():
   [ ExtendsList() ]
   [ { t = getToken(1); } ImplementsList() ]
                 {
-		  if (s.equals(JJTreeGlobals.s_parserName)) {
-		    if (t != null) {
-		      JJTreeGlobals.s_parserImplements = t;
-		    } else {
-		      JJTreeGlobals.s_parserImplements = getToken(1);
-		    }
-		    JJTreeGlobals.s_parserClassBodyStart = getToken(1);
-		  }
-		}
+      if (s.equals(JJTreeGlobals.s_parserName)) {
+        if (t != null) {
+          JJTreeGlobals.s_parserImplements = t;
+        } else {
+          JJTreeGlobals.s_parserImplements = getToken(1);
+        }
+        JJTreeGlobals.s_parserClassBodyStart = getToken(1);
+      }
+    }
   ClassOrInterfaceBody()
 }
 
@@ -1272,21 +1272,21 @@ void ReferenceType():
 void Template():
 {}
 {
-	"template" "<"
-		TemplatePack() ( "," TemplatePack() )*  
-	">" 
+  "template" "<"
+    TemplatePack() ( "," TemplatePack() )*  
+  ">" 
 }
 
 void TemplatePack():
 {}
 {
-	TemplateBase() ["..."] <IDENTIFIER> 
+  TemplateBase() ["..."] <IDENTIFIER> 
 }
 
 void TemplateBase():
 {}
 {
-	("class" | "typename")
+  ("class" | "typename")
 }
 
 
@@ -1363,8 +1363,8 @@ String Name() :
   s=JavaIdentifier()
   ( LOOKAHEAD(2) "." ss=JavaIdentifier() { s += "." + ss; } )*
                 {
-		  return s;
-		}
+      return s;
+    }
 }
 
 void NameList():
@@ -1392,7 +1392,7 @@ void Expression() :
 {
   ConditionalExpression()
   [
-	LOOKAHEAD(2)
+  LOOKAHEAD(2)
     AssignmentOperator() Expression()
   ]
 }
@@ -1614,8 +1614,8 @@ Token IntegerLiteral() :
 {
   t=<INTEGER_LITERAL>
                 {
-		  return t;
-		}
+      return t;
+    }
 }
 
 Token BooleanLiteral() :
@@ -1625,13 +1625,13 @@ Token BooleanLiteral() :
 {
   t="true"
                 {
-		  return t;
-		}
+      return t;
+    }
 |
   t="false"
                 {
-		  return t;
-		}
+      return t;
+    }
 }
 
 Token StringLiteral() :
@@ -1640,9 +1640,9 @@ Token StringLiteral() :
 }
 {
   t=<STRING_LITERAL>
-                {
-		  return t;
-		}
+  {
+    return t;
+  }
 }
 
 void NullLiteral() :

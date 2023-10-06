@@ -50,7 +50,7 @@ ${decls}
 #fi
   {
 #if TOKEN_MANAGER_USES_PARSER
-	this.parser = parserArg;
+  this.parser = parserArg;
 #fi
 
     jjmatchedPos = 0;
