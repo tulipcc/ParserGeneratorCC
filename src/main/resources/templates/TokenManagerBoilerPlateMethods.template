@@ -31,7 +31,7 @@
 #fi
   {
 #if TOKEN_MANAGER_USES_PARSER
-	this.parser = parserArg;
+  this.parser = parserArg;
 #else
 
 #fi

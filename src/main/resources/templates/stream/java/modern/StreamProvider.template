@@ -10,8 +10,8 @@ import java.io.Reader;
  */
 public class StreamProvider implements Provider
 {
-	private Reader m_aReader;
-	
+  private Reader m_aReader;
+
 #if AT_LEAST_JDK6
   @Deprecated
 #fi
@@ -39,17 +39,17 @@ public class StreamProvider implements Provider
        as in C# 0 represents end of file, and in Java, -1 represents end of file
        See : http://msdn.microsoft.com/en-us/library/9kstw824(v=vs.110).aspx
        ** Technically, this is not required for java but the overhead is extremely low compared to the code generation benefits.
-	   */
+     */
     if (result == 0)
       if (nOfs < aDest.length && nLen > 0)
         result = -1;
-	   
+     
     return result;
-	}
+  }
 
-	public void close () throws IOException
-	{
-	  if (m_aReader != null)
+  public void close () throws IOException
+  {
+    if (m_aReader != null)
       m_aReader.close();
-	}
+  }
 }
