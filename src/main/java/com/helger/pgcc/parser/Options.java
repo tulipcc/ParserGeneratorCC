@@ -86,7 +86,6 @@ import com.helger.commons.string.StringHelper;
 import com.helger.commons.system.SystemHelper;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
 
@@ -117,7 +116,6 @@ public class Options
   public static final String USEROPTION__PARSER_SUPER_CLASS = "PARSER_SUPER_CLASS";
   public static final String USEROPTION__JAVA_TEMPLATE_TYPE = "JAVA_TEMPLATE_TYPE";
   public static final String USEROPTION__GENERATE_BOILERPLATE = "GENERATE_BOILERPLATE";
-  public static final String USEROPTION__OUTPUT_LANGUAGE = "OUTPUT_LANGUAGE";
   public static final String USEROPTION__PARSER_CODE_GENERATOR = "PARSER_CODE_GENERATOR";
   public static final String USEROPTION__TOKEN_MANAGER_CODE_GENERATOR = "TOKEN_MANAGER_CODE_GENERATOR";
   public static final String USEROPTION__NO_DFA = "NO_DFA";
@@ -150,8 +148,6 @@ public class Options
   public static final String USEROPTION__TOKEN_FACTORY = "TOKEN_FACTORY";
   public static final String USEROPTION__TOKEN_EXTENDS = "TOKEN_EXTENDS";
   public static final String USEROPTION__DEPTH_LIMIT = "DEPTH_LIMIT";
-
-  private static EOutputLanguage s_language = EOutputLanguage.JAVA;
 
   /**
    * 2013/07/22 -- GWT Compliant Output -- no external dependencies on GWT, but
@@ -213,8 +209,6 @@ public class Options
     temp.add (new OptionInfo (USEROPTION__TOKEN_FACTORY, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__GRAMMAR_ENCODING, EOptionType.STRING, ""));
     temp.add (new OptionInfo (USEROPTION__OUTPUT_ENCODING, EOptionType.STRING, StandardCharsets.UTF_8.name ()));
-    s_language = EOutputLanguage.JAVA;
-    temp.add (new OptionInfo (USEROPTION__OUTPUT_LANGUAGE, EOptionType.STRING, s_language.getID ()));
 
     temp.add (new OptionInfo (USEROPTION__JAVA_TEMPLATE_TYPE, EOptionType.STRING, JAVA_TEMPLATE_TYPE_CLASSIC));
 
@@ -242,8 +236,6 @@ public class Options
 
     for (final OptionInfo t : s_userOptions)
       s_optionValues.put (t.getName (), t.getDefault ());
-
-    s_language = EOutputLanguage.JAVA;
   }
 
   @Nullable
@@ -461,24 +453,6 @@ public class Options
         return;
       }
     }
-    else
-      if (sNameUC.equalsIgnoreCase (USEROPTION__OUTPUT_LANGUAGE))
-      {
-        final String outputLanguage = (String) aRealSrc;
-        final EOutputLanguage eOutLanguage = EOutputLanguage.getFromIDCaseInsensitiveOrNull (outputLanguage);
-        if (eOutLanguage == null)
-        {
-          JavaCCErrors.warning (valueloc,
-                                "Bad option value \"" +
-                                          aRealSrc +
-                                          "\" for \"" +
-                                          name +
-                                          "\".  Option setting will be ignored. Valid options are: " +
-                                          StringHelper.getImplodedMapped (", ", EOutputLanguage.values (), EOutputLanguage::getID));
-          return;
-        }
-        s_language = eOutLanguage;
-      }
   }
 
   /**
@@ -955,12 +929,6 @@ public class Options
   private static boolean _isValidJavaTemplateType (@Nullable final String sType)
   {
     return sType == null ? false : s_aSupportedJavaTemplateTypes.contains (sType.toLowerCase (Locale.US));
-  }
-
-  @Nonnull
-  public static EOutputLanguage getOutputLanguage ()
-  {
-    return s_language;
   }
 
   public static String getJavaTemplateType ()

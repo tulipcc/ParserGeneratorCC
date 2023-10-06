@@ -76,7 +76,6 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.lang.GenericReflection;
 import com.helger.commons.string.StringHelper;
-import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCGlobals;
@@ -589,7 +588,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
   }
 
   @Nonnull
-  private static String _getCaseChar (final char c, final EOutputLanguage eOutputLanguage)
+  private static String _getCaseChar (final char c)
   {
     if (false)
       return Integer.toString (c);
@@ -612,7 +611,6 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     final int maxLongsReqd = s_maxStrKind / 64 + 1;
     boolean ifGenerated;
     LexGenJava.s_maxLongsReqd[LexGenJava.s_lexStateIndex] = maxLongsReqd;
-    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
 
     if (s_maxLen == 0)
     {
@@ -882,13 +880,13 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         if (Options.isIgnoreCase ())
         {
           if (c != Character.toUpperCase (c))
-            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toUpperCase (c), eOutputLanguage) + ":");
+            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toUpperCase (c)) + ":");
 
           if (c != Character.toLowerCase (c))
-            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toLowerCase (c), eOutputLanguage) + ":");
+            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toLowerCase (c)) + ":");
         }
 
-        codeGenerator.genCodeLine ("      case " + _getCaseChar (c, eOutputLanguage) + ":");
+        codeGenerator.genCodeLine ("      case " + _getCaseChar (c) + ":");
 
         long matchedKind;
         final String prefix = (i == 0) ? "         " : "            ";

@@ -48,7 +48,6 @@ import javax.annotation.Nonnull;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.stream.NonBlockingBufferedWriter;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
-import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 public class CodeGenerator
@@ -61,12 +60,6 @@ public class CodeGenerator
 
   public CodeGenerator ()
   {}
-
-  @Nonnull
-  public final EOutputLanguage getOutputLanguage ()
-  {
-    return Options.getOutputLanguage ();
-  }
 
   public final void switchToMainFile ()
   {

@@ -223,18 +223,10 @@ public class JJTree
 
         // TODO :: Not yet tested this in GWT/Modern mode (disabled by default
         // in 6.1)
-        switch (Options.getOutputLanguage ())
-        {
-          case JAVA:
-            NodeFilesJava.generateTreeConstants_java ();
-            NodeFilesJava.generateVisitor_java ();
-            NodeFilesJava.generateDefaultVisitor_java ();
-            JJTreeStateJava.generateTreeState_java ();
-            break;
-          default:
-            PGPrinter.info ("Unsupported JJTree output language : " + Options.getOutputLanguage ());
-            return ESuccess.FAILURE;
-        }
+        NodeFilesJava.generateTreeConstants_java ();
+        NodeFilesJava.generateVisitor_java ();
+        NodeFilesJava.generateDefaultVisitor_java ();
+        JJTreeStateJava.generateTreeState_java ();
 
         PGPrinter.info ("Annotated grammar generated successfully in " + io.getOutputFilename ());
         return ESuccess.SUCCESS;

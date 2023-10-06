@@ -64,9 +64,6 @@
 
 package com.helger.pgcc.jjtree;
 
-import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.parser.Options;
-
 public class ASTGrammar extends JJTreeNode
 {
   ASTGrammar (final int nID)
@@ -76,7 +73,6 @@ public class ASTGrammar extends JJTreeNode
 
   void generate (final JJTreeIO io)
   {
-    PGPrinter.info ("opt:" + Options.getOutputLanguage ().getID ());
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
     new CodeGeneratorJava ().visit (this, io);
