@@ -56,7 +56,6 @@ import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.PGVersion;
-import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.exp.ExpAction;
 
@@ -494,29 +493,21 @@ public final class JavaCCGlobals
 
   public static String addUnicodeEscapes (final String str)
   {
-    switch (Options.getOutputLanguage ())
+    final StringBuilder retval = new StringBuilder (str.length () * 2);
+    for (final char ch : str.toCharArray ())
     {
-      case JAVA:
+      if (ch < 0x20 ||
+          ch > 0x7e /* || ch == '\\' -- cba commented out 20140305 */ )
       {
-        final StringBuilder retval = new StringBuilder (str.length () * 2);
-        for (final char ch : str.toCharArray ())
-        {
-          if (ch < 0x20 ||
-              ch > 0x7e /* || ch == '\\' -- cba commented out 20140305 */ )
-          {
-            final String s = "0000" + Integer.toString (ch, 16);
-            retval.append ("\\u").append (s.substring (s.length () - 4, s.length ()));
-          }
-          else
-          {
-            retval.append (ch);
-          }
-        }
-        return retval.toString ();
+        final String s = "0000" + Integer.toString (ch, 16);
+        retval.append ("\\u").append (s.substring (s.length () - 4, s.length ()));
       }
-      default:
-        throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());
+      else
+      {
+        retval.append (ch);
+      }
     }
+    return retval.toString ();
   }
 
   public static int s_cline;
@@ -720,13 +711,7 @@ public final class JavaCCGlobals
   @Nonempty
   static String getFileExtension ()
   {
-    switch (Options.getOutputLanguage ())
-    {
-      case JAVA:
-        return ".java";
-      default:
-        throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());
-    }
+    return ".java";
   }
 
   /**

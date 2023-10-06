@@ -65,7 +65,6 @@
 package com.helger.pgcc.jjtree;
 
 import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.parser.Options;
 
 public class ASTGrammar extends JJTreeNode
@@ -80,15 +79,7 @@ public class ASTGrammar extends JJTreeNode
     PGPrinter.info ("opt:" + Options.getOutputLanguage ().getID ());
     // TODO :: CBA -- Require Unification of output language specific processing
     // into a single Enum class
-    switch (Options.getOutputLanguage ())
-    {
-      case JAVA:
-        new CodeGeneratorJava ().visit (this, io);
-        break;
-      default:
-        // Catch all to ensure we don't accidently do nothing
-        throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());
-    }
+    new CodeGeneratorJava ().visit (this, io);
   }
 
   /** Accept the visitor. **/

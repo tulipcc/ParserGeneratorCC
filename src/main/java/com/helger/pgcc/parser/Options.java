@@ -87,7 +87,6 @@ import com.helger.commons.system.SystemHelper;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
-import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
 
@@ -342,13 +341,7 @@ public class Options
   @Nonempty
   public static String getTokenMgrErrorClass ()
   {
-    switch (s_language)
-    {
-      case JAVA:
-        return "TokenMgrException";
-      default:
-        throw new UnsupportedOutputLanguageException (s_language);
-    }
+    return "TokenMgrException";
   }
 
   /**

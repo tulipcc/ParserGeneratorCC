@@ -49,7 +49,6 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.stream.NonBlockingBufferedWriter;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.pgcc.output.EOutputLanguage;
-import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.utils.OutputFileGenerator;
 
 public class CodeGenerator
@@ -277,15 +276,7 @@ public class CodeGenerator
    */
   public final void genAnnotation (final String ann)
   {
-    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
-    switch (eOutputLanguage)
-    {
-      case JAVA:
-        genCode ("@" + ann);
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
-    }
+    genCode ("@" + ann);
   }
 
   /**
@@ -296,15 +287,7 @@ public class CodeGenerator
    */
   public final void genModifier (final String mod)
   {
-    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
-    switch (eOutputLanguage)
-    {
-      case JAVA:
-        genCode (mod);
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
-    }
+    genCode (mod);
   }
 
   /**
@@ -322,23 +305,15 @@ public class CodeGenerator
    */
   public final void genClassStart (final String mod, final String name, final String [] superClasses, final String [] superInterfaces)
   {
-    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
-    switch (eOutputLanguage)
-    {
-      case JAVA:
-        if (mod != null)
-          genModifier (mod);
-        genCode ("class " + name);
-        if (superClasses.length == 1 && superClasses[0] != null)
-          genCode (" extends " + superClasses[0]);
-        if (superInterfaces.length != 0)
-          genCode (" implements ");
-        _genCommaSeperatedString (superInterfaces);
-        genCodeLine (" {");
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
-    }
+    if (mod != null)
+      genModifier (mod);
+    genCode ("class " + name);
+    if (superClasses.length == 1 && superClasses[0] != null)
+      genCode (" extends " + superClasses[0]);
+    if (superInterfaces.length != 0)
+      genCode (" implements ");
+    _genCommaSeperatedString (superInterfaces);
+    genCodeLine (" {");
   }
 
   private void _genCommaSeperatedString (final String [] strings)
@@ -361,20 +336,12 @@ public class CodeGenerator
                                              final String sNameAndParams,
                                              final String sExceptions)
   {
-    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
-    switch (eOutputLanguage)
+    genCode (sQualifiedModsAndRetType + " " + sNameAndParams);
+    if (sExceptions != null)
     {
-      case JAVA:
-        genCode (sQualifiedModsAndRetType + " " + sNameAndParams);
-        if (sExceptions != null)
-        {
-          genCode (" throws " + sExceptions);
-        }
-        genCodeNewLine ();
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
+      genCode (" throws " + sExceptions);
     }
+    genCodeNewLine ();
   }
 
   protected final String getClassQualifier (final String className)
