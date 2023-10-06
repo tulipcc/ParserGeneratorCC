@@ -82,7 +82,6 @@ import java.util.List;
 
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.EJDKVersion;
-import com.helger.pgcc.output.EOutputLanguage;
 
 /**
  * Generate the parser.
@@ -97,7 +96,6 @@ public class ParseGenJava extends CodeGenerator
     if (!Options.isBuildParser ())
       return;
 
-    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
     final EJDKVersion eJavaVersion = Options.getJdkVersion ();
     final boolean bHasCharset = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_1_6);
     final boolean bEmptyTypeVar = eJavaVersion.isNewerOrEqualsThan (EJDKVersion.JDK_1_7);

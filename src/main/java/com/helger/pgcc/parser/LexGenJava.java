@@ -86,7 +86,6 @@ import java.util.Map;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.CPG;
-import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.OutputHelper;
 import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.exp.ExpAction;
@@ -674,8 +673,6 @@ public class LexGenJava extends CodeGenerator
       return;
     }
 
-    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
-
     ExpRStringLiteral.dumpStrLiteralImages (this);
     _dumpFillToken ();
     NfaState.dumpStateSets (this);
@@ -802,8 +799,6 @@ public class LexGenJava extends CodeGenerator
 
   private void _dumpStaticVarDeclarations (final String charStreamName) throws IOException
   {
-    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
-
     genCodeNewLine ();
     genCodeLine ("/** Lexer state names. */");
     genCodeLine ("public static final String[] lexStateNames = {");
@@ -836,7 +831,7 @@ public class LexGenJava extends CodeGenerator
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode (eOutputLanguage.getLongHex (s_toToken[i]) + ", ");
+        genCode (CodeGenerator.getLongHex (s_toToken[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -848,7 +843,7 @@ public class LexGenJava extends CodeGenerator
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode (eOutputLanguage.getLongHex (s_toSkip[i]) + ", ");
+        genCode (CodeGenerator.getLongHex (s_toSkip[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -860,7 +855,7 @@ public class LexGenJava extends CodeGenerator
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode (eOutputLanguage.getLongHex (s_toSpecial[i]) + ", ");
+        genCode (CodeGenerator.getLongHex (s_toSpecial[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -872,7 +867,7 @@ public class LexGenJava extends CodeGenerator
       {
         if (i % 4 == 0)
           genCode ("\n   ");
-        genCode (eOutputLanguage.getLongHex (s_toMore[i]) + ", ");
+        genCode (CodeGenerator.getLongHex (s_toMore[i]) + ", ");
       }
       genCodeLine ("\n};");
     }
@@ -989,8 +984,6 @@ public class LexGenJava extends CodeGenerator
 
   private void _dumpGetNextToken ()
   {
-    final EOutputLanguage eOutputLanguage = getOutputLanguage ();
-
     genCodeNewLine ();
     genCodeLine ("int curLexState = " + s_defaultLexState + ";");
     genCodeLine ("int defaultLexState = " + s_defaultLexState + ";");
@@ -1083,14 +1076,14 @@ public class LexGenJava extends CodeGenerator
           genCodeLine (prefix +
                        "   while ((curChar < 64" +
                        " && (" +
-                       eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[0]) +
+                       CodeGenerator.getLongHex (s_singlesToSkip[i].m_asciiMoves[0]) +
                        " & (1L << curChar)) != 0L) || \n" +
                        prefix +
                        "          (curChar >> 6) == 1" +
                        " && (" +
-                       eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[1]) +
+                       CodeGenerator.getLongHex (s_singlesToSkip[i].m_asciiMoves[1]) +
                        " & (1L << (curChar & 077))) != " +
-                       eOutputLanguage.getLongPlain (0) +
+                       CodeGenerator.getLongPlain (0) +
                        ")");
         }
         else
@@ -1100,9 +1093,9 @@ public class LexGenJava extends CodeGenerator
                          "   while (curChar <= " +
                          (int) maxChar (s_singlesToSkip[i].m_asciiMoves[0]) +
                          " && (" +
-                         eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[0]) +
+                         CodeGenerator.getLongHex (s_singlesToSkip[i].m_asciiMoves[0]) +
                          " & (1L << curChar)) != " +
-                         eOutputLanguage.getLongPlain (0) +
+                         CodeGenerator.getLongPlain (0) +
                          ")");
           }
           else
@@ -1112,9 +1105,9 @@ public class LexGenJava extends CodeGenerator
                            "   while (curChar > 63 && curChar <= " +
                            (maxChar (s_singlesToSkip[i].m_asciiMoves[1]) + 64) +
                            " && (" +
-                           eOutputLanguage.getLongHex (s_singlesToSkip[i].m_asciiMoves[1]) +
+                           CodeGenerator.getLongHex (s_singlesToSkip[i].m_asciiMoves[1]) +
                            " & (1L << (curChar & 077))) != " +
-                           eOutputLanguage.getLongPlain (0) +
+                           CodeGenerator.getLongPlain (0) +
                            ")");
             }
 

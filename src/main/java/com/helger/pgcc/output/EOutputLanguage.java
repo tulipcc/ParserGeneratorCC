@@ -64,18 +64,6 @@ public enum EOutputLanguage implements IHasID <String>
     return m_sID;
   }
 
-  @Nonnull
-  public String getLongHex (final long n)
-  {
-    return "0x" + Long.toHexString (n) + "L";
-  }
-
-  @Nonnull
-  public String getLongPlain (final long n)
-  {
-    return "0x" + Long.toString (n) + "L";
-  }
-
   @Nullable
   public static EOutputLanguage getFromIDCaseInsensitiveOrNull (@Nullable final String sID)
   {

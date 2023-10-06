@@ -37,13 +37,10 @@
 package com.helger.pgcc.parser;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.addUnicodeEscapes;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_jjtreeGenerated;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -383,6 +380,18 @@ public class CodeGenerator
   protected final String getClassQualifier (final String className)
   {
     return className == null ? "" : className + "::";
+  }
+
+  @Nonnull
+  public static String getLongHex (final long n)
+  {
+    return "0x" + Long.toHexString (n) + "L";
+  }
+
+  @Nonnull
+  public static String getLongPlain (final long n)
+  {
+    return "0x" + Long.toString (n) + "L";
   }
 
   public static String getCharStreamName ()

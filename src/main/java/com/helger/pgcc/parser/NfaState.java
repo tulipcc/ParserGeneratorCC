@@ -980,13 +980,13 @@ public class NfaState
       if (common != null)
       {
         String tmp = "{\n   " +
-                     eOutputLanguage.getLongHex (common[0]) +
+                     CodeGenerator.getLongHex (common[0]) +
                      ", " +
-                     eOutputLanguage.getLongHex (common[1]) +
+                     CodeGenerator.getLongHex (common[1]) +
                      ", " +
-                     eOutputLanguage.getLongHex (common[2]) +
+                     CodeGenerator.getLongHex (common[2]) +
                      ", " +
-                     eOutputLanguage.getLongHex (common[3]) +
+                     CodeGenerator.getLongHex (common[3]) +
                      "\n};";
         Integer ind = s_lohiByteTab.get (tmp);
         if (ind == null)
@@ -1011,13 +1011,13 @@ public class NfaState
         s_tmpIndices[cnt++] = ind.intValue ();
 
         tmp = "{\n   " +
-              eOutputLanguage.getLongHex (loBytes[i][0]) +
+              CodeGenerator.getLongHex (loBytes[i][0]) +
               ", " +
-              eOutputLanguage.getLongHex (loBytes[i][1]) +
+              CodeGenerator.getLongHex (loBytes[i][1]) +
               ", " +
-              eOutputLanguage.getLongHex (loBytes[i][2]) +
+              CodeGenerator.getLongHex (loBytes[i][2]) +
               ", " +
-              eOutputLanguage.getLongHex (loBytes[i][3]) +
+              CodeGenerator.getLongHex (loBytes[i][3]) +
               "\n};";
         ind = s_lohiByteTab.get (tmp);
         if (ind == null)
@@ -1060,13 +1060,13 @@ public class NfaState
       {
         // System.out.print(i + ", ");
         final String tmp = "{\n   " +
-                           eOutputLanguage.getLongHex (loBytes[i][0]) +
+                           CodeGenerator.getLongHex (loBytes[i][0]) +
                            ", " +
-                           eOutputLanguage.getLongHex (loBytes[i][1]) +
+                           CodeGenerator.getLongHex (loBytes[i][1]) +
                            ", " +
-                           eOutputLanguage.getLongHex (loBytes[i][2]) +
+                           CodeGenerator.getLongHex (loBytes[i][2]) +
                            ", " +
-                           eOutputLanguage.getLongHex (loBytes[i][3]) +
+                           CodeGenerator.getLongHex (loBytes[i][3]) +
                            "\n};";
 
         Integer ind = s_lohiByteTab.get (tmp);
@@ -1927,7 +1927,6 @@ public class NfaState
 
   private void _dumpAsciiMoveForCompositeState (final CodeGenerator codeGenerator, final int byteNum, final boolean elseNeeded)
   {
-    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
     boolean nextIntersects = _selfLoop ();
 
     for (final NfaState temp1 : s_allStates)
@@ -1959,9 +1958,9 @@ public class NfaState
         codeGenerator.genCodeLine ("                  " +
                                    (elseNeeded ? "else " : "") +
                                    "if ((" +
-                                   eOutputLanguage.getLongHex (m_asciiMoves[byteNum]) +
+                                   CodeGenerator.getLongHex (m_asciiMoves[byteNum]) +
                                    " & l) != " +
-                                   eOutputLanguage.getLongPlain (0) +
+                                   CodeGenerator.getLongPlain (0) +
                                    ")");
       prefix = "   ";
     }
@@ -2024,7 +2023,6 @@ public class NfaState
 
   private void _dumpAsciiMove (final CodeGenerator codeGenerator, final int byteNum, final boolean dumped[])
   {
-    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
     boolean nextIntersects = _selfLoop () && m_isComposite;
     boolean onlyState = true;
 
@@ -2076,9 +2074,9 @@ public class NfaState
           codeGenerator.genCodeLine ("                  if (curChar == " + (64 * byteNum + oneBit) + kindCheck + ")");
         else
           codeGenerator.genCodeLine ("                  if ((" +
-                                     eOutputLanguage.getLongHex (m_asciiMoves[byteNum]) +
+                                     CodeGenerator.getLongHex (m_asciiMoves[byteNum]) +
                                      " & l) != " +
-                                     eOutputLanguage.getLongPlain (0) +
+                                     CodeGenerator.getLongPlain (0) +
                                      kindCheck +
                                      ")");
 
@@ -2106,9 +2104,9 @@ public class NfaState
         if (m_asciiMoves[byteNum] != 0xffffffffffffffffL)
         {
           codeGenerator.genCodeLine ("                  if ((" +
-                                     eOutputLanguage.getLongHex (m_asciiMoves[byteNum]) +
+                                     CodeGenerator.getLongHex (m_asciiMoves[byteNum]) +
                                      " & l) == " +
-                                     eOutputLanguage.getLongPlain (0) +
+                                     CodeGenerator.getLongPlain (0) +
                                      ")");
           codeGenerator.genCodeLine ("                     break;");
         }
@@ -2134,9 +2132,9 @@ public class NfaState
         if (m_asciiMoves[byteNum] != 0xffffffffffffffffL)
         {
           codeGenerator.genCodeLine ("                  if ((" +
-                                     eOutputLanguage.getLongHex (m_asciiMoves[byteNum]) +
+                                     CodeGenerator.getLongHex (m_asciiMoves[byteNum]) +
                                      " & l) != " +
-                                     eOutputLanguage.getLongPlain (0) +
+                                     CodeGenerator.getLongPlain (0) +
                                      ")");
           prefix = "   ";
         }

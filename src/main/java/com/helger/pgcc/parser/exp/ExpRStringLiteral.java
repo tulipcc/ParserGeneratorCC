@@ -828,8 +828,6 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
               throw new UnsupportedOutputLanguageException (eOutputLanguage);
           }
 
-          final StringBuilder fmt = new StringBuilder ();
-          final StringBuilder args = new StringBuilder ();
           for (int vecs = 0; vecs < s_maxStrKind / 64 + 1; vecs++)
           {
             if (i <= s_maxLenForActive[vecs])
@@ -1048,9 +1046,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                 codeGenerator.genCodeLine ("((active" +
                                            j +
                                            " & " +
-                                           eOutputLanguage.getLongHex (1L << k) +
+                                           CodeGenerator.getLongHex (1L << k) +
                                            ") != " +
-                                           eOutputLanguage.getLongPlain (0) +
+                                           CodeGenerator.getLongPlain (0) +
                                            ")");
               }
 
@@ -1149,7 +1147,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                 else
                   atLeastOne = true;
 
-                codeGenerator.genCode (eOutputLanguage.getLongHex (info.m_validKinds[j]));
+                codeGenerator.genCode (CodeGenerator.getLongHex (info.m_validKinds[j]));
               }
 
             if ((i + 1) <= s_maxLenForActive[j])
@@ -1157,7 +1155,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
               if (atLeastOne)
                 codeGenerator.genCode (", ");
 
-              codeGenerator.genCode (eOutputLanguage.getLongHex (info.m_validKinds[j]));
+              codeGenerator.genCode (CodeGenerator.getLongHex (info.m_validKinds[j]));
             }
             codeGenerator.genCodeLine (");");
           }
@@ -1177,9 +1175,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                   atLeastOne = true;
 
                 if (info.m_validKinds[j] != 0L)
-                  codeGenerator.genCode ("active" + j + ", " + eOutputLanguage.getLongHex (info.m_validKinds[j]));
+                  codeGenerator.genCode ("active" + j + ", " + CodeGenerator.getLongHex (info.m_validKinds[j]));
                 else
-                  codeGenerator.genCode ("active" + j + ", " + eOutputLanguage.getLongPlain (0));
+                  codeGenerator.genCode ("active" + j + ", " + CodeGenerator.getLongPlain (0));
               }
 
             if ((i + 1) <= s_maxLenForActive[j] + 1)
@@ -1187,9 +1185,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
               if (atLeastOne)
                 codeGenerator.genCode (", ");
               if (info.m_validKinds[j] != 0L)
-                codeGenerator.genCode ("active" + j + ", " + eOutputLanguage.getLongHex (info.m_validKinds[j]));
+                codeGenerator.genCode ("active" + j + ", " + CodeGenerator.getLongHex (info.m_validKinds[j]));
               else
-                codeGenerator.genCode ("active" + j + ", " + eOutputLanguage.getLongPlain (0));
+                codeGenerator.genCode ("active" + j + ", " + CodeGenerator.getLongPlain (0));
             }
 
             codeGenerator.genCodeLine (");");
@@ -1522,9 +1520,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
           codeGenerator.genCode ("(active" +
                                  j +
                                  " & " +
-                                 eOutputLanguage.getLongHex (actives[j]) +
+                                 CodeGenerator.getLongHex (actives[j]) +
                                  ") != " +
-                                 eOutputLanguage.getLongPlain (0));
+                                 CodeGenerator.getLongPlain (0));
         }
 
         if (condGenerated)
