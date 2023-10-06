@@ -198,8 +198,8 @@ public class ParseGenJava extends CodeGenerator
       if (JavaCCGlobals.isLookAheadNeeded ())
       {
         genCodeLine ("  /** Whether we are looking ahead. */");
-        genCodeLine ("  private " + eOutputLanguage.getTypeBoolean () + " jj_lookingAhead = false;");
-        genCodeLine ("  private " + eOutputLanguage.getTypeBoolean () + " jj_semLA;");
+        genCodeLine ("  private boolean jj_lookingAhead = false;");
+        genCodeLine ("  private boolean jj_semLA;");
       }
     }
     if (Options.isErrorReporting ())
@@ -230,7 +230,7 @@ public class ParseGenJava extends CodeGenerator
     if (s_jj2index != 0 && Options.isErrorReporting ())
     {
       genCodeLine ("  private final JJCalls[] jj_2_rtns = new JJCalls[" + s_jj2index + "];");
-      genCodeLine ("  private " + eOutputLanguage.getTypeBoolean () + " jj_rescan = false;");
+      genCodeLine ("  private boolean jj_rescan = false;");
       genCodeLine ("  private int jj_gc = 0;");
     }
     genCodeNewLine ();
@@ -784,7 +784,7 @@ public class ParseGenJava extends CodeGenerator
         genCodeLine ("  @SuppressWarnings(\"serial\")");
       genCodeLine ("  private static final class LookaheadSuccess extends IllegalStateException {}");
       genCodeLine ("  private final LookaheadSuccess jj_ls = new LookaheadSuccess();");
-      genCodeLine ("  private " + eOutputLanguage.getTypeBoolean () + " jj_scan_token(int kind) {");
+      genCodeLine ("  private boolean jj_scan_token(int kind) {");
       genCodeLine ("	 if (jj_scanpos == jj_lastpos) {");
       genCodeLine ("	   jj_la--;");
       genCodeLine ("	   if (jj_scanpos.next == null) {");
@@ -956,11 +956,7 @@ public class ParseGenJava extends CodeGenerator
       genCodeLine ("   */");
       genCodeLine ("  public ParseException generateParseException() {");
       genCodeLine ("    jj_expentries.clear();");
-      genCodeLine ("    " +
-                   eOutputLanguage.getTypeBoolean () +
-                   "[] la1tokens = new " +
-                   eOutputLanguage.getTypeBoolean () +
-                   "[" +
+      genCodeLine ("    boolean[] la1tokens = new boolean[" +
                    s_tokenCount +
                    "];");
       genCodeLine ("    if (jj_kind >= 0) {");
@@ -1042,9 +1038,7 @@ public class ParseGenJava extends CodeGenerator
     if (Options.isDebugParser ())
     {
       genCodeLine ("  private int trace_indent = 0;");
-      genCodeLine ("  private " +
-                   eOutputLanguage.getTypeBoolean () +
-                   " trace_enabled = " +
+      genCodeLine ("  private boolean trace_enabled = " +
                    (Options.isDebugParser () ? "true" : "false") +
                    ";");
       genCodeNewLine ();

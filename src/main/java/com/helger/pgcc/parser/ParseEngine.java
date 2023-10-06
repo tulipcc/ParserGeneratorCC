@@ -66,7 +66,6 @@ package com.helger.pgcc.parser;
 import static com.helger.pgcc.parser.JavaCCGlobals.BNF_PRODUCTIONS;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ccol;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cline;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
 import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
@@ -1459,7 +1458,7 @@ public class ParseEngine
       switch (eOutputLanguage)
       {
         case JAVA:
-          m_codeGenerator.genCodeLine ("  private " + eOutputLanguage.getTypeBoolean () + " jj_3" + e.getInternalName () + "()");
+          m_codeGenerator.genCodeLine ("  private boolean jj_3" + e.getInternalName () + "()");
           break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -1824,11 +1823,6 @@ public class ParseEngine
     {
       if (p instanceof CodeProductionJava)
       {
-        if (!eOutputLanguage.isJava ())
-        {
-          JavaCCErrors.semantic_error ("Cannot use JAVACODE productions with non-Java output.");
-          continue;
-        }
         final CodeProductionJava jp = (CodeProductionJava) p;
         Token t = jp.getReturnTypeTokens ().get (0);
         codeGenerator.printTokenSetup (t);

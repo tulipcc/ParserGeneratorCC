@@ -658,9 +658,8 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     if (c < 0x20 || c >= 0x7f)
       return Integer.toString (c);
 
-    if (eOutputLanguage.isJava ())
-      if (c == '\'' || c == '\\')
-        return "'\\" + c + "'";
+    if (c == '\'' || c == '\\')
+      return "'\\" + c + "'";
 
     return "'" + c + "'";
   }
@@ -717,14 +716,14 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                 params.append (", ");
               else
                 atLeastOne = true;
-              params.append (eOutputLanguage.getTypeLong () + " active" + j);
+              params.append ("long active" + j);
             }
 
           if (i <= s_maxLenForActive[j])
           {
             if (atLeastOne)
               params.append (", ");
-            params.append (eOutputLanguage.getTypeLong () + " active" + j);
+            params.append ("long active" + j);
           }
         }
         else
@@ -737,14 +736,14 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                 params.append (", ");
               else
                 atLeastOne = true;
-              params.append (eOutputLanguage.getTypeLong () + " old" + j + ", " + eOutputLanguage.getTypeLong () + " active" + j);
+              params.append ("long old" + j + ", long active" + j);
             }
 
           if (i <= s_maxLenForActive[j] + 1)
           {
             if (atLeastOne)
               params.append (", ");
-            params.append (eOutputLanguage.getTypeLong () + " old" + j + ", " + eOutputLanguage.getTypeLong () + " active" + j);
+            params.append ("long old" + j + ", long active" + j);
           }
         }
       }
@@ -1467,8 +1466,8 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
     final StringBuilder params = new StringBuilder ();
     for (i = 0; i < maxKindsReqd - 1; i++)
-      params.append (eOutputLanguage.getTypeLong () + " active" + i + ", ");
-    params.append (eOutputLanguage.getTypeLong () + " active" + i + ")");
+      params.append ("long active" + i + ", ");
+    params.append ("long active" + i + ")");
 
     switch (eOutputLanguage)
     {
@@ -1605,8 +1604,8 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     params.setLength (0);
     params.append ("(int pos, ");
     for (i = 0; i < maxKindsReqd - 1; i++)
-      params.append (eOutputLanguage.getTypeLong () + " active" + i + ", ");
-    params.append (eOutputLanguage.getTypeLong () + " active" + i + ")");
+      params.append ("long active" + i + ", ");
+    params.append ("long active" + i + ")");
 
     switch (eOutputLanguage)
     {

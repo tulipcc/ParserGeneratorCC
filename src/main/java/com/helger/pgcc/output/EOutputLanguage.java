@@ -48,23 +48,6 @@ public enum EOutputLanguage implements IHasID <String>
 {
   JAVA ("java")
   {
-    @Override
-    public String getTypeLong ()
-    {
-      return "long";
-    }
-
-    @Override
-    public String getLongValueSuffix ()
-    {
-      return "L";
-    }
-
-    @Override
-    public String getTypeBoolean ()
-    {
-      return "boolean";
-    }
   };
 
   private final String m_sID;
@@ -81,43 +64,16 @@ public enum EOutputLanguage implements IHasID <String>
     return m_sID;
   }
 
-  /**
-   * @return The native data type for "long" values.
-   */
-  @Nonnull
-  @Nonempty
-  public abstract String getTypeLong ();
-
-  /**
-   * @return The value suffix to be used for long values.
-   * @see #getTypeLong()
-   */
-  @Nonnull
-  @Nonempty
-  protected abstract String getLongValueSuffix ();
-
   @Nonnull
   public String getLongHex (final long n)
   {
-    return "0x" + Long.toHexString (n) + getLongValueSuffix ();
+    return "0x" + Long.toHexString (n) + "L";
   }
 
   @Nonnull
   public String getLongPlain (final long n)
   {
-    return "0x" + Long.toString (n) + getLongValueSuffix ();
-  }
-
-  /**
-   * @return The native data type for "boolean" values.
-   */
-  @Nonnull
-  @Nonempty
-  public abstract String getTypeBoolean ();
-
-  public boolean isJava ()
-  {
-    return this == JAVA;
+    return "0x" + Long.toString (n) + "L";
   }
 
   @Nullable

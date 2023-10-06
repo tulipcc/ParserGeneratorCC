@@ -306,7 +306,7 @@ public class Main
       final EOutputLanguage eOutputLanguage = Options.getOutputLanguage ();
 
       // 2013/07/22 Java Modern is a
-      final boolean isJavaModern = eOutputLanguage.isJava () && Options.getJavaTemplateType ().equals (Options.JAVA_TEMPLATE_TYPE_MODERN);
+      final boolean isJavaModern = Options.getJavaTemplateType ().equals (Options.JAVA_TEMPLATE_TYPE_MODERN);
 
       JavaCCGlobals.createOutputDir (Options.getOutputDirectory ());
 

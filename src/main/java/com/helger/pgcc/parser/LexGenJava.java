@@ -692,10 +692,7 @@ public class LexGenJava extends CodeGenerator
     {
       genCodeLine ("int[] jjemptyLineNo = new int[" + s_maxLexStates + "];");
       genCodeLine ("int[] jjemptyColNo = new int[" + s_maxLexStates + "];");
-      genCodeLine (eOutputLanguage.getTypeBoolean () +
-                   "[] jjbeenHere = new " +
-                   eOutputLanguage.getTypeBoolean () +
-                   "[" +
+      genCodeLine ("boolean[] jjbeenHere = new boolean[" +
                    s_maxLexStates +
                    "];");
     }
@@ -1365,7 +1362,7 @@ public class LexGenJava extends CodeGenerator
       genCodeLine (prefix + "   int error_line = input_stream.getEndLine();");
       genCodeLine (prefix + "   int error_column = input_stream.getEndColumn();");
       genCodeLine (prefix + "   String error_after = null;");
-      genCodeLine (prefix + "   " + eOutputLanguage.getTypeBoolean () + " EOFSeen = false;");
+      genCodeLine (prefix + "   boolean EOFSeen = false;");
       genCodeLine (prefix + "   try {");
       genCodeLine (prefix + "     input_stream.readChar();");
       genCodeLine (prefix + "     input_stream.backup(1);");

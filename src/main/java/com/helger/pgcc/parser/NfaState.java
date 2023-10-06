@@ -998,7 +998,7 @@ public class NfaState
             switch (eOutputLanguage)
             {
               case JAVA:
-                codeGenerator.genCodeLine ("static final " + eOutputLanguage.getTypeLong () + "[] jjbitVec" + s_lohiByteCnt + " = " + tmp);
+                codeGenerator.genCodeLine ("static final long[] jjbitVec" + s_lohiByteCnt + " = " + tmp);
                 break;
               default:
                 throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -1028,7 +1028,7 @@ public class NfaState
             switch (eOutputLanguage)
             {
               case JAVA:
-                codeGenerator.genCodeLine ("static final " + eOutputLanguage.getTypeLong () + "[] jjbitVec" + s_lohiByteCnt + " = " + tmp);
+                codeGenerator.genCodeLine ("static final long[] jjbitVec" + s_lohiByteCnt + " = " + tmp);
                 break;
               default:
                 throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -1078,7 +1078,7 @@ public class NfaState
             switch (eOutputLanguage)
             {
               case JAVA:
-                codeGenerator.genCodeLine ("static final " + eOutputLanguage.getTypeLong () + "[] jjbitVec" + s_lohiByteCnt + " = " + tmp);
+                codeGenerator.genCodeLine ("static final long[] jjbitVec" + s_lohiByteCnt + " = " + tmp);
                 break;
               default:
                 throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -1683,7 +1683,7 @@ public class NfaState
     final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
     if (byteNum == 0)
     {
-      codeGenerator.genCodeLine ("         " + eOutputLanguage.getTypeLong () + " l = 1L << curChar;");
+      codeGenerator.genCodeLine ("         long l = 1L << curChar;");
       switch (eOutputLanguage)
       {
         case JAVA:
@@ -1696,7 +1696,7 @@ public class NfaState
     else
       if (byteNum == 1)
       {
-        codeGenerator.genCodeLine ("         " + eOutputLanguage.getTypeLong () + " l = 1L << (curChar & 077);");
+        codeGenerator.genCodeLine ("         long l = 1L << (curChar & 077);");
         switch (eOutputLanguage)
         {
           case JAVA:
@@ -1712,11 +1712,11 @@ public class NfaState
         {
           codeGenerator.genCodeLine ("         int hiByte = (curChar >> 8);");
           codeGenerator.genCodeLine ("         int i1 = hiByte >> 6;");
-          codeGenerator.genCodeLine ("         " + eOutputLanguage.getTypeLong () + " l1 = 1L << (hiByte & 077);");
+          codeGenerator.genCodeLine ("         long l1 = 1L << (hiByte & 077);");
         }
 
         codeGenerator.genCodeLine ("         int i2 = (curChar & 0xff) >> 6;");
-        codeGenerator.genCodeLine ("         " + eOutputLanguage.getTypeLong () + " l2 = 1L << (curChar & 077);");
+        codeGenerator.genCodeLine ("         long l2 = 1L << (curChar & 077);");
       }
 
     // codeGenerator.genCodeLine(" MatchLoop: do");
@@ -2627,15 +2627,9 @@ public class NfaState
     switch (eOutputLanguage)
     {
       case JAVA:
-        codeGenerator.genCodeLine ("private static final " +
-                                   eOutputLanguage.getTypeBoolean () +
-                                   " jjCanMove_" +
+        codeGenerator.genCodeLine ("private static final boolean jjCanMove_" +
                                    m_nonAsciiMethod +
-                                   "(int hiByte, int i1, int i2, " +
-                                   eOutputLanguage.getTypeLong () +
-                                   " l1, " +
-                                   eOutputLanguage.getTypeLong () +
-                                   " l2)");
+                                   "(int hiByte, int i1, int i2, long l1, long l2)");
         break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
