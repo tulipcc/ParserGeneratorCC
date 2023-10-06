@@ -65,26 +65,6 @@ public enum EOutputLanguage implements IHasID <String>
     {
       return "boolean";
     }
-  },
-  CPP ("c++")
-  {
-    @Override
-    public String getTypeLong ()
-    {
-      return "unsigned long long";
-    }
-
-    @Override
-    public String getLongValueSuffix ()
-    {
-      return "ULL";
-    }
-
-    @Override
-    public String getTypeBoolean ()
-    {
-      return "bool";
-    }
   };
 
   private final String m_sID;
@@ -138,16 +118,6 @@ public enum EOutputLanguage implements IHasID <String>
   public boolean isJava ()
   {
     return this == JAVA;
-  }
-
-  public boolean hasStaticsFile ()
-  {
-    return this == CPP;
-  }
-
-  public boolean hasIncludeFile ()
-  {
-    return this == CPP;
   }
 
   @Nullable

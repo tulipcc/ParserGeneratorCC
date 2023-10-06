@@ -38,7 +38,6 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.TokenProduction;
@@ -106,9 +105,6 @@ public class BNFGenerator implements IDocGenerator
   {}
 
   public void javacode (final CodeProductionJava jp)
-  {}
-
-  public void cppcode (final CodeProductionCpp cp)
   {}
 
   public void expansionEnd (final Expansion e, final boolean first)

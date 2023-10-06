@@ -65,7 +65,6 @@
 package com.helger.pgcc.jjtree;
 
 import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.jjtree.output.NodeFilesCpp;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.parser.Options;
 
@@ -85,10 +84,6 @@ public class ASTGrammar extends JJTreeNode
     {
       case JAVA:
         new CodeGeneratorJava ().visit (this, io);
-        break;
-      case CPP:
-        new CodeGeneratorCpp ().visit (this, io);
-        NodeFilesCpp.generateTreeClasses ();
         break;
       default:
         // Catch all to ensure we don't accidently do nothing

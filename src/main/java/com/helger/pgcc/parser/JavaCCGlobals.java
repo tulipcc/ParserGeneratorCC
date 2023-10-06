@@ -514,8 +514,6 @@ public final class JavaCCGlobals
         }
         return retval.toString ();
       }
-      case CPP:
-        return str;
       default:
         throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());
     }
@@ -726,8 +724,6 @@ public final class JavaCCGlobals
     {
       case JAVA:
         return ".java";
-      case CPP:
-        return ".cc";
       default:
         throw new UnsupportedOutputLanguageException (Options.getOutputLanguage ());
     }

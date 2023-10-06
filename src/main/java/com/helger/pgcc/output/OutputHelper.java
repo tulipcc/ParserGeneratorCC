@@ -53,8 +53,7 @@ public class OutputHelper
   /**
    * Read the version from the comment in the specified file. This method does
    * not try to recover from invalid comment syntax, but rather returns version
-   * 0.0 (which will always be taken to mean the file is out of date). Works for
-   * Java and CPP.
+   * 0.0 (which will always be taken to mean the file is out of date)..
    *
    * @param fileName
    *        eg Token.java

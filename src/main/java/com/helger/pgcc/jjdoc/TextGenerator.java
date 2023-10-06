@@ -43,7 +43,6 @@ import javax.annotation.Nonnull;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.Options;
@@ -116,13 +115,6 @@ public class TextGenerator implements IDocGenerator
     productionStart (jp);
     text ("java code");
     productionEnd (jp);
-  }
-
-  public void cppcode (final CodeProductionCpp cp) throws IOException
-  {
-    productionStart (cp);
-    text ("c++ code");
-    productionEnd (cp);
   }
 
   public void productionStart (final NormalProduction np) throws IOException

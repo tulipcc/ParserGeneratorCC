@@ -70,9 +70,7 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.state.ESuccess;
 import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.jjtree.output.JJTreeStateCpp;
 import com.helger.pgcc.jjtree.output.JJTreeStateJava;
-import com.helger.pgcc.jjtree.output.NodeFilesCpp;
 import com.helger.pgcc.jjtree.output.NodeFilesJava;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
@@ -232,11 +230,6 @@ public class JJTree
             NodeFilesJava.generateVisitor_java ();
             NodeFilesJava.generateDefaultVisitor_java ();
             JJTreeStateJava.generateTreeState_java ();
-            break;
-          case CPP:
-            NodeFilesCpp.generateTreeConstants ();
-            NodeFilesCpp.generateVisitors ();
-            JJTreeStateCpp.generateTreeState ();
             break;
           default:
             PGPrinter.info ("Unsupported JJTree output language : " + Options.getOutputLanguage ());

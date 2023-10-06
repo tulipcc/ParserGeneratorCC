@@ -36,7 +36,6 @@ package com.helger.pgcc.jjdoc;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.RegExprSpec;
@@ -123,9 +122,6 @@ public class XTextGenerator implements IDocGenerator
   {}
 
   public void javacode (final CodeProductionJava jp)
-  {}
-
-  public void cppcode (final CodeProductionCpp cp)
   {}
 
   public void productionStart (final NormalProduction np)

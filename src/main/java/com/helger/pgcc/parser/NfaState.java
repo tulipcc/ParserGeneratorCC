@@ -1000,10 +1000,6 @@ public class NfaState
               case JAVA:
                 codeGenerator.genCodeLine ("static final " + eOutputLanguage.getTypeLong () + "[] jjbitVec" + s_lohiByteCnt + " = " + tmp);
                 break;
-              case CPP:
-                codeGenerator.switchToStaticsFile ();
-                codeGenerator.genCodeLine ("static const " + eOutputLanguage.getTypeLong () + " jjbitVec" + s_lohiByteCnt + "[] = " + tmp);
-                break;
               default:
                 throw new UnsupportedOutputLanguageException (eOutputLanguage);
             }
@@ -1033,11 +1029,6 @@ public class NfaState
             {
               case JAVA:
                 codeGenerator.genCodeLine ("static final " + eOutputLanguage.getTypeLong () + "[] jjbitVec" + s_lohiByteCnt + " = " + tmp);
-                break;
-              case CPP:
-                codeGenerator.switchToStaticsFile ();
-                codeGenerator.genCodeLine ("static const " + eOutputLanguage.getTypeLong () + " jjbitVec" + s_lohiByteCnt + "[] = " + tmp);
-                codeGenerator.switchToMainFile ();
                 break;
               default:
                 throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -1088,10 +1079,6 @@ public class NfaState
             {
               case JAVA:
                 codeGenerator.genCodeLine ("static final " + eOutputLanguage.getTypeLong () + "[] jjbitVec" + s_lohiByteCnt + " = " + tmp);
-                break;
-              case CPP:
-                codeGenerator.switchToStaticsFile ();
-                codeGenerator.genCodeLine ("static const " + eOutputLanguage.getTypeLong () + " jjbitVec" + s_lohiByteCnt + "[] = " + tmp);
                 break;
               default:
                 throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -1310,10 +1297,6 @@ public class NfaState
     {
       case JAVA:
         codeGenerator.genCode ("static final int[] jjnextStates = {");
-        break;
-      case CPP:
-        codeGenerator.switchToStaticsFile ();
-        codeGenerator.genCode ("static const int jjnextStates[] = {");
         break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -1706,9 +1689,6 @@ public class NfaState
         case JAVA:
           // Nothing
           break;
-        case CPP:
-          codeGenerator.genCodeLine ("         (void)l;");
-          break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
@@ -1721,9 +1701,6 @@ public class NfaState
         {
           case JAVA:
             // Nothing
-            break;
-          case CPP:
-            codeGenerator.genCodeLine ("         (void)l;");
             break;
           default:
             throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -2660,17 +2637,6 @@ public class NfaState
                                    eOutputLanguage.getTypeLong () +
                                    " l2)");
         break;
-      case CPP:
-        codeGenerator.generateMethodDefHeader (eOutputLanguage.getTypeBoolean (),
-                                               LexGenJava.s_tokMgrClassName,
-                                               "jjCanMove_" +
-                                                                             m_nonAsciiMethod +
-                                                                             "(int hiByte, int i1, int i2, " +
-                                                                             eOutputLanguage.getTypeLong () +
-                                                                             " l1, " +
-                                                                             eOutputLanguage.getTypeLong () +
-                                                                             " l2)");
-        break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
@@ -2779,56 +2745,6 @@ public class NfaState
       codeGenerator.genCodeLine ("}");
       codeGenerator.genCodeNewLine ();
     }
-  }
-
-  // private static boolean boilerPlateDumped = false;
-  static void printBoilerPlateCPP (final CodeGenerator codeGenerator)
-  {
-    codeGenerator.switchToIncludeFile ();
-    codeGenerator.genCodeLine ("#define jjCheckNAdd(state)\\");
-    codeGenerator.genCodeLine ("{\\");
-    codeGenerator.genCodeLine ("   if (jjrounds[state] != jjround)\\");
-    codeGenerator.genCodeLine ("   {\\");
-    codeGenerator.genCodeLine ("      jjstateSet[jjnewStateCnt++] = state;\\");
-    codeGenerator.genCodeLine ("      jjrounds[state] = jjround;\\");
-    codeGenerator.genCodeLine ("   }\\");
-    codeGenerator.genCodeLine ("}");
-
-    codeGenerator.genCodeLine ("#define jjAddStates(start, end)\\");
-    codeGenerator.genCodeLine ("{\\");
-    codeGenerator.genCodeLine ("   for (int x = start; x <= end; x++) {\\");
-    codeGenerator.genCodeLine ("      jjstateSet[jjnewStateCnt++] = jjnextStates[x];\\");
-    codeGenerator.genCodeLine ("   } /*while (start++ != end);*/\\");
-    codeGenerator.genCodeLine ("}");
-
-    codeGenerator.genCodeLine ("#define jjCheckNAddTwoStates(state1, state2)\\");
-    codeGenerator.genCodeLine ("{\\");
-    codeGenerator.genCodeLine ("   jjCheckNAdd(state1);\\");
-    codeGenerator.genCodeLine ("   jjCheckNAdd(state2);\\");
-    codeGenerator.genCodeLine ("}");
-    codeGenerator.genCodeNewLine ();
-
-    if (s_jjCheckNAddStatesDualNeeded)
-    {
-      codeGenerator.genCodeLine ("#define jjCheckNAddStates(start, end)\\");
-      codeGenerator.genCodeLine ("{\\");
-      codeGenerator.genCodeLine ("   for (int x = start; x <= end; x++) {\\");
-      codeGenerator.genCodeLine ("      jjCheckNAdd(jjnextStates[x]);\\");
-      codeGenerator.genCodeLine ("   } /*while (start++ != end);*/\\");
-      codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeNewLine ();
-    }
-
-    if (s_jjCheckNAddStatesUnaryNeeded)
-    {
-      codeGenerator.genCodeLine ("#define jjCheckNAddStates(start)\\");
-      codeGenerator.genCodeLine ("{\\");
-      codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start]);\\");
-      codeGenerator.genCodeLine ("   jjCheckNAdd(jjnextStates[start + 1]);\\");
-      codeGenerator.genCodeLine ("}");
-      codeGenerator.genCodeNewLine ();
-    }
-    codeGenerator.switchToMainFile ();
   }
 
   @SuppressWarnings ("unused")
@@ -2986,11 +2902,6 @@ public class NfaState
       case JAVA:
         codeGenerator.genCodeLine ("private int jjMoveNfa" + LexGenJava.s_lexStateSuffix + "(int startState, int curPos)");
         break;
-      case CPP:
-        codeGenerator.generateMethodDefHeader ("int",
-                                               LexGenJava.s_tokMgrClassName,
-                                               "jjMoveNfa" + LexGenJava.s_lexStateSuffix + "(int startState, int curPos)");
-        break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
@@ -3015,11 +2926,6 @@ public class NfaState
           // TODO do not throw error
           codeGenerator.genCodeLine ("   catch(final java.io.IOException e) { throw new Error(\"Internal Error\"); }");
           break;
-        case CPP:
-          codeGenerator.genCodeLine ("   input_stream->backup(seenUpto = curPos + 1);");
-          codeGenerator.genCodeLine ("   assert(!input_stream->endOfInput());");
-          codeGenerator.genCodeLine ("   curChar = input_stream->readChar();");
-          break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
@@ -3039,9 +2945,6 @@ public class NfaState
           codeGenerator.genCodeLine ("      debugStream.println(\"   Starting NFA to match one of : \" + " +
                                      "jjKindsForStateVector(curLexState, jjstateSet, 0, 1));");
           break;
-        case CPP:
-          codeGenerator.genCodeLine ("      fprintf(debugStream, \"   Starting NFA to match one of : %s\\n\", jjKindsForStateVector(curLexState, jjstateSet, 0, 1).c_str());");
-          break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
@@ -3058,12 +2961,6 @@ public class NfaState
                                      Options.getTokenMgrErrorClass () +
                                      ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
                                      "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
-          break;
-        case CPP:
-          codeGenerator.genCodeLine ("   fprintf(debugStream, " +
-                                     "\"<%s>Current character : %c(%d) at line %d column %d\\n\"," +
-                                     "addUnicodeEscapes(lexStateNames[curLexState]).c_str(), curChar, (int)curChar, " +
-                                     "input_stream->getEndLine(), input_stream->getEndColumn());");
           break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -3115,10 +3012,6 @@ public class NfaState
                                      "\"   Currently matched the first \" + (jjmatchedPos + 1) + \" characters as" +
                                      " a \" + tokenImage[jjmatchedKind] + \" token.\");");
           break;
-        case CPP:
-          codeGenerator.genCodeLine ("      if (jjmatchedKind != 0 && jjmatchedKind != 0x" + Integer.toHexString (Integer.MAX_VALUE) + ")");
-          codeGenerator.genCodeLine ("   fprintf(debugStream, \"   Currently matched the first %d characters as a \\\"%s\\\" token.\\n\",  (jjmatchedPos + 1),  addUnicodeEscapes(tokenImage[jjmatchedKind]).c_str());");
-          break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
@@ -3143,11 +3036,6 @@ public class NfaState
           codeGenerator.genCodeLine ("      if (i == startsAt)");
         }
         break;
-      case CPP:
-        codeGenerator.genCodeLine ("      if ((i = jjnewStateCnt), (jjnewStateCnt = startsAt), (i == (startsAt = " +
-                                   s_generatedStates +
-                                   " - startsAt)))");
-        break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
@@ -3164,9 +3052,6 @@ public class NfaState
           codeGenerator.genCodeLine ("      debugStream.println(\"   Possible kinds of longer matches : \" + " +
                                      "jjKindsForStateVector(curLexState, jjstateSet, startsAt, i));");
           break;
-        case CPP:
-          codeGenerator.genCodeLine ("      fprintf(debugStream, \"   Possible kinds of longer matches : %s\\n\", jjKindsForStateVector(curLexState, jjstateSet, startsAt, i).c_str());");
-          break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
@@ -3180,13 +3065,6 @@ public class NfaState
           codeGenerator.genCodeLine ("      catch(final java.io.IOException e) { break; }");
         else
           codeGenerator.genCodeLine ("      catch(final java.io.IOException e) { return curPos; }");
-        break;
-      case CPP:
-        if (LexGenJava.s_mixed[LexGenJava.s_lexStateIndex])
-          codeGenerator.genCodeLine ("      if (input_stream->endOfInput()) { break; }");
-        else
-          codeGenerator.genCodeLine ("      if (input_stream->endOfInput()) { return curPos; }");
-        codeGenerator.genCodeLine ("      curChar = input_stream->readChar();");
         break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -3203,12 +3081,6 @@ public class NfaState
                                      Options.getTokenMgrErrorClass () +
                                      ".addEscapes(String.valueOf(curChar)) + \" (\" + (int)curChar + \") " +
                                      "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
-          break;
-        case CPP:
-          codeGenerator.genCodeLine ("   fprintf(debugStream, " +
-                                     "\"<%s>Current character : %c(%d) at line %d column %d\\n\"," +
-                                     "addUnicodeEscapes(lexStateNames[curLexState]).c_str(), curChar, (int)curChar, " +
-                                     "input_stream->getEndLine(), input_stream->getEndColumn());");
           break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -3227,9 +3099,6 @@ public class NfaState
         case JAVA:
           codeGenerator.genCodeLine ("   int toRet = Math.max(curPos, seenUpto);");
           break;
-        case CPP:
-          codeGenerator.genCodeLine ("   int toRet = MAX(curPos, seenUpto);");
-          break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
       }
@@ -3242,11 +3111,6 @@ public class NfaState
           codeGenerator.genCodeLine ("         try { curChar = input_stream.readChar(); }");
           // TODO do not throw error
           codeGenerator.genCodeLine ("         catch(final java.io.IOException e) { throw new Error(\"Internal Error : Please send a bug report.\"); }");
-          break;
-        case CPP:
-          codeGenerator.genCodeLine ("      for (i = toRet - MIN(curPos, seenUpto); i-- > 0; )");
-          codeGenerator.genCodeLine ("        {  assert(!input_stream->endOfInput());");
-          codeGenerator.genCodeLine ("           curChar = input_stream->readChar(); }");
           break;
         default:
           throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -3266,71 +3130,6 @@ public class NfaState
 
     codeGenerator.genCodeLine ("}");
     s_allStates.clear ();
-  }
-
-  public static void dumpStatesForStateCPP (final CodeGenerator codeGenerator)
-  {
-    if (s_statesForState == null)
-    {
-      assert (false) : "This should never be null.";
-      codeGenerator.genCodeLine ("null;");
-      return;
-    }
-
-    codeGenerator.switchToStaticsFile ();
-    for (int i = 0; i < LexGenJava.s_maxLexStates; i++)
-    {
-      if (s_statesForState[i] == null)
-      {
-        continue;
-      }
-
-      for (int j = 0; j < s_statesForState[i].length; j++)
-      {
-        final int [] stateSet = s_statesForState[i][j];
-
-        codeGenerator.genCode ("const int stateSet_" + i + "_" + j + "[" + LexGenJava.s_stateSetSize + "] = ");
-        if (stateSet == null)
-        {
-          codeGenerator.genCodeLine ("   { " + j + " };");
-          continue;
-        }
-
-        codeGenerator.genCode ("   { ");
-
-        for (final int aElement : stateSet)
-          codeGenerator.genCode (aElement + ", ");
-
-        codeGenerator.genCodeLine ("};");
-      }
-
-    }
-
-    for (int i = 0; i < LexGenJava.s_maxLexStates; i++)
-    {
-      codeGenerator.genCodeLine ("const int *stateSet_" + i + "[] = {");
-      if (s_statesForState[i] == null)
-      {
-        codeGenerator.genCodeLine (" NULL, ");
-        codeGenerator.genCodeLine ("};");
-        continue;
-      }
-
-      for (int j = 0; j < s_statesForState[i].length; j++)
-      {
-        codeGenerator.genCode ("stateSet_" + i + "_" + j + ",");
-      }
-      codeGenerator.genCodeLine ("};");
-    }
-
-    codeGenerator.genCode ("const int** statesForState[] = { ");
-    for (int i = 0; i < LexGenJava.s_maxLexStates; i++)
-    {
-      codeGenerator.genCodeLine ("stateSet_" + i + ", ");
-    }
-
-    codeGenerator.genCodeLine ("\n};");
-    codeGenerator.switchToMainFile ();
   }
 
   public static void dumpStatesForStateJava (final CodeGenerator codeGenerator)
@@ -3388,9 +3187,6 @@ public class NfaState
       case JAVA:
         dumpStatesForStateJava (codeGenerator);
         break;
-      case CPP:
-        dumpStatesForStateCPP (codeGenerator);
-        break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
@@ -3402,10 +3198,6 @@ public class NfaState
       case JAVA:
         codeGenerator.genCodeLine ("protected static final class Kinds {");
         codeGenerator.genCode ("  protected static final int[][] kindForState = ");
-        break;
-      case CPP:
-        codeGenerator.switchToStaticsFile ();
-        codeGenerator.genCode ("static const int kindForState[" + LexGenJava.s_stateSetSize + "][" + LexGenJava.s_stateSetSize + "] = ");
         break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -3453,9 +3245,6 @@ public class NfaState
       case JAVA:
         // Close class
         codeGenerator.genCode ("}");
-        break;
-      case CPP:
-        // empty
         break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);

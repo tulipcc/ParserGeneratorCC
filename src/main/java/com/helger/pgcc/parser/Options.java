@@ -153,18 +153,6 @@ public class Options
   public static final String USEROPTION__TOKEN_EXTENDS = "TOKEN_EXTENDS";
   public static final String USEROPTION__DEPTH_LIMIT = "DEPTH_LIMIT";
 
-  public static final String USEROPTION__CPP_NAMESPACE = "NAMESPACE";
-  public static final String USEROPTION__CPP_TOKEN_INCLUDES = "TOKEN_INCLUDES";
-  public static final String USEROPTION__CPP_PARSER_INCLUDES = "PARSER_INCLUDES";
-  public static final String USEROPTION__CPP_IGNORE_ACTIONS = "IGNORE_ACTIONS";
-  public static final String USEROPTION__CPP_TOKEN_MANAGER_INCLUDES = "TOKEN_MANAGER_INCLUDES";
-  public static final String USEROPTION__CPP_TOKEN_MANAGER_SUPERCLASS = "TOKEN_MANAGER_SUPERCLASS";
-  public static final String USEROPTION__CPP_STOP_ON_FIRST_ERROR = "STOP_ON_FIRST_ERROR";
-  public static final String USEROPTION__CPP_STACK_LIMIT = "STACK_LIMIT";
-
-  public static final String USEROPTION__CPP_TOKEN_INCLUDE = "TOKEN_INCLUDE";
-  public static final String USEROPTION__CPP_PARSER_INCLUDE = "PARSER_INCLUDE";
-
   private static EOutputLanguage s_language = EOutputLanguage.JAVA;
 
   /**
@@ -231,17 +219,8 @@ public class Options
     temp.add (new OptionInfo (USEROPTION__OUTPUT_LANGUAGE, EOptionType.STRING, s_language.getID ()));
 
     temp.add (new OptionInfo (USEROPTION__JAVA_TEMPLATE_TYPE, EOptionType.STRING, JAVA_TEMPLATE_TYPE_CLASSIC));
-    temp.add (new OptionInfo (USEROPTION__CPP_NAMESPACE, EOptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__CPP_TOKEN_INCLUDES, EOptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__CPP_PARSER_INCLUDES, EOptionType.STRING, ""));
-
-    temp.add (new OptionInfo (USEROPTION__CPP_TOKEN_MANAGER_INCLUDES, EOptionType.STRING, ""));
-    temp.add (new OptionInfo (USEROPTION__CPP_IGNORE_ACTIONS, EOptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__CPP_STOP_ON_FIRST_ERROR, EOptionType.BOOLEAN, Boolean.FALSE));
-    temp.add (new OptionInfo (USEROPTION__CPP_TOKEN_MANAGER_SUPERCLASS, EOptionType.STRING, ""));
 
     temp.add (new OptionInfo (USEROPTION__DEPTH_LIMIT, EOptionType.INTEGER, Integer.valueOf (0)));
-    temp.add (new OptionInfo (USEROPTION__CPP_STACK_LIMIT, EOptionType.STRING, ""));
 
     s_userOptions = Collections.unmodifiableSet (temp);
   }
@@ -368,8 +347,6 @@ public class Options
     {
       case JAVA:
         return "TokenMgrException";
-      case CPP:
-        return "TokenMgrError";
       default:
         throw new UnsupportedOutputLanguageException (s_language);
     }
@@ -510,11 +487,6 @@ public class Options
         }
         s_language = eOutLanguage;
       }
-      else
-        if (sNameUC.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
-        {
-          processCPPNamespaceOption ((String) aRealSrc);
-        }
   }
 
   /**
@@ -641,10 +613,6 @@ public class Options
 
     s_optionValues.put (sNameUC, val);
     s_cmdLineSetting.add (sNameUC);
-    if (sNameUC.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
-    {
-      processCPPNamespaceOption ((String) val);
-    }
   }
 
   public static void normalize ()
@@ -1011,30 +979,6 @@ public class Options
   public static void setStringOption (final String optionName, final String optionValue)
   {
     s_optionValues.put (optionName, optionValue);
-    if (optionName.equalsIgnoreCase (USEROPTION__CPP_NAMESPACE))
-    {
-      processCPPNamespaceOption (optionValue);
-    }
-  }
-
-  public static void processCPPNamespaceOption (final String optionValue)
-  {
-    final String ns = optionValue;
-    if (ns.length () > 0)
-    {
-      // We also need to split it.
-      final StringTokenizer st = new StringTokenizer (ns, "::");
-      String expanded_ns = st.nextToken () + " {";
-      String ns_close = "}";
-      while (st.hasMoreTokens ())
-      {
-        expanded_ns = expanded_ns + "\nnamespace " + st.nextToken () + " {";
-        ns_close = ns_close + "\n}";
-      }
-      s_optionValues.put (NONUSER_OPTION__NAMESPACE_OPEN, expanded_ns);
-      s_optionValues.put (NONUSER_OPTION__HAS_NAMESPACE, Boolean.TRUE);
-      s_optionValues.put (NONUSER_OPTION__NAMESPACE_CLOSE, ns_close);
-    }
   }
 
   public static boolean isTokenManagerRequiresParserAccess ()
@@ -1055,24 +999,6 @@ public class Options
   public static boolean hasDepthLimit ()
   {
     return getDepthLimit () > 0;
-  }
-
-  /**
-   * Get defined parser stack usage limit.
-   *
-   * @return The requested stack usage limit.
-   */
-  public static String getCPPStackLimit ()
-  {
-    final String limit = stringValue (USEROPTION__CPP_STACK_LIMIT);
-    if (limit.equals ("0"))
-      return "";
-    return limit;
-  }
-
-  public static boolean hasCPPStackLimit ()
-  {
-    return StringHelper.hasText (getCPPStackLimit ());
   }
 
   /**

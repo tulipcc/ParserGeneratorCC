@@ -58,8 +58,6 @@ import com.helger.pgcc.utils.OutputFileGenerator;
 public class CodeGenerator
 {
   private final StringBuilder m_aMainBuffer = new StringBuilder ();
-  private final StringBuilder m_aIncludeBuffer = new StringBuilder ();
-  private final StringBuilder m_aStaticsBuffer = new StringBuilder ();
   private StringBuilder m_aOutputBuffer = m_aMainBuffer;
 
   private int m_nLine;
@@ -77,22 +75,6 @@ public class CodeGenerator
   public final void switchToMainFile ()
   {
     m_aOutputBuffer = m_aMainBuffer;
-  }
-
-  public final void switchToStaticsFile ()
-  {
-    if (getOutputLanguage ().hasStaticsFile ())
-    {
-      m_aOutputBuffer = m_aStaticsBuffer;
-    }
-  }
-
-  public final void switchToIncludeFile ()
-  {
-    if (getOutputLanguage ().hasIncludeFile ())
-    {
-      m_aOutputBuffer = m_aIncludeBuffer;
-    }
   }
 
   protected final int getCol ()
@@ -114,35 +96,6 @@ public class CodeGenerator
   {
     m_nLine = nLine;
     m_nCol = nCol;
-  }
-
-  public final void genStringLiteralArrayCPP (final String varName, final String [] arr)
-  {
-    // First generate char array vars
-    for (int i = 0; i < arr.length; i++)
-    {
-      genCodeLine ("static const JJChar " + varName + "_arr_" + i + "[] = ");
-      genStringLiteralInCPP (arr[i]);
-      genCodeLine (";");
-    }
-
-    genCodeLine ("static const JJString " + varName + "[] = {");
-    for (int i = 0; i < arr.length; i++)
-    {
-      genCodeLine (varName + "_arr_" + i + ", ");
-    }
-    genCodeLine ("};");
-  }
-
-  public final void genStringLiteralInCPP (final String s)
-  {
-    // String literals in CPP become char arrays
-    m_aOutputBuffer.append ("{");
-    for (final char c : s.toCharArray ())
-    {
-      m_aOutputBuffer.append ("0x").append (Integer.toHexString (c)).append (", ");
-    }
-    m_aOutputBuffer.append ("0}");
   }
 
   public final void genCode (final char c)
@@ -168,38 +121,6 @@ public class CodeGenerator
 
   public final void saveOutput (final String fileName)
   {
-    if (getOutputLanguage ().hasIncludeFile ())
-    {
-      final String incfilePath = fileName.replace (".cc", ".h");
-      final String incfileName = new File (incfilePath).getName ();
-
-      final String sDefine = incfileName.replace ('.', '_').toUpperCase (Locale.US);
-      m_aIncludeBuffer.insert (0, "#define " + sDefine + "\n");
-      m_aIncludeBuffer.insert (0, "#ifndef " + sDefine + "\n");
-
-      // dump the statics into the main file with the code.
-      m_aMainBuffer.insert (0, m_aStaticsBuffer);
-
-      // Finally enclose the whole thing in the namespace, if specified.
-      if (Options.stringValue (Options.USEROPTION__CPP_NAMESPACE).length () > 0)
-      {
-        m_aMainBuffer.insert (0, "namespace " + Options.stringValue ("NAMESPACE_OPEN") + "\n");
-        m_aMainBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
-        m_aIncludeBuffer.append (Options.stringValue ("NAMESPACE_CLOSE") + "\n");
-      }
-
-      if (s_jjtreeGenerated)
-      {
-        m_aMainBuffer.insert (0, "#include \"SimpleNode.h\"\n");
-      }
-      if (Options.isTokenManagerUsesParser ())
-        m_aMainBuffer.insert (0, "#include \"" + s_cu_name + ".h\"\n");
-      m_aMainBuffer.insert (0, "#include \"TokenMgrError.h\"\n");
-      m_aMainBuffer.insert (0, "#include \"" + incfileName + "\"\n");
-      m_aIncludeBuffer.append ("#endif\n");
-      saveOutput (incfilePath, m_aIncludeBuffer);
-    }
-
     m_aMainBuffer.insert (0, "/* " + new File (fileName).getName () + " */\n");
     saveOutput (fileName, m_aMainBuffer);
   }
@@ -365,10 +286,6 @@ public class CodeGenerator
       case JAVA:
         genCode ("@" + ann);
         break;
-      case CPP:
-        // For now, it's only C++ for now
-        genCode ("/*" + ann + "*/");
-        break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
     }
@@ -387,12 +304,6 @@ public class CodeGenerator
     {
       case JAVA:
         genCode (mod);
-        break;
-      case CPP:
-        // For now, it's only C++ for now
-        final String origMod = mod.trim ().toLowerCase (Locale.US);
-        if (origMod.equals ("public") || origMod.equals ("protected") || origMod.equals ("private"))
-          genCode (origMod + ": ");
         break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -427,15 +338,6 @@ public class CodeGenerator
           genCode (" implements ");
         _genCommaSeperatedString (superInterfaces);
         genCodeLine (" {");
-        break;
-      case CPP:
-        genCode ("class " + name);
-        if (superClasses.length > 0 || superInterfaces.length > 0)
-          genCode (" : ");
-        _genCommaSeperatedString (superClasses);
-        _genCommaSeperatedString (superInterfaces);
-        genCodeLine (" {");
-        genCodeLine ("public:");
         break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -472,35 +374,6 @@ public class CodeGenerator
           genCode (" throws " + sExceptions);
         }
         genCodeNewLine ();
-        break;
-      case CPP:
-        // for C++, we generate the signature in the header file and body in
-        // main file
-        m_aIncludeBuffer.append (sQualifiedModsAndRetType + " " + sNameAndParams);
-        // if (exceptions != null)
-        // includeBuffer.append(" throw(" + exceptions + ")");
-        m_aIncludeBuffer.append (";\n");
-
-        String modsAndRetType = null;
-        int i = sQualifiedModsAndRetType.lastIndexOf (':');
-        if (i >= 0)
-          modsAndRetType = sQualifiedModsAndRetType.substring (i + 1);
-
-        if (modsAndRetType != null)
-        {
-          i = modsAndRetType.lastIndexOf ("virtual");
-          if (i >= 0)
-            modsAndRetType = modsAndRetType.substring (i + "virtual".length ());
-        }
-
-        String sNonVirtual = sQualifiedModsAndRetType;
-        i = sNonVirtual.lastIndexOf ("virtual");
-        if (i >= 0)
-          sNonVirtual = sNonVirtual.substring (i + "virtual".length ());
-        m_aMainBuffer.append ("\n" + sNonVirtual + " " + getClassQualifier (sClassName) + sNameAndParams);
-        // if (exceptions != null)
-        // mainBuffer.append(" throw( " + exceptions + ")");
-        switchToMainFile ();
         break;
       default:
         throw new UnsupportedOutputLanguageException (eOutputLanguage);

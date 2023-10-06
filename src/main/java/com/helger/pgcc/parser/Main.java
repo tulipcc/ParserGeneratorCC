@@ -75,7 +75,6 @@ import com.helger.commons.state.ESuccess;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
-import com.helger.pgcc.output.cpp.OtherFilesGenCPP;
 import com.helger.pgcc.output.java.OtherFilesGenJava;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
@@ -339,19 +338,6 @@ public class Main
 
           Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.s_cu_name);
           OtherFilesGenJava.start (isJavaModern);
-          break;
-        case CPP:
-          // C++ for now
-          if (isBuildParser)
-          {
-            new ParseGenCPP ().start ();
-          }
-          if (isBuildParser)
-          {
-            new LexGenCpp ().start ();
-          }
-          Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.s_cu_name);
-          OtherFilesGenCPP.start ();
           break;
         default:
           throw new IllegalStateException ("Unhandled language!");
