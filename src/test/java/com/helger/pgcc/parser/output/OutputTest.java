@@ -124,9 +124,11 @@ public final class OutputTest extends AbstractJavaCCTestCase
     FileSystemIterator generatedFiles = new FileSystemIterator(outputDirectory);
     for (File generatedFile : generatedFiles) {
         String generated = SimpleFileIO.getFileAsString(generatedFile, StandardCharsets.UTF_8);
+        generated = generated.replaceAll("\\r\\n?", "\n");
 
         File expectedFile = new File(expectationDir, generatedFile.getName());
         String expected = SimpleFileIO.getFileAsString(expectedFile, StandardCharsets.UTF_8);
+        expected = expected.replaceAll("\\r\\n?", "\n");
 
         assertEquals("The generated file '" + generatedFile.getName() + "' differs from the expected one.", expected, generated);
     }
