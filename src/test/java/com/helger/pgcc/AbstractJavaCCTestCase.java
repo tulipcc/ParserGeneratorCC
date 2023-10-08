@@ -64,4 +64,34 @@ public abstract class AbstractJavaCCTestCase
     // return "src/org/javacc/parser/";
     // return "src/main/javacc/org/javacc/parser/";
   }
+
+  /**
+   * Where the input jj files are located
+   *
+   * @return the directory name String relative to the root
+   */
+  public String getTestResourcesDirectory ()
+  {
+    return "src/test/resources/";
+  }
+
+  /**
+   * Where the examples files are located
+   *
+   * @return the directory name String relative to the root
+   */
+  public String getExamplesDirectory ()
+  {
+    return "examples/";
+  }
+
+  /**
+   * Where the target files are located
+   *
+   * @return the directory name String relative to the root
+   */
+  public String getTargetDirectory ()
+  {
+    return "target/";
+  }
 }
