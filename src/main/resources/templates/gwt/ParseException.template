@@ -107,34 +107,34 @@ public class ParseException extends Exception {
     for (String option : sortedOptions)
       expected.append(INDENT).append(option).append(EOL);
     
-	StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     sb.append ("Encountered unexpected token:");
 
     Token tok = currentToken.next;
     for (int i = 0; i < maxSize; i++) {
       String tokenText = tok.image;
-  	  String escapedTokenText = add_escapes(tokenText);
+      String escapedTokenText = add_escapes(tokenText);
       if (i != 0)
-      	sb.append (' ');
+        sb.append (' ');
       if (tok.kind == 0) {
-      	sb.append(tokenImage[0]);
+        sb.append(tokenImage[0]);
         break;
       }
       sb.append(" \"");
-	  sb.append(escapedTokenText);
+      sb.append(escapedTokenText);
       sb.append("\"");
       sb.append(" " + tokenImage[tok.kind]);
       tok = tok.next;
     }
 #if KEEP_LINE_COLUMN
-	sb.append (EOL)
-	  .append (INDENT)
-	  .append ("at line ")
-	  .append (currentToken.next.beginLine)
-	  .append (", column ")
-	  .append (currentToken.next.beginColumn);
+    sb.append (EOL)
+      .append (INDENT)
+      .append ("at line ")
+      .append (currentToken.next.beginLine)
+      .append (", column ")
+      .append (currentToken.next.beginColumn);
 #fi
-	sb.append(".").append(EOL);
+    sb.append(".").append(EOL);
     
     if (expectedTokenSequences.length == 0) {
       // Nothing to add here
@@ -148,7 +148,7 @@ public class ParseException extends Exception {
     }
     // 2013/07/30 --> Seems to be inaccurate as represents the readahead state, not the lexical state BEFORE the unknown token
 //    if (lexicalStateName != null) {
-//    	sb.append(EOL).append("** Lexical State : ").append(lexicalStateName).append(EOL).append(EOL);
+//      sb.append(EOL).append("** Lexical State : ").append(lexicalStateName).append(EOL).append(EOL);
 //    }
     
     return sb.toString();

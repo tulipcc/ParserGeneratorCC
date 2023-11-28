@@ -46,7 +46,7 @@ import com.helger.commons.collection.impl.ICommonsList;
 public abstract class AbstractCodeProduction extends NormalProduction
 {
   /**
-   * The tokens that implement this JAVACODE/CPPCODE production.
+   * The tokens that implement this JAVACODE production.
    */
   private final ICommonsList <Token> m_aCodeTokens = new CommonsArrayList <> ();
 

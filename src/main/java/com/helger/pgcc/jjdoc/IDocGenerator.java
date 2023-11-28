@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.TokenProduction;
@@ -75,7 +74,7 @@ public interface IDocGenerator extends Serializable
 
   /**
    * Output document header.
-   * 
+   *
    * @throws IOException
    *         on IO error
    */
@@ -83,7 +82,7 @@ public interface IDocGenerator extends Serializable
 
   /**
    * Output document footer.
-   * 
+   *
    * @throws IOException
    *         on IO error
    */
@@ -115,7 +114,7 @@ public interface IDocGenerator extends Serializable
 
   /**
    * Output start of non-terminal.
-   * 
+   *
    * @throws IOException
    *         on IO error
    */
@@ -123,7 +122,7 @@ public interface IDocGenerator extends Serializable
 
   /**
    * Output end of non-terminal.
-   * 
+   *
    * @throws IOException
    *         on IO error
    */
@@ -131,7 +130,7 @@ public interface IDocGenerator extends Serializable
 
   /**
    * Output start of tokens.
-   * 
+   *
    * @throws IOException
    *         on IO error
    */
@@ -139,7 +138,7 @@ public interface IDocGenerator extends Serializable
 
   /**
    * Output end of tokens.
-   * 
+   *
    * @throws IOException
    *         on IO error
    */
@@ -154,16 +153,6 @@ public interface IDocGenerator extends Serializable
    *         on IO error
    */
   void javacode (CodeProductionJava jp) throws IOException;
-
-  /**
-   * Output comment from a production.
-   *
-   * @param cp
-   *        the CppCodeProduction to output
-   * @throws IOException
-   *         on IO error
-   */
-  void cppcode (CodeProductionCpp cp) throws IOException;
 
   /**
    * Output start of a normal production.

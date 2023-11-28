@@ -40,7 +40,6 @@ import java.util.List;
 import com.helger.commons.string.StringHelper;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.BNFProduction;
-import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.NormalProduction;
@@ -203,15 +202,10 @@ public final class JJDoc
         gen.productionEnd (np);
       }
       else
-        if (np instanceof CodeProductionCpp)
+        if (np instanceof CodeProductionJava)
         {
-          gen.cppcode ((CodeProductionCpp) np);
+          gen.javacode ((CodeProductionJava) np);
         }
-        else
-          if (np instanceof CodeProductionJava)
-          {
-            gen.javacode ((CodeProductionJava) np);
-          }
     }
     gen.nonterminalsEnd ();
   }

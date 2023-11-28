@@ -11,7 +11,6 @@ TOKENS
 | <_PARSER_BEGIN: "PARSER_BEGIN">
 | <_PARSER_END: "PARSER_END">
 | <_JAVACODE: "JAVACODE">
-| <_CPPCODE: "CPPCODE">
 | <_TOKEN: "TOKEN">
 | <_SPECIAL_TOKEN: "SPECIAL_TOKEN">
 | <_MORE: "MORE">
@@ -215,12 +214,10 @@ NON-TERMINALS
 	option_binding	:=	( <IDENTIFIER> | "LOOKAHEAD" | "IGNORE_CASE" | "static" | "PARSER_BEGIN" ) "=" ( IntegerLiteral | BooleanLiteral | StringLiteral | StringList ) ";"
 	StringList	:=	"(" StringLiteral ( "," StringLiteral )* ")"
 	production	:=	javacode_production
-		|	cppcode_production
 		|	regular_expr_production
 		|	token_manager_decls
 		|	bnf_production
 	javacode_production	:=	"JAVACODE" AccessModifier ResultType identifier FormalParameters ( "throws" Name ( "," Name )* )? Block
-	cppcode_production	:=	"CPPCODE" AccessModifier ResultType identifier FormalParameters ( "throws" Name ( "," Name )* )? Block
 	bnf_production	:=	AccessModifier ResultType identifier FormalParameters ( "throws" Name ( "," Name )* )? ":" Block "{" expansion_choices "}"
 	AccessModifier	:=	( "public" | "protected" | "private" )?
 	regular_expr_production	:=	( "<" "*" ">" | "<" <IDENTIFIER> ( "," <IDENTIFIER> )* ">" )? regexpr_kind ( "[" "IGNORE_CASE" "]" )? ":" "{" regexpr_spec ( "|" regexpr_spec )* "}"

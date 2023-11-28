@@ -87,7 +87,7 @@ void SimpleNode::jjtChildrenAccept(${PARSER_NAME}Visitor *visitor, ${VISITOR_DAT
 void SimpleNode::jjtChildAccept(int childNo, ${PARSER_NAME}Visitor *visitor, ${VISITOR_DATA_TYPE:-void *} data) const {
     if (0 <= childNo && childNo < children.size())
       children[childNo]->jjtAccept(visitor, data);
-}    	
+}
 
 #fi
   /* You can override these two methods in subclasses of SimpleNode to

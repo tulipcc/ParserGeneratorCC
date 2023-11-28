@@ -127,11 +127,6 @@ public class JavaCCParser extends JavaCCParserInternals {
    */
   private boolean m_bJumpPatched = false;
 
-  protected static boolean isJavaLanguage()
-  {
-    return Options.getOutputLanguage ().isJava ();
-  }
-
   /*
    * Returns true if the next token is not in the FOLLOW list of "expansion".
    * It is used to decide when the end of an "expansion" has been reached.
@@ -148,11 +143,8 @@ public class JavaCCParser extends JavaCCParserInternals {
    * result type as an error for a java grammar
    */
   private static boolean isAllowed(Token t)  {
-    if (isJavaLanguage())
-    {
-      if (t.kind == STAR || t.kind == BIT_AND || t.kind == CONST)
-        return false;
-    }
+    if (t.kind == STAR || t.kind == BIT_AND || t.kind == CONST)
+      return false;
     return true;
   }    
 
@@ -241,7 +233,6 @@ TOKEN :
 | < _PARSER_BEGIN: "PARSER_BEGIN" >
 | < _PARSER_END: "PARSER_END" >
 | < _JAVACODE: "JAVACODE" >
-| < _CPPCODE: "CPPCODE" >
 | < _TOKEN: "TOKEN" >
 | < _SPECIAL_TOKEN: "SPECIAL_TOKEN" >
 | < _MORE: "MORE" >
@@ -559,14 +550,6 @@ void javacc_input() :
   {
     m_processing_cu = true;
     m_sParserClassName = id1;
-
-    if (!isJavaLanguage()) {
-      JavaCCGlobals.setOtherLanguageDeclTokenBegin (getToken(1));
-      while(getToken(1).kind != _PARSER_END) {
-        getNextToken();
-      }
-      JavaCCGlobals.setOtherLanguageDeclTokenEnd (getToken(1));
-    }
   }
     CompilationUnit()
   {
@@ -655,14 +638,6 @@ void production() :
 |
   LOOKAHEAD(1)
   /*
-   * Since CPPCODE is both a JavaCC reserved word and a Java identifier,
-   * we need to give preference to "cppcode_production" over
-   * "bnf_production".
-   */
-  cppcode_production()
-|
-  LOOKAHEAD(1)
-  /*
    * Since SKIP, TOKEN, etc. are both JavaCC reserved words and Java
    * identifiers, we need to give preference to "regular_expression_production"
    * over "bnf_production".
@@ -693,48 +668,6 @@ void javacode_production() :
   }
 {
   "JAVACODE"
-  AccessModifier(p)
-  ResultType(p.getReturnTypeTokens())
-  lhs=identifier()  { p.setLhs(lhs); }
-  FormalParameters(p.getParameterListTokens())
-  [ "throws"
-  {
-    excName = new ArrayList<Token>();
-  }
-    Name(excName)
-  {
-    p.getThrowsList().add(excName);
-  }
-    (
-  {
-    excName = new ArrayList<Token>();
-  }
-      "," Name(excName)
-  {
-    p.getThrowsList().add(excName);
-  }
-    )*
-  ]
-  Block(p.getCodeTokens())
-  {
-    p.setLastToken(getToken(0));
-    addProduction(p);
-  }
-}
-
-void cppcode_production() :
-  {
-    CodeProductionCpp p = new CodeProductionCpp();
-    String lhs;
-    Token t = getToken(1);
-    p.setFirstToken(t);
-    List<Token> excName;
-    p.setThrowsList(new ArrayList<List<Token>>());
-    p.setLine(t.beginLine);
-    p.setColumn(t.beginColumn);
-  }
-{
-  "CPPCODE"
   AccessModifier(p)
   ResultType(p.getReturnTypeTokens())
   lhs=identifier()  { p.setLhs(lhs); }
@@ -895,13 +828,6 @@ void token_manager_decls() :
   }
 {
   t="TOKEN_MGR_DECLS" ":"
-  {
-    if (!isJavaLanguage()) {
-      getNextToken(); // eat {
-      eatUptoCloseBrace(decls);
-      getNextToken(); // eat }
-    }
-  }
 
   [ ClassOrInterfaceBody(false, decls) ]
   {
@@ -1097,17 +1023,6 @@ ExpLookahead local_lookahead() :
   ]
   [ LOOKAHEAD(0, { emptyLA || commaAtEnd } )
     "{"
-        {
-          if (!isJavaLanguage()) {
-            int b = 0;
-            while(getToken(1).kind != RBRACE || --b > 0) {
-              t = getNextToken();
-              la.getActionTokens().add(t);
-              if (t.kind == LBRACE) b++;
-            }
-          }
-        }
-
         [ Expression(la.getActionTokens()) ]
     "}"
   {
@@ -1200,15 +1115,11 @@ void expansion_unit(Container c) :
   ("catch" "("
     [ "final" ]
     {
-      if (!isJavaLanguage()) {
-        while (getToken(1).kind != RPAREN) 
-          getNextToken();
-      }
       t = getToken(0);
       t.kind = IDENTIFIER;
       t.image = "...";
     }
-    [ LOOKAHEAD({isJavaLanguage()}) Name(vec) t=<IDENTIFIER> ]
+    [ LOOKAHEAD( { true } ) Name(vec) t=<IDENTIFIER> ]
    ")"
   {
     types.add(vec);
@@ -1587,9 +1498,7 @@ void CompilationUnit() :
   ( ImportDeclaration() )*
   ( TypeDeclaration() )*
   {
-    if (Options.getOutputLanguage().isJava()) {
-      insertionpointerrors(getToken(1));
-    }
+    insertionpointerrors(getToken(1));
   }
 }
 
@@ -2432,11 +2341,6 @@ void Arguments(List<Token> tokens) :
   "("
   {
     first = getToken(1);
-    // Added by Sreenivas Viswanadha for 6.0
-    // TODO :: 2013/07/16 -- cba : Think this condition should be if the language IS C++, not if the language ISN'T Java ...
-    if (!isJavaLanguage()) {
-      eatUptoRParen(null);
-    }
   }
   [ ArgumentList() ]
   {
@@ -2556,9 +2460,6 @@ void Block(List<Token> tokens) :
   "{"
   {
     first = getToken(1);
-    if (!isJavaLanguage()) {
-      eatUptoCloseBrace(null);
-    }
   }
   ( BlockStatement() )*
   {

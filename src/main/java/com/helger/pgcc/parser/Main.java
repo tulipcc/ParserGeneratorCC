@@ -74,8 +74,6 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.state.ESuccess;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGPrinter;
-import com.helger.pgcc.output.EOutputLanguage;
-import com.helger.pgcc.output.cpp.OtherFilesGenCPP;
 import com.helger.pgcc.output.java.OtherFilesGenJava;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
@@ -304,10 +302,9 @@ public class Main
       // until the cc file has been processed. Was previously setting the 'lg'
       // variable to a lexer before the configuration override in the cc file
       // had been read.
-      final EOutputLanguage eOutputLanguage = Options.getOutputLanguage ();
 
       // 2013/07/22 Java Modern is a
-      final boolean isJavaModern = eOutputLanguage.isJava () && Options.getJavaTemplateType ().equals (Options.JAVA_TEMPLATE_TYPE_MODERN);
+      final boolean isJavaModern = Options.getJavaTemplateType ().equals (Options.JAVA_TEMPLATE_TYPE_MODERN);
 
       JavaCCGlobals.createOutputDir (Options.getOutputDirectory ());
 
@@ -326,36 +323,16 @@ public class Main
       // and have the enumerations describe the deltas between the outputs. The
       // current approach means that per-langauge configuration is distributed
       // and small changes between targets does not benefit from inheritance.
-      switch (eOutputLanguage)
+      if (isBuildParser)
       {
-        case JAVA:
-          if (isBuildParser)
-          {
-            new ParseGenJava ().start (isJavaModern);
-          }
-
-          // Must always create the lexer object even if not building a parser.
-          new LexGenJava ().start ();
-
-          Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.s_cu_name);
-          OtherFilesGenJava.start (isJavaModern);
-          break;
-        case CPP:
-          // C++ for now
-          if (isBuildParser)
-          {
-            new ParseGenCPP ().start ();
-          }
-          if (isBuildParser)
-          {
-            new LexGenCpp ().start ();
-          }
-          Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.s_cu_name);
-          OtherFilesGenCPP.start ();
-          break;
-        default:
-          throw new IllegalStateException ("Unhandled language!");
+        new ParseGenJava ().start (isJavaModern);
       }
+
+      // Must always create the lexer object even if not building a parser.
+      new LexGenJava ().start ();
+
+      Options.setStringOption (Options.NONUSER_OPTION__PARSER_NAME, JavaCCGlobals.s_cu_name);
+      OtherFilesGenJava.start (isJavaModern);
 
       final int nErrors = JavaCCErrors.getErrorCount ();
       final int nWarnings = JavaCCErrors.getWarningCount ();

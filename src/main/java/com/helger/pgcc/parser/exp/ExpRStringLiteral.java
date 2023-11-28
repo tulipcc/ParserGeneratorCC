@@ -76,8 +76,6 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.lang.GenericReflection;
 import com.helger.commons.string.StringHelper;
-import com.helger.pgcc.output.EOutputLanguage;
-import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCGlobals;
@@ -171,99 +169,11 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
   public static void dumpStrLiteralImages (final CodeGenerator codeGenerator)
   {
-    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
-    switch (eOutputLanguage)
-    {
-      case JAVA:
-        dumpStrLiteralImagesForJava (codeGenerator);
-        return;
-      case CPP:
-        // For C++
-        String image;
-        int i;
-        s_charCnt = 0; // Set to zero in reInit() but just to be sure
-
-        codeGenerator.genCodeNewLine ();
-        codeGenerator.genCodeLine ("/** Token literal values. */");
-        int literalCount = 0;
-        codeGenerator.switchToStaticsFile ();
-
-        if (s_allImages == null || s_allImages.length == 0)
-        {
-          codeGenerator.genCodeLine ("static const JJString jjstrLiteralImages[] = {};");
-          return;
-        }
-
-        s_allImages[0] = "";
-        for (i = 0; i < s_allImages.length; i++)
-        {
-          if ((image = s_allImages[i]) == null ||
-              ((LexGenJava.s_toSkip[i / 64] & (1L << (i % 64))) == 0L &&
-               (LexGenJava.s_toMore[i / 64] & (1L << (i % 64))) == 0L &&
-               (LexGenJava.s_toToken[i / 64] & (1L << (i % 64))) == 0L) ||
-              (LexGenJava.s_toSkip[i / 64] & (1L << (i % 64))) != 0L ||
-              (LexGenJava.s_toMore[i / 64] & (1L << (i % 64))) != 0L ||
-              LexGenJava.s_canReachOnMore[LexGenJava.s_lexStates[i]] ||
-              ((Options.isIgnoreCase () || LexGenJava.s_ignoreCase[i]) &&
-               (!image.equals (image.toLowerCase (Locale.US)) || !image.equals (image.toUpperCase (Locale.US)))))
-          {
-            s_allImages[i] = null;
-            if ((s_charCnt += 6) > 80)
-            {
-              codeGenerator.genCodeNewLine ();
-              s_charCnt = 0;
-            }
-
-            codeGenerator.genCodeLine ("static JJChar jjstrLiteralChars_" + literalCount++ + "[] = {0};");
-            continue;
-          }
-
-          String toPrint = "static JJChar jjstrLiteralChars_" + literalCount++ + "[] = {";
-          for (int j = 0; j < image.length (); j++)
-          {
-            toPrint += "0x" + Integer.toHexString (image.charAt (j)) + ", ";
-          }
-
-          // Null char
-          toPrint += "0 };";
-
-          if ((s_charCnt += toPrint.length ()) >= 80)
-          {
-            codeGenerator.genCodeNewLine ();
-            s_charCnt = 0;
-          }
-
-          codeGenerator.genCodeLine (toPrint);
-        }
-
-        while (++i < LexGenJava.s_maxOrdinal)
-        {
-          if ((s_charCnt += 6) > 80)
-          {
-            codeGenerator.genCodeNewLine ();
-            s_charCnt = 0;
-          }
-
-          codeGenerator.genCodeLine ("static JJChar jjstrLiteralChars_" + literalCount++ + "[] = {0};");
-          continue;
-        }
-
-        // Generate the array here.
-        codeGenerator.genCodeLine ("static const JJString " + "jjstrLiteralImages[] = {");
-        for (int j = 0; j < literalCount; j++)
-        {
-          codeGenerator.genCodeLine ("jjstrLiteralChars_" + j + ", ");
-        }
-        codeGenerator.genCodeLine ("};");
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
-    }
+    dumpStrLiteralImagesForJava (codeGenerator);
   }
 
   public static void dumpStrLiteralImagesForJava (final CodeGenerator codeGenerator)
   {
-    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
     String image;
     int i;
     s_charCnt = 0; // Set to zero in reInit() but just to be sure
@@ -306,27 +216,14 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       for (int j = 0; j < image.length (); j++)
       {
         final char c = image.charAt (j);
-        switch (eOutputLanguage)
+        if (c <= 0xff)
+          toPrint.append ('\\').append (Integer.toOctalString (c));
+        else
         {
-          case JAVA:
-            if (c <= 0xff)
-              toPrint.append ('\\').append (Integer.toOctalString (c));
-            else
-            {
-              String hexVal = Integer.toHexString (c);
-              if (hexVal.length () == 3)
-                hexVal = "0" + hexVal;
-              toPrint.append ("\\u").append (hexVal);
-            }
-            break;
-          case CPP:
-            String hexVal = Integer.toHexString (c);
-            if (hexVal.length () == 3)
-              hexVal = "0" + hexVal;
-            toPrint.append ("\\u").append (hexVal);
-            break;
-          default:
-            throw new UnsupportedOutputLanguageException (eOutputLanguage);
+          String hexVal = Integer.toHexString (c);
+          if (hexVal.length () == 3)
+            hexVal = "0" + hexVal;
+          toPrint.append ("\\u").append (hexVal);
         }
       }
 
@@ -617,76 +514,29 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
   static void dumpStartWithStates (final CodeGenerator codeGenerator)
   {
-    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
-    switch (eOutputLanguage)
-    {
-      case JAVA:
-        codeGenerator.genCodeLine ("private int jjStartNfaWithStates" + LexGenJava.s_lexStateSuffix + "(int pos, int kind, int state)");
-        break;
-      case CPP:
-        codeGenerator.generateMethodDefHeader ("int",
-                                               LexGenJava.s_tokMgrClassName,
-                                               "jjStartNfaWithStates" + LexGenJava.s_lexStateSuffix + "(int pos, int kind, int state)");
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
-    }
+    codeGenerator.genCodeLine ("private int jjStartNfaWithStates" + LexGenJava.s_lexStateSuffix + "(int pos, int kind, int state)");
     codeGenerator.genCodeLine ("{");
     codeGenerator.genCodeLine ("   jjmatchedKind = kind;");
     codeGenerator.genCodeLine ("   jjmatchedPos = pos;");
 
     if (Options.isDebugTokenManager ())
     {
-      switch (eOutputLanguage)
-      {
-        case JAVA:
-          codeGenerator.genCodeLine ("   debugStream.println(\"   No more string literal token matches are possible.\");");
-          codeGenerator.genCodeLine ("   debugStream.println(\"   Currently matched the first \" " +
-                                     "+ (jjmatchedPos + 1) + \" characters as a \" + tokenImage[jjmatchedKind] + \" token.\");");
-          break;
-        case CPP:
-          codeGenerator.genCodeLine ("   fprintf(debugStream, \"   No more string literal token matches are possible.\");");
-          codeGenerator.genCodeLine ("   fprintf(debugStream, \"   Currently matched the first %d characters as a \\\"%s\\\" token.\\n\",  (jjmatchedPos + 1),  addUnicodeEscapes(tokenImage[jjmatchedKind]).c_str());");
-          break;
-        default:
-          throw new UnsupportedOutputLanguageException (eOutputLanguage);
-      }
+      codeGenerator.genCodeLine ("   debugStream.println(\"   No more string literal token matches are possible.\");");
+      codeGenerator.genCodeLine ("   debugStream.println(\"   Currently matched the first \" " +
+                                 "+ (jjmatchedPos + 1) + \" characters as a \" + tokenImage[jjmatchedKind] + \" token.\");");
     }
 
-    switch (eOutputLanguage)
-    {
-      case JAVA:
-        codeGenerator.genCodeLine ("   try { curChar = input_stream.readChar(); }");
-        codeGenerator.genCodeLine ("   catch(java.io.IOException e) { return pos + 1; }");
-        break;
-      case CPP:
-        codeGenerator.genCodeLine ("   if (input_stream->endOfInput()) { return pos + 1; }");
-        codeGenerator.genCodeLine ("   curChar = input_stream->readChar();");
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
-    }
+    codeGenerator.genCodeLine ("   try { curChar = input_stream.readChar(); }");
+    codeGenerator.genCodeLine ("   catch(java.io.IOException e) { return pos + 1; }");
+
     if (Options.isDebugTokenManager ())
     {
-      switch (eOutputLanguage)
-      {
-        case JAVA:
-          codeGenerator.genCodeLine ("   debugStream.println(" +
-                                     (LexGenJava.s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
-                                     "\"Current character : \" + " +
-                                     Options.getTokenMgrErrorClass () +
-                                     ".addEscapes(String.valueOf(curChar)) + \" (\" + curChar + \") " +
-                                     "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
-          break;
-        case CPP:
-          codeGenerator.genCodeLine ("   fprintf(debugStream, " +
-                                     "\"<%s>Current character : %c(%d) at line %d column %d\\n\"," +
-                                     "addUnicodeEscapes(lexStateNames[curLexState]).c_str(), curChar, curChar, " +
-                                     "input_stream->getEndLine(), input_stream->getEndColumn());");
-          break;
-        default:
-          throw new UnsupportedOutputLanguageException (eOutputLanguage);
-      }
+      codeGenerator.genCodeLine ("   debugStream.println(" +
+                                 (LexGenJava.s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
+                                 "\"Current character : \" + " +
+                                 Options.getTokenMgrErrorClass () +
+                                 ".addEscapes(String.valueOf(curChar)) + \" (\" + curChar + \") " +
+                                 "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
     }
 
     codeGenerator.genCodeLine ("   return jjMoveNfa" + LexGenJava.s_lexStateSuffix + "(state, pos + 1);");
@@ -697,38 +547,16 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
   static void dumpBoilerPlate (final CodeGenerator codeGenerator)
   {
-    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
-    switch (eOutputLanguage)
-    {
-      case JAVA:
-        codeGenerator.genCodeLine ("private int jjStopAtPos(int pos, int kind)");
-        break;
-      case CPP:
-        codeGenerator.generateMethodDefHeader (" int ", LexGenJava.s_tokMgrClassName, "jjStopAtPos(int pos, int kind)");
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
-    }
+    codeGenerator.genCodeLine ("private int jjStopAtPos(int pos, int kind)");
     codeGenerator.genCodeLine ("{");
     codeGenerator.genCodeLine ("   jjmatchedKind = kind;");
     codeGenerator.genCodeLine ("   jjmatchedPos = pos;");
 
     if (Options.isDebugTokenManager ())
     {
-      switch (eOutputLanguage)
-      {
-        case JAVA:
-          codeGenerator.genCodeLine ("   debugStream.println(\"   No more string literal token matches are possible.\");");
-          codeGenerator.genCodeLine ("   debugStream.println(\"   Currently matched the first \" + (jjmatchedPos + 1) + " +
-                                     "\" characters as a \" + tokenImage[jjmatchedKind] + \" token.\");");
-          break;
-        case CPP:
-          codeGenerator.genCodeLine ("   fprintf(debugStream, \"   No more string literal token matches are possible.\");");
-          codeGenerator.genCodeLine ("   fprintf(debugStream, \"   Currently matched the first %d characters as a \\\"%s\\\" token.\\n\",  (jjmatchedPos + 1),  addUnicodeEscapes(tokenImage[jjmatchedKind]).c_str());");
-          break;
-        default:
-          throw new UnsupportedOutputLanguageException (eOutputLanguage);
-      }
+      codeGenerator.genCodeLine ("   debugStream.println(\"   No more string literal token matches are possible.\");");
+      codeGenerator.genCodeLine ("   debugStream.println(\"   Currently matched the first \" + (jjmatchedPos + 1) + " +
+                                 "\" characters as a \" + tokenImage[jjmatchedKind] + \" token.\");");
     }
 
     codeGenerator.genCodeLine ("   return pos + 1;");
@@ -760,7 +588,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
   }
 
   @Nonnull
-  private static String _getCaseChar (final char c, final EOutputLanguage eOutputLanguage)
+  private static String _getCaseChar (final char c)
   {
     if (false)
       return Integer.toString (c);
@@ -769,9 +597,8 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     if (c < 0x20 || c >= 0x7f)
       return Integer.toString (c);
 
-    if (eOutputLanguage.isJava ())
-      if (c == '\'' || c == '\\')
-        return "'\\" + c + "'";
+    if (c == '\'' || c == '\\')
+      return "'\\" + c + "'";
 
     return "'" + c + "'";
   }
@@ -784,23 +611,10 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     final int maxLongsReqd = s_maxStrKind / 64 + 1;
     boolean ifGenerated;
     LexGenJava.s_maxLongsReqd[LexGenJava.s_lexStateIndex] = maxLongsReqd;
-    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
 
     if (s_maxLen == 0)
     {
-      switch (eOutputLanguage)
-      {
-        case JAVA:
-          codeGenerator.genCodeLine ("private int jjMoveStringLiteralDfa0" + LexGenJava.s_lexStateSuffix + "()");
-          break;
-        case CPP:
-          codeGenerator.generateMethodDefHeader (" int ",
-                                                 LexGenJava.s_tokMgrClassName,
-                                                 "jjMoveStringLiteralDfa0" + LexGenJava.s_lexStateSuffix + "()");
-          break;
-        default:
-          throw new UnsupportedOutputLanguageException (eOutputLanguage);
-      }
+      codeGenerator.genCodeLine ("private int jjMoveStringLiteralDfa0" + LexGenJava.s_lexStateSuffix + "()");
       dumpNullStrLiterals (codeGenerator);
       return;
     }
@@ -833,14 +647,14 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                 params.append (", ");
               else
                 atLeastOne = true;
-              params.append (eOutputLanguage.getTypeLong () + " active" + j);
+              params.append ("long active" + j);
             }
 
           if (i <= s_maxLenForActive[j])
           {
             if (atLeastOne)
               params.append (", ");
-            params.append (eOutputLanguage.getTypeLong () + " active" + j);
+            params.append ("long active" + j);
           }
         }
         else
@@ -853,32 +667,20 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                 params.append (", ");
               else
                 atLeastOne = true;
-              params.append (eOutputLanguage.getTypeLong () + " old" + j + ", " + eOutputLanguage.getTypeLong () + " active" + j);
+              params.append ("long old" + j + ", long active" + j);
             }
 
           if (i <= s_maxLenForActive[j] + 1)
           {
             if (atLeastOne)
               params.append (", ");
-            params.append (eOutputLanguage.getTypeLong () + " old" + j + ", " + eOutputLanguage.getTypeLong () + " active" + j);
+            params.append ("long old" + j + ", long active" + j);
           }
         }
       }
       params.append (")");
 
-      switch (eOutputLanguage)
-      {
-        case JAVA:
-          codeGenerator.genCode ("private int jjMoveStringLiteralDfa" + i + LexGenJava.s_lexStateSuffix + params);
-          break;
-        case CPP:
-          codeGenerator.generateMethodDefHeader (" int ",
-                                                 LexGenJava.s_tokMgrClassName,
-                                                 "jjMoveStringLiteralDfa" + i + LexGenJava.s_lexStateSuffix + params);
-          break;
-        default:
-          throw new UnsupportedOutputLanguageException (eOutputLanguage);
-      }
+      codeGenerator.genCode ("private int jjMoveStringLiteralDfa" + i + LexGenJava.s_lexStateSuffix + params);
 
       codeGenerator.genCodeLine ("{");
 
@@ -936,82 +738,28 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
         if (i != 0 && Options.isDebugTokenManager ())
         {
-          switch (eOutputLanguage)
-          {
-            case JAVA:
-              codeGenerator.genCodeLine ("   if (jjmatchedKind != 0 && jjmatchedKind != 0x" +
-                                         Integer.toHexString (Integer.MAX_VALUE) +
-                                         ")");
-              codeGenerator.genCodeLine ("      debugStream.println(\"   Currently matched the first \" + " +
-                                         "(jjmatchedPos + 1) + \" characters as a \" + tokenImage[jjmatchedKind] + \" token.\");");
-              codeGenerator.genCodeLine ("   debugStream.println(\"   Possible string literal matches : { \"");
-              break;
-            case CPP:
-              codeGenerator.genCodeLine ("   if (jjmatchedKind != 0 && jjmatchedKind != 0x" +
-                                         Integer.toHexString (Integer.MAX_VALUE) +
-                                         ")");
-              codeGenerator.genCodeLine ("      fprintf(debugStream, \"   Currently matched the first %d characters as a \\\"%s\\\" token.\\n\", (jjmatchedPos + 1), addUnicodeEscapes(tokenImage[jjmatchedKind]).c_str());");
-              codeGenerator.genCodeLine ("   fprintf(debugStream, \"   Possible string literal matches : { \");");
-              break;
-            default:
-              throw new UnsupportedOutputLanguageException (eOutputLanguage);
-          }
+          codeGenerator.genCodeLine ("   if (jjmatchedKind != 0 && jjmatchedKind != 0x" +
+                                     Integer.toHexString (Integer.MAX_VALUE) +
+                                     ")");
+          codeGenerator.genCodeLine ("      debugStream.println(\"   Currently matched the first \" + " +
+                                     "(jjmatchedPos + 1) + \" characters as a \" + tokenImage[jjmatchedKind] + \" token.\");");
+          codeGenerator.genCodeLine ("   debugStream.println(\"   Possible string literal matches : { \"");
 
-          final StringBuilder fmt = new StringBuilder ();
-          final StringBuilder args = new StringBuilder ();
           for (int vecs = 0; vecs < s_maxStrKind / 64 + 1; vecs++)
           {
             if (i <= s_maxLenForActive[vecs])
             {
-              switch (eOutputLanguage)
-              {
-                case JAVA:
-                  codeGenerator.genCodeLine (" +");
-                  codeGenerator.genCode ("         jjKindsForBitVector(" + vecs + ", ");
-                  codeGenerator.genCode ("active" + vecs + ") ");
-                  break;
-                case CPP:
-                  if (fmt.length () > 0)
-                  {
-                    fmt.append (", ");
-                    args.append (", ");
-                  }
-                  fmt.append ("%s");
-                  args.append ("         jjKindsForBitVector(" + vecs + ", ");
-                  args.append ("active" + vecs + ").c_str() ");
-                  break;
-                default:
-                  throw new UnsupportedOutputLanguageException (eOutputLanguage);
-              }
+              codeGenerator.genCodeLine (" +");
+              codeGenerator.genCode ("         jjKindsForBitVector(" + vecs + ", ");
+              codeGenerator.genCode ("active" + vecs + ") ");
             }
           }
 
-          switch (eOutputLanguage)
-          {
-            case JAVA:
-              codeGenerator.genCodeLine (" + \" } \");");
-              break;
-            case CPP:
-              fmt.append ("}\\n");
-              codeGenerator.genCodeLine ("    fprintf(debugStream, \"" + fmt + "\"," + args + ");");
-              break;
-            default:
-              throw new UnsupportedOutputLanguageException (eOutputLanguage);
-          }
+          codeGenerator.genCodeLine (" + \" } \");");
         }
 
-        switch (eOutputLanguage)
-        {
-          case JAVA:
-            codeGenerator.genCodeLine ("   try { curChar = input_stream.readChar(); }");
-            codeGenerator.genCodeLine ("   catch(java.io.IOException e) {");
-            break;
-          case CPP:
-            codeGenerator.genCodeLine ("   if (input_stream->endOfInput()) {");
-            break;
-          default:
-            throw new UnsupportedOutputLanguageException (eOutputLanguage);
-        }
+        codeGenerator.genCodeLine ("   try { curChar = input_stream.readChar(); }");
+        codeGenerator.genCodeLine ("   catch(java.io.IOException e) {");
 
         if (!LexGenJava.s_mixed[LexGenJava.s_lexStateIndex] && NfaState.s_generatedStates != 0)
         {
@@ -1037,24 +785,11 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
           if (i != 0 && Options.isDebugTokenManager ())
           {
-            switch (eOutputLanguage)
-            {
-              case JAVA:
-                codeGenerator.genCodeLine ("      if (jjmatchedKind != 0 && jjmatchedKind != 0x" +
-                                           Integer.toHexString (Integer.MAX_VALUE) +
-                                           ")");
-                codeGenerator.genCodeLine ("         debugStream.println(\"   Currently matched the first \" + " +
-                                           "(jjmatchedPos + 1) + \" characters as a \" + tokenImage[jjmatchedKind] + \" token.\");");
-                break;
-              case CPP:
-                codeGenerator.genCodeLine ("      if (jjmatchedKind != 0 && jjmatchedKind != 0x" +
-                                           Integer.toHexString (Integer.MAX_VALUE) +
-                                           ")");
-                codeGenerator.genCodeLine ("      fprintf(debugStream, \"   Currently matched the first %d characters as a \\\"%s\\\" token.\\n\", (jjmatchedPos + 1),  addUnicodeEscapes(tokenImage[jjmatchedKind]).c_str());");
-                break;
-              default:
-                throw new UnsupportedOutputLanguageException (eOutputLanguage);
-            }
+            codeGenerator.genCodeLine ("      if (jjmatchedKind != 0 && jjmatchedKind != 0x" +
+                                       Integer.toHexString (Integer.MAX_VALUE) +
+                                       ")");
+            codeGenerator.genCodeLine ("         debugStream.println(\"   Currently matched the first \" + " +
+                                       "(jjmatchedPos + 1) + \" characters as a \" + tokenImage[jjmatchedKind] + \" token.\");");
           }
 
           codeGenerator.genCodeLine ("      return " + i + ";");
@@ -1080,39 +815,14 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
       if (i != 0)
       {
-        switch (eOutputLanguage)
-        {
-          case JAVA:
-            // Nothing
-            break;
-          case CPP:
-            codeGenerator.genCodeLine ("   curChar = input_stream->readChar();");
-            break;
-          default:
-            throw new UnsupportedOutputLanguageException (eOutputLanguage);
-        }
-
         if (Options.isDebugTokenManager ())
         {
-          switch (eOutputLanguage)
-          {
-            case JAVA:
-              codeGenerator.genCodeLine ("   debugStream.println(" +
-                                         (LexGenJava.s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
-                                         "\"Current character : \" + " +
-                                         Options.getTokenMgrErrorClass () +
-                                         ".addEscapes(String.valueOf(curChar)) + \" (\" + curChar + \") " +
-                                         "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
-              break;
-            case CPP:
-              codeGenerator.genCodeLine ("   fprintf(debugStream, " +
-                                         "\"<%s>Current character : %c(%d) at line %d column %d\\n\"," +
-                                         "addUnicodeEscapes(lexStateNames[curLexState]).c_str(), curChar, curChar, " +
-                                         "input_stream->getEndLine(), input_stream->getEndColumn());");
-              break;
-            default:
-              throw new UnsupportedOutputLanguageException (eOutputLanguage);
-          }
+          codeGenerator.genCodeLine ("   debugStream.println(" +
+                                     (LexGenJava.s_maxLexStates > 1 ? "\"<\" + lexStateNames[curLexState] + \">\" + " : "") +
+                                     "\"Current character : \" + " +
+                                     Options.getTokenMgrErrorClass () +
+                                     ".addEscapes(String.valueOf(curChar)) + \" (\" + curChar + \") " +
+                                     "at line \" + input_stream.getEndLine() + \" column \" + input_stream.getEndColumn());");
         }
       }
 
@@ -1170,13 +880,13 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
         if (Options.isIgnoreCase ())
         {
           if (c != Character.toUpperCase (c))
-            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toUpperCase (c), eOutputLanguage) + ":");
+            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toUpperCase (c)) + ":");
 
           if (c != Character.toLowerCase (c))
-            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toLowerCase (c), eOutputLanguage) + ":");
+            codeGenerator.genCodeLine ("      case " + _getCaseChar (Character.toLowerCase (c)) + ":");
         }
 
-        codeGenerator.genCodeLine ("      case " + _getCaseChar (c, eOutputLanguage) + ":");
+        codeGenerator.genCodeLine ("      case " + _getCaseChar (c) + ":");
 
         long matchedKind;
         final String prefix = (i == 0) ? "         " : "            ";
@@ -1209,9 +919,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                 codeGenerator.genCodeLine ("((active" +
                                            j +
                                            " & " +
-                                           eOutputLanguage.getLongHex (1L << k) +
+                                           CodeGenerator.getLongHex (1L << k) +
                                            ") != " +
-                                           eOutputLanguage.getLongPlain (0) +
+                                           CodeGenerator.getLongPlain (0) +
                                            ")");
               }
 
@@ -1310,7 +1020,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                 else
                   atLeastOne = true;
 
-                codeGenerator.genCode (eOutputLanguage.getLongHex (info.m_validKinds[j]));
+                codeGenerator.genCode (CodeGenerator.getLongHex (info.m_validKinds[j]));
               }
 
             if ((i + 1) <= s_maxLenForActive[j])
@@ -1318,7 +1028,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
               if (atLeastOne)
                 codeGenerator.genCode (", ");
 
-              codeGenerator.genCode (eOutputLanguage.getLongHex (info.m_validKinds[j]));
+              codeGenerator.genCode (CodeGenerator.getLongHex (info.m_validKinds[j]));
             }
             codeGenerator.genCodeLine (");");
           }
@@ -1338,9 +1048,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
                   atLeastOne = true;
 
                 if (info.m_validKinds[j] != 0L)
-                  codeGenerator.genCode ("active" + j + ", " + eOutputLanguage.getLongHex (info.m_validKinds[j]));
+                  codeGenerator.genCode ("active" + j + ", " + CodeGenerator.getLongHex (info.m_validKinds[j]));
                 else
-                  codeGenerator.genCode ("active" + j + ", " + eOutputLanguage.getLongPlain (0));
+                  codeGenerator.genCode ("active" + j + ", " + CodeGenerator.getLongPlain (0));
               }
 
             if ((i + 1) <= s_maxLenForActive[j] + 1)
@@ -1348,9 +1058,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
               if (atLeastOne)
                 codeGenerator.genCode (", ");
               if (info.m_validKinds[j] != 0L)
-                codeGenerator.genCode ("active" + j + ", " + eOutputLanguage.getLongHex (info.m_validKinds[j]));
+                codeGenerator.genCode ("active" + j + ", " + CodeGenerator.getLongHex (info.m_validKinds[j]));
               else
-                codeGenerator.genCode ("active" + j + ", " + eOutputLanguage.getLongPlain (0));
+                codeGenerator.genCode ("active" + j + ", " + CodeGenerator.getLongPlain (0));
             }
 
             codeGenerator.genCodeLine (");");
@@ -1387,17 +1097,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
       if (Options.isDebugTokenManager ())
       {
-        switch (eOutputLanguage)
-        {
-          case JAVA:
-            codeGenerator.genCodeLine ("      debugStream.println(\"   No string literal matches possible.\");");
-            break;
-          case CPP:
-            codeGenerator.genCodeLine ("      fprintf(debugStream, \"   No string literal matches possible.\\n\");");
-            break;
-          default:
-            throw new UnsupportedOutputLanguageException (eOutputLanguage);
-        }
+        codeGenerator.genCodeLine ("      debugStream.println(\"   No string literal matches possible.\");");
       }
 
       if (NfaState.s_generatedStates != 0)
@@ -1622,7 +1322,6 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
       return;
     }
 
-    final EOutputLanguage eOutputLanguage = codeGenerator.getOutputLanguage ();
     int i;
     final int maxKindsReqd = s_maxStrKind / 64 + 1;
     boolean condGenerated = false;
@@ -1630,38 +1329,16 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
 
     final StringBuilder params = new StringBuilder ();
     for (i = 0; i < maxKindsReqd - 1; i++)
-      params.append (eOutputLanguage.getTypeLong () + " active" + i + ", ");
-    params.append (eOutputLanguage.getTypeLong () + " active" + i + ")");
+      params.append ("long active" + i + ", ");
+    params.append ("long active" + i + ")");
 
-    switch (eOutputLanguage)
-    {
-      case JAVA:
-        codeGenerator.genCode ("private final int jjStopStringLiteralDfa" + LexGenJava.s_lexStateSuffix + "(int pos, " + params);
-        break;
-      case CPP:
-        codeGenerator.generateMethodDefHeader (" int",
-                                               LexGenJava.s_tokMgrClassName,
-                                               "jjStopStringLiteralDfa" + LexGenJava.s_lexStateSuffix + "(int pos, " + params);
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
-    }
+    codeGenerator.genCode ("private final int jjStopStringLiteralDfa" + LexGenJava.s_lexStateSuffix + "(int pos, " + params);
 
     codeGenerator.genCodeLine ("{");
 
     if (Options.isDebugTokenManager ())
     {
-      switch (eOutputLanguage)
-      {
-        case JAVA:
-          codeGenerator.genCodeLine ("      debugStream.println(\"   No more string literal token matches are possible.\");");
-          break;
-        case CPP:
-          codeGenerator.genCodeLine ("      fprintf(debugStream, \"   No more string literal token matches are possible.\");");
-          break;
-        default:
-          throw new UnsupportedOutputLanguageException (eOutputLanguage);
-      }
+      codeGenerator.genCodeLine ("      debugStream.println(\"   No more string literal token matches are possible.\");");
     }
 
     codeGenerator.genCodeLine ("   switch (pos)");
@@ -1694,9 +1371,9 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
           codeGenerator.genCode ("(active" +
                                  j +
                                  " & " +
-                                 eOutputLanguage.getLongHex (actives[j]) +
+                                 CodeGenerator.getLongHex (actives[j]) +
                                  ") != " +
-                                 eOutputLanguage.getLongPlain (0));
+                                 CodeGenerator.getLongPlain (0));
         }
 
         if (condGenerated)
@@ -1776,20 +1453,10 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
     params.setLength (0);
     params.append ("(int pos, ");
     for (i = 0; i < maxKindsReqd - 1; i++)
-      params.append (eOutputLanguage.getTypeLong () + " active" + i + ", ");
-    params.append (eOutputLanguage.getTypeLong () + " active" + i + ")");
+      params.append ("long active" + i + ", ");
+    params.append ("long active" + i + ")");
 
-    switch (eOutputLanguage)
-    {
-      case JAVA:
-        codeGenerator.genCode ("private final int jjStartNfa" + LexGenJava.s_lexStateSuffix + params);
-        break;
-      case CPP:
-        codeGenerator.generateMethodDefHeader ("int ", LexGenJava.s_tokMgrClassName, "jjStartNfa" + LexGenJava.s_lexStateSuffix + params);
-        break;
-      default:
-        throw new UnsupportedOutputLanguageException (eOutputLanguage);
-    }
+    codeGenerator.genCode ("private final int jjStartNfa" + LexGenJava.s_lexStateSuffix + params);
     codeGenerator.genCodeLine ("{");
 
     if (LexGenJava.s_mixed[LexGenJava.s_lexStateIndex])

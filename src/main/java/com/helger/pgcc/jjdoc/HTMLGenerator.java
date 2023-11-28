@@ -40,7 +40,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.string.StringHelper;
-import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.TokenProduction;
@@ -190,14 +189,6 @@ public class HTMLGenerator extends TextGenerator
     productionStart (jp);
     _println ("<I>java code</I></TD></TR>");
     productionEnd (jp);
-  }
-
-  @Override
-  public void cppcode (final CodeProductionCpp cp) throws IOException
-  {
-    productionStart (cp);
-    _println ("<I>cpp code</I></TD></TR>");
-    productionEnd (cp);
   }
 
   @Override
