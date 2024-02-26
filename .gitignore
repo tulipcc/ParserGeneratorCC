@@ -1,7 +1,7 @@
-/target/
+target/
 zz
 JavaCCParserTokenManager.java
-/.settings/
-/.project
-/.classpath
+.settings/
+.project
+.classpath
 *.iml
