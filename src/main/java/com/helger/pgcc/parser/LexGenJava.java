@@ -64,14 +64,14 @@
 
 package com.helger.pgcc.parser;
 
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_aActForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_I2S;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_sNextStateForEof;
-import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
@@ -187,7 +187,8 @@ public class LexGenJava extends CodeGenerator
               nKind == JavaCCParserConstants.INTERFACE ||
               nKind == JavaCCParserConstants.ENUM)
           {
-            setLineAndCol (CU_TO_INSERTION_POINT_1.get (nIndex).beginLine, CU_TO_INSERTION_POINT_1.get (nIndex).beginColumn);
+            setLineAndCol (CU_TO_INSERTION_POINT_1.get (nIndex).beginLine,
+                           CU_TO_INSERTION_POINT_1.get (nIndex).beginColumn);
             int j = nIndex;
             for (; j < i; j++)
             {
@@ -231,7 +232,7 @@ public class LexGenJava extends CodeGenerator
     {
       boolean bCommonTokenActionSeen = false;
       final boolean bCommonTokenActionNeeded = Options.isCommonTokenAction ();
-      Token t = s_token_mgr_decls.getFirst ();
+      Token t = s_token_mgr_decls.getFirstOrNull ();
 
       printTokenSetup (t);
       setColToStart ();
@@ -475,7 +476,9 @@ public class LexGenJava extends CodeGenerator
             continue;
           }
 
-          if (!Options.isNoDfa () && s_curRE instanceof ExpRStringLiteral && StringHelper.hasText (((ExpRStringLiteral) s_curRE).m_image))
+          if (!Options.isNoDfa () &&
+              s_curRE instanceof ExpRStringLiteral &&
+              StringHelper.hasText (((ExpRStringLiteral) s_curRE).m_image))
           {
             ((ExpRStringLiteral) s_curRE).generateDfa ();
             if (i != 0 && !s_mixed[s_lexStateIndex] && ignoring != ignore)
@@ -486,7 +489,8 @@ public class LexGenJava extends CodeGenerator
           else
             if (s_curRE.canMatchAnyChar ())
             {
-              if (s_canMatchAnyChar[s_lexStateIndex] == -1 || s_canMatchAnyChar[s_lexStateIndex] > s_curRE.getOrdinal ())
+              if (s_canMatchAnyChar[s_lexStateIndex] == -1 ||
+                  s_canMatchAnyChar[s_lexStateIndex] > s_curRE.getOrdinal ())
                 s_canMatchAnyChar[s_lexStateIndex] = s_curRE.getOrdinal ();
             }
             else
@@ -522,7 +526,8 @@ public class LexGenJava extends CodeGenerator
           switch (kind)
           {
             case SPECIAL:
-              s_hasSkipActions |= (s_actions[s_curRE.getOrdinal ()] != null) || (s_newLexState[s_curRE.getOrdinal ()] != null);
+              s_hasSkipActions |= (s_actions[s_curRE.getOrdinal ()] != null) ||
+                                  (s_newLexState[s_curRE.getOrdinal ()] != null);
               s_hasSpecial = true;
               s_toSpecial[s_curRE.getOrdinal () / 64] |= 1L << (s_curRE.getOrdinal () % 64);
               s_toSkip[s_curRE.getOrdinal () / 64] |= 1L << (s_curRE.getOrdinal () % 64);
@@ -1173,7 +1178,10 @@ public class LexGenJava extends CodeGenerator
       {
         if (s_initMatch[i] != Integer.MAX_VALUE && s_initMatch[i] != 0)
         {
-          genCodeLine (prefix + "if (jjmatchedPos < 0 || (jjmatchedPos == 0 && jjmatchedKind > " + s_canMatchAnyChar[i] + "))");
+          genCodeLine (prefix +
+                       "if (jjmatchedPos < 0 || (jjmatchedPos == 0 && jjmatchedKind > " +
+                       s_canMatchAnyChar[i] +
+                       "))");
         }
         else
           genCodeLine (prefix + "if (jjmatchedPos == 0 && jjmatchedKind > " + s_canMatchAnyChar[i] + ")");
@@ -1282,7 +1290,9 @@ public class LexGenJava extends CodeGenerator
         {
           if (s_hasMore)
           {
-            genCodeLine (prefix + "      else if ((jjtoSkip[jjmatchedKind >> 6] & " + "(1L << (jjmatchedKind & 077))) != 0L)");
+            genCodeLine (prefix +
+                         "      else if ((jjtoSkip[jjmatchedKind >> 6] & " +
+                         "(1L << (jjmatchedKind & 077))) != 0L)");
           }
           else
             genCodeLine (prefix + "      else");
@@ -1291,7 +1301,9 @@ public class LexGenJava extends CodeGenerator
 
           if (s_hasSpecial)
           {
-            genCodeLine (prefix + "         if ((jjtoSpecial[jjmatchedKind >> 6] & " + "(1L << (jjmatchedKind & 077))) != 0L)");
+            genCodeLine (prefix +
+                         "         if ((jjtoSpecial[jjmatchedKind >> 6] & " +
+                         "(1L << (jjmatchedKind & 077))) != 0L)");
             genCodeLine (prefix + "         {");
 
             genCodeLine (prefix + "            matchedToken = jjFillToken();");
@@ -1444,7 +1456,8 @@ public class LexGenJava extends CodeGenerator
           genCodeLine ("         }");
         }
 
-        if ((act = s_actions[i]) == null || act.getActionTokens ().isEmpty ())
+        act = s_actions[i];
+        if (act == null || act.getActionTokens ().isEmpty ())
           break;
 
         genCode ("         image.append");

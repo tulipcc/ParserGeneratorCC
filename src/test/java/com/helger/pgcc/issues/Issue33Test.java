@@ -78,7 +78,7 @@ public class Issue33Test
     /*
      * Load and run the parser on a test dataset
      */
-    try (InputStream in = new FileInputStream (aData))
+    try (final InputStream in = new FileInputStream (aData))
     {
       final ClassLoader loader = URLClassLoader.newInstance (new URL [] { aOutDir.toURI ().toURL () },
                                                              getClass ().getClassLoader ());
@@ -87,7 +87,7 @@ public class Issue33Test
                                                                                               Charset.class });
       final Object obj = constructor.newInstance (new Object [] { in, Charset.defaultCharset () });
       final Method parse = clazz.getDeclaredMethod ("parse", new Class [] {});
-      final int i = (int) parse.invoke (obj, new Object [] {});
+      final int i = ((Integer) parse.invoke (obj, new Object [] {})).intValue ();
       assertEquals (i, 10);
     }
   }

@@ -64,14 +64,14 @@
 package com.helger.pgcc.parser;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.BNF_PRODUCTIONS;
+import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
+import static com.helger.pgcc.parser.JavaCCGlobals.NAMES_OF_TOKENS;
+import static com.helger.pgcc.parser.JavaCCGlobals.PRODUCTION_TABLE;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ccol;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cline;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_jj2index;
-import static com.helger.pgcc.parser.JavaCCGlobals.MASK_VALS;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_maskindex;
-import static com.helger.pgcc.parser.JavaCCGlobals.NAMES_OF_TOKENS;
-import static com.helger.pgcc.parser.JavaCCGlobals.PRODUCTION_TABLE;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 
 import java.util.HashSet;
@@ -273,7 +273,8 @@ public class ParseEngine
               // for the preceding LOOKAHEAD (the semantic checks should have
               // made sure that
               // the LOOKAHEAD is suitable).
-              if (unit instanceof ExpNonTerminal && ((ExpNonTerminal) unit).getProd () instanceof AbstractCodeProduction)
+              if (unit instanceof ExpNonTerminal &&
+                  ((ExpNonTerminal) unit).getProd () instanceof AbstractCodeProduction)
               {
                 if (i > 0 && seq.getUnitAt (i - 1) instanceof ExpLookahead)
                 {
@@ -320,7 +321,7 @@ public class ParseEngine
   /**
    * Constants used in the following method "buildLookaheadChecker".
    */
-  static enum EState
+  enum EState
   {
     NOOPENSTM,
     OPENIF,
@@ -369,7 +370,9 @@ public class ParseEngine
       la = conds[index];
       m_bJJ2LA = false;
 
-      if (la.getAmount () == 0 || Semanticize.emptyExpansionExists (la.getLaExpansion ()) || _javaCodeCheck (la.getLaExpansion ()))
+      if (la.getAmount () == 0 ||
+          Semanticize.emptyExpansionExists (la.getLaExpansion ()) ||
+          _javaCodeCheck (la.getLaExpansion ()))
       {
 
         // This handles the following cases:
@@ -412,7 +415,7 @@ public class ParseEngine
           default:
             throw new IllegalStateException ();
         }
-        m_codeGenerator.printTokenSetup (la.getActionTokens ().getFirst ());
+        m_codeGenerator.printTokenSetup (la.getActionTokens ().getFirstOrNull ());
         for (final Token aElement : la.getActionTokens ())
         {
           t = aElement;
@@ -569,7 +572,7 @@ public class ParseEngine
           // In addition, there is also a semantic lookahead. So concatenate
           // the semantic check with the syntactic one.
           retval += " && (";
-          m_codeGenerator.printTokenSetup (la.getActionTokens ().getFirst ());
+          m_codeGenerator.printTokenSetup (la.getActionTokens ().getFirstOrNull ());
           for (final Token aElement : la.getActionTokens ())
           {
             t = aElement;
@@ -1007,7 +1010,9 @@ public class ParseEngine
       {
         case JAVA:
           m_codeGenerator.genCodeLine ("    } finally {");
-          m_codeGenerator.genCodeLine ("      trace_return(\"" + JavaCCGlobals.addUnicodeEscapes (p.getLhs ()) + "\");");
+          m_codeGenerator.genCodeLine ("      trace_return(\"" +
+                                       JavaCCGlobals.addUnicodeEscapes (p.getLhs ()) +
+                                       "\");");
           m_codeGenerator.genCodeLine ("    }");
           break;
         case CPP:
@@ -1195,7 +1200,8 @@ public class ParseEngine
                 sChoice = "\n" +
                           "jj_consume_token(-1);\n" +
                           "errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;" +
-                          (Options.booleanValue (Options.USEROPTION__CPP_STOP_ON_FIRST_ERROR) ? "return __ERROR_RET__;\n" : "");
+                          (Options.booleanValue (Options.USEROPTION__CPP_STOP_ON_FIRST_ERROR) ? "return __ERROR_RET__;\n"
+                                                                                              : "");
                 break;
               default:
                 throw new UnsupportedOutputLanguageException (eOutputLanguage);
@@ -1237,7 +1243,9 @@ public class ParseEngine
                       // for the last one, if it's an action, we will not
                       // protect it.
                       final Expansion elem = e_nrw.getUnitAt (i);
-                      if (!(elem instanceof ExpAction) || !(e.getParent () instanceof BNFProduction) || i != e_nrw.getUnitCount () - 1)
+                      if (!(elem instanceof ExpAction) ||
+                          !(e.getParent () instanceof BNFProduction) ||
+                          i != e_nrw.getUnitCount () - 1)
                       {
                         wrap_in_block = true;
                         retval += "\nif (!hasError) {";
@@ -1723,7 +1731,11 @@ public class ParseEngine
       switch (eOutputLanguage)
       {
         case JAVA:
-          m_codeGenerator.genCodeLine ("  private " + eOutputLanguage.getTypeBoolean () + " jj_3" + e.getInternalName () + "()");
+          m_codeGenerator.genCodeLine ("  private " +
+                                       eOutputLanguage.getTypeBoolean () +
+                                       " jj_3" +
+                                       e.getInternalName () +
+                                       "()");
           break;
         case CPP:
           m_codeGenerator.genCodeLine (" inline bool jj_3" + e.getInternalName () + "()");
@@ -1797,7 +1809,9 @@ public class ParseEngine
         final NormalProduction ntprod = (PRODUCTION_TABLE.get (e_nrw.getName ()));
         if (ntprod instanceof AbstractCodeProduction)
         {
-          m_codeGenerator.genCodeLine ("    if (true) { jj_la = 0; jj_scanpos = jj_lastpos; " + _genReturn (false) + "}");
+          m_codeGenerator.genCodeLine ("    if (true) { jj_la = 0; jj_scanpos = jj_lastpos; " +
+                                       _genReturn (false) +
+                                       "}");
         }
         else
         {
@@ -1833,7 +1847,7 @@ public class ParseEngine
               JavaCCGlobals.setLookAheadNeeded (true);
               m_codeGenerator.genCodeLine ("    jj_lookingAhead = true;");
               m_codeGenerator.genCode ("    jj_semLA = ");
-              m_codeGenerator.printTokenSetup (la.getActionTokens ().getFirst ());
+              m_codeGenerator.printTokenSetup (la.getActionTokens ().getFirstOrNull ());
               for (final Token aElement : la.getActionTokens ())
               {
                 t = aElement;
@@ -1885,7 +1899,12 @@ public class ParseEngine
 
               // Test Code
               if (false)
-                PGPrinter.info ("minimumSize: line: " + eseq.getLine () + ", column: " + eseq.getColumn () + ": " + minimumSize (eseq));
+                PGPrinter.info ("minimumSize: line: " +
+                                eseq.getLine () +
+                                ", column: " +
+                                eseq.getColumn () +
+                                ": " +
+                                minimumSize (eseq));
 
               cnt -= minimumSize (eseq);
               if (cnt <= 0)
@@ -1937,7 +1956,9 @@ public class ParseEngine
                   // codeGenerator.genCodeLine(" if (jj_3" +
                   // nested_e.internal_name + "()) { jj_scanpos = xsp; break;
                   // }");
-                  m_codeGenerator.genCodeLine ("      if (" + _genjj_3Call (nested_e) + ") { jj_scanpos = xsp; break; }");
+                  m_codeGenerator.genCodeLine ("      if (" +
+                                               _genjj_3Call (nested_e) +
+                                               ") { jj_scanpos = xsp; break; }");
                   // codeGenerator.genCodeLine(" if (jj_la == 0 && jj_scanpos ==
                   // jj_lastpos) " + genReturn(false));
                   m_codeGenerator.genCodeLine ("    }");
@@ -2261,7 +2282,9 @@ public class ParseEngine
           if (Options.isDebugParser ())
           {
             codeGenerator.genCodeLine ("    } finally {");
-            codeGenerator.genCodeLine ("      trace_return(\"" + JavaCCGlobals.addUnicodeEscapes (jp.getLhs ()) + "\");");
+            codeGenerator.genCodeLine ("      trace_return(\"" +
+                                       JavaCCGlobals.addUnicodeEscapes (jp.getLhs ()) +
+                                       "\");");
             codeGenerator.genCodeLine ("    }");
           }
           codeGenerator.genCodeLine ("  }");
