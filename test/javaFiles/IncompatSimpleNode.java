@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Philip Helger, pgcc@helger.com
+ * Copyright 2017-2025 Philip Helger, pgcc@helger.com
  *
  * Copyright 2011 Google Inc. All Rights Reserved.
  * Author: sreeni@google.com (Sreeni Viswanadha)
@@ -31,9 +31,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* JavaCCOptions:MULTI=false,NODE_USES_PARSER=true,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY= */
-
-
 public class SimpleNode implements Node {
   protected Node parent;
   protected Node[] children;
