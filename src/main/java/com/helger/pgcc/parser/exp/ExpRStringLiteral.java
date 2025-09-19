@@ -72,10 +72,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.lang.GenericReflection;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.reflection.GenericReflection;
+import com.helger.base.string.StringHelper;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.parser.CodeGenerator;
@@ -87,6 +85,8 @@ import com.helger.pgcc.parser.NfaState;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.Token;
 import com.helger.pgcc.parser.TokenizerData;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes string literals.

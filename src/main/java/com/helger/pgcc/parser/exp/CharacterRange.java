@@ -33,10 +33,10 @@
  */
 package com.helger.pgcc.parser.exp;
 
-import javax.annotation.Nonnull;
-
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.Token;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes character range descriptors in a character list.

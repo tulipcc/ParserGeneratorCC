@@ -33,7 +33,7 @@
  */
 package com.helger.pgcc.parser;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A Non-deterministic Finite Automaton.

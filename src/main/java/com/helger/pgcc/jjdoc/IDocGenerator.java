@@ -36,7 +36,7 @@ package com.helger.pgcc.jjdoc;
 import java.io.IOException;
 import java.io.Serializable;
 
-import com.helger.commons.ValueEnforcer;
+import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.NormalProduction;

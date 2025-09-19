@@ -35,19 +35,19 @@ package com.helger.pgcc.parser;
 
 import static com.helger.pgcc.parser.JavaCCGlobals.BNF_PRODUCTIONS;
 import static com.helger.pgcc.parser.JavaCCGlobals.CU_FROM_INSERTION_POINT_2;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
 import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_2;
 import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_I2S;
 import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_S2I;
 import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.SIMPLE_TOKENS_TABLE;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 
 import java.util.HashMap;
 import java.util.List;
 
-import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.collection.commons.CommonsArrayList;
 import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.exp.ExpAction;
 import com.helger.pgcc.parser.exp.ExpREndOfFile;

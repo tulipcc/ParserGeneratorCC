@@ -37,9 +37,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
 import com.helger.pgcc.parser.NormalProduction;
@@ -51,6 +49,8 @@ import com.helger.xml.serialize.write.EXMLCharMode;
 import com.helger.xml.serialize.write.EXMLIncorrectCharacterHandling;
 import com.helger.xml.serialize.write.EXMLSerializeVersion;
 import com.helger.xml.serialize.write.XMLMaskHelper;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Output BNF in HTML 3.2 format.

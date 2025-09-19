@@ -39,8 +39,8 @@ import static com.helger.pgcc.parser.JavaCCGlobals.replaceBackslash;
 import java.io.File;
 import java.io.IOException;
 
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.io.stream.NonBlockingBufferedReader;
+import com.helger.base.io.nonblocking.NonBlockingBufferedReader;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.parser.Options;

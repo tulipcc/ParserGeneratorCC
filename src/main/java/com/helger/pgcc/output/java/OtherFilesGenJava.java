@@ -63,15 +63,15 @@
  */
 package com.helger.pgcc.output.java;
 
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.ORDERED_NAME_TOKENS;
+import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.addEscapes;
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
 import static com.helger.pgcc.parser.JavaCCGlobals.printTokenSetup;
 import static com.helger.pgcc.parser.JavaCCGlobals.printTrailingComments;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.ORDERED_NAME_TOKENS;
-import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 import static com.helger.pgcc.parser.JavaCCParserConstants.PACKAGE;
 import static com.helger.pgcc.parser.JavaCCParserConstants.SEMICOLON;
@@ -82,7 +82,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.helger.commons.io.file.FileHelper;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.parser.ETokenKind;
 import com.helger.pgcc.parser.JavaCCErrors;

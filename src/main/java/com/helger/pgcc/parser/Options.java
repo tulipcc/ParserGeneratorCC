@@ -77,20 +77,21 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.ReturnsImmutableObject;
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.string.StringHelper;
-import com.helger.commons.system.SystemHelper;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.style.ReturnsImmutableObject;
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.string.StringHelper;
+import com.helger.base.string.StringImplode;
+import com.helger.base.system.SystemHelper;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A class with static state that stores all option information.
@@ -104,8 +105,8 @@ public class Options
   {}
 
   /**
-   * These are options that are not settable by the user themselves, and that
-   * are set indirectly via some configuration of user options
+   * These are options that are not settable by the user themselves, and that are set indirectly via
+   * some configuration of user options
    */
   public static final String NONUSER_OPTION__NAMESPACE_CLOSE = "NAMESPACE_CLOSE";
   public static final String NONUSER_OPTION__HAS_NAMESPACE = "HAS_NAMESPACE";
@@ -168,16 +169,15 @@ public class Options
   private static EOutputLanguage s_language = EOutputLanguage.JAVA;
 
   /**
-   * 2013/07/22 -- GWT Compliant Output -- no external dependencies on GWT, but
-   * generated code adds loose coupling to IO, for 6.1 release, this is opt-in,
-   * moving forward to 7.0, after thorough testing, this will likely become the
-   * default option with classic being deprecated
+   * 2013/07/22 -- GWT Compliant Output -- no external dependencies on GWT, but generated code adds
+   * loose coupling to IO, for 6.1 release, this is opt-in, moving forward to 7.0, after thorough
+   * testing, this will likely become the default option with classic being deprecated
    */
   public static final String JAVA_TEMPLATE_TYPE_MODERN = "modern";
 
   /**
-   * The old style of Java code generation (tight coupling of code to Java IO
-   * classes - not GWT compatible)
+   * The old style of Java code generation (tight coupling of code to Java IO classes - not GWT
+   * compatible)
    */
   public static final String JAVA_TEMPLATE_TYPE_CLASSIC = "classic";
 
@@ -247,10 +247,10 @@ public class Options
   }
 
   /**
-   * A mapping of option names (Strings) to values (Integer, Boolean, String).
-   * This table is initialized by the main program. Its contents defines the set
-   * of legal options. Its initial values define the default option values, and
-   * the option types can be determined from these values too.
+   * A mapping of option names (Strings) to values (Integer, Boolean, String). This table is
+   * initialized by the main program. Its contents defines the set of legal options. Its initial
+   * values define the default option values, and the option types can be determined from these
+   * values too.
    */
   protected static final Map <String, Object> s_optionValues = new HashMap <> ();
 
@@ -320,29 +320,26 @@ public class Options
   }
 
   /**
-   * Keep track of what options were set as a command line argument. We use this
-   * to see if the options set from the command line and the ones set in the
-   * input files clash in any way.
+   * Keep track of what options were set as a command line argument. We use this to see if the
+   * options set from the command line and the ones set in the input files clash in any way.
    */
   private static final Set <String> s_cmdLineSetting = new HashSet <> ();
 
   /**
-   * Keep track of what options were set from the grammar file. We use this to
-   * see if the options set from the command line and the ones set in the input
-   * files clash in any way.
+   * Keep track of what options were set from the grammar file. We use this to see if the options
+   * set from the command line and the ones set in the input files clash in any way.
    */
   private static final Set <String> s_inputFileSetting = new HashSet <> ();
 
   /**
-   * Returns a string representation of the specified options of interest. Used
-   * when, for example, generating Token.java to record the JavaCC options that
-   * were used to generate the file. All of the options must be boolean values.
+   * Returns a string representation of the specified options of interest. Used when, for example,
+   * generating Token.java to record the JavaCC options that were used to generate the file. All of
+   * the options must be boolean values.
    *
    * @param interestingOptions
    *        the options of interest, eg {Options.USEROPTION__STATIC,
    *        Options.USEROPTION__CACHE_TOKENS}
-   * @return the string representation of the options, eg
-   *         "STATIC=true,CACHE_TOKENS=false"
+   * @return the string representation of the options, eg "STATIC=true,CACHE_TOKENS=false"
    */
   @Nonnull
   public static String getOptionsString (final String [] interestingOptions)
@@ -376,8 +373,8 @@ public class Options
   }
 
   /**
-   * Determine if a given command line argument might be an option flag. Command
-   * line options start with a dash&nbsp;(-).
+   * Determine if a given command line argument might be an option flag. Command line options start
+   * with a dash&nbsp;(-).
    *
    * @param opt
    *        The command line argument to examine.
@@ -389,9 +386,8 @@ public class Options
   }
 
   /**
-   * Help function to handle cases where the meaning of an option has changed
-   * over time. If the user has supplied an option in the old format, it will be
-   * converted to the new format.
+   * Help function to handle cases where the meaning of an option has changed over time. If the user
+   * has supplied an option in the old format, it will be converted to the new format.
    *
    * @param name
    *        The name of the option being checked.
@@ -407,7 +403,8 @@ public class Options
       return ((Boolean) value).booleanValue () ? "*" : "";
     }
 
-    if (name.equalsIgnoreCase (USEROPTION__JDK_VERSION) && (value.getClass () == String.class || value.getClass () == Integer.class))
+    if (name.equalsIgnoreCase (USEROPTION__JDK_VERSION) &&
+        (value.getClass () == String.class || value.getClass () == Integer.class))
     {
       final EJDKVersion ret = EJDKVersion.getFromStringOrNull (value.toString ());
       if (ret != null)
@@ -452,7 +449,12 @@ public class Options
       final boolean bIsInvalidInteger = aObject instanceof Integer && ((Integer) aRealSrc).intValue () <= 0;
       if (aExistingValue.getClass () != aObject.getClass () || bIsInvalidInteger)
       {
-        JavaCCErrors.warning (valueloc, "Bad option value \"" + aRealSrc + "\" for \"" + name + "\".  Option setting will be ignored.");
+        JavaCCErrors.warning (valueloc,
+                              "Bad option value \"" +
+                                        aRealSrc +
+                                        "\" for \"" +
+                                        name +
+                                        "\".  Option setting will be ignored.");
         return;
       }
 
@@ -488,8 +490,10 @@ public class Options
                                         "\" for \"" +
                                         name +
                                         "\".  Option setting will be ignored. Valid options are: " +
-                                        StringHelper.getImploded (", ", s_aSupportedJavaTemplateTypes));
-        return;
+                                        StringImplode.imploder ()
+                                                     .source (s_aSupportedJavaTemplateTypes)
+                                                     .separator (", ")
+                                                     .build ());
       }
     }
     else
@@ -505,7 +509,10 @@ public class Options
                                           "\" for \"" +
                                           name +
                                           "\".  Option setting will be ignored. Valid options are: " +
-                                          StringHelper.getImplodedMapped (", ", EOutputLanguage.values (), EOutputLanguage::getID));
+                                          StringImplode.imploder ()
+                                                       .source (EOutputLanguage.values (), EOutputLanguage::getID)
+                                                       .separator (", ")
+                                                       .build ());
           return;
         }
         s_language = eOutLanguage;
@@ -518,8 +525,7 @@ public class Options
   }
 
   /**
-   * Process a single command-line option. The option is parsed and stored in
-   * the optionValues map.
+   * Process a single command-line option. The option is parsed and stored in the optionValues map.
    *
    * @param sArg
    *        argument string to set. May not be <code>null</code>.
@@ -651,9 +657,11 @@ public class Options
   {
     if (isDebugLookahead () && !isDebugParser ())
     {
-      if (s_cmdLineSetting.contains (USEROPTION__DEBUG_PARSER) || s_inputFileSetting.contains (USEROPTION__DEBUG_PARSER))
+      if (s_cmdLineSetting.contains (USEROPTION__DEBUG_PARSER) ||
+          s_inputFileSetting.contains (USEROPTION__DEBUG_PARSER))
       {
-        JavaCCErrors.warning ("True setting of option DEBUG_LOOKAHEAD overrides " + "false setting of option DEBUG_PARSER.");
+        JavaCCErrors.warning ("True setting of option DEBUG_LOOKAHEAD overrides " +
+                              "false setting of option DEBUG_PARSER.");
       }
       s_optionValues.put (USEROPTION__DEBUG_PARSER, Boolean.TRUE);
     }
@@ -930,8 +938,8 @@ public class Options
   }
 
   /**
-   * Return the file encoding for reading grammars; this will return the
-   * file.encoding system property if no value was explicitly set
+   * Return the file encoding for reading grammars; this will return the file.encoding system
+   * property if no value was explicitly set
    *
    * @return The file encoding (e.g., UTF-8, ISO_8859-1, MacRoman)
    */
@@ -953,8 +961,8 @@ public class Options
   }
 
   /**
-   * Return the file encoding for reading grammars; this will return the UTF-8
-   * if no value was explicitly set
+   * Return the file encoding for reading grammars; this will return the UTF-8 if no value was
+   * explicitly set
    *
    * @return The output encoding
    */

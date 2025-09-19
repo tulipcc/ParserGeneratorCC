@@ -38,10 +38,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.CodeProductionCpp;
 import com.helger.pgcc.parser.CodeProductionJava;
@@ -51,6 +49,8 @@ import com.helger.pgcc.parser.TokenProduction;
 import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.exp.ExpNonTerminal;
 import com.helger.pgcc.parser.exp.Expansion;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Output BNF in text format.

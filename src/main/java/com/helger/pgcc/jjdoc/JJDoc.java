@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.BNFProduction;
 import com.helger.pgcc.parser.CodeProductionCpp;

@@ -38,7 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.helger.commons.io.file.SimpleFileIO;
+import com.helger.io.file.SimpleFileIO;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCParser;

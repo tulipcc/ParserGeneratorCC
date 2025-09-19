@@ -33,9 +33,9 @@
  */
 package com.helger.pgcc.output.java;
 
-import javax.annotation.Nonnull;
+import com.helger.annotation.Nonempty;
 
-import com.helger.commons.annotation.Nonempty;
+import jakarta.annotation.Nonnull;
 
 public class JavaResourceTemplateLocationImpl implements IJavaResourceTemplateLocations
 {

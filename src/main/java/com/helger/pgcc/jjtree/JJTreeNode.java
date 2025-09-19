@@ -33,7 +33,7 @@
  */
 package com.helger.pgcc.jjtree;
 
-import com.helger.commons.annotation.OverrideOnDemand;
+import com.helger.annotation.style.OverrideOnDemand;
 
 public class JJTreeNode extends SimpleNode
 {

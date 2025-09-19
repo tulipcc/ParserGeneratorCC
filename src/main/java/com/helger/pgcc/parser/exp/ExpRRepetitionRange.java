@@ -36,10 +36,10 @@ package com.helger.pgcc.parser.exp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import com.helger.pgcc.parser.Nfa;
 import com.helger.pgcc.parser.Token;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes one-or-more regular expressions (&lt;foo+&gt;).

@@ -33,18 +33,18 @@
  */
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.s_aActForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.BNF_PRODUCTIONS;
 import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_I2S;
 import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_S2I;
 import static com.helger.pgcc.parser.JavaCCGlobals.NAMED_TOKENS_TABLE;
 import static com.helger.pgcc.parser.JavaCCGlobals.NAMES_OF_TOKENS;
-import static com.helger.pgcc.parser.JavaCCGlobals.s_sNextStateForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.ORDERED_NAME_TOKENS;
 import static com.helger.pgcc.parser.JavaCCGlobals.PRODUCTION_TABLE;
 import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.REXPS_OF_TOKENS;
 import static com.helger.pgcc.parser.JavaCCGlobals.SIMPLE_TOKENS_TABLE;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_aActForEof;
+import static com.helger.pgcc.parser.JavaCCGlobals.s_sNextStateForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 
 import java.util.ArrayList;

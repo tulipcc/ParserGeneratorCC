@@ -41,7 +41,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.pgcc.jjtree.output.JJTreeStateJava;
 import com.helger.pgcc.jjtree.output.NodeFilesJava;
 import com.helger.pgcc.parser.JavaCCGlobals;

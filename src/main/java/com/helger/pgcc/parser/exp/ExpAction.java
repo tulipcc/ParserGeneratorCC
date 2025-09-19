@@ -35,12 +35,12 @@ package com.helger.pgcc.parser.exp;
 
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.annotation.ReturnsMutableObject;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.annotation.style.ReturnsMutableObject;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
 import com.helger.pgcc.parser.Token;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes actions that may occur on the right hand side of productions.

@@ -33,11 +33,11 @@
  */
 package com.helger.pgcc.parser;
 
-import javax.annotation.Nonnull;
+import com.helger.annotation.style.ReturnsMutableObject;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
 
-import com.helger.commons.annotation.ReturnsMutableObject;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes a CODE productions.

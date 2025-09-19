@@ -37,11 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-
-import com.helger.commons.ValueEnforcer;
+import com.helger.annotation.Nonnegative;
+import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pgcc.parser.Token;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes expansions where one of many choices is taken (c1|c2|...).

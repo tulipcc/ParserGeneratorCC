@@ -33,7 +33,7 @@
  */
 package com.helger.pgcc.output;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class UnsupportedOutputLanguageException extends RuntimeException
 {

@@ -36,13 +36,13 @@ package com.helger.pgcc.parser.exp;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.annotation.Nonnegative;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
 import com.helger.pgcc.parser.NormalProduction;
 import com.helger.pgcc.parser.Token;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes non terminals.

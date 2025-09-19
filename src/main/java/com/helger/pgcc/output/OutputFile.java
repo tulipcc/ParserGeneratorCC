@@ -45,13 +45,11 @@ import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.WillCloseWhenClosed;
-
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.io.stream.NonBlockingBufferedReader;
-import com.helger.commons.io.stream.NullOutputStream;
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.WillCloseWhenClosed;
+import com.helger.base.io.nonblocking.NonBlockingBufferedReader;
+import com.helger.base.io.stream.NullOutputStream;
+import com.helger.base.string.StringHex;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.PGVersion;
@@ -60,18 +58,18 @@ import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
 import com.helger.security.messagedigest.EMessageDigestAlgorithm;
 
+import jakarta.annotation.Nonnull;
+
 /**
- * This class handles the creation and maintenance of the boiler-plate classes,
- * such as Token.java, JavaCharStream.java etc. It is responsible for:
+ * This class handles the creation and maintenance of the boiler-plate classes, such as Token.java,
+ * JavaCharStream.java etc. It is responsible for:
  * <ul>
  * <li>Writing the JavaCC header lines to the file.</li>
  * <li>Writing the checksum line.</li>
- * <li>Using the checksum to determine if an existing file has been changed by
- * the user (and so should be left alone).</li>
- * <li>Checking any existing file's version (if the file can not be
- * overwritten).</li>
- * <li>Checking any existing file's creation options (if the file can not be
- * overwritten).</li>
+ * <li>Using the checksum to determine if an existing file has been changed by the user (and so
+ * should be left alone).</li>
+ * <li>Checking any existing file's version (if the file can not be overwritten).</li>
+ * <li>Checking any existing file's creation options (if the file can not be overwritten).</li>
  * <li></li>
  * </ul>
  *
@@ -101,8 +99,8 @@ public class OutputFile implements AutoCloseable
    * @param compatibleVersion
    *        the minimum compatible JavaCC version.
    * @param options
-   *        if the file already exists, and cannot be overwritten, this is a
-   *        list of options (such s STATIC=false) to check for changes.
+   *        if the file already exists, and cannot be overwritten, this is a list of options (such s
+   *        STATIC=false) to check for changes.
    * @throws IOException
    *         on error
    */
@@ -145,7 +143,7 @@ public class OutputFile implements AutoCloseable
             }
           }
 
-          final String calculatedDigest = StringHelper.getHexEncoded (digestStream.getMessageDigest ().digest ());
+          final String calculatedDigest = StringHex.getHexEncoded (digestStream.getMessageDigest ().digest ());
 
           if (existingMD5 == null || !existingMD5.equals (calculatedDigest))
           {
@@ -186,8 +184,7 @@ public class OutputFile implements AutoCloseable
   }
 
   /**
-   * Output a warning if the file was created with an incompatible version of
-   * JavaCC.
+   * Output a warning if the file was created with an incompatible version of JavaCC.
    *
    * @param fileName
    * @param versionId
@@ -203,7 +200,7 @@ public class OutputFile implements AutoCloseable
       {
         if (line.startsWith (firstLine))
         {
-          final String version = line.replaceFirst (".*Version ", "").replaceAll (" \\*/", "");
+          final String version = line.replaceFirst (".*Version ", "").replace (" */", "");
           if (!version.equals (versionId))
           {
             JavaCCErrors.warning (file.getName () +
@@ -227,8 +224,8 @@ public class OutputFile implements AutoCloseable
   }
 
   /**
-   * Read the options line from the file and compare to the options currently in
-   * use. Output a warning if they are different.
+   * Read the options line from the file and compare to the options currently in use. Output a
+   * warning if they are different.
    *
    * @param fileName
    * @param options
@@ -266,8 +263,8 @@ public class OutputFile implements AutoCloseable
   }
 
   /**
-   * Return a PrintWriter object that may be used to write to this file. Any
-   * necessary header information is written by this method.
+   * Return a PrintWriter object that may be used to write to this file. Any necessary header
+   * information is written by this method.
    *
    * @return the {@link PrintWriter} to use.
    * @throws IOException
@@ -292,7 +289,11 @@ public class OutputFile implements AutoCloseable
 
       // Write the headers....
       final String version = m_sCompatibleVersion == null ? PGVersion.VERSION_NUMBER : m_sCompatibleVersion;
-      m_aPW.println ("/* " + JavaCCGlobals.getIdString (m_sToolName, m_aFile.getName ()) + " Version " + version + " */");
+      m_aPW.println ("/* " +
+                     JavaCCGlobals.getIdString (m_sToolName, m_aFile.getName ()) +
+                     " Version " +
+                     version +
+                     " */");
       if (m_aOptions != null)
       {
         m_aPW.println ("/* " + OPTIONS_PREFIX + ":" + Options.getOptionsString (m_aOptions) + " */");
@@ -303,8 +304,7 @@ public class OutputFile implements AutoCloseable
   }
 
   /**
-   * Close the OutputFile, writing any necessary trailer information (such as a
-   * checksum).
+   * Close the OutputFile, writing any necessary trailer information (such as a checksum).
    */
   public void close ()
   {
@@ -322,7 +322,7 @@ public class OutputFile implements AutoCloseable
   {
     m_aPW.flush ();
     final byte [] digest = m_dos.getMessageDigest ().digest ();
-    return StringHelper.getHexEncoded (digest);
+    return StringHex.getHexEncoded (digest);
   }
 
   private final class TrapClosePrintWriter extends PrintWriter

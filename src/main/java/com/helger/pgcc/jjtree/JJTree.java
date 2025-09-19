@@ -66,9 +66,7 @@ package com.helger.pgcc.jjtree;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.state.ESuccess;
+import com.helger.base.state.ESuccess;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.jjtree.output.JJTreeStateCpp;
 import com.helger.pgcc.jjtree.output.JJTreeStateJava;
@@ -76,6 +74,8 @@ import com.helger.pgcc.jjtree.output.NodeFilesCpp;
 import com.helger.pgcc.jjtree.output.NodeFilesJava;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;
+
+import jakarta.annotation.Nonnull;
 
 public class JJTree
 {

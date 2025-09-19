@@ -46,14 +46,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.io.stream.NonBlockingBufferedWriter;
-import com.helger.commons.io.stream.NonBlockingStringWriter;
+import com.helger.base.io.nonblocking.NonBlockingBufferedWriter;
+import com.helger.base.io.nonblocking.NonBlockingStringWriter;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.utils.OutputFileGenerator;
+
+import jakarta.annotation.Nonnull;
 
 public class CodeGenerator
 {

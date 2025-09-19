@@ -41,8 +41,6 @@ import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import javax.annotation.Nonnull;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,12 +48,14 @@ import org.slf4j.LoggerFactory;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.ast.CompilationUnit;
-import com.helger.commons.io.file.FileSystemIterator;
-import com.helger.commons.io.file.FileSystemRecursiveIterator;
-import com.helger.commons.io.file.FilenameHelper;
-import com.helger.commons.io.file.IFileFilter;
-import com.helger.commons.state.ESuccess;
+import com.helger.base.state.ESuccess;
+import com.helger.io.file.FileSystemIterator;
+import com.helger.io.file.FileSystemRecursiveIterator;
+import com.helger.io.file.FilenameHelper;
+import com.helger.io.file.IFileFilter;
 import com.helger.pgcc.jjtree.JJTree;
+
+import jakarta.annotation.Nonnull;
 
 public final class GrammarsParsingFuncTest
 {

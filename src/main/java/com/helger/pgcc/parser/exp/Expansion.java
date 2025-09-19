@@ -35,10 +35,10 @@ package com.helger.pgcc.parser.exp;
 
 import java.util.Set;
 
-import javax.annotation.Nonnull;
+import com.helger.annotation.style.OverrideOnDemand;
+import com.helger.base.string.StringHelper;
 
-import com.helger.commons.annotation.OverrideOnDemand;
-import com.helger.commons.string.StringHelper;
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes expansions - entities that may occur on the right hand sides of

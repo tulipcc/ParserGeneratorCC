@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.Options;

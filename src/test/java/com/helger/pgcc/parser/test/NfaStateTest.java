@@ -41,8 +41,8 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.helger.commons.exception.InitializationException;
-import com.helger.commons.io.file.FileHelper;
+import com.helger.base.exception.InitializationException;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.AbstractJavaCCTestCase;
 import com.helger.pgcc.parser.CodeGenerator;
 import com.helger.pgcc.parser.JavaCCGlobals;

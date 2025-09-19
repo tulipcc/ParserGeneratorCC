@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.helger.commons.state.ESuccess;
+import com.helger.base.state.ESuccess;
 import com.helger.pgcc.AbstractJavaCCTestCase;
 import com.helger.pgcc.jjdoc.JJDocMain;
 

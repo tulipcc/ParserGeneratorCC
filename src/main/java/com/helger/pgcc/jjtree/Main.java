@@ -33,7 +33,7 @@
  */
 package com.helger.pgcc.jjtree;
 
-import com.helger.commons.state.ESuccess;
+import com.helger.base.state.ESuccess;
 
 /**
  * Entry point.

@@ -41,7 +41,7 @@ import java.util.Map;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 
 /**
  * Test class for class {@link ConditionParser}.

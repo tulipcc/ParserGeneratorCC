@@ -35,11 +35,11 @@ package com.helger.pgcc.parser.exp;
 
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
 import com.helger.pgcc.parser.Token;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes lookahead rule for a particular expansion or expansion sequence

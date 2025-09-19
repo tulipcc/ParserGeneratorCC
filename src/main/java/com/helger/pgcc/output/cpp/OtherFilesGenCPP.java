@@ -63,14 +63,14 @@
  */
 package com.helger.pgcc.output.cpp;
 
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
+import static com.helger.pgcc.parser.JavaCCGlobals.ORDERED_NAME_TOKENS;
+import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.getIdString;
 import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
 import static com.helger.pgcc.parser.JavaCCGlobals.printTokenSetup;
 import static com.helger.pgcc.parser.JavaCCGlobals.printTrailingComments;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
-import static com.helger.pgcc.parser.JavaCCGlobals.ORDERED_NAME_TOKENS;
-import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
 import java.io.File;
@@ -80,7 +80,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.helger.commons.io.file.FileHelper;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.parser.ETokenKind;
 import com.helger.pgcc.parser.JavaCCErrors;

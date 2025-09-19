@@ -36,14 +36,14 @@ package com.helger.pgcc.parser.exp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.ValueEnforcer;
+import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.Nfa;
 import com.helger.pgcc.parser.NfaState;
 import com.helger.pgcc.parser.Options;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes character lists.

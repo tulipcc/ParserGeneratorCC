@@ -40,9 +40,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.collection.ArrayHelper;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.base.CGlobal;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.jjtree.JJTreeGlobals;
 import com.helger.pgcc.jjtree.JJTreeOptions;
@@ -68,10 +67,12 @@ public final class JJTreeStateCpp
     final String sFilePrefix = new File (JJTreeOptions.getJJTreeOutputDirectory (),
                                          "JJT" + JJTreeGlobals.s_parserName + "State").getAbsolutePath ();
 
-    OutputFile aOutputFile = new OutputFile (new File (sFilePrefix + ".h"), JJTStateVersion, ArrayHelper.EMPTY_STRING_ARRAY);
+    OutputFile aOutputFile = new OutputFile (new File (sFilePrefix + ".h"),
+                                             JJTStateVersion,
+                                             CGlobal.EMPTY_STRING_ARRAY);
     NodeFilesCpp.generateFile (aOutputFile, "/templates/jjtree/cpp/JJTTreeState.h.template", aOptions, true);
 
-    aOutputFile = new OutputFile (new File (sFilePrefix + ".cc"), JJTStateVersion, ArrayHelper.EMPTY_STRING_ARRAY);
+    aOutputFile = new OutputFile (new File (sFilePrefix + ".cc"), JJTStateVersion, CGlobal.EMPTY_STRING_ARRAY);
     NodeFilesCpp.generateFile (aOutputFile, "/templates/jjtree/cpp/JJTTreeState.cc.template", aOptions, true);
   }
 }

@@ -46,10 +46,10 @@ import org.slf4j.LoggerFactory;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.io.file.FileOperationManager;
-import com.helger.commons.io.file.FileSystemIterator;
-import com.helger.commons.io.file.IFileFilter;
+import com.helger.io.file.FileHelper;
+import com.helger.io.file.FileOperationManager;
+import com.helger.io.file.FileSystemIterator;
+import com.helger.io.file.IFileFilter;
 import com.helger.pgcc.parser.Options;
 
 /**

@@ -36,9 +36,9 @@ package com.helger.pgcc.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import com.helger.annotation.style.ReturnsMutableObject;
 
-import com.helger.commons.annotation.ReturnsMutableObject;
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes BNF productions.

@@ -33,9 +33,9 @@
  */
 package com.helger.pgcc.jjtree;
 
-import javax.annotation.Nonnull;
-
 import com.helger.pgcc.parser.JavaCCErrors;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Utilities for manipulating Tokens.

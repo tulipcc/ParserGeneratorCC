@@ -64,11 +64,11 @@
 
 package com.helger.pgcc;
 
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.exception.InitializationException;
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.lang.PropertiesHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.exception.InitializationException;
+import com.helger.base.rt.NonBlockingProperties;
+import com.helger.base.rt.PropertiesHelper;
+import com.helger.base.string.StringHelper;
+import com.helger.io.resource.ClassPathResource;
 
 /**
  * Supply the version number.
@@ -87,7 +87,8 @@ public final class PGVersion
   static
   {
     String sProjectVersion = null;
-    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("/pgcc-version.properties"));
+    final NonBlockingProperties p = PropertiesHelper.loadProperties (ClassPathResource.getInputStream ("/pgcc-version.properties",
+                                                                                                       PGVersion.class.getClassLoader ()));
     if (p != null)
       sProjectVersion = p.get ("version");
     if (sProjectVersion == null)

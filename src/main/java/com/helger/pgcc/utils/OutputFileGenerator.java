@@ -43,19 +43,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.WillNotClose;
+import com.helger.annotation.WillNotClose;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.io.nonblocking.NonBlockingBufferedReader;
+import com.helger.base.io.nonblocking.NonBlockingStringWriter;
+import com.helger.base.system.ENewLineMode;
+import com.helger.base.system.SystemHelper;
+import com.helger.io.file.FileHelper;
+import com.helger.io.file.SimpleFileIO;
+import com.helger.io.resource.ClassPathResource;
+import com.helger.io.resource.FileSystemResource;
+import com.helger.io.resource.IReadableResource;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.io.file.SimpleFileIO;
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.io.resource.FileSystemResource;
-import com.helger.commons.io.resource.IReadableResource;
-import com.helger.commons.io.stream.NonBlockingBufferedReader;
-import com.helger.commons.io.stream.NonBlockingStringWriter;
-import com.helger.commons.system.ENewLineMode;
-import com.helger.commons.system.SystemHelper;
+import jakarta.annotation.Nonnull;
 
 /**
  * Generates boiler-plate files from templates. Only very basic template

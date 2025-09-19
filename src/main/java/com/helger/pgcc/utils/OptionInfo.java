@@ -33,12 +33,12 @@
  */
 package com.helger.pgcc.utils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.helger.base.compare.IComparable;
+import com.helger.base.equals.EqualsHelper;
+import com.helger.base.hashcode.HashCodeGenerator;
 
-import com.helger.commons.compare.IComparable;
-import com.helger.commons.equals.EqualsHelper;
-import com.helger.commons.hashcode.HashCodeGenerator;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Chris Ainsley

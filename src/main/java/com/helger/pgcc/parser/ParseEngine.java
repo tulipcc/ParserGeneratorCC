@@ -77,13 +77,11 @@ import static com.helger.pgcc.parser.JavaCCGlobals.s_tokenCount;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.CommonsHashMap;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.CommonsHashMap;
+import com.helger.collection.commons.ICommonsList;
+import com.helger.collection.commons.ICommonsMap;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.UnsupportedOutputLanguageException;
@@ -98,6 +96,8 @@ import com.helger.pgcc.parser.exp.ExpTryBlock;
 import com.helger.pgcc.parser.exp.ExpZeroOrMore;
 import com.helger.pgcc.parser.exp.ExpZeroOrOne;
 import com.helger.pgcc.parser.exp.Expansion;
+
+import jakarta.annotation.Nonnull;
 
 public class ParseEngine
 {

@@ -38,10 +38,8 @@ import java.io.File;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.state.ESuccess;
+import com.helger.base.state.ESuccess;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.JavaCCGlobals;
@@ -51,6 +49,8 @@ import com.helger.pgcc.parser.MetaParseException;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.parser.ParseException;
 import com.helger.pgcc.parser.StreamProvider;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Main class.

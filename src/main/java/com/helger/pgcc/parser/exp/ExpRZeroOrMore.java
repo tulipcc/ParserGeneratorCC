@@ -33,11 +33,11 @@
  */
 package com.helger.pgcc.parser.exp;
 
-import javax.annotation.Nonnull;
-
 import com.helger.pgcc.parser.Nfa;
 import com.helger.pgcc.parser.NfaState;
 import com.helger.pgcc.parser.Token;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes zero-or-more regular expressions (&lt;foo*&gt;).

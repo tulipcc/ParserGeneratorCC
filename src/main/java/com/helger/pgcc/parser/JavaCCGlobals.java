@@ -45,14 +45,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.Nonempty;
+import com.helger.base.string.StringHelper;
+import com.helger.base.string.StringImplode;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.PGVersion;
@@ -60,10 +58,13 @@ import com.helger.pgcc.output.UnsupportedOutputLanguageException;
 import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
 import com.helger.pgcc.parser.exp.ExpAction;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 /**
- * This package contains data created as a result of parsing and semanticizing a
- * JavaCC input file. This data is what is used by the back-ends of JavaCC as
- * well as any other back-end of JavaCC related tools such as JJTree.
+ * This package contains data created as a result of parsing and semanticizing a JavaCC input file.
+ * This data is what is used by the back-ends of JavaCC as well as any other back-end of JavaCC
+ * related tools such as JJTree.
  */
 public final class JavaCCGlobals
 {
@@ -73,8 +74,8 @@ public final class JavaCCGlobals
   public static String s_fileName;
 
   /**
-   * The name of the original file (before processing by JJTree). Currently this
-   * is the same as fileName.
+   * The name of the original file (before processing by JJTree). Currently this is the same as
+   * fileName.
    */
   public static String s_origFileName;
 
@@ -84,14 +85,13 @@ public final class JavaCCGlobals
   public static boolean s_jjtreeGenerated;
 
   /**
-   * The list of tools that have participated in generating the input grammar
-   * file.
+   * The list of tools that have participated in generating the input grammar file.
    */
   public static List <String> s_toolNames;
 
   /**
-   * This prints the banner line when the various tools are invoked. This takes
-   * as argument the tool's full name and its version.
+   * This prints the banner line when the various tools are invoked. This takes as argument the
+   * tool's full name and its version.
    *
    * @param fullName
    *        full application name
@@ -115,47 +115,44 @@ public final class JavaCCGlobals
   public static String s_cu_name;
 
   /**
-   * This is a list of tokens that appear after "PARSER_BEGIN(name)" all the way
-   * until (but not including) the opening brace "{" of the class "name".
+   * This is a list of tokens that appear after "PARSER_BEGIN(name)" all the way until (but not
+   * including) the opening brace "{" of the class "name".
    */
   public static final ICommonsList <Token> CU_TO_INSERTION_POINT_1 = new CommonsArrayList <> ();
 
   /**
-   * This is the list of all tokens that appear after the tokens in
-   * "cu_to_insertion_point_1" and until (but not including) the closing brace
-   * "}" of the class "name".
+   * This is the list of all tokens that appear after the tokens in "cu_to_insertion_point_1" and
+   * until (but not including) the closing brace "}" of the class "name".
    */
   public static final ICommonsList <Token> CU_TO_INSERTION_POINT_2 = new CommonsArrayList <> ();
 
   /**
-   * This is the list of all tokens that appear after the tokens in
-   * "cu_to_insertion_point_2" and until "PARSER_END(name)".
+   * This is the list of all tokens that appear after the tokens in "cu_to_insertion_point_2" and
+   * until "PARSER_END(name)".
    */
   public static final ICommonsList <Token> CU_FROM_INSERTION_POINT_2 = new CommonsArrayList <> ();
 
   /**
-   * A list of all grammar productions - normal and JAVACODE - in the order they
-   * appear in the input file. Each entry here will be a subclass of
-   * "NormalProduction".
+   * A list of all grammar productions - normal and JAVACODE - in the order they appear in the input
+   * file. Each entry here will be a subclass of "NormalProduction".
    */
   public static final List <NormalProduction> BNF_PRODUCTIONS = new ArrayList <> ();
 
   /**
-   * A symbol table of all grammar productions - normal and JAVACODE. The symbol
-   * table is indexed by the name of the left hand side non-terminal. Its
-   * contents are of type "NormalProduction".
+   * A symbol table of all grammar productions - normal and JAVACODE. The symbol table is indexed by
+   * the name of the left hand side non-terminal. Its contents are of type "NormalProduction".
    */
   public static final Map <String, NormalProduction> PRODUCTION_TABLE = new HashMap <> ();
 
   /**
-   * A mapping of lexical state strings to their integer internal
-   * representation. Integers are stored as java.lang.Integer's.
+   * A mapping of lexical state strings to their integer internal representation. Integers are
+   * stored as java.lang.Integer's.
    */
   public static final Map <String, Integer> LEXSTATE_S2I = new HashMap <> ();
 
   /**
-   * A mapping of the internal integer representations of lexical states to
-   * their strings. Integers are stored as java.lang.Integer's.
+   * A mapping of the internal integer representations of lexical states to their strings. Integers
+   * are stored as java.lang.Integer's.
    */
   public static final Map <Integer, String> LEXSTATE_I2S = new HashMap <> ();
 
@@ -165,60 +162,56 @@ public final class JavaCCGlobals
   public static ICommonsList <Token> s_token_mgr_decls;
 
   /**
-   * The list of all TokenProductions from the input file. This list includes
-   * implicit TokenProductions that are created for uses of regular expressions
-   * within BNF productions.
+   * The list of all TokenProductions from the input file. This list includes implicit
+   * TokenProductions that are created for uses of regular expressions within BNF productions.
    */
   public static final List <TokenProduction> REXPR_LIST = new ArrayList <> ();
 
   /**
-   * The total number of distinct tokens. This is therefore one more than the
-   * largest assigned token ordinal.
+   * The total number of distinct tokens. This is therefore one more than the largest assigned token
+   * ordinal.
    */
   public static int s_tokenCount;
 
   /**
-   * This is a symbol table that contains all named tokens (those that are
-   * defined with a label). The index to the table is the image of the label and
-   * the contents of the table are of type "RegularExpression".
+   * This is a symbol table that contains all named tokens (those that are defined with a label).
+   * The index to the table is the image of the label and the contents of the table are of type
+   * "RegularExpression".
    */
   public static final Map <String, AbstractExpRegularExpression> NAMED_TOKENS_TABLE = new HashMap <> ();
 
   /**
-   * Contains the same entries as "named_tokens_table", but this is an ordered
-   * list which is ordered by the order of appearance in the input file.
+   * Contains the same entries as "named_tokens_table", but this is an ordered list which is ordered
+   * by the order of appearance in the input file.
    */
   public static final List <AbstractExpRegularExpression> ORDERED_NAME_TOKENS = new ArrayList <> ();
 
   /**
-   * A mapping of ordinal values (represented as objects of type "Integer") to
-   * the corresponding labels (of type "String"). An entry exists for an ordinal
-   * value only if there is a labeled token corresponding to this entry. If
-   * there are multiple labels representing the same ordinal value, then only
-   * one label is stored.
+   * A mapping of ordinal values (represented as objects of type "Integer") to the corresponding
+   * labels (of type "String"). An entry exists for an ordinal value only if there is a labeled
+   * token corresponding to this entry. If there are multiple labels representing the same ordinal
+   * value, then only one label is stored.
    */
   public static final Map <Integer, String> NAMES_OF_TOKENS = new HashMap <> ();
 
   /**
-   * A mapping of ordinal values (represented as objects of type "Integer") to
-   * the corresponding RegularExpression's.
+   * A mapping of ordinal values (represented as objects of type "Integer") to the corresponding
+   * RegularExpression's.
    */
   public static final Map <Integer, AbstractExpRegularExpression> REXPS_OF_TOKENS = new HashMap <> ();
 
   /**
-   * This is a three-level symbol table that contains all simple tokens (those
-   * that are defined using a single string (with or without a label). The index
-   * to the first level table is a lexical state which maps to a second level
-   * hashtable. The index to the second level hashtable is the string of the
-   * simple token converted to upper case, and this maps to a third level
-   * hashtable. This third level hashtable contains the actual string of the
-   * simple token and maps it to its RegularExpression.
+   * This is a three-level symbol table that contains all simple tokens (those that are defined
+   * using a single string (with or without a label). The index to the first level table is a
+   * lexical state which maps to a second level hashtable. The index to the second level hashtable
+   * is the string of the simple token converted to upper case, and this maps to a third level
+   * hashtable. This third level hashtable contains the actual string of the simple token and maps
+   * it to its RegularExpression.
    */
   public static final Map <String, Map <String, Map <String, AbstractExpRegularExpression>>> SIMPLE_TOKENS_TABLE = new HashMap <> ();
 
   /**
-   * maskindex, jj2index, maskVals are variables that are shared between
-   * ParseEngine and ParseGen.
+   * maskindex, jj2index, maskVals are variables that are shared between ParseEngine and ParseGen.
    */
   protected static int s_maskindex = 0;
   protected static int s_jj2index = 0;
@@ -265,8 +258,7 @@ public final class JavaCCGlobals
   }
 
   /**
-   * Returns the identifying string for the file name, given a toolname used to
-   * generate it.
+   * Returns the identifying string for the file name, given a toolname used to generate it.
    *
    * @param toolName
    *        tool name
@@ -280,8 +272,8 @@ public final class JavaCCGlobals
   }
 
   /**
-   * Returns the identifying string for the file name, given a set of tool names
-   * that are used to generate it. Total name may not exceed 200 characters.
+   * Returns the identifying string for the file name, given a set of tool names that are used to
+   * generate it. Total name may not exceed 200 characters.
    *
    * @param toolNames
    *        tool names
@@ -291,7 +283,9 @@ public final class JavaCCGlobals
    */
   public static String getIdString (final List <String> toolNames, final String fileName)
   {
-    final String toolNamePrefix = "Generated by: " + StringHelper.getImploded ('&', toolNames) + ":";
+    final String toolNamePrefix = "Generated by: " +
+                                  StringImplode.imploder ().source (toolNames).separator ('&').build () +
+                                  ":";
 
     if (toolNamePrefix.length () > 200)
     {
@@ -307,8 +301,8 @@ public final class JavaCCGlobals
    *        tool name
    * @param fileName
    *        file name
-   * @return <code>true</code> if tool name passed is one of the tool names
-   *         returned by getToolNames(fileName).
+   * @return <code>true</code> if tool name passed is one of the tool names returned by
+   *         getToolNames(fileName).
    */
   public static boolean isGeneratedBy (final String toolName, final String fileName)
   {
@@ -368,8 +362,7 @@ public final class JavaCCGlobals
   }
 
   /**
-   * Returns a List of names of the tools that have been used to generate the
-   * given file.
+   * Returns a List of names of the tools that have been used to generate the given file.
    *
    * @param fileName
    *        file name
@@ -386,7 +379,9 @@ public final class JavaCCGlobals
     {
       int read;
       while (true)
-        if ((read = stream.read (buf, total, buf.length - total)) != -1)
+      {
+        read = stream.read (buf, total, buf.length - total);
+        if (read != -1)
         {
           total += read;
           if (total == buf.length)
@@ -394,6 +389,7 @@ public final class JavaCCGlobals
         }
         else
           break;
+      }
 
       return _makeToolNameList (new String (buf, 0, total));
     }
@@ -482,7 +478,7 @@ public final class JavaCCGlobals
                       if (ch < 0x20 || ch > 0x7e)
                       {
                         final String s = "0000" + Integer.toString (ch, 16);
-                        retval.append ("\\u").append (s.substring (s.length () - 4, s.length ()));
+                        retval.append ("\\u").append (s.substring (s.length () - 4));
                       }
                       else
                       {
@@ -501,11 +497,10 @@ public final class JavaCCGlobals
         final StringBuilder retval = new StringBuilder (str.length () * 2);
         for (final char ch : str.toCharArray ())
         {
-          if (ch < 0x20 ||
-              ch > 0x7e /* || ch == '\\' -- cba commented out 20140305 */ )
+          if (ch < 0x20 || ch > 0x7e /* || ch == '\\' -- cba commented out 20140305 */ )
           {
             final String s = "0000" + Integer.toString (ch, 16);
-            retval.append ("\\u").append (s.substring (s.length () - 4, s.length ()));
+            retval.append ("\\u").append (s.substring (s.length () - 4));
           }
           else
           {

@@ -39,12 +39,12 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.rt.StackTraceHelper;
+import com.helger.base.string.StringHelper;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.lang.StackTraceHelper;
-import com.helger.commons.string.StringHelper;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class PGPrinter
 {

@@ -35,9 +35,9 @@ package com.helger.pgcc.parser.exp;
 
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import com.helger.pgcc.parser.Token;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes zero-or-one expansions (e.g., [foo], foo?).

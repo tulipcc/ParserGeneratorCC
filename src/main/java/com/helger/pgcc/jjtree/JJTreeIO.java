@@ -41,10 +41,10 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.io.stream.NonBlockingBufferedReader;
-import com.helger.commons.io.stream.StreamHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.io.nonblocking.NonBlockingBufferedReader;
+import com.helger.base.io.stream.StreamHelper;
+import com.helger.base.string.StringHelper;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.JavaCCGlobals;
 import com.helger.pgcc.parser.Options;

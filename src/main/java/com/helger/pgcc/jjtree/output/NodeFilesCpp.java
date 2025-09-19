@@ -75,10 +75,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.base.string.StringHelper;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.jjtree.ASTNodeDescriptor;
 import com.helger.pgcc.jjtree.JJTreeGlobals;
@@ -87,6 +85,8 @@ import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.output.cpp.OtherFilesGenCPP;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.utils.OutputFileGenerator;
+
+import jakarta.annotation.Nonnull;
 
 @Immutable
 public final class NodeFilesCpp

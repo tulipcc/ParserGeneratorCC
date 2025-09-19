@@ -64,12 +64,12 @@
 
 package com.helger.pgcc.parser;
 
+import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_I2S;
+import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.getFileExtension;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_aActForEof;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cu_name;
-import static com.helger.pgcc.parser.JavaCCGlobals.LEXSTATE_I2S;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_sNextStateForEof;
-import static com.helger.pgcc.parser.JavaCCGlobals.REXPR_LIST;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_token_mgr_decls;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_toolNames;
 
@@ -81,7 +81,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.output.EOutputLanguage;
 import com.helger.pgcc.output.OutputHelper;

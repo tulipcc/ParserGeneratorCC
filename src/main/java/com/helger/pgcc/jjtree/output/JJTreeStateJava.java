@@ -38,16 +38,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.annotation.Nonempty;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.concurrent.Immutable;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.jjtree.JJTreeGlobals;
 import com.helger.pgcc.jjtree.JJTreeIO;
 import com.helger.pgcc.jjtree.JJTreeOptions;
 import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.Options;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Generate the State of a tree.

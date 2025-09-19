@@ -33,14 +33,11 @@
  */
 package com.helger.pgcc.parser;
 
-import static com.helger.pgcc.parser.JavaCCGlobals.addEscapes;
 import static com.helger.pgcc.parser.JavaCCGlobals.REXPS_OF_TOKENS;
+import static com.helger.pgcc.parser.JavaCCGlobals.addEscapes;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.parser.exp.AbstractExpRegularExpression;
@@ -52,6 +49,9 @@ import com.helger.pgcc.parser.exp.ExpSequence;
 import com.helger.pgcc.parser.exp.ExpZeroOrMore;
 import com.helger.pgcc.parser.exp.ExpZeroOrOne;
 import com.helger.pgcc.parser.exp.Expansion;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class LookaheadCalc
 {

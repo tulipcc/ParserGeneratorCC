@@ -66,7 +66,7 @@ package com.helger.pgcc.jjtree;
 
 import java.io.File;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.Options;

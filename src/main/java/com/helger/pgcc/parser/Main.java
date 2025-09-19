@@ -68,10 +68,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.state.ESuccess;
+import com.helger.base.state.ESuccess;
+import com.helger.io.file.FileHelper;
 import com.helger.pgcc.CPG;
 import com.helger.pgcc.PGPrinter;
 import com.helger.pgcc.output.EOutputLanguage;
@@ -79,6 +77,8 @@ import com.helger.pgcc.output.cpp.OtherFilesGenCPP;
 import com.helger.pgcc.output.java.OtherFilesGenJava;
 import com.helger.pgcc.utils.EOptionType;
 import com.helger.pgcc.utils.OptionInfo;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Entry point.

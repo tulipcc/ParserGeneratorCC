@@ -33,10 +33,10 @@
  */
 package com.helger.pgcc.output.java;
 
+import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
 import static com.helger.pgcc.parser.JavaCCGlobals.printToken;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_ccol;
 import static com.helger.pgcc.parser.JavaCCGlobals.s_cline;
-import static com.helger.pgcc.parser.JavaCCGlobals.CU_TO_INSERTION_POINT_1;
 import static com.helger.pgcc.parser.JavaCCParserConstants.PACKAGE;
 import static com.helger.pgcc.parser.JavaCCParserConstants.SEMICOLON;
 
@@ -46,15 +46,15 @@ import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.WillNotClose;
-
+import com.helger.annotation.WillNotClose;
 import com.helger.pgcc.EJDKVersion;
 import com.helger.pgcc.PGVersion;
 import com.helger.pgcc.output.OutputFile;
 import com.helger.pgcc.parser.JavaCCErrors;
 import com.helger.pgcc.parser.Options;
 import com.helger.pgcc.utils.OutputFileGenerator;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Generate CharStream, TokenManager and Exceptions.

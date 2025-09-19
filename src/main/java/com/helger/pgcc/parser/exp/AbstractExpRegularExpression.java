@@ -37,14 +37,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.string.StringHelper;
 import com.helger.pgcc.parser.Nfa;
 import com.helger.pgcc.parser.Token;
 import com.helger.pgcc.parser.TokenProduction;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Describes regular expressions.
