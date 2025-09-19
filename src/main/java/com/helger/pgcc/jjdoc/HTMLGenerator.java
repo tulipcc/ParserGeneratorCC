@@ -97,11 +97,11 @@ public class HTMLGenerator extends TextGenerator
     _println ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">");
     _println ("<HTML>");
     _println ("<HEAD>");
-    if (StringHelper.hasText (JJDocOptions.getCSS ()))
+    if (StringHelper.isNotEmpty (JJDocOptions.getCSS ()))
     {
       _println ("<LINK REL=\"stylesheet\" type=\"text/css\" href=\"" + JJDocOptions.getCSS () + "\"/>");
     }
-    if (StringHelper.hasText (JJDocGlobals.s_input_file))
+    if (StringHelper.isNotEmpty (JJDocGlobals.s_input_file))
     {
       _println ("<TITLE>BNF for " + JJDocGlobals.s_input_file + "</TITLE>");
     }

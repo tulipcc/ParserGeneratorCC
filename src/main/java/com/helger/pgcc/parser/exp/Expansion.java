@@ -115,7 +115,7 @@ public class Expansion
 
   public final boolean hasNoInternalName ()
   {
-    return StringHelper.hasNoText (m_sInternalName);
+    return StringHelper.isEmpty (m_sInternalName);
   }
 
   public final String getInternalName ()

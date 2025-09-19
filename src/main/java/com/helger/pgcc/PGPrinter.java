@@ -74,7 +74,7 @@ public final class PGPrinter
 
     public void println (@Nonnull final String s)
     {
-      if (StringHelper.hasNoText (s))
+      if (StringHelper.isEmpty (s))
         m_aPS.println ();
       else
         m_aPS.println (s);

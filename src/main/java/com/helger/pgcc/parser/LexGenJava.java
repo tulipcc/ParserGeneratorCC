@@ -478,7 +478,7 @@ public class LexGenJava extends CodeGenerator
 
           if (!Options.isNoDfa () &&
               s_curRE instanceof ExpRStringLiteral &&
-              StringHelper.hasText (((ExpRStringLiteral) s_curRE).m_image))
+              StringHelper.isNotEmpty (((ExpRStringLiteral) s_curRE).m_image))
           {
             ((ExpRStringLiteral) s_curRE).generateDfa ();
             if (i != 0 && !s_mixed[s_lexStateIndex] && ignoring != ignore)
@@ -784,7 +784,7 @@ public class LexGenJava extends CodeGenerator
       {
         JavaCCErrors.warning (s_rexprs[s_initMatch[i]],
                               "Regular expression" +
-                                                        (StringHelper.hasNoText (sLabel) ? "" : " for " + sLabel) +
+                                                        (StringHelper.isEmpty (sLabel) ? "" : " for " + sLabel) +
                                                         " can be matched by the empty string (\"\") in lexical state " +
                                                         s_lexStateName[i] +
                                                         ". This can result in an endless loop of " +
@@ -794,7 +794,7 @@ public class LexGenJava extends CodeGenerator
       {
         JavaCCErrors.warning (s_rexprs[s_initMatch[i]],
                               "Regular expression" +
-                                                        (StringHelper.hasNoText (sLabel) ? "" : " for " + sLabel) +
+                                                        (StringHelper.isEmpty (sLabel) ? "" : " for " + sLabel) +
                                                         " can be matched by the empty string (\"\") in lexical state " +
                                                         s_lexStateName[i] +
                                                         ". This regular expression along with the " +

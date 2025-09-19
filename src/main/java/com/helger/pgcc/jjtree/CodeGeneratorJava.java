@@ -181,7 +181,7 @@ public class CodeGeneratorJava extends DefaultJJTreeVisitor
         // If the parser and nodes are in separate packages (NODE_PACKAGE
         // specified in
         // OPTIONS), then generate an import for the node package.
-        if (StringHelper.hasText (JJTreeGlobals.s_nodePackageName) && !JJTreeGlobals.s_nodePackageName.equals (JJTreeGlobals.s_packageName))
+        if (StringHelper.isNotEmpty (JJTreeGlobals.s_nodePackageName) && !JJTreeGlobals.s_nodePackageName.equals (JJTreeGlobals.s_packageName))
         {
           io.getOut ().println ();
           io.getOut ().println ("import " + JJTreeGlobals.s_nodePackageName + ".*;");

@@ -176,7 +176,7 @@ public final class NodeFilesJava
     // will default to the parser's package name.
     // If the package names are different we will need to import classes
     // from the parser's package.
-    if (StringHelper.hasText (JJTreeGlobals.s_nodePackageName))
+    if (StringHelper.isNotEmpty (JJTreeGlobals.s_nodePackageName))
     {
       ostr.println ("package " + JJTreeGlobals.s_nodePackageName + ";");
       ostr.println ();
@@ -258,7 +258,7 @@ public final class NodeFilesJava
       final String ve = _mergeVisitorException ();
 
       String argumentType;
-      if (StringHelper.hasText (JJTreeOptions.getVisitorDataType ()))
+      if (StringHelper.isNotEmpty (JJTreeOptions.getVisitorDataType ()))
         argumentType = JJTreeOptions.getVisitorDataType ();
       else
         argumentType = "Object";
@@ -331,7 +331,7 @@ public final class NodeFilesJava
       final String ve = _mergeVisitorException ();
 
       String argumentType;
-      if (StringHelper.hasText (JJTreeOptions.getVisitorDataType ()))
+      if (StringHelper.isNotEmpty (JJTreeOptions.getVisitorDataType ()))
         argumentType = JJTreeOptions.getVisitorDataType ();
       else
         argumentType = "Object";
@@ -382,7 +382,7 @@ public final class NodeFilesJava
   private static String _mergeVisitorException ()
   {
     String ve = JJTreeOptions.getVisitorException ();
-    if (StringHelper.hasText (ve))
+    if (StringHelper.isNotEmpty (ve))
       ve = " throws " + ve;
     return ve;
   }

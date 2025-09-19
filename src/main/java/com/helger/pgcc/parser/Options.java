@@ -701,14 +701,14 @@ public class Options
   public static String getParserCodeGenerator ()
   {
     final String retVal = stringValue (USEROPTION__PARSER_CODE_GENERATOR);
-    return StringHelper.hasNoText (retVal) ? null : retVal;
+    return StringHelper.isEmpty (retVal) ? null : retVal;
   }
 
   @Nullable
   public static String getTokenManagerCodeGenerator ()
   {
     final String retVal = stringValue (USEROPTION__TOKEN_MANAGER_CODE_GENERATOR);
-    return StringHelper.hasNoText (retVal) ? null : retVal;
+    return StringHelper.isEmpty (retVal) ? null : retVal;
   }
 
   public static boolean isNoDfa ()
@@ -947,7 +947,7 @@ public class Options
   public static Charset getGrammarEncoding ()
   {
     final String sValue = stringValue (USEROPTION__GRAMMAR_ENCODING);
-    if (StringHelper.hasText (sValue))
+    if (StringHelper.isNotEmpty (sValue))
       try
       {
         return Charset.forName (sValue);
@@ -970,7 +970,7 @@ public class Options
   public static Charset getOutputEncoding ()
   {
     final String sValue = stringValue (USEROPTION__OUTPUT_ENCODING);
-    if (StringHelper.hasText (sValue))
+    if (StringHelper.isNotEmpty (sValue))
       try
       {
         return Charset.forName (sValue);
@@ -1080,7 +1080,7 @@ public class Options
 
   public static boolean hasCPPStackLimit ()
   {
-    return StringHelper.hasText (getCPPStackLimit ());
+    return StringHelper.isNotEmpty (getCPPStackLimit ());
   }
 
   /**

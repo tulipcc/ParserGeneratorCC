@@ -315,7 +315,7 @@ public final class JJDoc
   private static void _emitExpansionRegularExpression (final AbstractExpRegularExpression r, final IDocGenerator gen) throws IOException
   {
     final String reRendered = emitRE (r);
-    if (StringHelper.hasText (reRendered))
+    if (StringHelper.isNotEmpty (reRendered))
     {
       gen.reStart (r);
       gen.text (reRendered);
@@ -381,7 +381,7 @@ public final class JJDoc
   public static String emitRE (final AbstractExpRegularExpression re)
   {
     String returnString = "";
-    final boolean hasLabel = StringHelper.hasText (re.getLabel ());
+    final boolean hasLabel = StringHelper.isNotEmpty (re.getLabel ());
     final boolean justName = re instanceof ExpRJustName;
     final boolean eof = re instanceof ExpREndOfFile;
     final boolean isString = re instanceof ExpRStringLiteral;

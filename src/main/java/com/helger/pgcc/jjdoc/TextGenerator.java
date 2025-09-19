@@ -186,7 +186,7 @@ public class TextGenerator implements IDocGenerator
   @Nonnull
   protected static Writer createPrintWriter (@Nonnull final String ext)
   {
-    if (StringHelper.hasNoText (JJDocOptions.getOutputFile ()))
+    if (StringHelper.isEmpty (JJDocOptions.getOutputFile ()))
     {
       if (JJDocGlobals.s_input_file.equals (JJDocGlobals.STANDARD_INPUT))
         return PGPrinter.getOutWriter ();

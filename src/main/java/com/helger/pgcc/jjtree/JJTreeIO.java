@@ -104,7 +104,7 @@ public final class JJTreeIO
   {
     String sOutput = JJTreeOptions.getOutputFile ();
 
-    if (StringHelper.hasNoText (sOutput))
+    if (StringHelper.isEmpty (sOutput))
     {
       String sRealIn = sInput;
       final int nLastSep = sRealIn.lastIndexOf (File.separatorChar);

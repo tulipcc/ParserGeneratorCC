@@ -1878,7 +1878,7 @@ public class ExpRStringLiteral extends AbstractExpRegularExpression
   {
     for (int kind = 0; kind < s_allImages.length; kind++)
     {
-      if (StringHelper.hasNoText (s_allImages[kind]) || LexGenJava.s_lexStates[kind] != lexStateIndex)
+      if (StringHelper.isEmpty (s_allImages[kind]) || LexGenJava.s_lexStates[kind] != lexStateIndex)
       {
         continue;
       }

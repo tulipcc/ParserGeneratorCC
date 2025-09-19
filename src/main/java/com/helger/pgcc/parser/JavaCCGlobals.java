@@ -105,7 +105,7 @@ public final class JavaCCGlobals
                     PGVersion.VERSION_NUMBER +
                     " (" +
                     fullName +
-                    (StringHelper.hasText (ver) ? " Version " + ver : "") +
+                    (StringHelper.isNotEmpty (ver) ? " Version " + ver : "") +
                     ")");
   }
 

@@ -69,7 +69,7 @@ public class TableDrivenJavaCodeGenerator implements TokenManagerCodeGenerator
     options.put ("charStreamName", CodeGenerator.getCharStreamName ());
     options.put ("defaultLexState", Integer.valueOf (tokenizerData.m_defaultLexState));
     options.put ("decls", tokenizerData.m_decls);
-    options.put ("superClass", StringHelper.hasNoText (superClass) ? "" : "extends " + superClass);
+    options.put ("superClass", StringHelper.isEmpty (superClass) ? "" : "extends " + superClass);
     options.put ("noDfa", Boolean.valueOf (Options.isNoDfa ()));
     options.put ("generatedStates", Integer.valueOf (tokenizerData.m_nfa.size ()));
     try

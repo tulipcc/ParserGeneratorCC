@@ -106,7 +106,7 @@ public abstract class AbstractExpRegularExpression extends Expansion
 
   public final boolean hasLabel ()
   {
-    return StringHelper.hasText (m_label);
+    return StringHelper.isNotEmpty (m_label);
   }
 
   public final void setLabel (final String s)

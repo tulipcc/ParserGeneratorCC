@@ -364,7 +364,7 @@ public class LexGenCpp extends LexGenJava
             continue;
           }
 
-          if (s_curRE instanceof ExpRStringLiteral && StringHelper.hasText (((ExpRStringLiteral) s_curRE).m_image))
+          if (s_curRE instanceof ExpRStringLiteral && StringHelper.isNotEmpty (((ExpRStringLiteral) s_curRE).m_image))
           {
             ((ExpRStringLiteral) s_curRE).generateDfa ();
             if (i != 0 && !s_mixed[s_lexStateIndex] && ignoring != ignore)

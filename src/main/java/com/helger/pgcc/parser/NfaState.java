@@ -1898,7 +1898,7 @@ public class NfaState
       // System.out.println(toBePrinted.stateName + " is the only state for "
       // + key + " ; and key is : " + StateNameForComposite(key));
 
-      if (StringHelper.hasText (toPrint))
+      if (StringHelper.isNotEmpty (toPrint))
         codeGenerator.genCode (toPrint);
 
       codeGenerator.genCodeLine ("               case " + _stateNameForComposite (key) + ":");
@@ -1913,7 +1913,7 @@ public class NfaState
 
     final List <List <NfaState>> partition = _partitionStatesSetForAscii (nameSet, byteNum);
 
-    if (StringHelper.hasText (toPrint))
+    if (StringHelper.isNotEmpty (toPrint))
       codeGenerator.genCode (toPrint);
 
     final int keyState = _stateNameForComposite (key);
@@ -2245,7 +2245,7 @@ public class NfaState
 
         if (temp.m_asciiMoves[byteNum] == 0L)
         {
-          if (StringHelper.hasNoText (toPrint))
+          if (StringHelper.isEmpty (toPrint))
             codeGenerator.genCodeLine ("                  break;");
 
           continue;
@@ -2255,7 +2255,7 @@ public class NfaState
       if (temp.m_asciiMoves[byteNum] == 0L)
         continue;
 
-      if (StringHelper.hasText (toPrint))
+      if (StringHelper.isNotEmpty (toPrint))
         codeGenerator.genCode (toPrint);
 
       dumped[temp.m_stateName] = true;
@@ -2318,7 +2318,7 @@ public class NfaState
     if (neededStates == 0)
     {
       if (stateForCase != null)
-        if (StringHelper.hasNoText (toPrint))
+        if (StringHelper.isEmpty (toPrint))
           codeGenerator.genCodeLine ("                  break;");
 
       return;
@@ -2326,7 +2326,7 @@ public class NfaState
 
     if (neededStates == 1)
     {
-      if (StringHelper.hasText (toPrint))
+      if (StringHelper.isNotEmpty (toPrint))
         codeGenerator.genCode (toPrint);
 
       codeGenerator.genCodeLine ("               case " + _stateNameForComposite (key) + ":");
@@ -2339,7 +2339,7 @@ public class NfaState
       return;
     }
 
-    if (StringHelper.hasText (toPrint))
+    if (StringHelper.isNotEmpty (toPrint))
       codeGenerator.genCode (toPrint);
 
     final int keyState = _stateNameForComposite (key);
@@ -2599,7 +2599,7 @@ public class NfaState
 
         if (temp.m_nonAsciiMethod == -1)
         {
-          if (StringHelper.hasNoText (toPrint))
+          if (StringHelper.isEmpty (toPrint))
             codeGenerator.genCodeLine ("                  break;");
 
           continue;
@@ -2609,7 +2609,7 @@ public class NfaState
       if (temp.m_nonAsciiMethod == -1)
         continue;
 
-      if (StringHelper.hasText (toPrint))
+      if (StringHelper.isNotEmpty (toPrint))
         codeGenerator.genCode (toPrint);
 
       dumped[temp.m_stateName] = true;

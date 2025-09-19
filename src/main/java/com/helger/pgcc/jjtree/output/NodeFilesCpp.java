@@ -606,7 +606,7 @@ public final class NodeFilesCpp
 
     String argumentType = _getVisitorArgumentType ();
     final String returnType = _getVisitorReturnType ();
-    if (StringHelper.hasText (JJTreeOptions.getVisitorDataType ()))
+    if (StringHelper.isNotEmpty (JJTreeOptions.getVisitorDataType ()))
       argumentType = JJTreeOptions.getVisitorDataType ();
 
     ostr.println ("  public:");
